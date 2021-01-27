@@ -174,6 +174,9 @@ function ram.get_zenny()
 end
 
 function ram.set_zenny(new_zenny)
+    if new_zenny < 0 then
+        new_zenny = 0
+    end
 	return memory.write_u32_le(zenny, new_zenny);
 end
 
@@ -186,6 +189,9 @@ function ram.get_frags()
 end
 
 function ram.set_frags(new_frags)
+    if new_frags < 0 then
+        new_frags = 0
+    end
 	return memory.write_u32_le(frags, new_frags);
 end
 

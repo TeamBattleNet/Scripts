@@ -33,15 +33,21 @@ local function display_commands()
     x = 3;
     y = 20;
     to_screen("Press  Up  to: " .. commands.options[commands.index].up_text);
-    x = 3;
     y = 40;
     to_screen("Press Down to: " .. commands.options[commands.index].down_text);
-    x = 3;
     y = 70;
     to_screen(commands.options[commands.index].text_func());
-    x = 3;
-    y = 0;
-    to_screen("Settings Index: " .. commands.index, "bottomright");
+    --y = 0;
+    --to_screen("Settings Index: " .. commands.index, "bottomright");
+end
+
+local function display_ramdom(ram_addr, count)
+    x = 2+6;
+    y = 0+71;
+    for i=1,count do
+        to_screen(string.format("%08X: %02X", ram_addr, memory.read_u8(ram_addr)));
+        ram_addr = ram_addr + 1;
+    end
 end
 
 local function display_RNG()
