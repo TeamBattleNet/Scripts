@@ -1,4 +1,4 @@
--- HUD Script for Mega Man Battle Network 3 Scripting by Tterraj42, enjoy.
+-- HUD Script for Mega Man Battle Network 3, enjoy.
 
 -- To use: Hold L and R, then press:
 -- Select to toggle display mode
@@ -11,9 +11,7 @@ local hud = {};
 local ram = require("BN3/RAM");
 local commands = require("BN3/Commands");
 
-commands.display_mode = 4
-
-local x = 2; -- puts text one pixel from edge
+local x = 3; -- puts text one pixel from edge
 local y = 0; -- puts text one pixel from edge
 
 -- font is positioned as if 10 pixels by 13 pixels
@@ -27,20 +25,23 @@ local function to_screen(text, anchor, color)
 end
 
 local function display_nothing()
-    x = 2;
+    x = 3;
     y = 0;
 end
 
 local function display_commands()
-    x = 2;
+    x = 3;
     y = 20;
     to_screen("Press  Up  to: " .. commands.options[commands.index].up_text);
-    x = 2;
+    x = 3;
     y = 40;
     to_screen("Press Down to: " .. commands.options[commands.index].down_text);
-    x = 2;
+    x = 3;
     y = 70;
     to_screen(commands.options[commands.index].text_func());
+    x = 3;
+    y = 0;
+    to_screen("Settings Index: " .. commands.index, "bottomright");
 end
 
 local function display_RNG()
@@ -63,20 +64,20 @@ local function display_steps()
 end
 
 local function display_auto()
-    x = 2;
+    x = 3;
     y = 0;
     display_RNG();
     display_steps();
 end
 
 local function display_battle()
-    x = 2;
+    x = 3;
     y = 0;
     to_screen("TODO: Battle HUD");
 end
 
 local function display_full()
-    x = 2;
+    x = 3;
     y = 0;
     to_screen("TODO: Full HUD");
 end

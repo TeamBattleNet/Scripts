@@ -1,10 +1,10 @@
--- HUD Script by TeamBN for all Mega Man Battle Network games, enjoy.
-
--- Special thanks to Prof9, NMarkro, Risch, Tterraj42, TL_Plexa, Mountebank, and TREZ
+-- HUD Script for all Mega Man Battle Network games, enjoy.
 
 -- To use: Hold L and R, then press:
 -- Select to toggle display mode
 -- Left/Right/Up/Down to navigate commands
+
+-- Special thanks to Prof9, NMarkro, Risch, TL_Plexa, Mountebank, Tterraj42, TREZ, and TeamBN
 
 function load_HUD()
     local code = bit.band(memory.read_u32_le(0x080000AC), 0xFFFFFF);

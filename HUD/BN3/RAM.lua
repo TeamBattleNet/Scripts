@@ -1,6 +1,6 @@
--- RAM Addresses & Functions for MMBN 3 Scripting by Tterraj42, enjoy.
+-- RAM Addresses & Functions for MMBN 3 Scripting, enjoy.
 
-local max_RNG_index = 60 * 60 * 60; -- 10 minutes of frames
+local max_RNG_index = 10 * 60 * 60; -- 10 minutes of frames
 
 --[[
 General Internal Memory
@@ -142,7 +142,14 @@ function ram.get_steps()
 end
 
 function ram.set_steps(new_steps)
+    if new_steps < 0 then
+        new_steps = 0
+    end
     memory.write_u32_le(steps, new_steps);
+end
+
+function ram.add_steps(some_steps)
+    ram.set_steps(ram.get_steps() + some_steps);
 end
 
 function ram.get_check()
@@ -150,7 +157,14 @@ function ram.get_check()
 end
 
 function ram.set_check(new_check)
+    if new_check < 0 then
+        new_check = 0
+    end
     memory.write_u32_le(check, new_check);
+end
+
+function ram.add_check(some_check)
+    ram.set_check(ram.get_check() + some_check);
 end
 
 -- Functions -> Inventory
