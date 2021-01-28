@@ -3,6 +3,7 @@
 local ram = {};
 
 ram.rng = require("BN3/RNG");
+ram.areas = require("BN3/Areas");
 ram.chips = require("BN3/Chips");
 ram.enemies = require("BN3/Enemies");
 
@@ -51,7 +52,7 @@ local battles_bug       = 0x02000E66; -- 1 byte
 --local                 = 0x02000E67; -- 1 byte TBD
 local GMD_RNG           = 0x02000E68; -- 4 bytes, drop table index
 
-local folder_1_ID       = 0x02001410; -- 2 bytes, chip  ID  of folder 1 slot 1, ends 0x2001484
+local folder_1_ID       = 0x02001410; -- 2 bytes, chip  ID  of folder 1 slot 1, ends 0x02001484
 local folder_1_code     = 0x02001412; -- 2 bytes, chip Code of folder 1 slot 1, ends 0x02001486
 local folder_2_ID       = 0x02001500; -- 2 bytes, chip  ID  of folder 1 slot 1, ends 0x02001574
 local folder_2_code     = 0x02001502; -- 2 bytes, chip Code of folder 1 slot 1, ends 0x02001576
@@ -72,7 +73,7 @@ local style_stored      = 0x02001894; -- 1 byte
 local world_HP_current  = 0x020018A0; -- 2 bytes
 local world_HP_max      = 0x020018A2; -- 2 bytes
 local zenny             = 0x020018F4; -- 4 bytes, 999999 "max"
-local frags             = 0x020018F8; -- 4 bytes,   9999 "max"
+local bug_frags         = 0x020018F8; -- 4 bytes,   9999 "max"
 
 local next_element      = 0x02001DBB; -- 1 byte, next element
 local battle_count      = 0x02001DCA; -- 1 byte, number of battles since last style change
@@ -142,7 +143,22 @@ local battle_HP_max     = 0x02037296; -- 1 byte
 
 local version          = 0x080000AA; -- 1 byte, blue 0x42 or white 0x57
 
-local style_names = {"Elec", "Heat", "Aqua", "Wood"}; -- FWEG but Elec is first, 1 indexed
+local style_elements = {}; -- FWEG but Elec is first, 1 indexed
+style_elements[0x00] = "None";
+style_elements[0x01] = "Elec";
+style_elements[0x02] = "Heat";
+style_elements[0x03] = "Aqua";
+style_elements[0x04] = "Wood";
+
+local style_names = {};
+style_names[0x00] = "Norm";
+style_names[0x01] = "Guts";
+style_names[0x02] = "Cust";
+style_names[0x03] = "Team";
+style_names[0x04] = "Shld";
+style_names[0x05] = "Grnd";
+style_names[0x06] = "Shdw";
+style_names[0x07] = "Bug";
 
 local game_state_names = {};
 game_state_names[0x00] = "title";
@@ -203,14 +219,33 @@ function ram.in_menu()
     return ram.get_game_state() == 0x18;
 end
 
--- Functions -> Location https://forums.therockmanexezone.com/list-of-mmbn3-areas-and-subareas-t5354.html
+-- Functions -> Location 
 
 function ram.get_area()
     return memory.read_u8(area);
 end
 
+function ram.set_area()
+    return memory.write_u8(area);
+end
+
 function ram.get_sub_area()
-    return memory.read_u8(subArea);
+    return memory.read_u8(sub_area);
+end
+
+function ram.set_sub_area()
+    return memory.write_u8(sub_area);
+end
+
+function ram.get_area_group()
+    return ram.areas.names[ram.get_area()];
+end
+
+function ram.get_area_name()
+    if ram.get_area_group() then
+        return ram.get_area_group()[ram.get_sub_area()] or "Unknown Sub Area";
+    end
+    return "Unknown Area";
 end
 
 function ram.in_real_world()
@@ -284,7 +319,6 @@ function ram.is_gambling()
             return true; -- Vending Comp (SciLab) or TV Board Comp or Vending Comp (Hospital)
         end
     end
-    
     return false;
 end
 
@@ -292,7 +326,6 @@ function ram.in_Secret_3()
     if ram.get_area() == 0x95 and ram.get_sub_area() == 0x02 then
         return true; -- Bug Frag Trader
     end
-    
     return false;
 end
 
@@ -315,21 +348,21 @@ function ram.add_zenny(some_zenny)
     return memory.write_u32_le(zenny, ram.get_zenny() + some_zenny);
 end
 
-function ram.get_frags()
-    return memory.read_u32_le(frags);
+function ram.get_bug_frags()
+    return memory.read_u32_le(bug_frags);
 end
 
-function ram.set_frags(new_frags)
-    if new_frags < 0 then
-        new_frags = 0;
-    elseif new_frags > 9999 then
-        new_frags = 9999;
+function ram.set_bug_frags(new_bug_frags)
+    if new_bug_frags < 0 then
+        new_bug_frags = 0;
+    elseif new_bug_frags > 9999 then
+        new_bug_frags = 9999;
     end
-    return memory.write_u32_le(frags, new_frags);
+    return memory.write_u32_le(bug_frags, new_bug_frags);
 end
 
-function ram.add_frags(some_frags)
-    return memory.write_u32_le(frags, ram.get_frags() + some_frags);
+function ram.add_bug_frags(some_bug_frags)
+    return memory.write_u32_le(frags, ram.get_bug_frags() + some_bug_frags);
 end
 
 -- Functions -> Battlechips
@@ -344,12 +377,32 @@ end
 
 -- Functions -> Mega Man
 
+function ram.get_style_type()
+    return bit.rshift(bit.band(memory.read_u8(style_stored), 0x38), 3);
+end
+
+function ram.get_style_type_name()
+    return style_names[ram.get_style_type()];
+end
+
+function ram.get_current_element()
+    return bit.band(memory.read_u8(style_stored), 0x07);
+end
+
+function ram.get_current_element_name()
+    return style_elements[ram.get_current_element()];
+end
+
+function ram.get_style_name()
+    return ram.get_current_element_name() .. ram.get_style_type_name();
+end
+
 function ram.get_next_element()
     return memory.read_u8(next_element);
 end
 
 function ram.get_next_element_name()
-    return style_names[ram.get_next_element()]; -- shouldn't be nil...
+    return style_elements[ram.get_next_element()];
 end
 
 function ram.set_next_element(new_next_element)
@@ -375,7 +428,7 @@ function ram.get_enemy_ID(enemy_number) -- convert from 1 to 0 index
 end
 
 function ram.get_enemy_name(enemy_number)
-    return ram.enemies[ram.get_enemy_ID(enemy_number)];
+    return ram.enemies.names[ram.get_enemy_ID(enemy_number)];
 end
 
 function ram.get_draw_slot(which_slot) -- convert from 1 to 0 index

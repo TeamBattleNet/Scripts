@@ -11,10 +11,8 @@ local hud = {};
 local ram = require("BN3/RAM");
 local commands = require("BN3/Commands");
 
-display_mode = 1; -- default is 1 for display_auto
-
-local x = 3; -- puts text one pixel from edge
-local y = 0; -- puts text one pixel from edge
+local x = 0;
+local y = 0;
 
 -- font is positioned as if 10 pixels by 13 pixels
 -- letters can be as wide as 14, or as tall as 17
@@ -23,32 +21,43 @@ local function to_screen(text, anchor, color)
     anchor = anchor or "topleft";
     color = color or 0xFFFFFFFF;
     gui.text(x, y, text, color, anchor);
-    y = y + 15;
+    y = y + 16;
 end
 
-local function display_nothing()
-    x = 3;
-    y = 0;
+local function position_top_left()
+    if ram.in_world() then
+        if ram.in_digital_world() then -- align with HP
+            x =  8;
+            y = 69;
+        else -- if ram.in_real_world() then -- aligned with PET
+            x = 16;
+            y = 83;
+        end
+    elseif ram.in_battle() then -- align with HP
+        x =  8;
+        y = 69;
+    else -- align with corner
+        x = 3; -- puts text one pixel from edge
+        y = 0; -- puts text one pixel from edge
+    end
 end
 
-local function display_commands()
-    x = 3;
-    y = 20;
-    to_screen("Press  Up  to: " .. commands.options[commands.index].up_text);
-    y = 40;
-    to_screen("Press Down to: " .. commands.options[commands.index].down_text);
-    y = 70;
-    to_screen(commands.options[commands.index].text_func());
-    --y = 0;
-    --to_screen("Settings Index: " .. commands.index, "bottomright");
+local function position_bottom_right()
+    x = 2;
+    y = 3;
 end
 
-local function display_ramdom(ram_addr, count, size, format)
-    x = 2+6;
-    y = 0+71;
+local function display_ramdom_bytes(ram_addr, count, jump)
     for i=1,count do
-        to_screen(string.format("%08X: " .. format, ram_addr, memory.read_u8(ram_addr)));
-        ram_addr = ram_addr + size;
+        to_screen(string.format("%08X: %02X", ram_addr, memory.read_u8(ram_addr)));
+        ram_addr = ram_addr + jump;
+    end
+end
+
+local function display_ramdom_words(ram_addr, count, jump)
+    for i=1,count do
+        to_screen(string.format("%08X: %08X", ram_addr, memory.read_u32_le(ram_addr)));
+        ram_addr = ram_addr + jump;
     end
 end
 
@@ -73,23 +82,67 @@ local function display_steps()
 end
 
 local function display_battle()
-    x = 3;
-    y = 0;
+    --ram.get_draw_slots();
+    --ram.get_draw_slot(which_slot);
     to_screen("TODO: Battle HUD");
 end
 
-local function display_full()
-    x = 3;
-    y = 0;
+local function display_game_info()
+    to_screen("Version: " .. ram.get_version());
+    to_screen(string.format("Progress: 0x%02X", ram.get_progress()));
+    to_screen("Area: " .. ram.get_area_name());
+    to_screen("Zenny: " .. ram.get_zenny());
+    to_screen("Bug Frags: " .. ram.get_bug_frags());
+    to_screen("Current Style: " .. ram.get_style_name());
+    to_screen("Next Element: " .. ram.get_next_element_name());
+    -- library
+end
+
+local function HUD_nothing()
+    position_top_left();
+end
+
+local function HUD_auto()
+    position_top_left();
+    if     ram.in_title() then
+        display_game_info();
+        display_RNG();
+    elseif ram.in_world() then
+        display_RNG();
+        display_steps();
+        position_bottom_right();
+        to_screen(ram.get_area_name(), "bottomright");
+    elseif ram.in_battle() then
+        display_RNG();
+        to_screen("Checks: " .. ram.get_encounter_checks());
+        position_bottom_right();
+        to_screen(ram.get_enemy_name(1), "bottomright");
+        to_screen(ram.get_enemy_name(2), "bottomright");
+        to_screen(ram.get_enemy_name(3), "bottomright");
+    elseif ram.in_transition() then
+        position_bottom_right();
+        to_screen("t r o u t", "bottomright", 0x10000000);
+    elseif ram.in_splash() then
+        display_game_info();
+    elseif ram.in_menu() then
+        display_RNG();
+    else
+        display_RNG();
+    end
+end
+
+local function HUD_full()
+    position_top_left();
     to_screen("TODO: Full HUD");
 end
 
-local function display_auto()
-    x = 3;
-    y = 0;
-    display_RNG();
-    display_steps();
+local function HUD_commands()
+    position_top_left();
+    to_screen(commands.display_options());
+    -- TODO: Disable game inputs while in settings mode
 end
+
+------------------------------------------------------------------------------------------------------------------------
 
 function hud.initialize()
     print("Initializing HUD for MMBN 3...");
@@ -99,6 +152,13 @@ function hud.initialize()
     print("HUD for MMBN 3 Initialized.");
 end
 
+local display_mode = 2;
+local display_modes = {};
+table.insert(display_modes, function() HUD_nothing();  end);
+table.insert(display_modes, function() HUD_auto();     end); -- default 2
+table.insert(display_modes, function() HUD_full();     end);
+table.insert(display_modes, function() HUD_commands(); end);
+
 function hud.update()
     ram.update_pre();
     
@@ -106,16 +166,16 @@ function hud.update()
     
     if keys.L and keys.R then
         if commands.changed then
-            if keys.Select or keys.Right or keys.Left or keys.Up or keys.Down then
+            if keys.Select or keys.Right or keys.Left or keys.Up or keys.Down or keys.A then
                 -- wait for keys to be released
             else
                 commands.changed = false;
             end
         elseif keys.Select then
             commands.changed = true;
-            display_mode = (display_mode + 1) % 5;
-        elseif display_mode == 0 then
-            -- ignore other inputs while HUD is off
+            display_mode = (display_mode % table.getn(display_modes)) + 1;
+        elseif display_mode == 1 then
+            -- disable commands while HUD is off
         elseif keys.Right or keys.Left or keys.Up or keys.Down then
             commands.changed = true;
             if     keys.Right then
@@ -123,26 +183,16 @@ function hud.update()
             elseif keys.Left then
                 commands.previous();
             elseif keys.Up then
-                commands.options[commands.index].up_func();
+                commands.option_up();
             elseif keys.Down then
-                commands.options[commands.index].down_func();
+                commands.option_down();
+            elseif keys.A then
+                commands.doit();
             end
-            print(commands.message);
-            gui.addmessage(commands.message);
         end
     end
     
-    if     display_mode == 0 then
-        display_nothing();
-    elseif display_mode == 1 then
-        display_auto();
-    elseif display_mode == 2 then
-        display_battle();
-    elseif display_mode == 3 then
-        display_full();
-    elseif display_mode == 4 then
-        display_commands();
-    end
+    display_modes[display_mode]();
     
     ram.update_post();
 end

@@ -7,11 +7,13 @@ commands.index = 1;
 commands.options = {};
 commands.changed = false;
 commands.message = "";
---commands.temp = 0;
+commands.temp = 0;
 
 function commands.next()
     commands.index = (commands.index % table.getn(commands.options)) + 1;
     commands.options[commands.index].text_func();
+    print(commands.message);
+    gui.addmessage(commands.message);
 end
 
 function commands.previous()
@@ -20,6 +22,28 @@ function commands.previous()
         commands.index = table.getn(commands.options);
     end
     commands.options[commands.index].text_func();
+    print(commands.message);
+    gui.addmessage(commands.message);
+end
+
+function commands.option_up()
+end
+
+function commands.option_down()
+end
+
+function commands.doit()
+end
+
+function commands.display_options()
+    local options = "TODO: Display Command Options like:";
+    options = options .. "\n[1] Increase Main RNG by 100"
+    options = options .. "\n[2] Increase Main RNG by  10"
+    options = options .. "\n[3] Increase Main RNG by   1"
+    options = options .. "\n[4] Decrease Main RNG by   1 <--"
+    options = options .. "\n[5] Decrease Main RNG by  10"
+    options = options .. "\n[6] Decrease Main RNG by 100"
+    return options;
 end
 
 table.insert(commands.options, {
@@ -100,18 +124,18 @@ table.insert(commands.options, {
 
 table.insert(commands.options, {
       up_text = "Add    1 Bug Frag",
-      up_func = function() commands.message = "Added   1 Bug Frag"; ram.add_frags(1); end,
+      up_func = function() commands.message = "Added   1 Bug Frag"; ram.add_bug_frags(1); end,
     down_text = "Remove 1 Bug Frag",
-    down_func = function() commands.message = "Removed 1 Bug Frag"; ram.add_frags(-1); end,
-    text_func = function() commands.message = "Modifying Bug Frags by 1"; return "Modify Bug Frags: " .. ram.get_frags(); end
+    down_func = function() commands.message = "Removed 1 Bug Frag"; ram.add_bug_frags(-1); end,
+    text_func = function() commands.message = "Modifying Bug Frags by 1"; return "Modify Bug Frags: " .. ram.get_bug_frags(); end
 });
 
 table.insert(commands.options, {
       up_text = "Add    10 Bug Frag",
-      up_func = function() commands.message = "Added   10 Bug Frag"; ram.add_frags(10); end,
+      up_func = function() commands.message = "Added   10 Bug Frag"; ram.add_bug_frags(10); end,
     down_text = "Remove 10 Bug Frag",
-    down_func = function() commands.message = "Removed 10 Bug Frag"; ram.add_frags(-10); end,
-    text_func = function() commands.message = "Modifying Bug Frags by 10"; return "Modify Bug Frags: " .. ram.get_frags(); end
+    down_func = function() commands.message = "Removed 10 Bug Frag"; ram.add_bug_frags(-10); end,
+    text_func = function() commands.message = "Modifying Bug Frags by 10"; return "Modify Bug Frags: " .. ram.get_bug_frags(); end
 });
 
 table.insert(commands.options, {

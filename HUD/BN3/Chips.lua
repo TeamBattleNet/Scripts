@@ -1,4 +1,4 @@
--- Battle Chip values for MMBN 3 by Tterraj42, enjoy.
+-- Battlechip values for MMBN 3 scripting, enjoy.
 
 local chips = {};
 
