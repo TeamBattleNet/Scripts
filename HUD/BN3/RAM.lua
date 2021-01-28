@@ -382,7 +382,7 @@ function ram.get_style_type()
 end
 
 function ram.get_style_type_name()
-    return style_names[ram.get_style_type()];
+    return style_names[ram.get_style_type()] or "????";
 end
 
 function ram.get_current_element()
@@ -390,7 +390,7 @@ function ram.get_current_element()
 end
 
 function ram.get_current_element_name()
-    return style_elements[ram.get_current_element()];
+    return style_elements[ram.get_current_element()] or "????";
 end
 
 function ram.get_style_name()
@@ -402,7 +402,7 @@ function ram.get_next_element()
 end
 
 function ram.get_next_element_name()
-    return style_elements[ram.get_next_element()];
+    return style_elements[ram.get_next_element()] or "????";
 end
 
 function ram.set_next_element(new_next_element)
