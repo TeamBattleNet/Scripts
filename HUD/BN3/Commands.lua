@@ -2,41 +2,72 @@
 
 local ram = require("BN3/RAM");
 
+local controls = {};
+
+local command_index = 1;
+
 local commands = {};
-commands.index = 1;
-commands.options = {};
-commands.changed = false;
-commands.message = "";
-commands.temp = 0;
+local options = {};
 
-function commands.next()
-    commands.index = (commands.index % table.getn(commands.options)) + 1;
-    commands.options[commands.index].text_func();
-    print(commands.message);
-    gui.addmessage(commands.message);
+--[[
+
+function controls.next()
+    command_index = (command_index % table.getn(commands)) + 1;
+    local command = commands[command_index];
+    print(command.text);
+    gui.addmessage(command.text);
 end
 
-function commands.previous()
-    commands.index = commands.index - 1;
-    if commands.index == 0 then
-        commands.index = table.getn(commands.options);
+function controls.previous()
+    command_index = command_index - 1;
+    if command_index == 0 then
+        command_index = table.getn(commands);
     end
-    commands.options[commands.index].text_func();
-    print(commands.message);
-    gui.addmessage(commands.message);
+    local command = commands[command_index];
+    print(command.text);
+    gui.addmessage(command.text);
 end
 
-function commands.option_up()
+function controls.option_down()
+    local command = commands[command_index];
+    command.selection = (command.selection % table.getn(command.options)) + 1;
+    local option = command.options[command.selection];
+    print("Selected: " .. option.text);
+    gui.addmessage("Selected: " .. option.text);
 end
 
-function commands.option_down()
+function controls.option_up()
+  local command = commands[command_index];
+  command.selection = command.selection - 1;
+  if command.selection == 0 then
+      command.selection = table.getn(command.options);
+  end
+  local option = command.options[command.selection];
+  print("Selected: " .. option.text);
+  gui.addmessage("Selected: " .. option.text);
 end
 
-function commands.doit()
+function controls.doit()
+    local command = commands[command_index];
+    local option = command.options[command.selection];
+    print(option.text);
+    gui.addmessage(option.text);
+    command.doit(option.value);
 end
 
-function commands.display_options()
-    local options = "TODO: Display Command Options like:";
+function controls.display_options()
+    local command = commands[command_index];
+    local option = command.options[command.selection];
+    local options = command.text;
+    for key, value in pairs(options) do
+        print("["..key.."]", " -- ", value);
+    end
+    for i=1,table.getn(command.options) do
+        print("["..i.."]" .. options[i]);
+    end
+    local command = commands[command_index];
+    local option = command.options[command.selection].
+    print(option.text);
     options = options .. "\n[1] Increase Main RNG by 100"
     options = options .. "\n[2] Increase Main RNG by  10"
     options = options .. "\n[3] Increase Main RNG by   1"
@@ -45,6 +76,20 @@ function commands.display_options()
     options = options .. "\n[6] Decrease Main RNG by 100"
     return options;
 end
+
+------------------------------------------------------------------------------------------------------------------------
+
+options = {};
+table.insert(options, {value = 100; text = "Increase Main RNG by 100"});
+table.insert(options, {value =  10; text = "Increase Main RNG by  10"});
+table.insert(options, {value =   1; text = "Increase Main RNG by   1"});
+table.insert(options, {value =   1; text = "Decrease Main RNG by   1"});
+table.insert(options, {value =  10; text = "Decrease Main RNG by  10"});
+table.insert(options, {value = 100; text = "Decrease Main RNG by 100"});
+options.selection = 3; -- default option
+options.text = "Modify Main RNG";
+options.doit = function(value) ram.rng.adjust_main_RNG(value); end;
+table.insert(commands, options);
 
 table.insert(commands.options, {
       up_text = "Do nothing!",
@@ -146,5 +191,7 @@ table.insert(commands.options, {
     text_func = function() commands.message = "Toggling Encounter Skip"; return "Toggle Random Encounter Skip: " .. tostring(ram.skip_encounters); end
 });
 
-return commands;
+--]]
+
+return controls;
 

@@ -119,7 +119,7 @@ local interact_with     = 0x02009481; -- 1 byte ???
 local interact_offset   = 0x020094AC; -- 4 bytes ???
 local GMD_value         = 0x020094B8; -- 2 bytes, how to decode?
 local number_trader     = 0x020094B8; -- 1 byte per 8 digits
-local  sub_RNG          = 0x02009730; -- controls encounter ID and chip draws
+local lazy_RNG          = 0x02009730; -- controls encounter ID and chip draws
 local bbs_jobs_new      = 0x020097A5; -- 1 byte ???
 local bbs_jobs_total    = 0x020097BA; -- 1 byte ???
 local game_state        = 0x020097F8; -- 1 byte
@@ -432,7 +432,10 @@ function ram.get_enemy_name(enemy_number)
 end
 
 function ram.get_draw_slot(which_slot) -- convert from 1 to 0 index
-    return memory.read_u8(draw_index + which_slot - 1) + 1;
+    if 1 <= which_slot and which_slot <= 30 then
+        return memory.read_u8(draw_index + which_slot - 1) + 1;
+    end
+    return -1;
 end
 
 function ram.get_draw_slots()

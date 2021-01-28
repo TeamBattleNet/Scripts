@@ -8,6 +8,8 @@
 
 local hud = {};
 
+local HUD_version = "0.1.0.0";
+
 local ram = require("BN3/RAM");
 local commands = require("BN3/Commands");
 
@@ -65,9 +67,9 @@ local function display_RNG()
     to_screen("M RNG: "   .. string.format("%08X", ram.rng.get_main_RNG_value()));
     to_screen("M Index: " .. (ram.rng.get_main_RNG_index() or "?"));
     to_screen("M Delta: " .. (ram.rng.get_main_RNG_delta() or "?"));
-    to_screen("S RNG: "   .. string.format("%08X", ram.rng.get_sub_RNG_value()));
-    to_screen("S Index: " .. (ram.rng.get_sub_RNG_index() or "?"));
-    to_screen("S Delta: " .. (ram.rng.get_sub_RNG_delta() or "?"));
+    to_screen("L RNG: "   .. string.format("%08X", ram.rng.get_lazy_RNG_value()));
+    to_screen("L Index: " .. (ram.rng.get_lazy_RNG_index() or "?"));
+    to_screen("L Delta: " .. (ram.rng.get_lazy_RNG_delta() or "?"));
 end
 
 local function display_steps()
@@ -81,10 +83,11 @@ local function display_steps()
     to_screen("Y: " .. ram.get_y());
 end
 
-local function display_battle()
-    --ram.get_draw_slots();
-    --ram.get_draw_slot(which_slot);
-    to_screen("TODO: Battle HUD");
+local function display_draws(how_many, start_at)
+    start_at = start_at or 1;
+    for i=1,how_many do
+        to_screen(string.format("%2i: %2i", i+start_at-1, ram.get_draw_slot(i+start_at-1)));
+    end
 end
 
 local function display_game_info()
@@ -113,6 +116,10 @@ local function HUD_auto()
         position_bottom_right();
         to_screen(ram.get_area_name(), "bottomright");
     elseif ram.in_battle() then
+        x = x - 12;
+        display_draws(7);
+        position_top_left();
+        x = x + 71;
         display_RNG();
         to_screen("Checks: " .. ram.get_encounter_checks());
         position_bottom_right();
@@ -120,6 +127,7 @@ local function HUD_auto()
         to_screen(ram.get_enemy_name(2), "bottomright");
         to_screen(ram.get_enemy_name(3), "bottomright");
     elseif ram.in_transition() then
+        to_screen("HUD Version: " .. HUD_version);
         position_bottom_right();
         to_screen("t r o u t", "bottomright", 0x10000000);
     elseif ram.in_splash() then
@@ -133,7 +141,39 @@ end
 
 local function HUD_full()
     position_top_left();
-    to_screen("TODO: Full HUD");
+    if     ram.in_title() then
+        display_game_info();
+        display_RNG();
+    elseif ram.in_world() then
+        display_RNG();
+        display_steps();
+        position_bottom_right();
+        to_screen(ram.get_area_name(), "bottomright");
+    elseif ram.in_battle() then
+        position_top_left();
+        display_RNG();
+        to_screen("Checks: " .. ram.get_encounter_checks());
+        x = 191;
+        y = 16;
+        display_draws(15,  1);
+        x = x + 83;
+        y = 16;
+        display_draws(15, 16);
+        position_bottom_right();
+        to_screen(ram.get_enemy_name(1), "bottomright");
+        to_screen(ram.get_enemy_name(2), "bottomright");
+        to_screen(ram.get_enemy_name(3), "bottomright");
+    elseif ram.in_transition() then
+        to_screen("HUD Version: " .. HUD_version);
+        position_bottom_right();
+        to_screen("t r o u t", "bottomright", 0x10000000);
+    elseif ram.in_splash() then
+        display_game_info();
+    elseif ram.in_menu() then
+        display_RNG();
+    else -- unknown game_state?
+        display_RNG();
+    end
 end
 
 local function HUD_commands()
@@ -157,7 +197,9 @@ local display_modes = {};
 table.insert(display_modes, function() HUD_nothing();  end);
 table.insert(display_modes, function() HUD_auto();     end); -- default 2
 table.insert(display_modes, function() HUD_full();     end);
-table.insert(display_modes, function() HUD_commands(); end);
+--table.insert(display_modes, function() HUD_commands(); end);
+
+local setting_changed = false;
 
 function hud.update()
     ram.update_pre();
@@ -165,30 +207,33 @@ function hud.update()
     local keys = joypad.get();
     
     if keys.L and keys.R then
-        if commands.changed then
+        if setting_changed then
             if keys.Select or keys.Right or keys.Left or keys.Up or keys.Down or keys.A then
-                -- wait for keys to be released
+                -- wait for buttons to be released
             else
-                commands.changed = false;
+                setting_changed = false;
             end
         elseif keys.Select then
-            commands.changed = true;
+            setting_changed = true;
             display_mode = (display_mode % table.getn(display_modes)) + 1;
-        elseif display_mode == 1 then
+        elseif display_mode == 1 or true then
             -- disable commands while HUD is off
-        elseif keys.Right or keys.Left or keys.Up or keys.Down then
-            commands.changed = true;
-            if     keys.Right then
-                commands.next();
-            elseif keys.Left then
-                commands.previous();
-            elseif keys.Up then
-                commands.option_up();
-            elseif keys.Down then
-                commands.option_down();
-            elseif keys.A then
-                commands.doit();
-            end
+            -- commands are being reworked
+        elseif keys.Right then
+            setting_changed = true;
+            commands.next();
+        elseif keys.Left then
+            setting_changed = true;
+            commands.previous();
+        elseif keys.Up then
+            setting_changed = true;
+            commands.option_up();
+        elseif keys.Down then
+            setting_changed = true;
+            commands.option_down();
+        elseif keys.A then
+            setting_changed = true;
+            commands.doit();
         end
     end
     
