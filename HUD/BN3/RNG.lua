@@ -4,18 +4,15 @@ local rng = {};
 
 -- RAM Addresses
 
-local  sub_RNG = 0x02009730; -- controls encounter ID and chip draws
 local main_RNG = 0x02009800; -- controls everything else
-
--- 0x02009800 is rng1 and 0x02009730 is rng2 - GreigaMaster
--- I labeled them this way because 0x02009800 comes first in the code.
+local  sub_RNG = 0x02009730; -- controls encounter ID and folder shuffling
 
 -- local variables
 
 local cur_RNG_index = 0;
 local max_RNG_index = 0;
 local previous_main_RNG_index = 0;
-local previous_sub_RNG_index = 0;
+local previous_sub_RNG_index  = 0;
 local values_per_frame = 10 * 60; -- 10 seconds of frames
 
 -- Create RNG lookup table

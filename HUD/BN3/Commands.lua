@@ -7,10 +7,7 @@ commands.index = 1;
 commands.options = {};
 commands.changed = false;
 commands.message = "";
-commands.funcs = {};
-
-commands.display_mode = 1;
-commands.skip_encounters = false;
+--commands.temp = 0;
 
 function commands.next()
     commands.index = (commands.index % table.getn(commands.options)) + 1;
@@ -119,10 +116,10 @@ table.insert(commands.options, {
 
 table.insert(commands.options, {
       up_text = "Enable  Encounter Skip",
-      up_func = function() commands.message = "Encounter Skip Enabled"; commands.skip_encounters = true; end,
+      up_func = function() commands.message = "Encounter Skip Enabled" ; ram.skip_encounters =  true; end,
     down_text = "Disable Encounter Skip",
-    down_func = function() commands.message = "Encounter Skip Disabled"; commands.skip_encounters = false; end,
-    text_func = function() commands.message = "Toggling Encounter Skip"; return "Toggle Random Encounter Skip: " .. tostring(commands.skip_encounters); end
+    down_func = function() commands.message = "Encounter Skip Disabled"; ram.skip_encounters = false; end,
+    text_func = function() commands.message = "Toggling Encounter Skip"; return "Toggle Random Encounter Skip: " .. tostring(ram.skip_encounters); end
 });
 
 return commands;

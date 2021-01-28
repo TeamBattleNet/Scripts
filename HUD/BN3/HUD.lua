@@ -11,6 +11,8 @@ local hud = {};
 local ram = require("BN3/RAM");
 local commands = require("BN3/Commands");
 
+display_mode = 1; -- default is 1 for display_auto
+
 local x = 3; -- puts text one pixel from edge
 local y = 0; -- puts text one pixel from edge
 
@@ -41,12 +43,12 @@ local function display_commands()
     --to_screen("Settings Index: " .. commands.index, "bottomright");
 end
 
-local function display_ramdom(ram_addr, count)
+local function display_ramdom(ram_addr, count, size, format)
     x = 2+6;
     y = 0+71;
     for i=1,count do
-        to_screen(string.format("%08X: %02X", ram_addr, memory.read_u8(ram_addr)));
-        ram_addr = ram_addr + 1;
+        to_screen(string.format("%08X: " .. format, ram_addr, memory.read_u8(ram_addr)));
+        ram_addr = ram_addr + size;
     end
 end
 
@@ -61,19 +63,13 @@ end
 
 local function display_steps()
     to_screen("Steps: " .. ram.get_steps());
-    if ram.is_mega() then
+    if ram.in_digital_world() then
         to_screen("Check: " .. ram.get_check());
-        to_screen("Next : " .. (64 - (ram.get_steps() - ram.get_check())));
+        to_screen("Checks: " .. ram.get_encounter_checks());
+        to_screen("Next :  " .. (64 - (ram.get_steps() - ram.get_check())));
     end
     to_screen("X: " .. ram.get_x());
     to_screen("Y: " .. ram.get_y());
-end
-
-local function display_auto()
-    x = 3;
-    y = 0;
-    display_RNG();
-    display_steps();
 end
 
 local function display_battle()
@@ -88,9 +84,18 @@ local function display_full()
     to_screen("TODO: Full HUD");
 end
 
+local function display_auto()
+    x = 3;
+    y = 0;
+    display_RNG();
+    display_steps();
+end
+
 function hud.initialize()
     print("Initializing HUD for MMBN 3...");
-    ram.initialize();
+    ram.initialize({
+        max_RNG_index = 10 * 60 * 60; -- 10 minutes of frames
+    });
     print("HUD for MMBN 3 Initialized.");
 end
 
@@ -108,8 +113,8 @@ function hud.update()
             end
         elseif keys.Select then
             commands.changed = true;
-            commands.display_mode = (commands.display_mode + 1) % 5;
-        elseif commands.display_mode == 0 then
+            display_mode = (display_mode + 1) % 5;
+        elseif display_mode == 0 then
             -- ignore other inputs while HUD is off
         elseif keys.Right or keys.Left or keys.Up or keys.Down then
             commands.changed = true;
@@ -127,19 +132,17 @@ function hud.update()
         end
     end
     
-    if     commands.display_mode == 0 then
+    if     display_mode == 0 then
         display_nothing();
-    elseif commands.display_mode == 1 then
+    elseif display_mode == 1 then
         display_auto();
-    elseif commands.display_mode == 2 then
+    elseif display_mode == 2 then
         display_battle();
-    elseif commands.display_mode == 3 then
+    elseif display_mode == 3 then
         display_full();
-    elseif commands.display_mode == 4 then
+    elseif display_mode == 4 then
         display_commands();
     end
-    
-    ram.encounter_check(commands.skip_encounters);
     
     ram.update_post();
 end
