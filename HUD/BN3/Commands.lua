@@ -5,17 +5,14 @@ local ram = require("BN3/RAM");
 local controls = {};
 
 local command_index = 1;
-
 local commands = {};
 local options = {};
-
---[[
 
 function controls.next()
     command_index = (command_index % table.getn(commands)) + 1;
     local command = commands[command_index];
-    print(command.text);
-    gui.addmessage(command.text);
+    print(command.description());
+    gui.addmessage(command.description());
 end
 
 function controls.previous()
@@ -24,174 +21,132 @@ function controls.previous()
         command_index = table.getn(commands);
     end
     local command = commands[command_index];
-    print(command.text);
-    gui.addmessage(command.text);
+    print(command.description());
+    gui.addmessage(command.description());
 end
 
 function controls.option_down()
-    local command = commands[command_index];
-    command.selection = (command.selection % table.getn(command.options)) + 1;
-    local option = command.options[command.selection];
+    local options = commands[command_index];
+    options.selection = (options.selection % table.getn(options)) + 1;
+    local option = options[options.selection];
     print("Selected: " .. option.text);
     gui.addmessage("Selected: " .. option.text);
 end
 
 function controls.option_up()
-  local command = commands[command_index];
-  command.selection = command.selection - 1;
-  if command.selection == 0 then
-      command.selection = table.getn(command.options);
-  end
-  local option = command.options[command.selection];
-  print("Selected: " .. option.text);
-  gui.addmessage("Selected: " .. option.text);
+    local options = commands[command_index];
+    options.selection = options.selection - 1;
+    if options.selection == 0 then
+        options.selection = table.getn(options);
+    end
+    local option = options[options.selection];
+    print("Selected: " .. option.text);
+    gui.addmessage("Selected: " .. option.text);
 end
 
 function controls.doit()
     local command = commands[command_index];
-    local option = command.options[command.selection];
+    local option = command[command.selection];
     print(option.text);
     gui.addmessage(option.text);
     command.doit(option.value);
 end
 
 function controls.display_options()
-    local command = commands[command_index];
-    local option = command.options[command.selection];
-    local options = command.text;
-    for key, value in pairs(options) do
-        print("["..key.."]", " -- ", value);
+    local options = commands[command_index];
+    
+    local text = options.description() .. "\n";
+    for i=1,table.getn(options) do
+        text = text .. "\n["..i.."] " .. options[i].text;
+        if i == options.selection then
+            text = text .. " <--";
+        end
     end
-    for i=1,table.getn(command.options) do
-        print("["..i.."]" .. options[i]);
-    end
-    local command = commands[command_index];
-    local option = command.options[command.selection].
-    print(option.text);
-    options = options .. "\n[1] Increase Main RNG by 100"
-    options = options .. "\n[2] Increase Main RNG by  10"
-    options = options .. "\n[3] Increase Main RNG by   1"
-    options = options .. "\n[4] Decrease Main RNG by   1 <--"
-    options = options .. "\n[5] Decrease Main RNG by  10"
-    options = options .. "\n[6] Decrease Main RNG by 100"
-    return options;
+    return text;
 end
 
 ------------------------------------------------------------------------------------------------------------------------
 
 options = {};
-table.insert(options, {value = 100; text = "Increase Main RNG by 100"});
-table.insert(options, {value =  10; text = "Increase Main RNG by  10"});
-table.insert(options, {value =   1; text = "Increase Main RNG by   1"});
-table.insert(options, {value =   1; text = "Decrease Main RNG by   1"});
-table.insert(options, {value =  10; text = "Decrease Main RNG by  10"});
-table.insert(options, {value = 100; text = "Decrease Main RNG by 100"});
+table.insert(options, {value = 0; text = "Press Left or Right to change Commands"});
+options.selection = 1; -- default option
+options.description = function() return "Settings Menu"; end;
+options.doit = function(value) return; end;
+table.insert(commands, options);
+
+options = {};
+table.insert(options, {value =  100; text = "Increase Main RNG by 100"});
+table.insert(options, {value =   10; text = "Increase Main RNG by  10"});
+table.insert(options, {value =    1; text = "Increase Main RNG by   1"});
+table.insert(options, {value =   -1; text = "Decrease Main RNG by   1"});
+table.insert(options, {value =  -10; text = "Decrease Main RNG by  10"});
+table.insert(options, {value = -100; text = "Decrease Main RNG by 100"});
 options.selection = 3; -- default option
-options.text = "Modify Main RNG";
+options.description = function() return string.format("Modify Main RNG: %4s: %08X", (ram.rng.get_main_RNG_index() or "????"), ram.rng.get_main_RNG_value()); end;
 options.doit = function(value) ram.rng.adjust_main_RNG(value); end;
 table.insert(commands, options);
 
-table.insert(commands.options, {
-      up_text = "Do nothing!",
-      up_func = function() commands.message = ""; end,
-    down_text = "Do nothing!",
-    down_func = function() commands.message = ""; end,
-    text_func = function() commands.message = "Settings Menu"; return "Welcome to the Settings Menu!"; end
-});
+options = {};
+table.insert(options, {value =  100; text = "Increase Lazy RNG by 100"});
+table.insert(options, {value =   10; text = "Increase Lazy RNG by  10"});
+table.insert(options, {value =    1; text = "Increase Lazy RNG by   1"});
+table.insert(options, {value =   -1; text = "Decrease Lazy RNG by   1"});
+table.insert(options, {value =  -10; text = "Decrease Lazy RNG by  10"});
+table.insert(options, {value = -100; text = "Decrease Lazy RNG by 100"});
+options.selection = 3; -- default option
+options.description = function() return string.format("Modify Lazy RNG: %4s: %08X", (ram.rng.get_lazy_RNG_index() or "????"), ram.rng.get_lazy_RNG_value()); end;
+options.doit = function(value) ram.rng.adjust_lazy_RNG(value); end;
+table.insert(commands, options);
 
-table.insert(commands.options, {
-      up_text = "Advance Main RNG by 1",
-      up_func = function() commands.message = "Advanced Main RNG by 1"; ram.rng.adjust_main_RNG(1); end,
-    down_text = "Reverse Main RNG by 1",
-    down_func = function() commands.message = "Reversed Main RNG by 1"; ram.rng.adjust_main_RNG(-1); end,
-    text_func = function() commands.message = "Modifying Main RNG by 1";
-        return string.format("Modify Main RNG: %4s: %08X", (ram.rng.get_main_RNG_index() or "????"), ram.rng.get_main_RNG_value()); end
-});
+options = {};
+table.insert(options, {value =  100000; text = "Increase Zenny by 100000"});
+table.insert(options, {value =   10000; text = "Increase Zenny by  10000"});
+table.insert(options, {value =    1000; text = "Increase Zenny by   1000"});
+table.insert(options, {value =     100; text = "Increase Zenny by    100"});
+table.insert(options, {value =    -100; text = "Decrease Zenny by    100"});
+table.insert(options, {value =   -1000; text = "Decrease Zenny by   1000"});
+table.insert(options, {value =  -10000; text = "Decrease Zenny by  10000"});
+table.insert(options, {value = -100000; text = "Decrease Zenny by 100000"});
+options.selection = 4; -- default option
+options.description = function() return string.format("Modify Zenny: %u", ram.get_zenny()); end;
+options.doit = function(value) ram.add_zenny(value); end;
+table.insert(commands, options);
 
-table.insert(commands.options, {
-      up_text = "Advance Main RNG by 10",
-      up_func = function() commands.message = "Advanced Main RNG by 10"; ram.rng.adjust_main_RNG(10); end,
-    down_text = "Reverse Main RNG by 10",
-    down_func = function() commands.message = "Reversed Main RNG by 10"; ram.rng.adjust_main_RNG(-10); end,
-    text_func = function() commands.message = "Modifying Main RNG by 10";
-        return string.format("Modify Main RNG: %4s: %08X", (ram.rng.get_main_RNG_index() or "????"), ram.rng.get_main_RNG_value()); end
-});
+options = {};
+table.insert(options, {value =  1000; text = "Increase Bug Frags by 1000"});
+table.insert(options, {value =   100; text = "Increase Bug Frags by  100"});
+table.insert(options, {value =    10; text = "Increase Bug Frags by   10"});
+table.insert(options, {value =     1; text = "Increase Bug Frags by    1"});
+table.insert(options, {value =    -1; text = "Decrease Bug Frags by    1"});
+table.insert(options, {value =   -10; text = "Decrease Bug Frags by   10"});
+table.insert(options, {value =  -100; text = "Decrease Bug Frags by  100"});
+table.insert(options, {value = -1000; text = "Decrease Bug Frags by 1000"});
+options.selection = 4; -- default option
+options.description = function() return string.format("Modify Bug Frags: %u", ram.get_bug_frags()); end;
+options.doit = function(value) ram.add_bug_frags(value); end;
+table.insert(commands, options);
 
-table.insert(commands.options, {
-      up_text = "Advance Sub RNG by 1",
-      up_func = function() commands.message = "Advanced Sub RNG by 1"; ram.rng.adjust_sub_RNG(1); end,
-    down_text = "Reverse Sub RNG by 1",
-    down_func = function() commands.message = "Reversed Sub RNG by 1"; ram.rng.adjust_sub_RNG(-1); end,
-    text_func = function() commands.message = "Modifying Sub RNG by 1";
-        return string.format("Modify Sub RNG: %4s: %08X", (ram.rng.get_sub_RNG_index() or "????"), ram.rng.get_sub_RNG_value()); end
-});
+options = {};
+table.insert(options, {value =  9999; text = "Increase Steps by 9999"});
+table.insert(options, {value =    64; text = "Increase Steps by   64"});
+table.insert(options, {value =     2; text = "Increase Steps by    2"});
+table.insert(options, {value =     1; text = "Increase Steps by    1"});
+table.insert(options, {value =    -1; text = "Decrease Steps by    1"});
+table.insert(options, {value =    -2; text = "Decrease Steps by    2"});
+table.insert(options, {value =   -64; text = "Decrease Steps by   64"});
+table.insert(options, {value = -9999; text = "Decrease Steps by 9999"});
+options.selection = 4; -- default option
+options.description = function() return string.format("Modify Steps: %u", ram.get_steps()); end;
+options.doit = function(value) ram.add_steps(value); end;
+table.insert(commands, options);
 
-table.insert(commands.options, {
-      up_text = "Advance Sub RNG by 10",
-      up_func = function() commands.message = "Advanced Sub RNG by 10"; ram.rng.adjust_sub_RNG(10); end,
-    down_text = "Reverse Sub RNG by 10",
-    down_func = function() commands.message = "Reversed Sub RNG by 10"; ram.rng.adjust_sub_RNG(-10); end,
-    text_func = function() commands.message = "Modifying Sub RNG by 10";
-        return string.format("Modify Sub RNG: %4s: %08X", (ram.rng.get_sub_RNG_index() or "????"), ram.rng.get_sub_RNG_value()); end
-});
-
-table.insert(commands.options, {
-      up_text = "Increase Steps by 2",
-      up_func = function() commands.message = "Increased Steps by 2"; ram.add_steps(2); end,
-    down_text = "Reduce   Steps by 2",
-    down_func = function() commands.message = "Reduced   Steps by 2"; ram.add_steps(-2); end,
-    text_func = function() commands.message = "Modifying Steps by 2"; return "Modify Steps: " .. ram.get_steps(); end
-});
-
-table.insert(commands.options, {
-  up_text = "Increase Steps by 64",
-  up_func = function() commands.message = "Increased Steps by 64"; ram.add_steps(64); end,
-down_text = "Reduce   Steps by 64",
-down_func = function() commands.message = "Reduced   Steps by 64"; ram.add_steps(-64); end,
-text_func = function() commands.message = "Modifying Steps by 64"; return "Modify Steps: " .. ram.get_steps(); end
-});
-
-table.insert(commands.options, {
-      up_text = "Add    100 Zenny",
-      up_func = function() commands.message = "Added   100 Zenny"; ram.add_zenny(100); end,
-    down_text = "Remove 100 Zenny",
-    down_func = function() commands.message = "Removed 100 Zenny"; ram.add_zenny(-100); end,
-    text_func = function() commands.message = "Modifying Zenny by 100"; return "Modify Zenny: " .. ram.get_zenny(); end
-});
-
-table.insert(commands.options, {
-      up_text = "Add    1000 Zenny",
-      up_func = function() commands.message = "Added   1000 Zenny"; ram.add_zenny(1000); end,
-    down_text = "Remove 1000 Zenny",
-    down_func = function() commands.message = "Removed 1000 Zenny"; ram.add_zenny(-1000); end,
-    text_func = function() commands.message = "Modifying Zenny by 1000"; return "Modify Zenny: " .. ram.get_zenny(); end
-});
-
-table.insert(commands.options, {
-      up_text = "Add    1 Bug Frag",
-      up_func = function() commands.message = "Added   1 Bug Frag"; ram.add_bug_frags(1); end,
-    down_text = "Remove 1 Bug Frag",
-    down_func = function() commands.message = "Removed 1 Bug Frag"; ram.add_bug_frags(-1); end,
-    text_func = function() commands.message = "Modifying Bug Frags by 1"; return "Modify Bug Frags: " .. ram.get_bug_frags(); end
-});
-
-table.insert(commands.options, {
-      up_text = "Add    10 Bug Frag",
-      up_func = function() commands.message = "Added   10 Bug Frag"; ram.add_bug_frags(10); end,
-    down_text = "Remove 10 Bug Frag",
-    down_func = function() commands.message = "Removed 10 Bug Frag"; ram.add_bug_frags(-10); end,
-    text_func = function() commands.message = "Modifying Bug Frags by 10"; return "Modify Bug Frags: " .. ram.get_bug_frags(); end
-});
-
-table.insert(commands.options, {
-      up_text = "Enable  Encounter Skip",
-      up_func = function() commands.message = "Encounter Skip Enabled" ; ram.skip_encounters =  true; end,
-    down_text = "Disable Encounter Skip",
-    down_func = function() commands.message = "Encounter Skip Disabled"; ram.skip_encounters = false; end,
-    text_func = function() commands.message = "Toggling Encounter Skip"; return "Toggle Random Encounter Skip: " .. tostring(ram.skip_encounters); end
-});
-
---]]
+options = {};
+table.insert(options, {value = false; text = "Allow Random Encounters"});
+table.insert(options, {value =  true; text = "Block Random Encounters"});
+options.selection = 1; -- default option
+options.description = function() return "Toggle Encounter Skip: " .. tostring(ram.skip_encounters); end;
+options.doit = function(value) ram.skip_encounters = value; end;
+table.insert(commands, options);
 
 return controls;
 

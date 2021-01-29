@@ -8,7 +8,7 @@
 
 local hud = {};
 
-local HUD_version = "0.1.0.0";
+local HUD_version = "0.1.1.0";
 
 local ram = require("BN3/RAM");
 local commands = require("BN3/Commands");
@@ -196,8 +196,8 @@ local display_mode = 2;
 local display_modes = {};
 table.insert(display_modes, function() HUD_nothing();  end);
 table.insert(display_modes, function() HUD_auto();     end); -- default 2
-table.insert(display_modes, function() HUD_full();     end);
---table.insert(display_modes, function() HUD_commands(); end);
+--table.insert(display_modes, function() HUD_full();     end);
+table.insert(display_modes, function() HUD_commands(); end);
 
 local setting_changed = false;
 
@@ -216,9 +216,8 @@ function hud.update()
         elseif keys.Select then
             setting_changed = true;
             display_mode = (display_mode % table.getn(display_modes)) + 1;
-        elseif display_mode == 1 or true then
+        elseif display_mode == 1 then
             -- disable commands while HUD is off
-            -- commands are being reworked
         elseif keys.Right then
             setting_changed = true;
             commands.next();

@@ -345,7 +345,7 @@ function ram.set_zenny(new_zenny)
 end
 
 function ram.add_zenny(some_zenny)
-    return memory.write_u32_le(zenny, ram.get_zenny() + some_zenny);
+    return ram.set_zenny(ram.get_zenny() + some_zenny)
 end
 
 function ram.get_bug_frags()
@@ -362,7 +362,7 @@ function ram.set_bug_frags(new_bug_frags)
 end
 
 function ram.add_bug_frags(some_bug_frags)
-    return memory.write_u32_le(frags, ram.get_bug_frags() + some_bug_frags);
+    return ram.set_bug_frags(ram.get_bug_frags() + some_bug_frags);
 end
 
 -- Functions -> Battlechips
