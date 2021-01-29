@@ -8,11 +8,15 @@ local command_index = 1;
 local commands = {};
 local options = {};
 
+local function show_text(message)
+    print(message);
+    gui.addmessage(message);
+end
+
 function controls.next()
     command_index = (command_index % table.getn(commands)) + 1;
     local command = commands[command_index];
-    print(command.description());
-    gui.addmessage(command.description());
+    show_text(command.description());
 end
 
 function controls.previous()
@@ -21,16 +25,14 @@ function controls.previous()
         command_index = table.getn(commands);
     end
     local command = commands[command_index];
-    print(command.description());
-    gui.addmessage(command.description());
+    show_text(command.description());
 end
 
 function controls.option_down()
     local options = commands[command_index];
     options.selection = (options.selection % table.getn(options)) + 1;
     local option = options[options.selection];
-    print("Selected: " .. option.text);
-    gui.addmessage("Selected: " .. option.text);
+    show_text("Selected: " .. option.text);
 end
 
 function controls.option_up()
@@ -40,34 +42,34 @@ function controls.option_up()
         options.selection = table.getn(options);
     end
     local option = options[options.selection];
-    print("Selected: " .. option.text);
-    gui.addmessage("Selected: " .. option.text);
+    show_text("Selected: " .. option.text);
 end
 
 function controls.doit()
     local command = commands[command_index];
     local option = command[command.selection];
-    print(option.text);
-    gui.addmessage(option.text);
+    show_text(option.text);
     command.doit(option.value);
 end
 
 function controls.display_options()
     local options = commands[command_index];
-    
-    local text = options.description() .. "\n";
+    local lines = {};
+    table.insert(lines, options.description());
     for i=1,table.getn(options) do
-        text = text .. "\n["..i.."] " .. options[i].text;
+        line = string.format("[%2i] %s", i, options[i].text);
         if i == options.selection then
-            text = text .. " <--";
+            line = line .. " <--";
         end
+        table.insert(lines, line);
     end
-    return text;
+    return lines;
 end
 
 ------------------------------------------------------------------------------------------------------------------------
 
 options = {};
+table.insert(options, {value = 0; text = "Press  Up  or  Down to change Options "});
 table.insert(options, {value = 0; text = "Press Left or Right to change Commands"});
 options.selection = 1; -- default option
 options.description = function() return "Settings Menu"; end;
@@ -141,10 +143,66 @@ options.doit = function(value) ram.add_steps(value); end;
 table.insert(commands, options);
 
 options = {};
+table.insert(options, {value = 0x00; text = "ACDC Town  "});
+table.insert(options, {value = 0x01; text = "ACDC School"});
+table.insert(options, {value = 0x02; text = "SciLab     "});
+table.insert(options, {value = 0x03; text = "Yoka       "});
+table.insert(options, {value = 0x04; text = "Beach      "});
+table.insert(options, {value = 0x05; text = "Hades      "});
+table.insert(options, {value = 0x06; text = "Hospital   "});
+table.insert(options, {value = 0x07; text = "WWW Base   "});
+options.selection = 1; -- default option
+options.description = function() return "Pick Real World Main Area: " .. ram.get_area_name(); end;
+options.doit = function(value) ram.set_area(value); end;
+table.insert(commands, options);
+
+options = {};
+table.insert(options, {value = 0x00; text = "Sub Area 0x00"});
+table.insert(options, {value = 0x01; text = "Sub Area 0x01"});
+table.insert(options, {value = 0x02; text = "Sub Area 0x02"});
+table.insert(options, {value = 0x03; text = "Sub Area 0x03"});
+table.insert(options, {value = 0x04; text = "Sub Area 0x04"});
+table.insert(options, {value = 0x05; text = "Sub Area 0x05"});
+table.insert(options, {value = 0x06; text = "Sub Area 0x06"});
+table.insert(options, {value = 0x07; text = "Sub Area 0x07"});
+table.insert(options, {value = 0x08; text = "Sub Area 0x08"});
+table.insert(options, {value = 0x09; text = "Sub Area 0x09"});
+table.insert(options, {value = 0x0A; text = "Sub Area 0x0A"});
+table.insert(options, {value = 0x0B; text = "Sub Area 0x0B"});
+table.insert(options, {value = 0x0C; text = "Sub Area 0x0C"});
+table.insert(options, {value = 0x0D; text = "Sub Area 0x0E"});
+table.insert(options, {value = 0x0E; text = "Sub Area 0x0E"});
+table.insert(options, {value = 0x0F; text = "Sub Area 0x0F"});
+options.selection = 1; -- default option
+options.description = function() return "Pick Sub Area: " .. ram.get_area_name(); end;
+options.doit = function(value) if ram.check_area_name(ram.get_area(), value) then ram.set_sub_area(value); end end;
+table.insert(commands, options);
+
+options = {};
+table.insert(options, {value = 0x80; text = "Principal's PC"});
+table.insert(options, {value = 0x81; text = "Zoo Comps     "});
+table.insert(options, {value = 0x82; text = "Hospital Comps"});
+table.insert(options, {value = 0x83; text = "WWW Comps     "});
+table.insert(options, {value = 0x88; text = "Homepages     "});
+table.insert(options, {value = 0x8A; text = "Special Comps "});
+table.insert(options, {value = 0x8C; text = "Small Comps 1 "});
+table.insert(options, {value = 0x8D; text = "Small Comps 2 "});
+table.insert(options, {value = 0x90; text = "ACDC Area     "});
+table.insert(options, {value = 0x91; text = "SciLab Area   "});
+table.insert(options, {value = 0x92; text = "Yoka Area     "});
+table.insert(options, {value = 0x93; text = "Beach Area    "});
+table.insert(options, {value = 0x94; text = "Undernet      "});
+table.insert(options, {value = 0x95; text = "Secret Area   "});
+options.selection = 1; -- default option
+options.description = function() return "Pick Digital World Main Area: " .. ram.get_area_name(); end;
+options.doit = function(value) ram.set_area(value); end;
+table.insert(commands, options);
+
+options = {};
 table.insert(options, {value = false; text = "Allow Random Encounters"});
 table.insert(options, {value =  true; text = "Block Random Encounters"});
 options.selection = 1; -- default option
-options.description = function() return "Toggle Encounter Skip: " .. tostring(ram.skip_encounters); end;
+options.description = function() return "Random Encounters: " .. tostring(not ram.skip_encounters); end;
 options.doit = function(value) ram.skip_encounters = value; end;
 table.insert(commands, options);
 

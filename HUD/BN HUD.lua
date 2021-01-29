@@ -1,9 +1,10 @@
 -- HUD Script for all Mega Man Battle Network games, enjoy.
 
 -- To use: Hold L and R, then press:
--- Select to toggle display modes
--- Left/Right/Up/Down to navigate commands
--- A to activate the command option
+-- Start to turn HUD on/off
+-- Select to Command Mode on/off
+-- Left/Right/Up/Down to navigate Commands
+-- A to activate the Command Option
 
 -- Special thanks to Prof9, NMarkro, Risch, TL_Plexa, Mountebank, Tterraj42, TREZ, and TeamBN
 
@@ -25,6 +26,8 @@ function load_HUD()
 end
 
 local hud = load_HUD();
+
+console.clear();
 
 if hud then
     hud.initialize();

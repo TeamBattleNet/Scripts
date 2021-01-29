@@ -106,7 +106,6 @@ areas.names[0x88][0x01] = "Mayl's HP";
 areas.names[0x88][0x02] = "Dex's HP";
 areas.names[0x88][0x03] = "Yai's HP";
 areas.names[0x88][0x04] = "Tamako's HP";
-areas.names[0x88][0x05] = "???'s HP";
 
 areas.names[0x8A] = {}; -- Special Comps
 areas.names[0x8A][0x00] = "EduComputer";

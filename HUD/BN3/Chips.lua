@@ -410,5 +410,17 @@ chips.names[351] = "MstrStyl";
 -- Various Buster Shots & Special Attacks
 chips.names[384] = "Backup";
 
+chips.rng = {}; -- advancements of Main RNG
+chips.rng[  1] = 1; --"Cannon";
+chips.rng[  2] = 1; --"HiCannon";
+chips.rng[  3] = 1; --"M-Cannon";
+chips.rng[  4] = 1; --"AirShot1";
+chips.rng[  5] = 1; --"AirShot2";
+chips.rng[  6] = 1; --"AirShot3";
+chips.rng[ 10] = 0; --"ShotGun";
+chips.rng[ 11] = 0; --"V-Gun";
+chips.rng[ 12] = 0; --"SideGun";
+chips.rng[ 13] = 0; --"Spreader";
+
 return chips;
 

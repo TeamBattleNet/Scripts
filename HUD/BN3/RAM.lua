@@ -124,8 +124,8 @@ local bbs_jobs_new      = 0x020097A5; -- 1 byte ???
 local bbs_jobs_total    = 0x020097BA; -- 1 byte ???
 local game_state        = 0x020097F8; -- 1 byte
 local main_RNG          = 0x02009800; -- controls everything else
-local gamble_win        = 0x02009DB2; -- 1 byte, winning value
 local gamble_pick       = 0x02009DB1; -- 1 byte, current value
+local gamble_win        = 0x02009DB2; -- 1 byte, winning value
 
 local title_star_flags  = 0x0200A30A; -- 1 bit per star 0xFE
 
@@ -141,7 +141,7 @@ local draw_index        = 0x02034040; -- 1 byte each, battle chip draws, ends at
 local battle_HP_current = 0x02037294; -- 1 byte
 local battle_HP_max     = 0x02037296; -- 1 byte
 
-local version          = 0x080000AA; -- 1 byte, blue 0x42 or white 0x57
+local version           = 0x080000AA; -- 1 byte
 
 local style_elements = {}; -- FWEG but Elec is first, 1 indexed
 style_elements[0x00] = "None";
@@ -167,8 +167,9 @@ game_state_names[0x08] = "battle";
 game_state_names[0x0C] = "player_change"; -- jack-in/out
 game_state_names[0x14] = "splash";
 game_state_names[0x18] = "menu";
+game_state_names[0x30] = "credits";
 
--- Flags to find: Key Items, MDs, Jobs, Trades, Vines, Fires
+-- Flags to find: Beta Navis, Key Items, MDs, Jobs, Trades, Vines, Fires, Animals, Jack-Out Lock Out
 
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -176,7 +177,9 @@ game_state_names[0x18] = "menu";
 
 function ram.get_version()
     if memory.read_u8(version) == 0x42 then
-        return "Blue";
+        return "Blue/Black";
+    elseif memory.read_u8(version) == 0x45 then
+        return "EXE";
     elseif memory.read_u8(version) == 0x57 then
         return "White";
     end
@@ -219,22 +222,30 @@ function ram.in_menu()
     return ram.get_game_state() == 0x18;
 end
 
+function ram.in_credits()
+    return ram.get_game_state() == 0x30;
+end
+
+function ram.get_stars()
+    return memory.read_u8(title_star_flags);
+end
+
 -- Functions -> Location 
 
 function ram.get_area()
     return memory.read_u8(area);
 end
 
-function ram.set_area()
-    return memory.write_u8(area);
+function ram.set_area(new_area)
+    return memory.write_u8(area, new_area);
 end
 
 function ram.get_sub_area()
     return memory.read_u8(sub_area);
 end
 
-function ram.set_sub_area()
-    return memory.write_u8(sub_area);
+function ram.set_sub_area(new_sub_area)
+    return memory.write_u8(sub_area, new_sub_area);
 end
 
 function ram.get_area_group()
@@ -246,6 +257,10 @@ function ram.get_area_name()
         return ram.get_area_group()[ram.get_sub_area()] or "Unknown Sub Area";
     end
     return "Unknown Area";
+end
+
+function ram.check_area_name(main_area, sub_area)
+    return ram.areas.names[main_area] and ram.areas.names[main_area][sub_area];
 end
 
 function ram.in_real_world()
@@ -305,28 +320,12 @@ function ram.add_check(some_check)
     ram.set_check(ram.get_check() + some_check);
 end
 
-function ram.get_gamble_win()
-    return memory.read_u8(gamble_win);
+function ram.get_sneak()
+    return memory.read_u32_le(sneak);
 end
 
-function ram.get_gamble_win()
-    return memory.read_u8(gamble_pick);
-end
-
-function ram.is_gambling()
-    if ram.get_area() == 0x8C then -- Sub Comps
-        if ram.get_sub_area() == 0x02 or ram.get_sub_area() == 0x08 or ram.get_sub_area() == 0x0C then
-            return true; -- Vending Comp (SciLab) or TV Board Comp or Vending Comp (Hospital)
-        end
-    end
-    return false;
-end
-
-function ram.in_Secret_3()
-    if ram.get_area() == 0x95 and ram.get_sub_area() == 0x02 then
-        return true; -- Bug Frag Trader
-    end
-    return false;
+function ram.reset_sneak(new_sneak)
+    memory.write_u32_le(sneak, 6000);
 end
 
 -- Functions -> Inventory
@@ -376,6 +375,10 @@ function ram.get_chip_code(code)
 end
 
 -- Functions -> Mega Man
+
+function ram.get_max_HP()
+    return memory.read_u16_le(world_HP_max);
+end
 
 function ram.get_style_type()
     return bit.rshift(bit.band(memory.read_u8(style_stored), 0x38), 3);
@@ -440,7 +443,7 @@ end
 
 function ram.get_draw_slots()
     slots = {};
-    for i=1,30 do -- check off by 1
+    for i=1,30 do
         slots[i] = ram.get_draw_slot(i);
     end
     return slots;
@@ -464,6 +467,30 @@ function ram.get_GMD_value()
     return memory.read_u32_le(GMD_value);
 end
 
+function ram.get_gamble_pick()
+    return memory.read_u8(gamble_pick);
+end
+
+function ram.get_gamble_win()
+    return memory.read_u8(gamble_win);
+end
+
+function ram.is_gambling()
+    if ram.get_area() == 0x8C then -- Sub Comps
+        if ram.get_sub_area() == 0x02 or ram.get_sub_area() == 0x08 or ram.get_sub_area() == 0x0C then
+            return true; -- Vending Comp (SciLab) or TV Board Comp or Vending Comp (Hospital)
+        end
+    end
+    return false;
+end
+
+function ram.in_Secret_3()
+    if ram.get_area() == 0x95 and ram.get_sub_area() == 0x02 then
+        return true; -- Bug Frag Trader
+    end
+    return false;
+end
+
 ------------------------------------------------------------------------------------------------------------------------
 
 -- Encounter Tracking and Avoidance
@@ -479,7 +506,7 @@ ram.skip_encounters = false;
 local function encounter_check()
     if ram.in_world() then
         if ram.get_check() < last_encounter_check then
-            last_encounter_check = 0; -- area reloaded or state loaded
+            last_encounter_check = 0; -- dodged encounter or area (re)load or state loaded
         elseif ram.get_check() > last_encounter_check then
             last_encounter_check = ram.get_check();
         end
