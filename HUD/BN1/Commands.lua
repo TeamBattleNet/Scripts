@@ -108,6 +108,15 @@ options.doit = function(value) ram.add_powerups_available(value); end;
 table.insert(commands, options);
 
 options = {};
+table.insert(options, {value = 53; text = "Give 53 IceBlock"});
+table.insert(options, {value =  1; text = "Give  1 IceBlock"});
+table.insert(options, {value = -1; text = "Take  1 IceBlock"});
+options.selection = 1; -- default option
+options.description = function() return string.format("Modify IceBlocks: %u", ram.get_IceBlock_available()); end;
+options.doit = function(value) ram.add_IceBlock_available(value); end;
+table.insert(commands, options);
+
+options = {};
 table.insert(options, {value =  9999; text = "Increase Steps by 9999"});
 table.insert(options, {value =    64; text = "Increase Steps by   64"});
 table.insert(options, {value =     2; text = "Increase Steps by    2"});

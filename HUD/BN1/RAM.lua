@@ -37,13 +37,9 @@ https://problemkaputt.de/gbatek.htm#gbamemorymap
 
 -- Addresses -> 02000000-0203FFFF - On-board Work RAM (WRAM) (256 KBytes)
 
-local magic_flag         = 0x0200001D; -- 0x00010000 (progress must be == 0x54)
+local magic_flag         = 0x0200001D; -- 0x---10--- (progress must be == 0x54)
 
-local fires_flags_1      = 0x02000070; -- fire flags
-local fires_flags_2      = 0x02000071; -- fire flags
-local fires_flags_3      = 0x02000072; -- fire flags
-local fires_flags_4      = 0x02000073; -- fire flags
-local fires_flags_4      = 0x02000073; -- fire flags
+local fires_flags        = 0x02000070; -- 4 bytes, 32 fire bit flags
 
 local folder_ID          = 0x020001C0; -- 1 byte, chip  ID  of folder slot 1, ends at TBD
 local folder_code        = 0x020001C1; -- 1 byte, chip Code of folder slot 1, ends at TBD
@@ -193,7 +189,7 @@ function ram.get_magic_byte()
 end
 
 function ram.is_magic_bit_set()
-    if bit.band(ram.get_magic_byte(), 0x10) == 0x10 then
+    if bit.band(ram.get_magic_byte(), 0x18) == 0x10 then
         return true;
     end
     return false;
@@ -326,6 +322,23 @@ function ram.get_mega_level()
     -- TODO: Calculate and return Mega Man's level
 end
 
+function ram.get_IceBlock_available()
+    return memory.read_u8(IceBlock_count);
+end
+
+function ram.set_IceBlock_available(new_IceBlock_available)
+    if new_IceBlock_available < 0 then
+        new_IceBlock_available = 0;
+    elseif new_IceBlock_available > 53 then
+        new_IceBlock_available = 53;
+    end
+    return memory.write_u8(IceBlock_count, new_IceBlock_available);
+end
+
+function ram.add_IceBlock_available(some_IceBlock)
+    ram.set_IceBlock_available(ram.get_IceBlock_available() + some_IceBlock);
+end
+
 function ram.get_powerups_available()
     return memory.read_u8(powerups_available);
 end
@@ -381,6 +394,26 @@ end
 
 function ram.near_number_doors() -- School Comps or WWW Comp 2
     return ram.get_area() == 0x80 or (ram.get_area() == 0x85 and ram.get_sub_area() == 0x01);
+end
+
+function ram.get_fire_flags()
+    return memory.read_u32_le(fires_flags);
+end
+
+function ram.ignite_oven_fires()
+    --memory.write_u32_le(fires_flags, 0x00000000);
+end
+
+function ram.extinguish_oven_fires()
+    --memory.write_u32_le(fires_flags, 0xFFFFFFFF);
+end
+
+function ram.ignite_WWW_fires()
+    --memory.write_u32_le(fires_flags, 0x00000000);
+end
+
+function ram.extinguish_WWW_fires()
+    --memory.write_u32_le(fires_flags, 0xFFFFFFFF);
 end
 
 ------------------------------------------------------------------------------------------------------------------------

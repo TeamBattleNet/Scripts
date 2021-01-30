@@ -112,15 +112,21 @@ local function display_routing()
     x = 590;
     y =  16;
     display_ramdom_words(0x02000030, 6, 4);
-    x = 290;
+    x = 190;
+    y = 120;
+    to_screen(string.format("%08X: %08X", 0x02000070, memory.read_u32_le(0x02000070)));
+    x = 390;
     y = 120;
     to_screen(string.format("%08X: %02X", 0x02000216, memory.read_u8(0x02000216)));
-    x = 430;
+    x = 530;
     y = 120;
     to_screen(ram.is_go_mode());
-    x = 490;
+    x = 590;
     y = 120;
     to_screen(string.format("%08X: %02X", 0x0200001D, memory.read_u8(0x0200001D)));
+    x = 720;
+    y = 120;
+    to_screen(string.format("IB:%2u", ram.get_IceBlock_available()));
 end
 
 local function display_commands()
