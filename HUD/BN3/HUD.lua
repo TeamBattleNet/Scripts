@@ -4,12 +4,12 @@
 -- Start to turn HUD on/off
 -- Select to Command Mode on/off
 -- Left/Right/Up/Down to navigate Commands
--- A to activate the Command Option
+-- B to activate the Command Option
 
 -- https://docs.google.com/spreadsheets/d/1MILb--rcdUO4iVRPpAM9B4qUvD0XDJodoHaqWnozXeM/pubhtml Did you check the notes?
 
 local hud = {};
-hud.version = "0.1.2.1";
+hud.version = "0.1.2.2";
 
 local ram = require("BN3/RAM");
 local commands = require("BN3/Commands");
@@ -26,7 +26,7 @@ end
 
 local function position_top_left()
     if     ram.in_battle() then             -- align with HP
-        x = 10;
+        x =  0;
         y = 70;
     elseif ram.in_world() then
         if ram.in_digital_world() then      -- align with HP
@@ -44,7 +44,7 @@ local function position_top_left()
 end
 
 local function position_bottom_right()
-    x = 2;
+    x = 3;
     y = 3;
     anchor = "bottomright";
 end
@@ -95,7 +95,7 @@ local function display_draws(how_many, start_at)
 end
 
 local function display_in_menu()
-
+    to_screen("TODO: Menu HUD");
 end
 
 local function display_game_info()
@@ -106,29 +106,47 @@ local function display_game_info()
     to_screen("");
     to_screen("Current Style: " .. ram.get_style_name());
     to_screen("Next Element : " .. ram.get_next_element_name());
-    to_screen("Zenny    : " .. ram.get_zenny());
-    to_screen("Bug Frags: " .. ram.get_bug_frags());
-    to_screen("Max HP   : " .. ram.get_max_HP());
+    to_screen(string.format("Zenny    : %6u", ram.get_zenny()));
+    to_screen(string.format("Bug Frags: %4u", ram.get_bug_frags()));
+    to_screen(string.format("Max HP   : %4u", ram.get_max_HP()));
     -- TODO: Library Stats
+end
+
+local function display_routing()
+    position_top_left();
+    x = 390;
+    y =  16;
+    to_screen("TODO: Routing HUD");
+end
+
+local function display_commands()
+    position_top_left();
+    x = 290;
+    y =  32;
+    options = commands.display_options();
+    for i=1,table.getn(options) do
+        to_screen(options[i]);
+    end
 end
 
 ------------------------------------------------------------------------------------------------------------------------
 
 local show_HUD = true;
+
+local routing_mode = false;
 local command_mode = false;
 
 local function display_HUD()
-    if command_mode then
-        position_top_left();
-        x = 287;
-        y = 16;
-        options = commands.display_options();
-        for i=1,table.getn(options) do
-            to_screen(options[i]);
-        end
+    if routing_mode then
+        display_routing();
     end
+    
+    if command_mode then
+        display_commands();
+    end
+    
     position_top_left();
-    if ram.in_title() then
+    if ram.in_title() or ram.in_splash() then
         display_game_info();
         to_screen("");
         display_RNG();
@@ -145,7 +163,6 @@ local function display_HUD()
         position_bottom_right();
         to_screen(ram.get_area_name());
     elseif ram.in_battle() then
-        x = x - 12;
         display_draws(9);
         position_top_left();
         x = x + 71;
@@ -159,9 +176,7 @@ local function display_HUD()
     elseif ram.in_transition() then
         to_screen("HUD Version: " .. hud.version);
         position_bottom_right();
-        to_screen("For the best emotes on Twitch, go subscribe to Twitch.tv/xKilios and you to can xkilioDab!");
-    elseif ram.in_splash() then
-        display_game_info();
+        to_screen("For the best emotes on Twitch, go subscribe to twitch.tv/subs/xKilios and you to can xkilioDab!");
     elseif ram.in_menu() then
         display_in_menu();
     elseif ram.in_credits() then
@@ -196,27 +211,31 @@ function hud.update()
     end
     
     if show_HUD then
-        if (keys.L and keys.R) and (keys.Select and not previous_keys.Select) then
-            command_mode = not command_mode;
-        elseif buttons.Grave and not previous_buttons.Grave then -- Grave is `
-            command_mode = not command_mode;
-        end
-        
         if (keys.L and keys.R) or command_mode then
-            if     keys.Right and not previous_keys.Right then
+            if     keys.Select and not previous_keys.Select then
+                command_mode = not command_mode;
+            elseif keys.Right  and not previous_keys.Right  then
                 commands.next();
-            elseif keys.Left  and not previous_keys.Left  then
+            elseif keys.Left   and not previous_keys.Left   then
                 commands.previous();
-            elseif keys.Up    and not previous_keys.Up    then
+            elseif keys.Up     and not previous_keys.Up     then
                 commands.option_up();
-            elseif keys.Down  and not previous_keys.Down  then
+            elseif keys.Down   and not previous_keys.Down   then
                 commands.option_down();
-            elseif keys.B     and not previous_keys.B     then
+            elseif keys.B      and not previous_keys.B      then
                 commands.doit();
-            elseif keys.A     and not previous_keys.A     then
+            elseif keys.A      and not previous_keys.A      then
                 --print(ram.get_draw_slots());
                 --print(buttons);
                 --print(keys);
+            end
+        end
+        
+        if buttons.Grave and not previous_buttons.Grave then -- Grave is `
+            if buttons.Shift then
+                routing_mode = not routing_mode;
+            else
+                command_mode = not command_mode;
             end
         end
         

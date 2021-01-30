@@ -1,7 +1,6 @@
--- Commands for the HUD Script for MMBN 3, enjoy.
+-- Commands for the HUD Script for MMBN 1, enjoy.
 
-local ram = require("BN3/RAM");
-local resetter = require("BN3/Resetter");
+local ram = require("BN1/RAM");
 
 local controls = {};
 
@@ -49,7 +48,8 @@ end
 function controls.doit()
     local command = commands[command_index];
     local option = command[command.selection];
-    show_text("Executed: " .. option.text);
+    show_text("Executting: " .. command.description());
+    show_text("With Option: " .. option.text);
     command.doit(option.value);
 end
 
@@ -78,8 +78,8 @@ options.doit = function(value) return; end;
 table.insert(commands, options);
 
 options = {};
-table.insert(options, {value = false; text = "Allow Random Encounters"});
 table.insert(options, {value =  true; text = "Block Random Encounters"});
+table.insert(options, {value = false; text = "Allow Random Encounters"});
 options.selection = 1; -- default option
 options.description = function() return "Random Encounters: " .. tostring(not ram.skip_encounters); end;
 options.doit = function(value) ram.skip_encounters = value; end;
@@ -100,17 +100,11 @@ options.doit = function(value) ram.add_zenny(value); end;
 table.insert(commands, options);
 
 options = {};
-table.insert(options, {value =  1000; text = "Increase Bug Frags by 1000"});
-table.insert(options, {value =   100; text = "Increase Bug Frags by  100"});
-table.insert(options, {value =    10; text = "Increase Bug Frags by   10"});
-table.insert(options, {value =     1; text = "Increase Bug Frags by    1"});
-table.insert(options, {value =    -1; text = "Decrease Bug Frags by    1"});
-table.insert(options, {value =   -10; text = "Decrease Bug Frags by   10"});
-table.insert(options, {value =  -100; text = "Decrease Bug Frags by  100"});
-table.insert(options, {value = -1000; text = "Decrease Bug Frags by 1000"});
+table.insert(options, {value =  1; text = "Give 1 PowerUP"});
+table.insert(options, {value = -1; text = "Take 1 PowerUP"});
 options.selection = 1; -- default option
-options.description = function() return string.format("Modify Bug Frags: %u", ram.get_bug_frags()); end;
-options.doit = function(value) ram.add_bug_frags(value); end;
+options.description = function() return string.format("Modify PowerUPs: %u", ram.get_powerups_available()); end;
+options.doit = function(value) ram.add_powerups_available(value); end;
 table.insert(commands, options);
 
 options = {};
@@ -128,38 +122,26 @@ options.doit = function(value) ram.add_steps(value); end;
 table.insert(commands, options);
 
 options = {};
-table.insert(options, {value =  100; text = "Increase Main RNG by 100"});
-table.insert(options, {value =   10; text = "Increase Main RNG by  10"});
-table.insert(options, {value =    1; text = "Increase Main RNG by   1"});
-table.insert(options, {value =   -1; text = "Decrease Main RNG by   1"});
-table.insert(options, {value =  -10; text = "Decrease Main RNG by  10"});
-table.insert(options, {value = -100; text = "Decrease Main RNG by 100"});
+table.insert(options, {value =  1000; text = "Increase RNG by 1000"});
+table.insert(options, {value =   100; text = "Increase RNG by  100"});
+table.insert(options, {value =    10; text = "Increase RNG by   10"});
+table.insert(options, {value =     1; text = "Increase RNG by    1"});
+table.insert(options, {value =    -1; text = "Decrease RNG by    1"});
+table.insert(options, {value =   -10; text = "Decrease RNG by   10"});
+table.insert(options, {value =  -100; text = "Decrease RNG by  100"});
+table.insert(options, {value = -1000; text = "Decrease RNG by 1000"});
 options.selection = 1; -- default option
-options.description = function() return string.format("Modify Main RNG: %4s: %08X", (ram.rng.get_main_RNG_index() or "????"), ram.rng.get_main_RNG_value()); end;
-options.doit = function(value) ram.rng.adjust_main_RNG(value); end;
+options.description = function() return string.format("Modify RNG: %4s: %08X", (ram.rng.get_RNG_index() or "????"), ram.rng.get_RNG_value()); end;
+options.doit = function(value) ram.rng.adjust_RNG(value); end;
 table.insert(commands, options);
 
 options = {};
-table.insert(options, {value =  100; text = "Increase Lazy RNG by 100"});
-table.insert(options, {value =   10; text = "Increase Lazy RNG by  10"});
-table.insert(options, {value =    1; text = "Increase Lazy RNG by   1"});
-table.insert(options, {value =   -1; text = "Decrease Lazy RNG by   1"});
-table.insert(options, {value =  -10; text = "Decrease Lazy RNG by  10"});
-table.insert(options, {value = -100; text = "Decrease Lazy RNG by 100"});
-options.selection = 1; -- default option
-options.description = function() return string.format("Modify Lazy RNG: %4s: %08X", (ram.rng.get_lazy_RNG_index() or "????"), ram.rng.get_lazy_RNG_value()); end;
-options.doit = function(value) ram.rng.adjust_lazy_RNG(value); end;
-table.insert(commands, options);
-
-options = {};
-table.insert(options, {value = 0x00; text = "ACDC Town  "});
-table.insert(options, {value = 0x01; text = "ACDC School"});
-table.insert(options, {value = 0x02; text = "SciLab     "});
-table.insert(options, {value = 0x03; text = "Yoka       "});
-table.insert(options, {value = 0x04; text = "Beach      "});
-table.insert(options, {value = 0x05; text = "Hades      "});
-table.insert(options, {value = 0x06; text = "Hospital   "});
-table.insert(options, {value = 0x07; text = "WWW Base   "});
+table.insert(options, {value = 0x00; text = "ACDC Elementary   "});
+table.insert(options, {value = 0x01; text = "ACDC Town         "});
+table.insert(options, {value = 0x02; text = "Government Complex"});
+table.insert(options, {value = 0x03; text = "Dentown           "});
+table.insert(options, {value = 0x04; text = "SciLab Basement   "});
+table.insert(options, {value = 0x05; text = "WWW Base          "});
 options.selection = 1; -- default option
 options.description = function() return "Pick Real World Main Area: " .. ram.get_area_name(); end;
 options.doit = function(value) if ram.does_area_exist(value, ram.get_sub_area()) then ram.set_area(value); end end;
@@ -188,41 +170,21 @@ options.doit = function(value) if ram.does_area_exist(ram.get_area(), value) the
 table.insert(commands, options);
 
 options = {};
-table.insert(options, {value = 0x80; text = "Principal's PC"});
-table.insert(options, {value = 0x81; text = "Zoo Comps     "});
-table.insert(options, {value = 0x82; text = "Hospital Comps"});
-table.insert(options, {value = 0x83; text = "WWW Comps     "});
-table.insert(options, {value = 0x88; text = "Homepages     "});
-table.insert(options, {value = 0x8A; text = "Special Comps "});
-table.insert(options, {value = 0x8C; text = "Small Comps 1 "});
-table.insert(options, {value = 0x8D; text = "Small Comps 2 "});
-table.insert(options, {value = 0x90; text = "ACDC Area     "});
-table.insert(options, {value = 0x91; text = "SciLab Area   "});
-table.insert(options, {value = 0x92; text = "Yoka Area     "});
-table.insert(options, {value = 0x93; text = "Beach Area    "});
-table.insert(options, {value = 0x94; text = "Undernet      "});
-table.insert(options, {value = 0x95; text = "Secret Area   "});
+table.insert(options, {value = 0x80; text = "School Comps            "});
+table.insert(options, {value = 0x81; text = "Oven Comps              "});
+table.insert(options, {value = 0x82; text = "Waterworks Comps        "});
+table.insert(options, {value = 0x83; text = "Traffic Light Comps     "});
+table.insert(options, {value = 0x84; text = "Power Plant Comps       "});
+table.insert(options, {value = 0x85; text = "WWW Comps               "});
+table.insert(options, {value = 0x88; text = "ACDC Homepages          "});
+table.insert(options, {value = 0x89; text = "Government Complex HPs 1"});
+table.insert(options, {value = 0x8A; text = "Dentown Homepages       "});
+table.insert(options, {value = 0x8B; text = "Government Complex HPs 2"});
+table.insert(options, {value = 0x8C; text = "Miscellaneous Comps     "});
+table.insert(options, {value = 0x90; text = "Internet                "});
 options.selection = 1; -- default option
 options.description = function() return "Pick Digital World Main Area: " .. ram.get_area_name(); end;
 options.doit = function(value) if ram.does_area_exist(value, ram.get_sub_area()) then ram.set_area(value); end end;
-table.insert(commands, options);
-
-options = {};
-table.insert(options, {value = { frame =  67; hard = false; }; text = "First Possible    (Soft)"});
-table.insert(options, {value = { frame =  67; hard = true;  }; text = "First Possible    (Hard)"});
-table.insert(options, {value = { frame = 100; hard = true;  }; text = "PressA on 100     (Hard)"});
-table.insert(options, {value = { frame = 132; hard = true;  }; text = "Wind Star         (Hard)"});
-table.insert(options, {value = { frame = 133; hard = true;  }; text = "CopyMan Chain     (Hard)"});
-table.insert(options, {value = { frame = 137; hard = false; }; text = "US Gamble         (Soft)"});
-table.insert(options, {value = { frame = 170; hard = true;  }; text = "IceBall           (Hard)"});
-table.insert(options, {value = { frame = 170; hard = false; }; text = "IceBall           (Soft)"});
-table.insert(options, {value = { frame = 173; hard = true;  }; text = "BubbleMan Beta    (Hard)"});
-table.insert(options, {value = { frame = 200; hard = true;  }; text = "PressA on 200     (Hard)"});
-table.insert(options, {value = { frame = 300; hard = true;  }; text = "PressA on 300     (Hard)"});
-table.insert(options, {value = { frame = 600; hard = true;  }; text = "PressA on 600     (Hard)"});
-options.selection = 1; -- default option
-options.description = function() return string.format("Reset for Main RNG to be: %3u", options[options.selection].value.frame+17); end;
-options.doit = function(value) resetter.reset(value.frame, value.hard); end;
 table.insert(commands, options);
 
 return controls;

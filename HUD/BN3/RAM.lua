@@ -35,7 +35,11 @@ Unused Memory Area
 https://problemkaputt.de/gbatek.htm#gbamemorymap
 --]]
 
--- Addresses -- 02000000-0203FFFF - On-board Work RAM (WRAM) (256 KBytes)
+-- GMD_value and number_code use the same address
+-- Pressing LButton during CopyMan skip could be an exploit
+-- Flags to find: Beta Navis, Key Items, MDs, Jobs, Trades, Vines, Fires, Animals, Jack-Out Lock Out
+
+-- Addresses -> 02000000-0203FFFF - On-board Work RAM (WRAM) (256 KBytes)
 
 local folder_state      = 0x02000040; -- 1 byte
 local HP_memory_value   = 0x02000150; -- 1 byte ???
@@ -98,10 +102,10 @@ local cursor_ID         = 0x02007D14; -- 2 bytes? chip ID of cursor
 local cursor_code       = 0x02007D18; -- 2 bytes? chip Code of cursor
 local folder_or_pack    = 0x02007DD3; -- 1 byte, 26 == folder, 8 == pack
 
-local your_x1           = 0x02008F54; -- 2 bytes graphical position?
-local your_y1           = 0x02008F56; -- 2 bytes graphical position?
-local your_x2           = 0x02008F58; -- 2 bytes actual position?
-local your_y2           = 0x02008F5A; -- 2 bytes actual position?
+local your_X            = 0x02008F54; -- 2 bytes freezing doesn't prevent movement???
+local your_Y            = 0x02008F56; -- 2 bytes freezing doesn't prevent movement???
+local map_offset_x      = 0x02008F58; -- 2 bytes % 256 to scroll screen
+local map_offset_y      = 0x02008F5A; -- 2 bytes % 256 to scroll screen
 
 local folder_cursor     = 0x020093E2; -- 2 bytes?, cursor value in the folder
 local folder_offset     = 0x020093E6; -- 2 bytes?, offset value in the folder
@@ -119,11 +123,11 @@ local interact_with     = 0x02009481; -- 1 byte ???
 local interact_offset   = 0x020094AC; -- 4 bytes ???
 local GMD_value         = 0x020094B8; -- 2 bytes, how to decode?
 local number_code       = 0x020094B8; -- 1 byte per 8 digits
-local lazy_RNG          = 0x02009730; -- controls encounter ID and chip draws
+local lazy_RNG          = 0x02009730; -- 4 bytes, controls encounter ID and chip draws
 local bbs_jobs_new      = 0x020097A5; -- 1 byte ???
 local bbs_jobs_total    = 0x020097BA; -- 1 byte ???
 local game_state        = 0x020097F8; -- 1 byte
-local main_RNG          = 0x02009800; -- controls everything else
+local main_RNG          = 0x02009800; -- 4 bytes, controls everything else
 local gamble_pick       = 0x02009DB1; -- 1 byte, current value
 local gamble_win        = 0x02009DB2; -- 1 byte, winning value
 
@@ -137,11 +141,15 @@ local battle_field      = 0x0200F47E; -- 8*3 bytes, current battlefield
 local pack_ID           = 0x0201881C; -- 2 bytes, chip ID of pack
 local pack_code         = 0x0201880A; -- 2 bytes, chip code of pack
 
-local battle_draw_slots = 0x02034040; -- 1 byte each, battle chip draws, ends at 0x0203405D
+local battle_draw_slots = 0x02034040; -- 1 byte each, in battle chip draws, ends at 0x0203405D
 local battle_HP_current = 0x02037294; -- 1 byte
 local battle_HP_max     = 0x02037296; -- 1 byte
 
+-- Addresses -> 08000000-09FFFFFF - Game Pak ROM/FlashROM (max 32MB)
+
 local version           = 0x080000AA; -- 1 byte
+
+------------------------------------------------------------------------------------------------------------------------
 
 local style_elements = {}; -- FWEG but Elec is first, 1 indexed
 style_elements[0x00] = "None";
@@ -167,13 +175,10 @@ game_state_names[0x08] = "battle";
 game_state_names[0x0C] = "player_change"; -- jack-in/out
 game_state_names[0x14] = "splash";
 game_state_names[0x18] = "menu";
+--game_state_names[0x1C] = "shop";      -- from BN 1
+--game_state_names[0x20] = "game_over"; -- from BN 1
+--game_state_names[0x24] = "trader";    -- from BN 1
 game_state_names[0x30] = "credits";
-
--- GMD_value and number_code use the same address
--- Pressing LButton during CopyMan skip could be an exploit
--- Flags to find: Beta Navis, Key Items, MDs, Jobs, Trades, Vines, Fires, Animals, Jack-Out Lock Out
-
-------------------------------------------------------------------------------------------------------------------------
 
 -- Functions -> Game State
 
@@ -232,7 +237,7 @@ function ram.get_stars()
     return memory.read_u8(title_star_flags);
 end
 
--- Functions -> Location 
+-- Functions -> Position 
 
 function ram.get_area()
     return memory.read_u8(area);
@@ -250,18 +255,17 @@ function ram.set_sub_area(new_sub_area)
     return memory.write_u8(sub_area, new_sub_area);
 end
 
-function ram.get_area_group()
-    return ram.areas.names[ram.get_area()];
-end
-
 function ram.get_area_name()
-    if ram.get_area_group() then
-        return ram.get_area_group()[ram.get_sub_area()] or "Unknown Sub Area";
+    if ram.areas.names[ram.get_area()] then
+        if ram.areas.names[ram.get_area()][ram.get_sub_area()] then
+            return ram.areas.names[ram.get_area()][ram.get_sub_area()];
+        end
+        return "Unknown Sub Area";
     end
     return "Unknown Area";
 end
 
-function ram.check_area_name(main_area, sub_area)
+function ram.does_area_exist(main_area, sub_area)
     return ram.areas.names[main_area] and ram.areas.names[main_area][sub_area];
 end
 
@@ -277,19 +281,11 @@ function ram.in_digital_world()
 end
 
 function ram.get_x()
-    return memory.read_s16_le(your_x2);
-end
-
-function ram.set_x()
-    return memory.write_s16_le(your_x2); -- untested
+    return memory.read_s16_le(your_X);
 end
 
 function ram.get_y()
-    return memory.read_s16_le(your_y2);
-end
-
-function ram.set_y()
-    return memory.write_s16_le(your_y2); -- untested
+    return memory.read_s16_le(your_Y);
 end
 
 function ram.get_steps()
@@ -508,7 +504,7 @@ ram.skip_encounters = false;
 local function encounter_check()
     if ram.in_world() then
         if ram.get_check() < last_encounter_check then
-            last_encounter_check = 0; -- dodged encounter or area (re)load or state loaded
+            last_encounter_check = 0; -- dodged encounter or area (re)load or state load
         elseif ram.get_check() > last_encounter_check then
             last_encounter_check = ram.get_check();
         end

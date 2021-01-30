@@ -1,112 +1,134 @@
--- RNG Value Generator for MMBN 1 Scripting by Tterraj42, enjoy.
+-- RNG Value Generator for MMBN 1 Scripting, enjoy.
 
 local rng = {};
 
--- RAM Addresses
+-- RAM Address
 
-local RNG_Addr = 0x02006CC0; -- resets and pauses on title screen
+local RNG_address = 0x02006CC0; -- resets and pauses on the title screen
 
 -- local variables
 
-local cur_index = 0;
-local max_index = 0;
-local previous_index = 0;
-local values_per_frame = 10 * 60; -- 10 seconds of frames
+local current_RNG_index = 0;
+local maximum_RNG_index = 60 * 60; -- minimum value
+local previous_RNG_index = 0;
+local previous_RNG_value = 0;
+local maximum_calculations_per_frame = 5 * 60; -- large values will run slowly on older PCs
 
--- Create RNG lookup table
+-- RNG Functions
 
 function rng.simulate_RNG(seed)
-	-- seed = ((seed << 1) + (seed >> 31) + 1) ^ 0x873CA9E5;
-	return bit.bxor((bit.lshift(seed,1) + bit.rshift(seed, 31) + 1), 0x873CA9E5);
+    -- seed = ((seed << 1) + (seed >> 31) + 1) ^ 0x873CA9E5;
+    return bit.bxor((bit.lshift(seed,1) + bit.rshift(seed, 31) + 1), 0x873CA9E5);
 end
 
+function rng.calculate_RNG_delta(temp, goal)
+    for delta=0,maximum_calculations_per_frame do
+        if temp == goal then
+            return delta;
+        end
+        temp = rng.simulate_RNG(temp);
+    end
+    return nil;
+end
+
+-- Create lookup table
+
 function rng.initialize_table()
-	rng.value = {};
-	rng.index = {};
-	rng.value[0] = 0;
-	rng.index[0] = 0;
-	rng.value[1] = 0xA338244F;
-	rng.index[0xA338244F] = 1;
-	
-	cur_index = 1
+    rng.value = {};
+    rng.index = {};
+    rng.value[0] = 0;
+    rng.index[0] = 0;
+    rng.value[1] = 0xA338244F;
+    rng.index[0xA338244F] = 1;
+    
+    current_RNG_index = 1;
 end
 
 function rng.expand_table(by_this_many)
-	for i=1, by_this_many do
-		local RNG_next = rng.simulate_RNG(rng.value[cur_index]);
-		rng.value[cur_index+1] = RNG_next;
-		rng.index[RNG_next] = cur_index+1;
-		
-		cur_index = cur_index + 1
-	end
+    for i=1, by_this_many do
+        local RNG_next = rng.simulate_RNG(rng.value[current_RNG_index]);
+        
+        current_RNG_index = current_RNG_index + 1;
+        
+        rng.value[current_RNG_index] = RNG_next;
+        rng.index[RNG_next] = current_RNG_index;
+    end
 end
 
--- Functions
+-- RAM Functions
 
 function rng.get_RNG_value()
-	return memory.read_u32_le(RNG_Addr);
+    return memory.read_u32_le(RNG_address);
 end
 
 function rng.set_RNG_value(new_rng)
-	memory.write_u32_le(RNG_Addr, new_rng);
+    memory.write_u32_le(RNG_address, new_rng);
 end
 
 function rng.get_RNG_index()
-	return rng.index[memory.read_u32_le(RNG_Addr)]; -- could be nil
+    return rng.index[rng.get_RNG_value()]; -- will be nil for values above maximum_RNG_index
 end
 
 function rng.set_RNG_index(new_index)
-	if 0 < new_index and new_index <= cur_index then
-		memory.write_u32_le(RNG_Addr, rng.value[new_index]);
-	end
+    if 1 <= new_index and new_index <= current_RNG_index then
+        rng.set_RNG_value(rng.value[new_index]);
+    end
 end
 
 function rng.get_RNG_delta()
-	local RNG_index = rng.get_RNG_index();
-	if RNG_index and previous_index then
-		return RNG_index - previous_index;
-	end
-	return nil;
+    return rng.calculate_RNG_delta(previous_RNG_value, rng.get_RNG_value());
+end
+
+function rng.get_RNG_delta_from_index()
+    local RNG_index = rng.get_RNG_index();
+    if RNG_index and previous_RNG_index then
+        return RNG_index - previous_RNG_index;
+    end
+    return nil;
 end
 
 function rng.adjust_RNG(steps)
-	local RNG_index = rng.get_RNG_index();
-	
-	if not RNG_index then
-		return
-	end
-	
-	local new_index = RNG_index + steps; -- steps could be negative
-	
-	if new_index < 1 then
-		new_index = 1;
-	end
-	
-	if new_index > cur_index then
-		new_index = cur_index;
-	end
-	
-	rng.set_RNG_index(new_index);
+    local RNG_index = rng.get_RNG_index();
+    
+    if not RNG_index then
+        return
+    end
+    
+    local new_index = RNG_index + steps;
+    
+    if new_index < 1 then -- steps could be negative
+        new_index = 1;
+    end
+    
+    if new_index > current_RNG_index then
+        new_index = current_RNG_index;
+    end
+    
+    rng.set_RNG_index(new_index);
 end
 
--- Controls
+-- Module Controls
 
 function rng.initialize(target_RNG_index)
-	if not target_RNG_index or target_RNG_index < values_per_frame then
-		target_RNG_index = values_per_frame;
-	end
-	max_index = target_RNG_index;
-	rng.initialize_table();
+    if target_RNG_index and target_RNG_index > maximum_RNG_index then
+        maximum_RNG_index = target_RNG_index;
+    end
+    rng.initialize_table();
+    print("Creating RNG Tables with max index of: " .. maximum_RNG_index);
 end
 
 function rng.update_pre()
-	if cur_index < max_index then
-		rng.expand_table(values_per_frame);
-	end
+    if current_RNG_index < maximum_RNG_index then
+        rng.expand_table(maximum_calculations_per_frame);
+        if current_RNG_index >= maximum_RNG_index then
+            print("RNG Table Created.");
+        end
+    end
 end
 
 function rng.update_post()
-	previous_index = rng.get_RNG_index();
+    previous_RNG_index = rng.get_RNG_index();
+    previous_RNG_value = rng.get_RNG_value();
 end
 
 return rng;

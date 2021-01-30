@@ -1,6 +1,6 @@
 -- Enemy names for MMBN 3 scripting, enjoy.
 
-local enemies = {};
+local enemies = {}; -- TODO: Replace with MMBN 1 enemies...
 
 enemies.names = {};
 enemies.names[  -1] = "Unknown";
