@@ -39,7 +39,7 @@ https://problemkaputt.de/gbatek.htm#gbamemorymap
 
 local magic_flag         = 0x0200001D; -- 0x---10--- (progress must be == 0x54)
 
-local fires_flags        = 0x02000070; -- 4 bytes, 32 fire bit flags
+local fire_flags         = 0x02000070; -- 4 bytes, 32 fire bit flags
 
 local folder_ID          = 0x020001C0; -- 1 byte, chip  ID  of folder slot 1, ends at TBD
 local folder_code        = 0x020001C1; -- 1 byte, chip Code of folder slot 1, ends at TBD
@@ -58,6 +58,20 @@ local battle_pointer     = 0x02003784; -- 4 bytes, pointer to current battle
 local battle_draw_slots  = 0x02004910; -- 1 byte each, in battle chip draws, ends at TBD
 local your_X             = 0x02004954; -- 2 bytes ???
 local your_Y             = 0x02004956; -- 2 bytes ???
+
+local enemy = {};
+enemy[1]      =         {}; -- TBD
+enemy[1].ID   = 0x02000000; -- TBD
+enemy[1].HP   = 0x02006790; -- 2 bytes
+enemy[1].text = 0x02004D30; -- 2 bytes, for counting down over time
+enemy[2]      =         {}; -- TBD
+enemy[2].ID   = 0x02000000; -- TBD
+enemy[2].HP   = 0x02006850; -- 2 bytes
+enemy[2].text = 0x020050A0; -- 2 bytes, for counting down over time
+enemy[3]      =         {}; -- TBD
+enemy[3].ID   = 0x02000000; -- TBD
+enemy[3].HP   = 0x02006910; -- 2 bytes
+enemy[3].text = 0x02005200; -- 2 bytes, for counting down over time
 
 local cursor_ID          = 0x020062E4; -- 1 byte, chip  ID  of cursor
 local cursor_code        = 0x020062E5; -- 1 byte, chip Code of cursor
@@ -83,7 +97,6 @@ local pack_code          = 0x0201900A; -- 1 byte, chip code of pack slot 1
 --local mega_level         = 0x02000000; -- 1 byte ???
 --local world_HP_max       = 0x02000000; -- 2 bytes ???
 --local title_star_flag    = 0x02000000; -- 1 bit for 1 star :)
---local battle_enemy_ID    = 0x02000000; -- 1 byte, per enemy up to 3
 
 -- Addresses -> 08000000-09FFFFFF - Game Pak ROM/FlashROM (max 32MB)
 
@@ -358,13 +371,24 @@ end
 
 -- Functions -> Battle Information
 
-function ram.get_enemy_ID(enemy_number) -- convert from 1 to 0 index
-    return -1;
-    --return memory.read_u8(battle_enemy_ID + enemy_number - 1);
+function ram.get_enemy_ID(which_enemy)
+    return memory.read_u8(enemy[which_enemy].ID);
 end
 
-function ram.get_enemy_name(enemy_number)
-    return ram.enemies.names[ram.get_enemy_ID(enemy_number)];
+function ram.get_enemy_name(which_enemy)
+    return ram.enemies.names[ram.get_enemy_ID(which_enemy)];
+end
+
+function ram.get_enemy_HP(which_enemy)
+    return memory.read_u16_le(enemy[which_enemy].HP);
+end
+
+function ram.set_enemy_HP(which_enemy, new_HP)
+    memory.write_u16_le(enemy[which_enemy].HP, new_HP);
+end
+
+function ram.kill_enemy(which_enemy)
+    ram.set_enemy_HP(which_enemy, 0);
 end
 
 function ram.get_draw_slot(which_slot) -- convert from 1 to 0 index, then back

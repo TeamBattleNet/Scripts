@@ -196,5 +196,14 @@ options.description = function() return "Pick Digital World Main Area: " .. ram.
 options.doit = function(value) if ram.does_area_exist(value, ram.get_sub_area()) then ram.set_area(value); end end;
 table.insert(commands, options);
 
+options = {};
+table.insert(options, {value = 1; text = "Kill Enemy 1"});
+table.insert(options, {value = 2; text = "Kill Enemy 2"});
+table.insert(options, {value = 3; text = "Kill Enemy 3"});
+options.selection = 1; -- default option
+options.description = function() return "Kill Which Enemy?"; end;
+options.doit = function(value) ram.kill_enemy(value); end;
+table.insert(commands, options);
+
 return controls;
 
