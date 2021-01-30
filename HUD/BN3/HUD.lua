@@ -9,8 +9,7 @@
 -- https://docs.google.com/spreadsheets/d/1MILb--rcdUO4iVRPpAM9B4qUvD0XDJodoHaqWnozXeM/pubhtml Did you check the notes?
 
 local hud = {};
-
-local HUD_version = "0.1.2.0";
+hud.version = "0.1.2.1";
 
 local ram = require("BN3/RAM");
 local commands = require("BN3/Commands");
@@ -95,8 +94,12 @@ local function display_draws(how_many, start_at)
     end
 end
 
+local function display_in_menu()
+
+end
+
 local function display_game_info()
-    to_screen("HUD  Version: " .. HUD_version);
+    to_screen("HUD  Version: " .. hud.version);
     to_screen("Game Version: " .. ram.get_version());
     to_screen(string.format("Star Flags: 0x%02X", ram.get_stars()));
     to_screen(string.format("Progress  : 0x%02X", ram.get_progress()));
@@ -111,10 +114,10 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------
 
-local display_HUD = true;
+local show_HUD = true;
 local command_mode = false;
 
-local function HUD()
+local function display_HUD()
     if command_mode then
         position_top_left();
         x = 287;
@@ -153,14 +156,17 @@ local function HUD()
         to_screen(ram.get_enemy_name(1));
         to_screen(ram.get_enemy_name(2));
         to_screen(ram.get_enemy_name(3));
-    elseif ram.in_transition() or ram.in_credits() then
-        to_screen("HUD Version: " .. HUD_version);
+    elseif ram.in_transition() then
+        to_screen("HUD Version: " .. hud.version);
         position_bottom_right();
-        to_screen("t r o u t", 0x10000000);
+        to_screen("For the best emotes on Twitch, go subscribe to Twitch.tv/xKilios and you to can xkilioDab!");
     elseif ram.in_splash() then
         display_game_info();
     elseif ram.in_menu() then
-        display_RNG();
+        display_in_menu();
+    elseif ram.in_credits() then
+        position_bottom_right();
+        to_screen("t r o u t", 0x10000000);
     else
         to_screen("Unknown Game State!");
     end
@@ -185,11 +191,11 @@ function hud.update()
     
     if keys.L and keys.R then
         if keys.Start and not previous_keys.Start then
-            display_HUD = not display_HUD;
+            show_HUD = not show_HUD;
         end
     end
     
-    if display_HUD then
+    if show_HUD then
         if (keys.L and keys.R) and (keys.Select and not previous_keys.Select) then
             command_mode = not command_mode;
         elseif buttons.Grave and not previous_buttons.Grave then -- Grave is `
@@ -228,7 +234,7 @@ function hud.update()
             end
         end
         
-        HUD();
+        display_HUD();
     end
     
     ram.update_post();

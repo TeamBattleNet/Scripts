@@ -49,7 +49,7 @@ end
 function controls.doit()
     local command = commands[command_index];
     local option = command[command.selection];
-    show_text("Executing: " .. option.text);
+    show_text("Executed: " .. option.text);
     command.doit(option.value);
 end
 
