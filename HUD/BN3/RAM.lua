@@ -118,7 +118,7 @@ local is_interacting    = 0x02009480; -- 1 byte ???
 local interact_with     = 0x02009481; -- 1 byte ???
 local interact_offset   = 0x020094AC; -- 4 bytes ???
 local GMD_value         = 0x020094B8; -- 2 bytes, how to decode?
-local number_trader     = 0x020094B8; -- 1 byte per 8 digits
+local number_code       = 0x020094B8; -- 1 byte per 8 digits
 local lazy_RNG          = 0x02009730; -- controls encounter ID and chip draws
 local bbs_jobs_new      = 0x020097A5; -- 1 byte ???
 local bbs_jobs_total    = 0x020097BA; -- 1 byte ???
@@ -137,7 +137,7 @@ local battle_field      = 0x0200F47E; -- 8*3 bytes, current battlefield
 local pack_ID           = 0x0201881C; -- 2 bytes, chip ID of pack
 local pack_code         = 0x0201880A; -- 2 bytes, chip code of pack
 
-local draw_index        = 0x02034040; -- 1 byte each, battle chip draws, ends at 0x0203405D
+local battle_draw_slots = 0x02034040; -- 1 byte each, battle chip draws, ends at 0x0203405D
 local battle_HP_current = 0x02037294; -- 1 byte
 local battle_HP_max     = 0x02037296; -- 1 byte
 
@@ -169,6 +169,8 @@ game_state_names[0x14] = "splash";
 game_state_names[0x18] = "menu";
 game_state_names[0x30] = "credits";
 
+-- GMD_value and number_code use the same address
+-- Pressing LButton during CopyMan skip could be an exploit
 -- Flags to find: Beta Navis, Key Items, MDs, Jobs, Trades, Vines, Fires, Animals, Jack-Out Lock Out
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -183,7 +185,7 @@ function ram.get_version()
     elseif memory.read_u8(version) == 0x57 then
         return "White";
     end
-    return "???";
+    return "???"; -- 1.0 or 1.1 differences?
 end
 
 function ram.get_progress()
@@ -434,9 +436,9 @@ function ram.get_enemy_name(enemy_number)
     return ram.enemies.names[ram.get_enemy_ID(enemy_number)];
 end
 
-function ram.get_draw_slot(which_slot) -- convert from 1 to 0 index
+function ram.get_draw_slot(which_slot) -- convert from 1 to 0 index, then back
     if 1 <= which_slot and which_slot <= 30 then
-        return memory.read_u8(draw_index + which_slot - 1) + 1;
+        return memory.read_u8(battle_draw_slots + which_slot - 1) + 1;
     end
     return -1;
 end

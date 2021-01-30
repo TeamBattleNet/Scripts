@@ -10,7 +10,7 @@
 
 local hud = {};
 
-local HUD_version = "0.1.1.1";
+local HUD_version = "0.1.1.2";
 
 local ram = require("BN3/RAM");
 local commands = require("BN3/Commands");
@@ -175,11 +175,13 @@ function hud.initialize()
 end
 
 local previous_keys = {};
+local previous_buttons = {};
 
 function hud.update()
     ram.update_pre();
     
     local keys = joypad.get();
+    local buttons = input.get();
     
     if keys.L and keys.R then
         if keys.Start and not previous_keys.Start then
@@ -188,34 +190,51 @@ function hud.update()
     end
     
     if display_HUD then
+        if (keys.L and keys.R) and (keys.Select and not previous_keys.Select) then
+            command_mode = not command_mode;
+        elseif buttons.Grave and not previous_buttons.Grave then -- Grave is `
+            command_mode = not command_mode;
+        end
+        
         if (keys.L and keys.R) or command_mode then
-            if keys.Select and not previous_keys.Select then
-                command_mode = not command_mode;
-            elseif display_HUD then
-                if     keys.Right and not previous_keys.Right then
-                    commands.next();
-                elseif keys.Left  and not previous_keys.Left  then
-                    commands.previous();
-                elseif keys.Up    and not previous_keys.Up    then
-                    commands.option_up();
-                elseif keys.Down  and not previous_keys.Down  then
-                    commands.option_down();
-                elseif keys.A     and not previous_keys.A     then
-                    commands.doit();
-                end
+            if     keys.Right and not previous_keys.Right then
+                commands.next();
+            elseif keys.Left  and not previous_keys.Left  then
+                commands.previous();
+            elseif keys.Up    and not previous_keys.Up    then
+                commands.option_up();
+            elseif keys.Down  and not previous_keys.Down  then
+                commands.option_down();
+            elseif keys.B     and not previous_keys.B     then
+                commands.doit();
+            elseif keys.A     and not previous_keys.A     then
+                --print(ram.get_draw_slots());
+                --print(buttons);
+                --print(keys);
+            end
+        end
+        
+        if command_mode then
+            if     buttons.Right   and not previous_buttons.Right   then
+                commands.next();
+            elseif buttons.Left    and not previous_buttons.Left    then
+                commands.previous();
+            elseif buttons.Up      and not previous_buttons.Up      then
+                commands.option_up();
+            elseif buttons.Down    and not previous_buttons.Down    then
+                commands.option_down();
+            elseif buttons.Keypad0 and not previous_buttons.Keypad0 then
+                commands.doit();
             end
         end
         
         HUD();
     end
     
-    if command_mode then
-        -- TODO: Disable game inputs while in settings mode
-    end
-    
     ram.update_post();
     
     previous_keys = keys;
+    previous_buttons = buttons;
 end
 
 return hud;

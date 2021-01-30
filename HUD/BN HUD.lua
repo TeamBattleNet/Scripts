@@ -4,7 +4,7 @@
 -- Start to turn HUD on/off
 -- Select to Command Mode on/off
 -- Left/Right/Up/Down to navigate Commands
--- A to activate the Command Option
+-- B to activate the Command Option
 
 -- Special thanks to Prof9, NMarkro, Risch, TL_Plexa, Mountebank, Tterraj42, TREZ, and TeamBN
 
