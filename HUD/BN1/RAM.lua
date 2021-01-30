@@ -388,7 +388,13 @@ function ram.set_enemy_HP(which_enemy, new_HP)
 end
 
 function ram.kill_enemy(which_enemy)
-    ram.set_enemy_HP(which_enemy, 0);
+    if which_enemy == 0 then
+        ram.set_enemy_HP(1, 0);
+        ram.set_enemy_HP(2, 0);
+        ram.set_enemy_HP(3, 0);
+    else
+        ram.set_enemy_HP(which_enemy, 0);
+    end
 end
 
 function ram.get_draw_slot(which_slot) -- convert from 1 to 0 index, then back
