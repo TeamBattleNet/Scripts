@@ -1,6 +1,7 @@
 -- Commands for the HUD Script for MMBN 3, enjoy.
 
 local ram = require("BN3/RAM");
+local resetter = require("BN3/Resetter");
 
 local controls = {};
 
@@ -48,7 +49,7 @@ end
 function controls.doit()
     local command = commands[command_index];
     local option = command[command.selection];
-    show_text(option.text);
+    show_text("Executing: " .. option.text);
     command.doit(option.value);
 end
 
@@ -77,27 +78,11 @@ options.doit = function(value) return; end;
 table.insert(commands, options);
 
 options = {};
-table.insert(options, {value =  100; text = "Increase Main RNG by 100"});
-table.insert(options, {value =   10; text = "Increase Main RNG by  10"});
-table.insert(options, {value =    1; text = "Increase Main RNG by   1"});
-table.insert(options, {value =   -1; text = "Decrease Main RNG by   1"});
-table.insert(options, {value =  -10; text = "Decrease Main RNG by  10"});
-table.insert(options, {value = -100; text = "Decrease Main RNG by 100"});
-options.selection = 3; -- default option
-options.description = function() return string.format("Modify Main RNG: %4s: %08X", (ram.rng.get_main_RNG_index() or "????"), ram.rng.get_main_RNG_value()); end;
-options.doit = function(value) ram.rng.adjust_main_RNG(value); end;
-table.insert(commands, options);
-
-options = {};
-table.insert(options, {value =  100; text = "Increase Lazy RNG by 100"});
-table.insert(options, {value =   10; text = "Increase Lazy RNG by  10"});
-table.insert(options, {value =    1; text = "Increase Lazy RNG by   1"});
-table.insert(options, {value =   -1; text = "Decrease Lazy RNG by   1"});
-table.insert(options, {value =  -10; text = "Decrease Lazy RNG by  10"});
-table.insert(options, {value = -100; text = "Decrease Lazy RNG by 100"});
-options.selection = 3; -- default option
-options.description = function() return string.format("Modify Lazy RNG: %4s: %08X", (ram.rng.get_lazy_RNG_index() or "????"), ram.rng.get_lazy_RNG_value()); end;
-options.doit = function(value) ram.rng.adjust_lazy_RNG(value); end;
+table.insert(options, {value = false; text = "Allow Random Encounters"});
+table.insert(options, {value =  true; text = "Block Random Encounters"});
+options.selection = 1; -- default option
+options.description = function() return "Random Encounters: " .. tostring(not ram.skip_encounters); end;
+options.doit = function(value) ram.skip_encounters = value; end;
 table.insert(commands, options);
 
 options = {};
@@ -140,6 +125,30 @@ table.insert(options, {value = -9999; text = "Decrease Steps by 9999"});
 options.selection = 4; -- default option
 options.description = function() return string.format("Modify Steps: %u", ram.get_steps()); end;
 options.doit = function(value) ram.add_steps(value); end;
+table.insert(commands, options);
+
+options = {};
+table.insert(options, {value =  100; text = "Increase Main RNG by 100"});
+table.insert(options, {value =   10; text = "Increase Main RNG by  10"});
+table.insert(options, {value =    1; text = "Increase Main RNG by   1"});
+table.insert(options, {value =   -1; text = "Decrease Main RNG by   1"});
+table.insert(options, {value =  -10; text = "Decrease Main RNG by  10"});
+table.insert(options, {value = -100; text = "Decrease Main RNG by 100"});
+options.selection = 3; -- default option
+options.description = function() return string.format("Modify Main RNG: %4s: %08X", (ram.rng.get_main_RNG_index() or "????"), ram.rng.get_main_RNG_value()); end;
+options.doit = function(value) ram.rng.adjust_main_RNG(value); end;
+table.insert(commands, options);
+
+options = {};
+table.insert(options, {value =  100; text = "Increase Lazy RNG by 100"});
+table.insert(options, {value =   10; text = "Increase Lazy RNG by  10"});
+table.insert(options, {value =    1; text = "Increase Lazy RNG by   1"});
+table.insert(options, {value =   -1; text = "Decrease Lazy RNG by   1"});
+table.insert(options, {value =  -10; text = "Decrease Lazy RNG by  10"});
+table.insert(options, {value = -100; text = "Decrease Lazy RNG by 100"});
+options.selection = 3; -- default option
+options.description = function() return string.format("Modify Lazy RNG: %4s: %08X", (ram.rng.get_lazy_RNG_index() or "????"), ram.rng.get_lazy_RNG_value()); end;
+options.doit = function(value) ram.rng.adjust_lazy_RNG(value); end;
 table.insert(commands, options);
 
 options = {};
@@ -199,11 +208,21 @@ options.doit = function(value) ram.set_area(value); end;
 table.insert(commands, options);
 
 options = {};
-table.insert(options, {value = false; text = "Allow Random Encounters"});
-table.insert(options, {value =  true; text = "Block Random Encounters"});
+table.insert(options, {value = { frame =  67; hard = false; }; text = "First Possible    (Soft)"});
+table.insert(options, {value = { frame =  67; hard = true;  }; text = "First Possible    (Hard)"});
+table.insert(options, {value = { frame = 100; hard = true;  }; text = "PressA on 100     (Hard)"});
+table.insert(options, {value = { frame = 132; hard = true;  }; text = "Wind Star         (Hard)"});
+table.insert(options, {value = { frame = 133; hard = true;  }; text = "CopyMan Chain     (Hard)"});
+table.insert(options, {value = { frame = 137; hard = false; }; text = "US Gamble         (Soft)"});
+table.insert(options, {value = { frame = 170; hard = true;  }; text = "IceBall           (Hard)"});
+table.insert(options, {value = { frame = 170; hard = false; }; text = "IceBall           (Soft)"});
+table.insert(options, {value = { frame = 173; hard = true;  }; text = "BubbleMan Beta    (Hard)"});
+table.insert(options, {value = { frame = 200; hard = true;  }; text = "PressA on 200     (Hard)"});
+table.insert(options, {value = { frame = 300; hard = true;  }; text = "PressA on 300     (Hard)"});
+table.insert(options, {value = { frame = 600; hard = true;  }; text = "PressA on 600     (Hard)"});
 options.selection = 1; -- default option
-options.description = function() return "Random Encounters: " .. tostring(not ram.skip_encounters); end;
-options.doit = function(value) ram.skip_encounters = value; end;
+options.description = function() return string.format("Reset for Main RNG to be: %3u", options[options.selection].value.frame+17); end;
+options.doit = function(value) resetter.reset(value.frame, value.hard); end;
 table.insert(commands, options);
 
 return controls;

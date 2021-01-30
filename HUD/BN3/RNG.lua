@@ -81,7 +81,7 @@ function rng.set_main_RNG_value(new_rng)
 end
 
 function rng.get_main_RNG_index()
-    return rng.main_index[memory.read_u32_le(main_RNG)]; -- could be nil
+    return rng.main_index[memory.read_u32_le(main_RNG)]; -- will be nil for values above max_RNG_index
 end
 
 function rng.set_main_RNG_index(new_index)
@@ -109,9 +109,9 @@ function rng.adjust_main_RNG(steps)
         return
     end
     
-    local new_index = main_RNG_index + steps; -- steps could be negative
+    local new_index = main_RNG_index + steps;
     
-    if new_index < 1 then
+    if new_index < 1 then -- steps could be negative
         new_index = 1;
     end
     
@@ -131,7 +131,7 @@ function rng.set_lazy_RNG_value(new_rng)
 end
 
 function rng.get_lazy_RNG_index()
-    return rng.lazy_index[memory.read_u32_le(lazy_RNG)]; -- could be nil
+    return rng.lazy_index[memory.read_u32_le(lazy_RNG)]; -- will be nil for values above max_RNG_index
 end
 
 function rng.set_lazy_RNG_index(new_index)
@@ -159,9 +159,9 @@ function rng.adjust_lazy_RNG(steps)
         return
     end
     
-    local new_index = lazy_RNG_index + steps; -- steps could be negative
+    local new_index = lazy_RNG_index + steps;
     
-    if new_index < 1 then
+    if new_index < 1 then -- steps could be negative
         new_index = 1;
     end
     

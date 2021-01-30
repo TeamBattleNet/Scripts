@@ -10,7 +10,7 @@
 
 local hud = {};
 
-local HUD_version = "0.1.1.2";
+local HUD_version = "0.1.2.0";
 
 local ram = require("BN3/RAM");
 local commands = require("BN3/Commands");
@@ -171,7 +171,7 @@ function hud.initialize()
     ram.initialize({
         max_RNG_index = 10 * 60 * 60; -- 10 minutes of frames
     });
-    print("HUD for MMBN 3 Initialized.");
+    print("HUD for MMBN 3 " .. ram.get_version() .. " Initialized.");
 end
 
 local previous_keys = {};
