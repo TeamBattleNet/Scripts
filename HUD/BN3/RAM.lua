@@ -430,7 +430,7 @@ function ram.get_enemy_ID(enemy_number) -- convert from 1 to 0 index
 end
 
 function ram.get_enemy_name(enemy_number)
-    return ram.enemies.names[ram.get_enemy_ID(enemy_number)];
+    return ram.enemies.names[ram.get_enemy_ID(enemy_number)] or "Unknown ID";
 end
 
 function ram.get_draw_slot(which_slot) -- convert from 1 to 0 index, then back

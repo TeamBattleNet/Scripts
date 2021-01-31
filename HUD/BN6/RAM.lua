@@ -88,7 +88,7 @@ local buster2           = 0; -- 1 byte ???
 local buster3           = 0; -- 1 byte ???
 local max_HP_over_five  = 0; -- 1 byte, Maximum HP Check for HP Memory (Max HP/5)
 
-local battle_enemy_ID   = 0; -- 1 byte, per enemy up to 3
+local battle_enemy_ID   = 0x02000000; -- 2 bytes, per enemy up to 3 (changed to something less jittery)
 
 local cursor_ID         = 0x0200845E; -- 2 bytes? chip ID of cursor
 local cursor_code       = 0x0200845C; -- 2 bytes? chip Code of cursor
@@ -179,15 +179,22 @@ local drawIndex = {};
 
 -- Functions -> Game State
 
+--[[
+Gregar BR5E US
+Falzar BR6E US
+Gregar BR5P EU
+Falzar BR6P EU
+Gregar BR5J JP
+Falzar BR6J JP
+--]]
+
 function ram.get_version()
-    if memory.read_u8(version) == 0x42 then
-        return "Blue/Black";
-    elseif memory.read_u8(version) == 0x45 then
-        return "EXE";
-    elseif memory.read_u8(version) == 0x57 then
-        return "White";
+    if     memory.read_u8(version) == 0x00 then
+        return "Gregar";
+    elseif memory.read_u8(version) == 0x00 then
+        return "Falzar";
     end
-    return "???"; -- 1.0 or 1.1 differences?
+    return "???";
 end
 
 function ram.get_progress()
@@ -394,11 +401,11 @@ end
 -- Functions -> Battle Information
 
 function ram.get_enemy_ID(enemy_number) -- convert from 1 to 0 index
-    return memory.read_u8(battle_enemy_ID + enemy_number - 1);
+    return memory.read_u16_le(battle_enemy_ID + enemy_number - 1);
 end
 
 function ram.get_enemy_name(enemy_number)
-    return ram.enemies.names[ram.get_enemy_ID(enemy_number)];
+    return ram.enemies.names[ram.get_enemy_ID(enemy_number)] or "Unknown ID";
 end
 
 function ram.get_draw_slot(which_slot) -- convert from 1 to 0 index, then back

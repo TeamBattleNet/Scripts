@@ -9,7 +9,7 @@
 -- https://docs.google.com/spreadsheets/d/1MILb--rcdUO4iVRPpAM9B4qUvD0XDJodoHaqWnozXeM/pubhtml Did you check the notes?
 
 local hud = {};
-hud.version = "0.1.0.0";
+hud.minor_version = "0.0";
 
 local ram = require("BN6/RAM");
 local commands = require("BN6/Commands");
@@ -41,14 +41,14 @@ end
 local function position_top_left()
     if     ram.in_battle() then             -- align with HP
         x =  0;
-        y = 70;
+        y = 140;
     elseif ram.in_world() then
         if ram.in_digital_world() then      -- align with HP
             x = 10;
             y = 70;
         else -- if ram.in_real_world() then -- aligned with PET
-            x = 16;
-            y = 82;
+            x = 10;
+            y = 96;
         end
     else                                    -- align with corner
         x = 3; -- puts most text one pixel from edge
@@ -112,16 +112,18 @@ local function display_in_menu()
     to_screen("TODO: Menu HUD");
 end
 
-local function display_game_info()
-    to_screen("HUD  Version: " .. hud.version);
-    to_screen("Game Version: " .. ram.get_version());
-    to_screen(string.format("Star Flags: 0x%02X", ram.get_stars()));
-    to_screen(string.format("Progress  : 0x%02X", ram.get_progress()));
-    to_screen("");
+local function display_plaer_info()
     to_screen(string.format("Zenny    : %6u", ram.get_zenny()));
     to_screen(string.format("Bug Frags: %4u", ram.get_bug_frags()));
     to_screen(string.format("Max HP   : %4u", ram.get_max_HP()));
     -- TODO: Library Stats
+end
+
+local function display_game_info()
+    to_screen("HUD  Version: " .. hud.version);
+    to_screen("Game Version: " .. ram.get_version());
+    --to_screen(string.format("Star Flags: 0x%02X", ram.get_stars()));
+    to_screen(string.format("Progress  : 0x%02X", ram.get_progress()));
 end
 
 local function display_routing()
@@ -171,9 +173,9 @@ local function display_HUD()
         position_bottom_right();
         to_screen(ram.get_area_name());
     elseif ram.in_battle() then
-		if previousGameState ~= "battle" then
-			ram.simulate_draw()
-		end
+        if previousGameState ~= "battle" then
+            ram.simulate_draw()
+        end
         display_draws(9);
         position_top_left();
         x = x + 71;
@@ -196,15 +198,15 @@ local function display_HUD()
     else
         to_screen("Unknown Game State!");
     end
-	
-	previousGameState = ram.get_game_state_name();
+    
+    previousGameState = ram.get_game_state_name();
 end
 
-function hud.initialize()
+function hud.initialize(options)
     print("Initializing HUD for MMBN 6...");
-    ram.initialize({
-        max_RNG_index = 10 * 60 * 60; -- 10 minutes of frames
-    });
+    hud.version = options.major_version .. "." .. hud.minor_version;
+    options.max_RNG_index = 10 * 60 * 60; -- 10 minutes of frames
+    ram.initialize(options);
     print("HUD for MMBN 6 " .. ram.get_version() .. " Initialized.");
 end
 

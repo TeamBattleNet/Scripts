@@ -1,9 +1,10 @@
 -- Enemy names for MMBN 3 scripting, enjoy.
 
+-- https://forums.therockmanexezone.com/mmbn3-custom-battle-guide-t5304.html
+
 local enemies = {};
 
 enemies.names = {};
-enemies.names[  -1] = "Unknown";
 enemies.names[0x00] = "MegaMan";
 enemies.names[0x01] = "Mettaur";
 enemies.names[0x02] = "Mettaur2";
@@ -244,7 +245,7 @@ enemies.names[0xEC] = "Serenade";
 enemies.names[0xED] = "Serenade Alpha";
 enemies.names[0xEE] = "Serenade Beta";
 enemies.names[0xEF] = "Serenade Omega";
-enemies.names[0xF0] = "Bass";
+enemies.names[0xF0] = "Invincible Bass";
 enemies.names[0xF1] = "Bass";
 enemies.names[0xF2] = "BassGS";
 enemies.names[0xF3] = "Bass Omega";
