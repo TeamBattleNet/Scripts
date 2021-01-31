@@ -9,7 +9,7 @@
 -- https://docs.google.com/spreadsheets/d/1MILb--rcdUO4iVRPpAM9B4qUvD0XDJodoHaqWnozXeM/pubhtml Did you check the notes?
 
 local hud = {};
-hud.version = "0.1.2.2";
+hud.version = "0.1.0.0";
 
 local ram = require("BN6/RAM");
 local commands = require("BN6/Commands");
