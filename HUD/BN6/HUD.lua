@@ -14,6 +14,18 @@ hud.version = "0.1.0.0";
 local ram = require("BN6/RAM");
 local commands = require("BN6/Commands");
 
+local noInputs = {};
+noInputs["A"] = false;
+noInputs["B"] = false;
+noInputs["Start"] = false;
+noInputs["Select"] = false;
+noInputs["L"] = false;
+noInputs["R"] = false;
+noInputs["Up"] = false;
+noInputs["Down"] = false;
+noInputs["Left"] = false;
+noInputs["Right"] = false;
+
 local x = 0; -- font is positioned as if 10 pixels by 13 pixels
 local y = 0; -- letters can be as wide as 14, or as tall as 17
 local anchor = ""; -- one of the four corners
