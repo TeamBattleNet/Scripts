@@ -179,6 +179,7 @@ local function display_HUD()
         display_draws(10);
         position_top_left();
         x = x + 71;
+        to_screen(string.format("Battle ID:   0x%4X", ram.get_battle_pointer()));
         display_RNG(true);
         to_screen("");
         to_screen(string.format("Checks: %2u", ram.get_encounter_checks()));

@@ -153,7 +153,11 @@ local check              = 0x020003F8; -- 4 bytes, steps at the last encounter c
 
 -- 13A0 first usable?
 
-local battle_pointer     = 0x02003784; -- 4 bytes, pointer to current battle
+local battle_state       = 0x02003712; -- 2 byte?
+local battle_turns       = 0x0200371C; -- 1 byte, number of custom gauge opens + 1
+local battle_timer       = 0x02003730; -- 2 bytes, frame counter for current battle
+local battle_pointer     = 0x02003784; -- 2 bytes? ROM offset?
+local battle_custom_fill = 0x0200374E; -- 2 bytes, counts up to 0x4000
 
 local battle_draw_slots  = 0x02004910; -- 1 byte each, in battle chip draws, ends at TBD
 local your_X             = 0x02004954; -- 2 bytes ???
@@ -161,17 +165,17 @@ local your_Y             = 0x02004956; -- 2 bytes ???
 
 local enemy = {};
 enemy[1]      =         {}; -- TBD
-enemy[1].ID   = 0x02000000; -- TBD
+enemy[1].ID   = 0x02003774; -- 1 byte
 enemy[1].HP   = 0x02006790; -- 2 bytes
-enemy[1].text = 0x02004D30; -- 2 bytes, for counting down over time
+enemy[1].text = 0x02004D30; -- 2 bytes, for counting down HP over time
 enemy[2]      =         {}; -- TBD
-enemy[2].ID   = 0x02000000; -- TBD
+enemy[2].ID   = 0x02003775; -- 1 byte
 enemy[2].HP   = 0x02006850; -- 2 bytes
-enemy[2].text = 0x020050A0; -- 2 bytes, for counting down over time
+enemy[2].text = 0x020050A0; -- 2 bytes, for counting down HP over time
 enemy[3]      =         {}; -- TBD
-enemy[3].ID   = 0x02000000; -- TBD
+enemy[3].ID   = 0x02003776; -- 1 byte
 enemy[3].HP   = 0x02006910; -- 2 bytes
-enemy[3].text = 0x02005200; -- 2 bytes, for counting down over time
+enemy[3].text = 0x02005200; -- 2 bytes, for counting down HP over time
 
 local cursor_ID          = 0x020062E4; -- 1 byte, chip  ID  of cursor
 local cursor_code        = 0x020062E5; -- 1 byte, chip Code of cursor
@@ -574,6 +578,14 @@ function ram.kill_enemy(which_enemy)
     else
         ram.set_enemy_HP(which_enemy, 0);
     end
+end
+
+function ram.get_battle_pointer()
+    return memory.read_u16_le(battle_pointer);
+end
+
+function ram.fill_custom_gauge()
+    memory.write_u16_le(battle_custom_fill, 0x4000);
 end
 
 function ram.get_draw_slot(which_slot) -- convert from 1 to 0 index, then back

@@ -97,7 +97,7 @@ local buster2           = 0x02005779; -- 1 byte ???
 local buster3           = 0x0200577A; -- 1 byte ???
 local max_HP_over_five  = 0x0200579C; -- 1 byte, Maximum HP Check for HP Memory (Max HP/5)
 
-local battle_enemy_ID   = 0x02006D00; -- 1 byte, per enemy up to 3
+local battle_enemy_ID   = 0x02006D00; -- 1 byte per enemy, up to 3
 
 local cursor_ID         = 0x02007D14; -- 2 bytes? chip ID of cursor
 local cursor_code       = 0x02007D18; -- 2 bytes? chip Code of cursor
