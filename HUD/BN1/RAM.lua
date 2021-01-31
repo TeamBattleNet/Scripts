@@ -6,6 +6,7 @@ ram.rng = require("BN1/RNG");
 ram.areas = require("BN1/Areas");
 ram.chips = require("BN1/Chips");
 ram.enemies = require("BN1/Enemies");
+ram.progress_names = require("BN1/Progress");
 
 --[[
 General Internal Memory
@@ -37,22 +38,122 @@ https://problemkaputt.de/gbatek.htm#gbamemorymap
 
 -- Addresses -> 02000000-0203FFFF - On-board Work RAM (WRAM) (256 KBytes)
 
+local metro_ticket       = 0x02000005; -- TBD
+
 local magic_flag         = 0x0200001D; -- 0x---10--- (progress must be == 0x54)
+
+local library_start      = 0x02000020; -- starts at 2nd bit  flag
+local library_end        = 0x02000034; -- or later?
+
+-- 42, higsby email?
+
+local emails_read_1      = 0x02000048; -- ends at 4F?
+
+local BMD_flags_start    = 0x02000050; -- or earlier?
+--local GMD_flags          = 0x02000051; -- -53?
+local BMD_flags_end      = 0x0200006B; -- or later?
+
+-- 6C-8B temp flags?
 
 local fire_flags         = 0x02000070; -- 4 bytes, 32 fire bit flags
 
-local folder_ID          = 0x020001C0; -- 1 byte, chip  ID  of folder slot 1, ends at TBD
+-- 83 dex hp link?
+
+-- 110-120 divider
+
+-- 120-170 ???
+
+local folder_ID          = 0x020001C0; -- 1 byte, chip  ID  of folder slot 1, ends at 0x020001FB
 local folder_code        = 0x020001C1; -- 1 byte, chip Code of folder slot 1, ends at TBD
 
+local WHAT_IS_THIS       = 0x020001FF; -- 1 byte?
+
+--local                  = 0x02000200; -- 1 byte flags?
+--local                  = 0x02000210; -- 1 byte TBD fight GutsMan
 local area               = 0x02000214; -- 1 byte
 local sub_area           = 0x02000215; -- 1 byte
 local progress           = 0x02000216; -- 1 byte
+local music_progress     = 0x02000217; -- 1 byte
+--local                  = 0x02000218; -- 1 byte TBD
+--local                  = 0x02000219; -- 1 byte TBD
+--230-233 block of 1's
+--local link_flags       = 0x02000234; -- 1 byte TBD hp & internet
+--21D ???
 local zenny              = 0x02000284; -- 4 bytes, 999999 "max"
+-- 2AC-2CF
+local key_PET            = 0x020002D0; -- 1 byte
 local IceBlock_count     = 0x020002D1; -- 1 byte, for both Oven and WWW 1
+local key_WaterGun       = 0x020002D2; -- 1 byte value of 0x05?
+local key_SchoolID       = 0x020002D3; -- 1 byte
+local key_SciLabID       = 0x020002D4; -- 1 byte, snip snip
+local key_Handle         = 0x020002D5; -- 1 byte
+local key_Message        = 0x020002D6; -- 1 byte, 5th grade Froid
+local key_Response       = 0x020002D7; -- 1 byte, to Mayl's email
+local key_WWW_PIN        = 0x020002D8; -- 1 byte
+local key_BatteryA       = 0x020002D9; -- 1 byte
+local key_BatteryB       = 0x020002DA; -- 1 byte
+local key_BatteryC       = 0x020002DB; -- 1 byte
+local key_BatteryD       = 0x020002DC; -- 1 byte
+local key_BatteryE       = 0x020002DD; -- 1 byte
+local key_Charger        = 0x020002DE; -- 1 byte
+local key_WWW_Pass       = 0x020002DF; -- 1 byte, expired
+--local key_invalid      = 0x020002E0; -- 1 byte
+local key_Dentures       = 0x020002E1; -- 1 byte TBD
+-- 0x020002E2 to 0x020002EF invalid
+--local key_invalid      = 0x020002F0; -- 1 byte
+local key_at_Mayl        = 0x020002F1; -- 1 byte
+local key_at_Yai         = 0x020002F2; -- 1 byte
+local key_at_Dex         = 0x020002F3; -- 1 byte
+--local key_invalid      = 0x020002F4; -- 1 byte
+local key_at_Dad         = 0x020002F5; -- 1 byte
+local key_at_Sal         = 0x020002F6; -- 1 byte TBD
+--local key_invalid      = 0x020002F7; -- 1 byte
+local key_at_Miyu        = 0x020002F8; -- 1 byte TBD
+--local key_invalid      = 0x020002F9; -- 1 byte
+--local key_invalid      = 0x020002FA; -- 1 byte
+local key_at_Masa        = 0x020002FB; -- 1 byte
+--local key_invalid      = 0x020002FC; -- 1 byte
+local key_at_WWW         = 0x020002FD; -- 1 byte
+--local key_invalid      = 0x020002FE; -- 1 byte
+--local key_invalid      = 0x020002FF; -- 1 byte
+local key_slash_Dex      = 0x02000300; -- 1 byte, 0x21 and 0x02000010 -> 0x00200000
+local key_slash_Sal      = 0x02000301; -- 1 byte
+local key_slash_Miyu     = 0x02000302; -- 1 byte
+--local key_invalid      = 0x02000303; -- 1 byte
+local key_Hig_Memo       = 0x02000304; -- 1 byte
+local key_Lab_Memo       = 0x02000305; -- 1 byte
+local key_Pa_Memo        = 0x02000306; -- 1 byte
+local key_Yuri_Memo      = 0x02000307; -- 1 byte
+--local key_invalid      = 0x02000308; -- 1 byte
+--local key_invalid      = 0x02000309; -- 1 byte
+--local key_invalid      = 0x0200030A; -- 1 byte
+--local key_invalid      = 0x0200030B; -- 1 byte
+local key_ACDCPass       = 0x0200030C; -- 1 byte
+local key_GovtPass       = 0x0200030D; -- 1 byte
+local key_TownPass       = 0x0200030E; -- 1 byte
+--local key_invalid      = 0x0200030F; -- 1 byte
 
+local HPMemory           = 0x02000310; -- 1 byte TBD
 local powerups_available = 0x02000311; -- 1 byte
+--local                  = 0x02000312; -- 1 byte
+--local                  = 0x02000313; -- 1 byte
+local armor_heat         = 0x02000314; -- 1 byte
+--local armor_           = 0x02000315; -- 1 byte
+local armor_wood         = 0x02000316; -- 1 byte
+
+-- 370-3CF divider
+
+local steps_also         = 0x020003E0; -- 3 bytes ???
+local time_in_frames     = 0x020003E8; -- 4 bytes, check for skipped frames
 local steps              = 0x020003F4; -- 4 bytes
 local check              = 0x020003F8; -- 4 bytes, steps at the last encounter check
+
+-- 448-49F big divider
+
+-- 5AA broken divider?
+
+-- 13A0 first usable?
+
 local battle_pointer     = 0x02003784; -- 4 bytes, pointer to current battle
 
 local battle_draw_slots  = 0x02004910; -- 1 byte each, in battle chip draws, ends at TBD
@@ -91,6 +192,8 @@ local number_door_code   = 0x02009A90; -- 1 byte?
 
 local pack_ID            = 0x02019018; -- 1 byte, chip  ID  of pack slot 1
 local pack_code          = 0x0201900A; -- 1 byte, chip code of pack slot 1
+
+-- 0x02047FFF end of WRAM
 
 -- Unverified
 
@@ -143,10 +246,6 @@ function ram.get_version()
         return "Pal";
     end
     return "???";
-end
-
-function ram.get_progress()
-    return memory.read_u8(progress);
 end
 
 function ram.get_game_state()
@@ -213,6 +312,27 @@ function ram.is_go_mode()
         return "Yes!";
     end
     return "Nope";
+end
+
+function ram.get_progress()
+    return memory.read_u8(progress);
+end
+
+function ram.get_progress_name()
+    return ram.progress_names[ram.get_progress()];
+end
+
+function ram.set_progress(new_progress)
+    if new_progress < 0x00 then
+        new_progress = 0x00;
+    elseif new_progress > 0x5F then
+        new_progress = 0x5F;
+    end
+    return memory.write_u8(progress, new_progress);
+end
+
+function ram.add_progress(some_progress)
+    return ram.set_progress(ram.get_progress() + some_progress);
 end
 
 -- Functions -> Position 

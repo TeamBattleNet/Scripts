@@ -145,6 +145,32 @@ options.doit = function(value) ram.rng.adjust_RNG(value); end;
 table.insert(commands, options);
 
 options = {};
+table.insert(options, {value =  0x10; text = "Add      0x10  to  Progress"});
+table.insert(options, {value =  0x01; text = "Add      0x01  to  Progress"});
+table.insert(options, {value = -0x01; text = "Subtract 0x01 from Progress"});
+table.insert(options, {value = -0x10; text = "Subtract 0x10 from Progress"});
+options.selection = 1; -- default option
+options.description = function() return string.format("Modify Progress Byte: %02X", ram.get_progress()); end;
+options.doit = function(value) ram.add_progress(value); end;
+table.insert(commands, options);
+
+options = {};
+table.insert(options, {value =  0x00; text = "0x00 New Game          "});
+table.insert(options, {value =  0x06; text = "0x06 FireMan Defeated  "});
+table.insert(options, {value =  0x20; text = "0x20 NumberMan Defeated"});
+table.insert(options, {value =  0x22; text = "0x22 StoneMan Defeated "});
+table.insert(options, {value =  0x26; text = "0x26 What Polar Bears? "});
+table.insert(options, {value =  0x30; text = "0x30 IceMan Defeated   "});
+table.insert(options, {value =  0x40; text = "0x40 ColorMan Defeated "});
+table.insert(options, {value =  0x50; text = "0x50 ElecMan Defeated  "});
+table.insert(options, {value =  0x52; text = "0x52 BombMan Defeated  "});
+table.insert(options, {value =  0x54; text = "0x54 Expired WWW Pass  "});
+options.selection = 1; -- default option
+options.description = function() return string.format("Set Progress Byte: %02X", ram.get_progress()); end;
+options.doit = function(value) ram.set_progress(value); end;
+table.insert(commands, options);
+
+options = {};
 table.insert(options, {value = 0x00; text = "ACDC Elementary   "});
 table.insert(options, {value = 0x01; text = "ACDC Town         "});
 table.insert(options, {value = 0x02; text = "Government Complex"});

@@ -79,8 +79,8 @@ areas.names[0x05][0x03] = "WWW Base Passage 1";
 areas.names[0x05][0x04] = "WWW Base Passage 2";
 areas.names[0x05][0x05] = "WWW Base Passage 3";
 
-areas.names[0x06] = {}; -- WAZA (OSS only)
-areas.names[0x06][0x00] = "WAZA Command Room";
+--areas.names[0x06] = {}; -- WAZA (OSS only)
+--areas.names[0x06][0x00] = "WAZA Command Room";
 
 areas.names[0x80] = {}; -- School Comp
 areas.names[0x80][0x00] = "School Comp 1";
@@ -177,7 +177,7 @@ areas.names[0x90][0x0D] = "Undernet 10";
 areas.names[0x90][0x0E] = "Undernet 11";
 areas.names[0x90][0x0F] = "Undernet 12";
 
---areas.names[ram.get_area()][ram.get_sub_area()];
+--ram.areas.names[ram.get_area()][ram.get_sub_area()];
 
 return areas;
 
