@@ -9,8 +9,8 @@ local command_index = 1;
 local commands = {};
 local options = {};
 
-local firstCommandOption = nil;
-local displaySubOption = false;
+local first_command_option = nil;
+local display_sub_option = false;
 
 local function show_text(message)
     print(message);
@@ -21,7 +21,7 @@ function controls.next()
     command_index = (command_index % table.getn(commands)) + 1;
     local command = commands[command_index];
     show_text(command.description());
-	displaySubOption = false;
+	display_sub_option = false;
 end
 
 function controls.previous()
@@ -31,25 +31,25 @@ function controls.previous()
     end
     local command = commands[command_index];
     show_text(command.description());
-	displaySubOption = false;
+	display_sub_option = false;
 end
 
 function controls.option_down()
     local options = commands[command_index];
-	if not displaySubOption then
+	if not display_sub_option then
 		options.selection = (options.selection % table.getn(options)) + 1;
 		local option = options[options.selection];
 		show_text("Selected: " .. option.text);
 	else
-		options.subOptions.selection = (options.subOptions.selection % table.getn(options.subOptions)) + 1;
-		local subOption = options.subOptions[options.subOptions.selection];
-		show_text("Selected: " .. subOption.text);
+		options.sub_options.selection = (options.sub_options.selection % table.getn(options.sub_options)) + 1;
+		local sub_option = options.sub_options[options.sub_options.selection];
+		show_text("Selected: " .. sub_option.text);
 	end
 end
 
 function controls.option_up()
     local options = commands[command_index];
-	if not displaySubOption then
+	if not display_sub_option then
 		options.selection = options.selection - 1;
 		if options.selection == 0 then
 			options.selection = table.getn(options);
@@ -57,12 +57,12 @@ function controls.option_up()
 		local option = options[options.selection];
 		show_text("Selected: " .. option.text);
 	else
-		options.subOptions.selection = options.subOptions.selection - 1;
-		if options.subOptions.selection == 0 then
-			options.subOptions.selection = table.getn(options.subOptions);
+		options.sub_options.selection = options.sub_options.selection - 1;
+		if options.sub_options.selection == 0 then
+			options.sub_options.selection = table.getn(options.sub_options);
 		end
-		local subOption = options.subOptions[options.subOptions.selection];
-		show_text("Selected: " .. subOption.text);
+		local sub_option = options.sub_options[options.sub_options.selection];
+		show_text("Selected: " .. sub_option.text);
 	end
 end
 
@@ -70,17 +70,17 @@ function controls.doit()
     local command = commands[command_index];
     local option = command[command.selection];
     show_text("Executed: " .. option.text);
-	if command.subOptions ~= nil then
-		show_text("Command has subOption");
-		if not displaySubOption then
-			show_text("Showing subOptions");
-			displaySubOption = true;
-			firstCommandOption = option;
+	if command.sub_options ~= nil then
+		show_text("Command has sub_option");
+		if not display_sub_option then
+			show_text("Showing sub_options");
+			display_sub_option = true;
+			first_command_option = option;
 		else
-			local subOption = command.subOptions[command.subOptions.selection];
-			show_text("Executing subOptions: " .. firstCommandOption.value .. " " .. subOption.value);
-			command.doit(firstCommandOption.value, subOption.value);
-			displaySubOption = false;
+			local sub_option = command.sub_options[command.sub_options.selection];
+			show_text("Executing sub_options: " .. first_command_option.value .. " " .. sub_option.value);
+			command.doit(first_command_option.value, sub_option.value);
+			display_sub_option = false;
 		end
 	else
 		show_text("TEST");
@@ -90,9 +90,9 @@ end
 
 function controls.display_options()
     local options = commands[command_index];
-	local subOptions = commands[command_index].subOptions;
+	local sub_options = commands[command_index].sub_options;
     local lines = {};
-	if not displaySubOption then
+	if not display_sub_option then
 		table.insert(lines, options.description());
 		for i=1,table.getn(options) do
 			line = string.format("[%2i] %s", i, options[i].text);
@@ -102,10 +102,10 @@ function controls.display_options()
 			table.insert(lines, line);
 		end
 	else
-		table.insert(lines, subOptions.description());
-		for i=1,table.getn(subOptions) do
-			line = string.format("[%2i] %s", i, subOptions[i].text);
-			if i == subOptions.selection then
+		table.insert(lines, sub_options.description());
+		for i=1,table.getn(sub_options) do
+			line = string.format("[%2i] %s", i, sub_options[i].text);
+			if i == sub_options.selection then
 				line = line .. " <--";
 			end
 			table.insert(lines, line);
@@ -210,26 +210,26 @@ options.selection = 1; -- default option
 options.description = function() return "Pick Real World Main Area: " .. ram.get_area_name(); end;
 options.doit = function(firstVal, secondVal) if ram.does_area_exist(firstVal, secondVal) then ram.set_area(firstVal); ram.set_sub_area(secondVal); end end;
 
-subOptions = {};
-table.insert(subOptions, {value = 0x00; text = "Sub Area 0x00"});
-table.insert(subOptions, {value = 0x01; text = "Sub Area 0x01"});
-table.insert(subOptions, {value = 0x02; text = "Sub Area 0x02"});
-table.insert(subOptions, {value = 0x03; text = "Sub Area 0x03"});
-table.insert(subOptions, {value = 0x04; text = "Sub Area 0x04"});
-table.insert(subOptions, {value = 0x05; text = "Sub Area 0x05"});
-table.insert(subOptions, {value = 0x06; text = "Sub Area 0x06"});
-table.insert(subOptions, {value = 0x07; text = "Sub Area 0x07"});
-table.insert(subOptions, {value = 0x08; text = "Sub Area 0x08"});
-table.insert(subOptions, {value = 0x09; text = "Sub Area 0x09"});
-table.insert(subOptions, {value = 0x0A; text = "Sub Area 0x0A"});
-table.insert(subOptions, {value = 0x0B; text = "Sub Area 0x0B"});
-table.insert(subOptions, {value = 0x0C; text = "Sub Area 0x0C"});
-table.insert(subOptions, {value = 0x0D; text = "Sub Area 0x0E"});
-table.insert(subOptions, {value = 0x0E; text = "Sub Area 0x0E"});
-table.insert(subOptions, {value = 0x0F; text = "Sub Area 0x0F"});
-subOptions.selection = 1; -- default option
-subOptions.description = function() return "Pick Sub Area: " .. ram.get_area_name(); end;
-options.subOptions = subOptions;
+sub_options = {};
+table.insert(sub_options, {value = 0x00; text = "Sub Area 0x00"});
+table.insert(sub_options, {value = 0x01; text = "Sub Area 0x01"});
+table.insert(sub_options, {value = 0x02; text = "Sub Area 0x02"});
+table.insert(sub_options, {value = 0x03; text = "Sub Area 0x03"});
+table.insert(sub_options, {value = 0x04; text = "Sub Area 0x04"});
+table.insert(sub_options, {value = 0x05; text = "Sub Area 0x05"});
+table.insert(sub_options, {value = 0x06; text = "Sub Area 0x06"});
+table.insert(sub_options, {value = 0x07; text = "Sub Area 0x07"});
+table.insert(sub_options, {value = 0x08; text = "Sub Area 0x08"});
+table.insert(sub_options, {value = 0x09; text = "Sub Area 0x09"});
+table.insert(sub_options, {value = 0x0A; text = "Sub Area 0x0A"});
+table.insert(sub_options, {value = 0x0B; text = "Sub Area 0x0B"});
+table.insert(sub_options, {value = 0x0C; text = "Sub Area 0x0C"});
+table.insert(sub_options, {value = 0x0D; text = "Sub Area 0x0E"});
+table.insert(sub_options, {value = 0x0E; text = "Sub Area 0x0E"});
+table.insert(sub_options, {value = 0x0F; text = "Sub Area 0x0F"});
+sub_options.selection = 1; -- default option
+sub_options.description = function() return "Pick Sub Area: " .. ram.get_area_name(); end;
+options.sub_options = sub_options;
 table.insert(commands, options);
 
 options = {};
