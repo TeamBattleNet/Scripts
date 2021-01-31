@@ -130,7 +130,7 @@ function rng.initialize(address, seed, target_RNG_index)
         print("Creating RNG Table with max index of: " .. max_RNG_index);
         print("Creating RNG Table with calculations per frame of: " .. calculations_per_frame);
     else
-        print(string.format("Bad arguments to RNG: %s, %s, %s", address, seed, target_RNG_index));
+        print(string.format("Bad arguments to RNG: %s, %s, %s", address or "nil", seed or "nil", target_RNG_index or "nil"));
     end
 end
 

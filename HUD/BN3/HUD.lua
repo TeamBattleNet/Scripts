@@ -9,7 +9,7 @@
 -- https://docs.google.com/spreadsheets/d/1MILb--rcdUO4iVRPpAM9B4qUvD0XDJodoHaqWnozXeM/pubhtml Did you check the notes?
 
 local hud = {};
-hud.version = "0.1.2.2";
+hud.minor_version = "0.0";
 
 local ram = require("BN3/RAM");
 local commands = require("BN3/Commands");
@@ -187,11 +187,11 @@ local function display_HUD()
     end
 end
 
-function hud.initialize()
+function hud.initialize(options)
     print("Initializing HUD for MMBN 3...");
-    ram.initialize({
-        max_RNG_index = 10 * 60 * 60; -- 10 minutes of frames
-    });
+    hud.version = options.major_version .. "." .. hud.minor_version;
+    options.max_RNG_index = 10 * 60 * 60; -- 10 minutes of frames
+    ram.initialize(options);
     print("HUD for MMBN 3 " .. ram.get_version() .. " Initialized.");
 end
 

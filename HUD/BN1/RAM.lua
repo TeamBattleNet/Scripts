@@ -2,7 +2,7 @@
 
 local ram = {};
 
-ram.rng = {}; -- passed in
+ram.rng = require("BN1/RNG");
 ram.areas = require("BN1/Areas");
 ram.chips = require("BN1/Chips");
 ram.enemies = require("BN1/Enemies");
@@ -213,8 +213,6 @@ encounter_curve[0x45] = 0x080099BC; -- US
 encounter_curve[0x4A] = 0x08009988; -- JP
 encounter_curve[0x50] = 0x080099C8; -- PAL
 
-------------------------------------------------------------------------------------------------------------------------
-
 local game_state_names = {};
 game_state_names[0x00] = "title"; -- or BIOS
 game_state_names[0x04] = "world";
@@ -228,6 +226,8 @@ game_state_names[0x20] = "game_over";
 game_state_names[0x24] = "trader";
 game_state_names[0x28] = "credits";
 game_state_names[0x2C] = "ubisoft_logo";
+
+------------------------------------------------------------------------------------------------------------------------
 
 -- Functions -> RNG Wrapper (in progress)
 
@@ -705,8 +705,7 @@ end
 -- Controls
 
 function ram.initialize(options)
-    ram.rng = options.rng;
-    ram.rng.initialize(RNG_address, 0xA338244F, options.max_RNG_index);
+    ram.rng.initialize(options.max_RNG_index);
 end
 
 function ram.update_pre()

@@ -6,6 +6,7 @@ ram.rng = require("BN3/RNG");
 ram.areas = require("BN3/Areas");
 ram.chips = require("BN3/Chips");
 ram.enemies = require("BN3/Enemies");
+--ram.progress_names = require("BN3/Progress");
 
 --[[
 General Internal Memory
@@ -149,8 +150,6 @@ local battle_HP_max     = 0x02037296; -- 1 byte
 
 local version           = 0x080000AA; -- 1 byte
 
-------------------------------------------------------------------------------------------------------------------------
-
 local style_elements = {}; -- FWEG but Elec is first, 1 indexed
 style_elements[0x00] = "None";
 style_elements[0x01] = "Elec";
@@ -179,6 +178,8 @@ game_state_names[0x18] = "menu";
 --game_state_names[0x20] = "game_over"; -- from BN 1
 --game_state_names[0x24] = "trader";    -- from BN 1
 game_state_names[0x30] = "credits";
+
+------------------------------------------------------------------------------------------------------------------------
 
 -- Functions -> Game State
 
