@@ -9,7 +9,7 @@
 -- https://docs.google.com/spreadsheets/d/e/2PACX-1vT5JrlG2InVHk4Rxpz_o3wQ5xbpNj2_n87wY0R99StH9F5P5Cp8AFyjsEQCG6MVEaEMn9dJND-k5M-P/pubhtml Did you check the notes?
 
 local hud = {};
-hud.version = "0.1.0.2";
+hud.minor_version = "0.0";
 
 local ram = require("BN1/RAM");
 local commands = require("BN1/Commands");
@@ -63,21 +63,24 @@ local function display_ramdom_words(ram_addr, count, jump)
     end
 end
 
-local function display_RNG()
-    to_screen("RNG: "   .. string.format("%08X", ram.rng.get_RNG_value()));
-    to_screen("Index: " .. (ram.rng.get_RNG_index() or "?"));
-    to_screen("Delta: " .. (ram.rng.get_RNG_delta() or "?"));
+local function display_RNG(and_value)
+    if and_value then
+        to_screen("RNG Value: "   .. string.format("%08X", ram.rng.get_RNG_value()));
+    end
+    to_screen(string.format("RNG Index: %4s", (ram.rng.get_RNG_index() or "?")));
+    to_screen(string.format("RNG Delta: %4s", (ram.rng.get_RNG_delta() or "?")));
 end
 
 local function display_steps()
-    to_screen(string.format("Steps: %4u", ram.get_steps()));
     if ram.in_digital_world() then
-        to_screen(string.format("Check: %4u", ram.get_check()));
-        to_screen(string.format("Checks: %3u", ram.get_encounter_checks()));
-        to_screen(string.format("Next: %2i", (64 - (ram.get_steps() - ram.get_check()))));
+        to_screen(string.format("Steps : %7u", ram.get_steps()));
+        to_screen(string.format("Check : %7u", ram.get_check()));
+        to_screen(string.format("Checks: %7u", ram.get_encounter_checks()));
+        to_screen(string.format("Chance: %6.3f%%", ram.get_encounter_chance()));
+        to_screen(string.format("Next  : %7i", (64 - (ram.get_steps() - ram.get_check()))));
     end
-    to_screen(string.format("X: %5i", ram.get_x()));
-    to_screen(string.format("Y: %5i", ram.get_y()));
+    to_screen(string.format("X: %7i", ram.get_x()));
+    to_screen(string.format("Y: %7i", ram.get_y()));
 end
 
 local function display_draws(how_many, start_at)
@@ -91,14 +94,16 @@ local function display_in_menu()
     to_screen("TODO: Menu HUD");
 end
 
-local function display_game_info()
-    to_screen("HUD Ver : " .. hud.version);
-    to_screen("Version : " .. ram.get_version());
-    to_screen(string.format("Progress:    0x%02X", ram.get_progress()));
+local function display_player_info()
     to_screen(string.format("Zenny   : %7u", ram.get_zenny()));
     -- TODO: MegaMan Stats
     -- TODO: Library Stats
-    --to_screen("");
+end
+
+local function display_game_info()
+    to_screen(string.format("Progress: 0x%02X %s", ram.get_progress(), ram.get_progress_name()));
+    to_screen("Game Version: " .. ram.get_version());
+    to_screen("HUD  Version: " .. hud.version);
 end
 
 local function display_routing()
@@ -159,12 +164,11 @@ local function display_HUD()
     if ram.in_title() or ram.in_splash() then
         display_game_info();
         to_screen("");
-        display_RNG();
+        display_RNG(true);
         position_bottom_right();
         to_screen(ram.get_area_name());
     elseif ram.in_world() then
         display_RNG();
-        to_screen("");
         display_steps();
         if ram.near_number_doors() then
             to_screen("Door Code: " .. ram.get_door_code());
@@ -175,7 +179,7 @@ local function display_HUD()
         display_draws(10);
         position_top_left();
         x = x + 71;
-        display_RNG();
+        display_RNG(true);
         to_screen("");
         to_screen(string.format("Checks: %2u", ram.get_encounter_checks()));
         position_bottom_right();
@@ -194,11 +198,11 @@ local function display_HUD()
     end
 end
 
-function hud.initialize()
+function hud.initialize(options)
     print("Initializing HUD for MMBN 1...");
-    ram.initialize({
-        max_RNG_index = 10 * 60 * 60; -- 10 minutes of frames
-    });
+    hud.version = options.major_version .. "." .. hud.minor_version;
+    options.max_RNG_index = 10 * 60 * 60; -- 10 minutes of frames
+    ram.initialize(options);
     print("HUD for MMBN 1 " .. ram.get_version() .. " Initialized.");
 end
 

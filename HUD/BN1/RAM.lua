@@ -2,7 +2,7 @@
 
 local ram = {};
 
-ram.rng = require("BN1/RNG");
+ram.rng = {}; -- passed in
 ram.areas = require("BN1/Areas");
 ram.chips = require("BN1/Chips");
 ram.enemies = require("BN1/Enemies");
@@ -38,6 +38,8 @@ https://problemkaputt.de/gbatek.htm#gbamemorymap
 
 -- Addresses -> 02000000-0203FFFF - On-board Work RAM (WRAM) (256 KBytes)
 
+local title_star_flag    = 0x02000000; -- 0x04 1 bit for 1 star :)
+
 local metro_ticket       = 0x02000005; -- TBD
 
 local magic_flag         = 0x0200001D; -- 0x---10--- (progress must be == 0x54)
@@ -45,13 +47,10 @@ local magic_flag         = 0x0200001D; -- 0x---10--- (progress must be == 0x54)
 local library_start      = 0x02000020; -- starts at 2nd bit  flag
 local library_end        = 0x02000034; -- or later?
 
--- 42, higsby email?
+local emails_gave_flags  = 0x02000040; -- maybe? ends at 47
+local emails_read_flags  = 0x02000048; -- maybe? ends at 4F
 
-local emails_read_1      = 0x02000048; -- ends at 4F?
-
-local BMD_flags_start    = 0x02000050; -- or earlier?
---local GMD_flags          = 0x02000051; -- -53?
-local BMD_flags_end      = 0x0200006B; -- or later?
+local BMD_flags          = 0x02000050; -- ends at 6B? 0x80 is shelf PET
 
 -- 6C-8B temp flags?
 
@@ -199,7 +198,6 @@ local pack_code          = 0x0201900A; -- 1 byte, chip code of pack slot 1
 
 --local mega_level         = 0x02000000; -- 1 byte ???
 --local world_HP_max       = 0x02000000; -- 2 bytes ???
---local title_star_flag    = 0x02000000; -- 1 bit for 1 star :)
 
 -- Addresses -> 08000000-09FFFFFF - Game Pak ROM/FlashROM (max 32MB)
 
@@ -218,7 +216,7 @@ encounter_curve[0x50] = 0x080099C8; -- PAL
 ------------------------------------------------------------------------------------------------------------------------
 
 local game_state_names = {};
-game_state_names[0x00] = "title";
+game_state_names[0x00] = "title"; -- or BIOS
 game_state_names[0x04] = "world";
 game_state_names[0x08] = "battle";
 game_state_names[0x0C] = "player_change"; -- jack-in/out
@@ -230,6 +228,32 @@ game_state_names[0x20] = "game_over";
 game_state_names[0x24] = "trader";
 game_state_names[0x28] = "credits";
 game_state_names[0x2C] = "ubisoft_logo";
+
+-- Functions -> RNG Wrapper (in progress)
+
+function ram.get_RNG_value()
+    return ram.rng.get_RNG_value();
+end
+
+function ram.set_RNG_value(new_rng)
+    ram.rng.set_RNG_value(new_rng);
+end
+
+function ram.get_RNG_index()
+    return ram.rng.get_RNG_index();
+end
+
+function ram.set_RNG_index(new_index)
+    ram.rng.set_RNG_index(new_index)
+end
+
+function ram.get_RNG_delta()
+    return ram.rng.get_RNG_delta();
+end
+
+function ram.adjust_RNG(steps)
+    ram.rng.adjust_RNG(steps);
+end
 
 -- Functions -> Game State
 
@@ -296,30 +320,16 @@ function ram.in_credits()
     return ram.get_game_state() == 0x28;
 end
 
-function ram.get_magic_byte()
-    return memory.read_u8(magic_flag);
-end
-
-function ram.is_magic_bit_set()
-    if bit.band(ram.get_magic_byte(), 0x18) == 0x10 then
-        return true;
-    end
-    return false;
-end
-
-function ram.is_go_mode()
-    if ram.is_magic_bit_set() then
-        return "Yes!";
-    end
-    return "Nope";
-end
-
 function ram.get_progress()
     return memory.read_u8(progress);
 end
 
+function ram.get_progress_name_from_value(progress_value)
+    return ram.progress_names[progress_value];
+end
+
 function ram.get_progress_name()
-    return ram.progress_names[ram.get_progress()];
+    return ram.get_progress_name_from_value(ram.get_progress());
 end
 
 function ram.set_progress(new_progress)
@@ -331,8 +341,57 @@ function ram.set_progress(new_progress)
     return memory.write_u8(progress, new_progress);
 end
 
+function ram.set_progress_safe(new_progress)
+    if ram.get_progress_name_from_value(new_progress) then
+        ram.set_progress(new_progress);
+    end
+end
+
 function ram.add_progress(some_progress)
     return ram.set_progress(ram.get_progress() + some_progress);
+end
+
+function ram.get_star_byte()
+    return memory.read_u8(title_star_flag);
+end
+
+function ram.set_star_byte()
+    return memory.write_u8(title_star_flag);
+end
+
+function ram.get_star_flag()
+    return bit.rshift(bit.band(ram.get_star_byte(), 0x04), 2);
+end
+
+function ram.set_star_flag()
+    ram.set_star_byte(bit.bor(ram.get_star_byte(), 0x04));
+end
+
+function ram.get_magic_byte()
+    return memory.read_u8(magic_flag);
+end
+
+function ram.set_magic_byte(new_magic)
+    return memory.read_u8(magic_flag, new_magic);
+end
+
+function ram.is_magic_bit_set()
+    if bit.band(ram.get_magic_byte(), 0x18) == 0x10 then
+        return true;
+    end
+    return false;
+end
+
+function ram.go_mode()
+    ram.set_progress(0x54);
+    ram.set_magic_byte(0x10);
+end
+
+function ram.is_go_mode()
+    if ram.is_magic_bit_set() and ram.get_progress() == 0x54 then
+        return "Yes!";
+    end
+    return "Nope";
 end
 
 -- Functions -> Position 
@@ -552,18 +611,49 @@ end
 
 function ram.ignite_oven_fires()
     --memory.write_u32_le(fires_flags, 0x00000000);
+    --memory.write_u32_le(0x02000014 , 0x00000000);
 end
 
 function ram.extinguish_oven_fires()
     --memory.write_u32_le(fires_flags, 0xFFFFFFFF);
+    --memory.write_u32_le(0x02000014 , 0xFFFFFFFF);
 end
 
 function ram.ignite_WWW_fires()
     --memory.write_u32_le(fires_flags, 0x00000000);
+    --memory.write_u32_le(0x0200001B , 0x00000000);
 end
 
 function ram.extinguish_WWW_fires()
     --memory.write_u32_le(fires_flags, 0xFFFFFFFF);
+    --memory.write_u32_le(0x0200001B , 0xFFFFFFFF);
+end
+
+function ram.get_string_hex(address, bytes)
+    if address and bytes then
+        local hex = "0x";
+        for i=0,bytes-1 do
+            hex = hex .. string.format("%02X", memory.read_u8(address+i));
+        end
+        return hex;
+    end
+end
+
+function ram.get_bit(byte, bindex) -- 0 indexed
+    bit.rshift( bit.band( byte, bit.lshift( 0x01, bindex ) ), bindex );
+end
+
+function ram.get_string_binary(address, bytes)
+    if address and bytes then
+        local binary = "";
+        for i=0,bytes-1 do
+            local byte = memory.read_u8(address+i);
+            for i=0,7 do
+                binary = binary .. tostring(ram.get_bit(byte, i));
+            end
+        end
+        return binary;
+    end
 end
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -581,7 +671,7 @@ function ram.get_encounter_threshold()
     curve = memory.read_u8(curve_addr + (ram.get_area() - 0x80) * 0x10 + ram.get_sub_area());
     local odds_addr = encounter_odds[ram.get_version_byte()];
     local test_level = math.min(math.floor(ram.get_steps() / 64) + 1, 16);
-    return memory.read_u8(odds_addr + test_level * 8 + ram.get_curve());
+    return memory.read_u8(odds_addr + test_level * 8 + curve);
 end
 
 function ram.get_encounter_chance()
@@ -615,7 +705,8 @@ end
 -- Controls
 
 function ram.initialize(options)
-    ram.rng.initialize(options.max_RNG_index);
+    ram.rng = options.rng;
+    ram.rng.initialize(RNG_address, 0xA338244F, options.max_RNG_index);
 end
 
 function ram.update_pre()

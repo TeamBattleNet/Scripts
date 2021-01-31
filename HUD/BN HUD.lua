@@ -30,7 +30,10 @@ local hud = load_HUD();
 console.clear();
 
 if hud then
-    hud.initialize();
+    local options = {};
+    options.major_version = "0.2";
+    options.rng = require("All/RNG");
+    hud.initialize(options);
     while true do
         hud.update();
         emu.frameadvance();
@@ -38,7 +41,7 @@ if hud then
 else
     print("Game not recognized.");
     while true do
-        emu.frameadvance(); -- idle until new ROM is loaded
+        emu.frameadvance(); -- idle until a new ROM is loaded
     end
 end
 
