@@ -1,6 +1,6 @@
--- Area names for MMBN 3 scripting, enjoy.
+-- Area names for MMBN 6 scripting, enjoy.
 
--- https://forums.therockmanexezone.com/list-of-mmbn3-areas-and-subareas-t5354.html
+-- https://forums.therockmanexezone.com/list-of-mmbn6-areas-and-subareas-t5241.html
 
 local areas = {};
 
