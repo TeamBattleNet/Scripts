@@ -36,11 +36,13 @@ ram.addr = {};
 
 ram.addr.title_star_byte     = 0x02000000; -- 0x04 1 bit for 1 star :)
 
+-- 000-00F ??? WWW Pin Doors
+
 ram.addr.metro_ticket        = 0x02000005; -- TBD
 
-ram.addr.fire_flags_oven     = 0x02000014; -- 30 bit flags
-ram.addr.fire_flags_www      = 0x0200001B; -- 23 bit flags
-
+ram.addr.fire_flags_oven     = 0x02000014; -- 30 bit flags, shared use
+ram.addr.fire_flags_www      = 0x0200001B; -- 23 bit flags, shared use
+--ram.addr.                  = 0x0200001C; -- TBD
 ram.addr.magic_byte          = 0x0200001D; -- 0x---10--- (progress must be == 0x54)
 
 ram.addr.library_start       = 0x02000020; -- starts at 2nd bit  flag
@@ -49,41 +51,56 @@ ram.addr.library_end         = 0x02000034; -- or later?
 ram.addr.emails_gave_flags   = 0x02000040; -- maybe? ends at 47
 ram.addr.emails_read_flags   = 0x02000048; -- maybe? ends at 4F
 
-ram.addr.BMD_flags           = 0x02000050; -- ends at 6B? 0x80 is shelf PET
-
--- 6C-8B temp flags?
+ram.addr.BMD_flags           = 0x02000050; -- ends at 6F? 0x80 is shelf PET
 
 ram.addr.fire_flags          = 0x02000070; -- 4 bytes, 32 fire bit flags
 
--- 83 dex hp link?
+--  70-8B  ??? flags
 
--- 110-120 divider
+--  8C-8F  ??? all 1's
 
--- 120-170 ???
+-- 110-120 ??? all 1's
+
+-- 120-170 ??? no idea
+
+-- 170-1BF ??? all 1's
 
 ram.addr.folder_ID           = 0x020001C0; -- 1 byte, chip  ID  of folder slot 1, ends at 0x020001FB
 ram.addr.folder_code         = 0x020001C1; -- 1 byte, chip Code of folder slot 1, ends at TBD
 
 -- 1FC-203 ??? 1FF changes a lot
 
---ram.addr.                  = 0x02000200; -- ? byte
---ram.addr.                  = 0x02000210; -- ? byte
+-- 204-213 ??? mostly 1's
+
 ram.addr.main_area           = 0x02000214; -- 1 byte
 ram.addr.sub_area            = 0x02000215; -- 1 byte
 ram.addr.progress            = 0x02000216; -- 1 byte
 ram.addr.music_progress      = 0x02000217; -- 1 byte
 --ram.addr.                  = 0x02000218; -- ? byte
 --ram.addr.                  = 0x02000219; -- ? byte
-
-ram.addr.buster_attack       = 0x02000224; -- 1 byte, max is 0x04
-ram.addr.buster_rapid        = 0x02000225; -- 1 byte, max is 0x04
-ram.addr.buster_charge       = 0x02000226; -- 1 byte, max is 0x04
+--ram.addr.                  = 0x0200021A; -- ? byte
+--ram.addr.                  = 0x0200021B; -- ? byte
+--ram.addr.                  = 0x0200021C; -- ? byte
+--ram.addr.                  = 0x0200021D; -- ? byte
+--ram.addr.                  = 0x0200021E; -- ? byte
+--ram.addr.                  = 0x0200021F; -- ? byte
+--ram.addr.                  = 0x02000220; -- ? byte
+--ram.addr.                  = 0x02000221; -- ? byte
+--ram.addr.                  = 0x02000222; -- ? byte
+--ram.addr.                  = 0x02000223; -- ? byte
+ram.addr.buster_attack       = 0x02000224; -- 1 byte, max is 0x04, can't change mid-battle
+ram.addr.buster_rapid        = 0x02000225; -- 1 byte, max is 0x04, can't change mid-battle
+ram.addr.buster_charge       = 0x02000226; -- 1 byte, max is 0x04, can't change mid-battle
 ram.addr.armor_equipped      = 0x02000227; -- 1 byte, max is 0x04
-
+--ram.addr.                  = 0x02000228; -- ? byte
+--ram.addr.                  = 0x02000229; -- ? byte
+--ram.addr.                  = 0x0200022A; -- ? byte
+--ram.addr.                  = 0x0200022B; -- ? byte
 ram.addr.HP_max_1            = 0x0200022C; -- 2 bytes, max is 0x03E8
 ram.addr.HP_max_2            = 0x0200022E; -- 2 bytes, max is 0x03E8
+--ram.addr.                  = 0x02000230; -- ? byte
 
--- 230 more flags?
+-- 230+ more flags?
 
 --ram.addr.                  = 0x02000234; -- ? byte HP & Internet links
 
@@ -225,6 +242,13 @@ ram.set.sub_area = function(sub_area) memory.write_u8(ram.addr.sub_area, sub_are
 
 ram.get.battle_pointer = function() return memory.read_u16_le(ram.addr.battle_pointer); end;
 ram.set.battle_pointer = function(battle_pointer) memory.write_u16_le(ram.addr.battle_pointer, battle_pointer); end;
+
+ram.get.buster_attack = function() return memory.read_u8(ram.addr.buster_attack); end;
+ram.set.buster_attack = function(buster_attack) memory.write_u8(ram.addr.buster_attack, buster_attack); end;
+ram.get.buster_rapid = function() return memory.read_u8(ram.addr.buster_rapid); end;
+ram.set.buster_rapid = function(buster_rapid) memory.write_u8(ram.addr.buster_rapid, buster_rapid); end;
+ram.get.buster_charge = function() return memory.read_u8(ram.addr.buster_charge); end;
+ram.set.buster_charge = function(buster_charge) memory.write_u8(ram.addr.buster_charge, buster_charge); end;
 
 ram.get.check = function() return memory.read_u16_le(ram.addr.check); end;
 ram.set.check = function(check) memory.write_u16_le(ram.addr.check, check); end;

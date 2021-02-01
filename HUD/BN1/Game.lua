@@ -396,6 +396,30 @@ function game.get_library_count()
     -- TODO
 end
 
+----------------------------------------Mega Modifications ----------------------------------------
+
+function game.set_buster_stats(power_level)
+    game.ram.set.buster_attack(power_level);
+    game.ram.set.buster_rapid (power_level);
+    game.ram.set.buster_charge(power_level);
+end
+
+function game.reset_buster_stats()
+    game.set_buster_stats(0); -- 0 indexed
+end
+
+function game.max_buster_stats()
+    game.set_buster_stats(4);
+end
+
+function game.hub_buster_stats()
+    game.set_buster_stats(5); -- super armor
+end
+
+function game.op_buster_stats()
+    game.set_buster_stats(7); -- 327 buster shots
+end
+
 ----------------------------------------Battle Information ----------------------------------------
 
 function game.get_battle_pointer()

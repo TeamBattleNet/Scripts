@@ -291,6 +291,10 @@ command_misc.options = {
     { value = game.extinguish_oven_fires; text = "Extinguish Oven Fires"; };
     { value = game.ignite_WWW_fires;      text = "Ignite WWW Fires";      };
     { value = game.extinguish_WWW_fires;  text = "Extinguish WWW Fires";  };
+    { value = game.reset_buster_stats;    text = "Reset Buster Stats";    };
+    { value = game.max_buster_stats;      text = "Max Buster Stats";      };
+    { value = game.hub_buster_stats;      text = "Hub Buster Stats";      };
+    { value = game.op_buster_stats;       text = "OP Buster Stats";       };
 };
 command_misc.doit = function(value) value(); end;
 table.insert(commands, command_misc);
