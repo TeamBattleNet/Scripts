@@ -26,7 +26,7 @@ progress_names[0x23] = "Dad's PowerUP";
 progress_names[0x24] = "School Cancelled";
 progress_names[0x25] = "SciLab (At Night)";
 progress_names[0x26] = "ColdBears Deleted";
-progress_names[0x27] = "Freed OSG from car";
+progress_names[0x27] = "Found OSG in trunk";
 
 progress_names[0x30] = "IceMan Deleted";
 progress_names[0x31] = "Traffic Lights Hijacked";

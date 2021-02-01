@@ -173,33 +173,40 @@ table.insert(commands, command_RNG);
 
 
 
---[[
-options = {};
-table.insert(options, {value =  0x10; text = "Add      0x10  to  Progress"});
-table.insert(options, {value =  0x01; text = "Add      0x01  to  Progress"});
-table.insert(options, {value = -0x01; text = "Subtract 0x01 from Progress"});
-table.insert(options, {value = -0x10; text = "Subtract 0x10 from Progress"});
-options.selection = 1; -- default option
-options.description = function() return string.format("Modify Progress Byte: %02X", ram.get_progress()); end;
-options.doit = function(value) ram.add_progress(value); end;
-table.insert(commands, options);
-
-options = {};
-table.insert(options, {value =  0x00; text = "0x00 New Game          "});
-table.insert(options, {value =  0x06; text = "0x06 FireMan Defeated  "});
-table.insert(options, {value =  0x20; text = "0x20 NumberMan Defeated"});
-table.insert(options, {value =  0x22; text = "0x22 StoneMan Defeated "});
-table.insert(options, {value =  0x26; text = "0x26 What Polar Bears? "});
-table.insert(options, {value =  0x30; text = "0x30 IceMan Defeated   "});
-table.insert(options, {value =  0x40; text = "0x40 ColorMan Defeated "});
-table.insert(options, {value =  0x50; text = "0x50 ElecMan Defeated  "});
-table.insert(options, {value =  0x52; text = "0x52 BombMan Defeated  "});
-table.insert(options, {value =  0x54; text = "0x54 Expired WWW Pass  "});
-options.selection = 1; -- default option
-options.description = function() return string.format("Set Progress Byte: %02X", ram.get_progress()); end;
-options.doit = function(value) ram.set_progress(value); end;
-table.insert(commands, options);
---]]
+local command_progress = {};
+function command_progress.update_options(option_value)
+    command_progress.options = {};
+    command_progress.selection = 1;
+    command_progress.scenario = nil;
+    
+    if not option_value then
+        command_progress.description = function() return "Select a scenario:"; end;
+        table.insert( command_progress.options, { value = 0x00; text = "0x00 ProbablyAVirus"; } );
+        table.insert( command_progress.options, { value = 0x10; text = "0x10 School Takeover"; } );
+        table.insert( command_progress.options, { value = 0x20; text = "0x20 Complex Complex"; } );
+        table.insert( command_progress.options, { value = 0x30; text = "0x30 City Traffic"; } );
+        table.insert( command_progress.options, { value = 0x40; text = "0x40 Power Plant"; } );
+        table.insert( command_progress.options, { value = 0x50; text = "0x50 Get the Memos"; } );
+    else
+        command_progress.description = function() return "Select an option:"; end;
+        command_progress.scenario = option_value;
+        table.insert( command_progress.options, { value = nil; text = "Previous Menu"; } );
+        for i=option_value,option_value+0xF do
+            if ram.get_progress_name_from_value(i) then
+                table.insert( command_progress.options, { value = i; text = string.format("0x%02X: %s", i, ram.get_progress_name_from_value(i)); } );
+            end
+        end
+    end
+end
+command_progress.update_options();
+function command_progress.doit(value)
+    if command_progress.scenario and value then
+        ram.set_progress(value);
+    else
+        command_progress.update_options(value);
+    end
+end
+table.insert(commands, command_progress);
 
 
 
