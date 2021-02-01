@@ -444,6 +444,22 @@ function game.op_buster_stats()
     game.set_buster_stats(7); -- 327 buster shots
 end
 
+function game.calculate_max_HP()
+    return 100 + 20 * game.ram.get.HPMemory();
+end
+
+function game.calculate_mega_level()
+    level = 1; -- starting level
+    level = level + 1 * game.ram.get.HPMemory();
+    level = level + 3 * game.ram.get.buster_attack();
+    level = level + 3 * game.ram.get.buster_rapid();
+    level = level + 3 * game.ram.get.buster_charge();
+    level = level + 6 * game.ram.get.armor_heat();
+    level = level + 6 * game.ram.get.armor_aqua();
+    level = level + 6 * game.ram.get.armor_wood();
+    return level;
+end
+
 ----------------------------------------Battle Information ----------------------------------------
 
 function game.get_battle_pointer()

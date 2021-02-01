@@ -42,8 +42,8 @@ ram.addr.metro_ticket        = 0x02000005; -- TBD
 
 ram.addr.fire_flags_oven     = 0x02000014; -- 30 bit flags, shared use
 ram.addr.fire_flags_www      = 0x0200001B; -- 23 bit flags, shared use
---ram.addr.                  = 0x0200001C; -- TBD
-ram.addr.magic_byte          = 0x0200001D; -- 0x---10--- (progress must be == 0x54)
+ram.addr.elevator_flag       = 0x0200001C; -- 1-------b
+ram.addr.magic_byte          = 0x0200001D; -- ---10---b (progress must be == 0x54)
 
 ram.addr.library_start       = 0x02000020; -- starts at 2nd bit  flag
 ram.addr.library_end         = 0x02000034; -- or later?
@@ -242,6 +242,13 @@ ram.get.main_area = function() return memory.read_u8(ram.addr.main_area); end;
 ram.set.main_area = function(main_area) memory.write_u8(ram.addr.main_area, main_area); end;
 ram.get.sub_area = function() return memory.read_u8(ram.addr.sub_area); end;
 ram.set.sub_area = function(sub_area) memory.write_u8(ram.addr.sub_area, sub_area); end;
+
+ram.get.armor_heat = function() return memory.read_u8(ram.addr.armor_heat); end;
+ram.set.armor_heat = function(armor_heat) memory.write_u8(ram.addr.armor_heat, armor_heat); end;
+ram.get.armor_aqua = function() return memory.read_u8(ram.addr.armor_aqua); end;
+ram.set.armor_aqua = function(armor_aqua) memory.write_u8(ram.addr.armor_aqua, armor_aqua); end;
+ram.get.armor_wood = function() return memory.read_u8(ram.addr.armor_wood); end;
+ram.set.armor_wood = function(armor_wood) memory.write_u8(ram.addr.armor_wood, armor_wood); end;
 
 ram.get.battle_pointer = function() return memory.read_u16_le(ram.addr.battle_pointer); end;
 ram.set.battle_pointer = function(battle_pointer) memory.write_u16_le(ram.addr.battle_pointer, battle_pointer); end;

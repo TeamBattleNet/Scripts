@@ -9,7 +9,7 @@
 -- https://docs.google.com/spreadsheets/d/e/2PACX-1vT5JrlG2InVHk4Rxpz_o3wQ5xbpNj2_n87wY0R99StH9F5P5Cp8AFyjsEQCG6MVEaEMn9dJND-k5M-P/pubhtml Did you check the notes?
 
 local hud = {};
-hud.minor_version = "1.0";
+hud.minor_version = "1.1";
 
 local game = require("BN1/Game");
 local commands = require("BN1/Commands");
@@ -76,8 +76,9 @@ local function display_in_menu()
 end
 
 local function display_player_info()
-    to_screen(string.format("Zenny   : %7u", game.get_zenny()));
-    -- TODO: MegaMan Stats
+    to_screen(string.format("Zenny: %6u", game.get_zenny()));
+    to_screen(string.format("MaxHP: %6u", game.calculate_max_HP()));
+    to_screen(string.format("Level: %6u", game.calculate_mega_level()));
     -- TODO: Library Stats
 end
 
@@ -128,7 +129,7 @@ local function display_HUD()
     if game.in_title() or game.in_splash() then
         display_game_info();
         to_screen("");
-        display_RNG(true);
+        display_player_info()
         position_bottom_right();
         to_screen(game.get_current_area_name());
     elseif game.in_world() then
