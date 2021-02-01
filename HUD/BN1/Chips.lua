@@ -1,5 +1,7 @@
 -- Battlechip names for MMBN 1 scripting, enjoy.
 
+-- https://docs.google.com/spreadsheets/d/18qUmXQP_w6g7Guy_fpzaCCWph17cxSetR29n5WOxXKI/pubhtml
+
 local chips = {};
 
 chips.codes = {};
@@ -263,7 +265,42 @@ chips.names[197] = "ElecMan2";
 chips.names[198] = "ElecMan3";
 chips.names[199] = "Bass";
 
--- PAs?
+chips.names[202] = "Z-Canon1";
+chips.names[203] = "Z-Canon2";
+chips.names[204] = "Z-Canon3";
+chips.names[205] = "Z-Spread";
+chips.names[206] = "Z-Raton1";
+chips.names[207] = "Z-Raton2";
+chips.names[208] = "Z-Raton3";
+chips.names[209] = "Z-Arrow";
+chips.names[210] = "Z-Spear";
+chips.names[211] = "Z-Lance";
+chips.names[212] = "O-Canon1";
+chips.names[213] = "O-Canon2";
+chips.names[214] = "O-Canon3";
+chips.names[215] = "O-Spread";
+chips.names[216] = "O-Raton1";
+chips.names[217] = "O-Raton2";
+chips.names[218] = "O-Raton3";
+chips.names[219] = "O-Arrow";
+chips.names[220] = "O-Spear";
+chips.names[221] = "O-Lance";
+chips.names[222] = "B-Bomb";
+chips.names[223] = "B-Sword";
+chips.names[224] = "B-Wave";
+chips.names[225] = "B-Quake";
+chips.names[226] = "S-Bomb";
+chips.names[227] = "S-Sword";
+chips.names[228] = "S-Wave";
+chips.names[229] = "S-Quake";
+chips.names[230] = "PwrCanon";
+chips.names[231] = "HvyStamp";
+chips.names[232] = "BgStrait";
+chips.names[233] = "BloodSuk";
+chips.names[234] = "Storm";
+chips.names[235] = "GtsShoot";
+chips.names[236] = "LifeSavr";
+chips.names[237] = "2xHero";
 
 function chips.get_random_code()
     return math.random(0,25);
@@ -275,6 +312,10 @@ function chips.get_random_ID()
         ID = math.random(1,199);
     end
     return ID;
+end
+
+function chips.get_random_PA()
+    return math.random(202,237);
 end
 
 return chips;
