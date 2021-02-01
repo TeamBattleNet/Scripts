@@ -25,20 +25,15 @@ local function to_screen(text, color)
 end
 
 local function position_top_left()
-    if     ram.in_battle() then             -- align with HP
+    if     ram.in_battle() then     -- align with HP
         x =  0;
-        y = 68;
-    elseif ram.in_world() then
-        if ram.in_digital_world() then      -- align with HP
-            x = 3;
-            y = 0;
-        else -- if ram.in_real_world() then -- aligned with PET
-            x = 10;
-            y = 90;
-        end
-    else                                    -- align with corner
-        x = 3; -- puts most text one pixel from edge
-        y = 0; -- puts most text one pixel from edge
+        y = 64;
+    elseif ram.in_real_world() then -- aligned with PET
+        x = 10;
+        y = 90;
+    else
+        x = 5;
+        y = 8;
     end
     anchor = "topleft";
 end
@@ -94,7 +89,7 @@ end
 
 local function display_routing()
     position_top_left();
-    x = 190;
+    x = 240;
     y =  16;
     to_screen("0000: " .. ram.get_string_hex(0x02000000, 16, true));
     to_screen("0010: " .. ram.get_string_hex(0x02000010, 16, true));
@@ -103,10 +98,10 @@ local function display_routing()
     to_screen("0008: " .. ram.get_string_binary(0x02000000, 4, true));
     to_screen("000C: " .. ram.get_string_binary(0x02000000, 4, true));
     to_screen("01FC: " .. ram.get_string_hex(0x020001FC, 8, true));
-    x = 500;
+    x = 550;
     y = 112;
     to_screen(ram.is_go_mode());
-    x = 550;
+    x = 600;
     y = 112;
     to_screen(ram.get_string_binary(0x0200001D, 1, true));
 end
@@ -129,14 +124,6 @@ local routing_mode = false;
 local command_mode = false;
 
 local function display_HUD()
-    if routing_mode then
-        display_routing();
-    end
-    
-    if command_mode then
-        display_commands();
-    end
-    
     position_top_left();
     if ram.in_title() or ram.in_splash() then
         display_game_info();
@@ -173,6 +160,14 @@ local function display_HUD()
         to_screen("t r o u t", 0x10000000);
     else
         to_screen("Unknown Game State!");
+    end
+    
+    if command_mode then
+        display_commands();
+    end
+    
+    if routing_mode then
+        display_routing();
     end
 end
 
