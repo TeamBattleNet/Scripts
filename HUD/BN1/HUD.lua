@@ -11,7 +11,7 @@
 local hud = {};
 hud.minor_version = "0.0";
 
-local ram = require("BN1/RAM");
+local game = require("BN1/Game");
 local commands = require("BN1/Commands");
 
 local x = 0; -- font is positioned as if 10 pixels by 13 pixels
@@ -25,12 +25,12 @@ local function to_screen(text, color)
 end
 
 local function position_top_left()
-    if     ram.in_battle() then     -- align with HP
+    if     game.in_battle() then     -- align with HP
         x =  0;
         y = 64;
-    elseif ram.in_real_world() then -- aligned with PET
+    elseif game.in_world() and game.in_real_world() then -- aligned with PET
         x = 10;
-        y = 90;
+        y = 96;
     else
         x = 5;
         y = 8;
@@ -46,28 +46,28 @@ end
 
 local function display_RNG(and_value)
     if and_value then
-        to_screen("RNG Value: "   .. string.format("%08X", ram.get_RNG_value()));
+        to_screen("RNG Value: "   .. string.format("%08X", game.get_RNG_value()));
     end
-    to_screen(string.format("RNG Index: %4s", (ram.get_RNG_index() or "?")));
-    to_screen(string.format("RNG Delta: %4s", (ram.get_RNG_delta() or "?")));
+    to_screen(string.format("RNG Index: %4s", (game.get_RNG_index() or "?")));
+    to_screen(string.format("RNG Delta: %4s", (game.get_RNG_delta() or "?")));
 end
 
 local function display_steps()
-    if ram.in_digital_world() then
-        to_screen(string.format("Steps : %7u", ram.get_steps()));
-        to_screen(string.format("Check : %7u", ram.get_check()));
-        to_screen(string.format("Checks: %7u", ram.get_encounter_checks()));
-        to_screen(string.format("Chance: %6.3f%%", ram.get_encounter_chance()));
-        to_screen(string.format("Next  : %7i", (64 - (ram.get_steps() - ram.get_check()))));
+    if game.in_digital_world() then
+        to_screen(string.format("Steps : %7u", game.get_steps()));
+        to_screen(string.format("Check : %7u", game.get_check()));
+        to_screen(string.format("Checks: %7u", game.get_encounter_checks()));
+        to_screen(string.format("Chance: %6.3f%%", game.get_encounter_chance()));
+        to_screen(string.format("Next  : %7i", (64 - (game.get_steps() - game.get_check()))));
     end
-    to_screen(string.format("X: %7i", ram.get_x()));
-    to_screen(string.format("Y: %7i", ram.get_y()));
+    to_screen(string.format("X: %7i", game.get_X()));
+    to_screen(string.format("Y: %7i", game.get_Y()));
 end
 
 local function display_draws(how_many, start_at)
     start_at = start_at or 1;
     for i=1,how_many do
-        to_screen(string.format("%2i: %2i", i+start_at-1, ram.get_draw_slot(i+start_at-1)));
+        to_screen(string.format("%2i: %2i", i+start_at-1, game.get_draw_slot(i+start_at-1)));
     end
 end
 
@@ -76,14 +76,14 @@ local function display_in_menu()
 end
 
 local function display_player_info()
-    to_screen(string.format("Zenny   : %7u", ram.get_zenny()));
+    to_screen(string.format("Zenny   : %7u", game.get_zenny()));
     -- TODO: MegaMan Stats
     -- TODO: Library Stats
 end
 
 local function display_game_info()
-    to_screen(string.format("Progress: 0x%02X %s", ram.get_progress(), ram.get_progress_name()));
-    to_screen("Game Version: " .. ram.get_version());
+    to_screen(string.format("Progress: 0x%02X %s", game.get_progress(), game.get_current_progress_name()));
+    to_screen("Game Version: " .. game.get_version_name());
     to_screen("HUD  Version: " .. hud.version);
 end
 
@@ -91,19 +91,19 @@ local function display_routing()
     position_top_left();
     x = 240;
     y =  16;
-    to_screen("0000: " .. ram.get_string_hex(0x02000000, 16, true));
-    to_screen("0010: " .. ram.get_string_hex(0x02000010, 16, true));
-    to_screen("0000: " .. ram.get_string_binary(0x02000000, 4, true));
-    to_screen("0004: " .. ram.get_string_binary(0x02000000, 4, true));
-    to_screen("0008: " .. ram.get_string_binary(0x02000000, 4, true));
-    to_screen("000C: " .. ram.get_string_binary(0x02000000, 4, true));
-    to_screen("01FC: " .. ram.get_string_hex(0x020001FC, 8, true));
+    to_screen("0000: " .. game.get_string_hex(0x02000000, 16, true));
+    to_screen("0010: " .. game.get_string_hex(0x02000010, 16, true));
+    to_screen("0000: " .. game.get_string_binary(0x02000000, 4, true));
+    to_screen("0004: " .. game.get_string_binary(0x02000000, 4, true));
+    to_screen("0008: " .. game.get_string_binary(0x02000000, 4, true));
+    to_screen("000C: " .. game.get_string_binary(0x02000000, 4, true));
+    to_screen("01FC: " .. game.get_string_hex(0x020001FC, 8, true));
     x = 550;
     y = 112;
-    to_screen(ram.is_go_mode());
+    to_screen(tostring(game.is_go_mode()));
     x = 600;
     y = 112;
-    to_screen(ram.get_string_binary(0x0200001D, 1, true));
+    to_screen(game.get_string_binary(0x0200001D, 1, true));
 end
 
 local function display_commands()
@@ -125,37 +125,37 @@ local command_mode = false;
 
 local function display_HUD()
     position_top_left();
-    if ram.in_title() or ram.in_splash() then
+    if game.in_title() or game.in_splash() then
         display_game_info();
         to_screen("");
         display_RNG(true);
         position_bottom_right();
-        to_screen(ram.get_current_area_name());
-    elseif ram.in_world() then
+        to_screen(game.get_current_area_name());
+    elseif game.in_world() then
         display_RNG();
         display_steps();
-        if ram.near_number_doors() then
-            to_screen("Door Code: " .. ram.get_door_code());
+        if game.near_number_doors() then
+            to_screen("Door Code: " .. game.get_door_code());
         end
         position_bottom_right();
-        to_screen(ram.get_current_area_name());
-    elseif ram.in_battle() or ram.in_game_over() then
+        to_screen(game.get_current_area_name());
+    elseif game.in_battle() or game.in_game_over() then
         display_draws(10);
         position_top_left();
         x = x + 71;
-        to_screen(string.format("Battle ID:   0x%4X", ram.get_battle_pointer()));
+        to_screen(string.format("Battle ID:   0x%4X", game.get_battle_pointer()));
         display_RNG(true);
         to_screen("");
-        to_screen(string.format("Checks: %2u", ram.get_encounter_checks()));
+        to_screen(string.format("Checks: %2u", game.get_encounter_checks()));
         position_bottom_right();
-        to_screen(ram.get_enemy_name(1));
-        to_screen(ram.get_enemy_name(2));
-        to_screen(ram.get_enemy_name(3));
-    elseif ram.in_transition() then
+        to_screen(game.get_enemy_name(1));
+        to_screen(game.get_enemy_name(2));
+        to_screen(game.get_enemy_name(3));
+    elseif game.in_transition() then
         to_screen("HUD Version: " .. hud.version);
-    elseif ram.in_menu() or ram.in_shop() or ram.in_chip_trader() then
+    elseif game.in_menu() or game.in_shop() or game.in_chip_trader() then
         display_in_menu();
-    elseif ram.in_credits() then
+    elseif game.in_credits() then
         position_bottom_right();
         to_screen("t r o u t", 0x10000000);
     else
@@ -175,15 +175,15 @@ function hud.initialize(options)
     print("Initializing HUD for MMBN 1...");
     hud.version = options.major_version .. "." .. hud.minor_version;
     options.max_RNG_index = 10 * 60 * 60; -- 10 minutes of frames
-    ram.initialize(options);
-    print("HUD for MMBN 1 " .. ram.get_version() .. " Initialized.");
+    game.initialize(options);
+    print("HUD for MMBN 1 " .. game.get_version_name() .. " Initialized.");
 end
 
 local previous_keys = {};
 local previous_buttons = {};
 
 function hud.update()
-    ram.update_pre();
+    game.update_pre();
     
     local keys = joypad.get();
     local buttons = input.get();
@@ -209,7 +209,7 @@ function hud.update()
             elseif keys.B      and not previous_keys.B      then
                 commands.doit();
             elseif keys.A      and not previous_keys.A      then
-                --print(ram.get_draw_slots());
+                --print(game.get_draw_slots());
                 --print(buttons);
                 --print(keys);
             end
@@ -240,7 +240,7 @@ function hud.update()
         display_HUD();
     end
     
-    ram.update_post();
+    game.update_post();
     
     previous_keys = keys;
     previous_buttons = buttons;

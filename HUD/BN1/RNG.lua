@@ -114,7 +114,7 @@ function rng.initialize(target_RNG_index)
         maximum_RNG_index = target_RNG_index;
     end
     rng.initialize_table();
-    print("Creating RNG Tables with max index of: " .. maximum_RNG_index);
+    print("Creating RNG Table with max index of: " .. maximum_RNG_index);
 end
 
 function rng.update_pre()

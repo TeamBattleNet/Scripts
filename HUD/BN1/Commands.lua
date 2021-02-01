@@ -1,8 +1,9 @@
 -- Commands for the HUD Script for MMBN 1, enjoy.
 
-local ram = require("BN1/RAM");
-
 local controls = {};
+
+local game = require("BN1/Game");
+
 local commands = {};
 local command_index = 1;
 
@@ -86,8 +87,8 @@ command_encounters.options = {
     { value = false; text = "Allow Random Encounters"; };
 };
 command_encounters.selection = 1;
-command_encounters.description = function() return "Random Encounters: " .. tostring(not ram.skip_encounters); end
-command_encounters.doit = function(value) ram.skip_encounters = value; end;
+command_encounters.description = function() return "Random Encounters: " .. tostring(not game.skip_encounters); end
+command_encounters.doit = function(value) game.skip_encounters = value; end;
 table.insert(commands, command_encounters);
 
 
@@ -104,8 +105,8 @@ command_zenny.options = {
     { value = -100000; text = "Decrease by 100000"; };
 };
 command_zenny.selection = 1;
-command_zenny.description = function() return string.format("Zenny: %11u", ram.get_zenny()); end;
-command_zenny.doit = function(value) ram.add_zenny(value); end;
+command_zenny.description = function() return string.format("Zenny: %11u", game.get_zenny()); end;
+command_zenny.doit = function(value) game.add_zenny(value); end;
 table.insert(commands, command_zenny);
 
 
@@ -118,8 +119,8 @@ command_power.options = {
     { value = -10; text = "Take 10"; };
 };
 command_power.selection = 1;
-command_power.description = function() return "PowerUPs: " .. ram.get_powerups_available(); end
-command_power.doit = function(value) ram.add_powerups_available(value); end;
+command_power.description = function() return "PowerUPs: " .. game.get_PowerUPs(); end
+command_power.doit = function(value) game.add_PowerUPs(value); end;
 table.insert(commands, command_power);
 
 
@@ -132,8 +133,8 @@ command_ice_block.options = {
     { value = -53; text = "Take 53"; };
 };
 command_ice_block.selection = 1;
-command_ice_block.description = function() return "IceBlocks: " .. ram.get_IceBlock_available(); end;
-command_ice_block.doit = function(value) ram.add_IceBlock_available(value); end;
+command_ice_block.description = function() return "IceBlocks: " .. game.get_IceBlocks(); end;
+command_ice_block.doit = function(value) game.add_IceBlocks(value); end;
 table.insert(commands, command_ice_block);
 
 
@@ -150,8 +151,8 @@ command_RNG.options = {
     { value = -1000; text = "Decrease by 1000"; };
 };
 command_RNG.selection = 1;
-command_RNG.description = function() return string.format("RNG Index: %5s", (ram.rng.get_RNG_index() or "????")); end;
-command_RNG.doit = function(value) ram.rng.adjust_RNG(value); end;
+command_RNG.description = function() return string.format("RNG Index: %5s", (game.rng.get_RNG_index() or "?????")); end;
+command_RNG.doit = function(value) game.rng.adjust_RNG(value); end;
 table.insert(commands, command_RNG);
 
 
@@ -168,8 +169,8 @@ command_RNG.options = {
     { value = -9999; text = "Decrease by 9999"; };
 };
 command_RNG.selection = 1;
-command_RNG.description = function() return "Modify Steps: " .. ram.get_steps(); end;
-command_RNG.doit = function(value) ram.add_steps(value); end;
+command_RNG.description = function() return "Modify Steps: " .. game.get_steps(); end;
+command_RNG.doit = function(value) game.add_steps(value); end;
 table.insert(commands, command_RNG);
 
 
@@ -181,7 +182,7 @@ function command_progress.update_options(option_value)
     command_progress.scenario = nil;
     
     if not option_value then
-        command_progress.description = function() return "Select a scenario group:"; end;
+        command_progress.description = function() return "Select a Progress scenario:"; end;
         table.insert( command_progress.options, { value = 0x00; text = "0x00 ProbablyAVirus";  } );
         table.insert( command_progress.options, { value = 0x10; text = "0x10 School Takeover"; } );
         table.insert( command_progress.options, { value = 0x20; text = "0x20 Complex Complex"; } );
@@ -189,12 +190,12 @@ function command_progress.update_options(option_value)
         table.insert( command_progress.options, { value = 0x40; text = "0x40 Power Plant";     } );
         table.insert( command_progress.options, { value = 0x50; text = "0x50 Get the Memos";   } );
     else
-        command_progress.description = function() return "Select an option:"; end;
+        command_progress.description = function() return "Select a Progress value:"; end;
         command_progress.scenario = option_value;
         table.insert( command_progress.options, { value = nil; text = "Previous Menu"; } );
         for i=option_value,option_value+0xF do
-            if ram.get_progress_name_from_value(i) then
-                table.insert( command_progress.options, { value = i; text = string.format("0x%02X: %s", i, ram.get_progress_name_from_value(i)); } );
+            if game.get_progress_name(i) then
+                table.insert( command_progress.options, { value = i; text = string.format("0x%02X: %s", i, game.get_progress_name(i)); } );
             end
         end
     end
@@ -202,7 +203,7 @@ end
 command_progress.update_options();
 function command_progress.doit(value)
     if command_progress.scenario and value then
-        ram.set_progress(value);
+        game.set_progress(value);
     else
         command_progress.update_options(value);
     end
@@ -219,16 +220,16 @@ function teleport_real_world.update_options(option_value)
     
     if not option_value then
         teleport_real_world.description = function() return "Select a real world group:"; end;
-        for i,group in pairs(ram.get_area_groups_real()) do
-            table.insert( teleport_real_world.options, { value = group; text = ram.get_area_group_name(group); } );
+        for i,group in pairs(game.get_area_groups_real()) do
+            table.insert( teleport_real_world.options, { value = group; text = game.get_area_group_name(group); } );
         end
     else
         teleport_real_world.description = function() return "Select an area:"; end;
         teleport_real_world.main_area = option_value;
         table.insert( teleport_real_world.options, { value = nil; text = "Previous Menu"; } );
         for i=0,0xF do
-            if ram.does_area_exist(option_value, i) then
-                table.insert( teleport_real_world.options, { value = i; text = ram.get_area_name(option_value, i); } );
+            if game.does_area_exist(option_value, i) then
+                table.insert( teleport_real_world.options, { value = i; text = game.get_area_name(option_value, i); } );
             end
         end
     end
@@ -236,7 +237,7 @@ end
 teleport_real_world.update_options();
 function teleport_real_world.doit(value)
     if teleport_real_world.main_area and value then
-        ram.teleport(teleport_real_world.main_area, value);
+        game.teleport(teleport_real_world.main_area, value);
     else
         teleport_real_world.update_options(value);
     end
@@ -253,16 +254,16 @@ function teleport_digital_world.update_options(option_value)
     
     if not option_value then
         teleport_digital_world.description = function() return "Select a digital world group:"; end;
-        for i,group in pairs(ram.get_area_groups_digital()) do
-            table.insert( teleport_digital_world.options, { value = group; text = ram.get_area_group_name(group); } );
+        for i,group in pairs(game.get_area_groups_digital()) do
+            table.insert( teleport_digital_world.options, { value = group; text = game.get_area_group_name(group); } );
         end
     else
         teleport_digital_world.description = function() return "Select an area:"; end;
         teleport_digital_world.main_area = option_value;
         table.insert( teleport_digital_world.options, { value = nil; text = "Previous Menu"; } );
         for i=0,0xF do
-            if ram.does_area_exist(option_value, i) then
-                table.insert( teleport_digital_world.options, { value = i; text = ram.get_area_name(option_value, i); } );
+            if game.does_area_exist(option_value, i) then
+                table.insert( teleport_digital_world.options, { value = i; text = game.get_area_name(option_value, i); } );
             end
         end
     end
@@ -270,7 +271,7 @@ end
 teleport_digital_world.update_options();
 function teleport_digital_world.doit(value)
     if teleport_digital_world.main_area and value then
-        ram.teleport(teleport_digital_world.main_area, value);
+        game.teleport(teleport_digital_world.main_area, value);
     else
         teleport_digital_world.update_options(value);
     end
@@ -283,13 +284,13 @@ local command_misc = {};
 command_misc.selection = 1;
 command_misc.description = function() return "Misc Commands:"; end;
 command_misc.options = {
-    { value = ram.go_mode;               text = "Go Mode";               };
-    { value = ram.set_star_flag;         text = "Set Star Flag";         };
-    { value = ram.clear_star_flag;       text = "Clear Star Flag";       };
-    { value = ram.ignite_oven_fires;     text = "Ignite Oven Fires";     };
-    { value = ram.extinguish_oven_fires; text = "Extinguish Oven Fires"; };
-    { value = ram.ignite_WWW_fires;      text = "Ignite WWW Fires";      };
-    { value = ram.extinguish_WWW_fires;  text = "Extinguish WWW Fires";  };
+    { value = game.go_mode;               text = "Go Mode";               };
+    { value = game.set_star_flag;         text = "Set Star Flag";         };
+    { value = game.clear_star_flag;       text = "Clear Star Flag";       };
+    { value = game.ignite_oven_fires;     text = "Ignite Oven Fires";     };
+    { value = game.extinguish_oven_fires; text = "Extinguish Oven Fires"; };
+    { value = game.ignite_WWW_fires;      text = "Ignite WWW Fires";      };
+    { value = game.extinguish_WWW_fires;  text = "Extinguish WWW Fires";  };
 };
 command_misc.doit = function(value) value(); end;
 table.insert(commands, command_misc);
@@ -300,13 +301,13 @@ local command_combat = {};
 command_combat.selection = 1;
 command_combat.description = function() return "Battle Options:"; end;
 command_combat.options = {
-    { value = function(value) ram.kill_enemy(0); end; text = "Delete Everything"; };
-    { value = function(value) ram.kill_enemy(1); end; text = "Delete Enemy 1"; };
-    { value = function(value) ram.kill_enemy(2); end; text = "Delete Enemy 2"; };
-    { value = function(value) ram.kill_enemy(3); end; text = "Delete Enemy 3"; };
-    { value = ram.fill_custom_gauge;  text = "Fill Custom Gauge";    };
-    { value = ram.empty_custom_gauge; text = "Empty Custom Gauge";   };
-    { value = ram.reset_delete_time;  text = "Set Delete Time to 0"; };
+    { value = function(value) game.kill_enemy(0); end; text = "Delete Everything"; };
+    { value = function(value) game.kill_enemy(1); end; text = "Delete Enemy 1";    };
+    { value = function(value) game.kill_enemy(2); end; text = "Delete Enemy 2";    };
+    { value = function(value) game.kill_enemy(3); end; text = "Delete Enemy 3";    };
+    { value = game.fill_custom_gauge;  text = "Fill Custom Gauge";    };
+    { value = game.empty_custom_gauge; text = "Empty Custom Gauge";   };
+    { value = game.reset_delete_time;  text = "Set Delete Time to 0"; };
 };
 command_combat.doit = function(value) value(); end;
 table.insert(commands, command_combat);

@@ -185,7 +185,7 @@ function rng.update_pre()
     if current_RNG_index < maximum_RNG_index then
         rng.expand_table(maximum_calculations_per_frame);
         if current_RNG_index >= maximum_RNG_index then
-            print("RNG Table Created.");
+            print("RNG Tables Created.");
         end
     end
 end

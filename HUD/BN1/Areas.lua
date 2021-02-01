@@ -189,7 +189,5 @@ areas.names[0x90][0x0D] = "Undernet 10";
 areas.names[0x90][0x0E] = "Undernet 11";
 areas.names[0x90][0x0F] = "Undernet 12";
 
---ram.areas.names[ram.get_area()][ram.get_sub_area()];
-
 return areas;
 
