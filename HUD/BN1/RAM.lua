@@ -45,8 +45,10 @@ ram.addr.fire_flags_www      = 0x0200001B; -- 23 bit flags, shared use
 ram.addr.elevator_flag       = 0x0200001C; -- 1-------b
 ram.addr.magic_byte          = 0x0200001D; -- ---10---b (progress must be == 0x54)
 
-ram.addr.library_start       = 0x02000020; -- starts at 2nd bit  flag
-ram.addr.library_end         = 0x02000034; -- or later?
+ram.addr.library             = 0x02000020; -- bit flags (with gaps) ends at 0x38
+ram.addr.library_bass        = 0x02000038; -- 00000001b
+
+--  39-3F  Reserved for library (included in count)
 
 ram.addr.emails_gave_flags   = 0x02000040; -- maybe? ends at 47
 ram.addr.emails_read_flags   = 0x02000048; -- maybe? ends at 4F
@@ -299,6 +301,9 @@ ram.set.HPMemory = function(HPMemory) memory.write_u8(ram.addr.HPMemory, HPMemor
 
 ram.get.IceBlock = function() return memory.read_u8(ram.addr.key_IceBlock_count); end;
 ram.set.IceBlock = function(key_IceBlock_count) memory.write_u8(ram.addr.key_IceBlock_count, key_IceBlock_count); end;
+
+ram.get.library = function(offset) return memory.read_u8(ram.addr.library+offset); end;
+ram.set.library = function(offset, bit_flags) memory.write_u8(ram.addr.library+offset, bit_flags); end;
 
 ram.get.magic_byte = function() return memory.read_u8(ram.addr.magic_byte); end;
 ram.set.magic_byte = function(magic_byte) memory.write_u8(ram.addr.magic_byte, magic_byte); end;

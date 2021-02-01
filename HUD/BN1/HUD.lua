@@ -76,10 +76,10 @@ local function display_in_menu()
 end
 
 local function display_player_info()
-    to_screen(string.format("Zenny: %6u", game.get_zenny()));
-    to_screen(string.format("MaxHP: %6u", game.calculate_max_HP()));
-    to_screen(string.format("Level: %6u", game.calculate_mega_level()));
-    -- TODO: Library Stats
+    to_screen(string.format("Zenny  : %6u", game.get_zenny()));
+    to_screen(string.format("Max  HP: %6u", game.calculate_max_HP()));
+    to_screen(string.format("Level  : %6u", game.calculate_mega_level()));
+    to_screen(string.format("Library: %6u", game.get_library_count()));
 end
 
 local function display_game_info()
@@ -95,16 +95,16 @@ local function display_routing()
     to_screen("0000: " .. game.get_string_hex(0x02000000, 16, true));
     to_screen("0010: " .. game.get_string_hex(0x02000010, 16, true));
     to_screen("0000: " .. game.get_string_binary(0x02000000, 4, true));
-    to_screen("0004: " .. game.get_string_binary(0x02000000, 4, true));
-    to_screen("0008: " .. game.get_string_binary(0x02000000, 4, true));
-    to_screen("000C: " .. game.get_string_binary(0x02000000, 4, true));
+    to_screen("0004: " .. game.get_string_binary(0x02000004, 4, true));
+    to_screen("0008: " .. game.get_string_binary(0x02000008, 4, true));
+    to_screen("000C: " .. game.get_string_binary(0x0200000C, 4, true));
     to_screen("01FC: " .. game.get_string_hex(0x020001FC, 8, true));
     x = 550;
     y = 112;
-    to_screen(tostring(game.is_go_mode()));
-    x = 600;
-    y = 112;
     to_screen(game.get_string_binary(0x0200001D, 1, true));
+    x = 650;
+    y = 112;
+    to_screen(tostring(game.is_go_mode()));
 end
 
 local function display_commands()

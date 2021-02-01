@@ -191,7 +191,7 @@ function game.get_star_flag()
 end
 
 function game.set_star_flag()
-    game.set_star_byte(bit.bor(game.get_star_byte(), 0x04));
+    game.set_star_byte(bit.set(game.get_star_byte(), 2));
 end
 
 function game.clear_star_flag()
@@ -388,11 +388,20 @@ function game.get_chip_code(code)
     return game.chips.codes[code];
 end
 
-function game.get_battlechip_count()
-    -- TODO
+function game.get_library_count()
+    local count = 0;
+    for i=0,0x1F do
+        local byte = game.ram.get.library(i);
+        for i=0,7 do
+            if bit.check(byte, i) then
+                count = count + 1;
+            end
+        end
+    end
+    return count;
 end
 
-function game.get_library_count()
+function game.get_battlechip_count()
     -- TODO
 end
 
@@ -571,17 +580,17 @@ end
 
 ---------------------------------------- Routing ----------------------------------------
 
-function game.get_bit(byte, bindex) -- 0 indexed
-    return bit.rshift( bit.band( byte, bit.lshift( 0x01, bindex ) ), bindex );
-end
-
 function game.get_string_binary(address, bytes, with_spaces)
     if address and bytes then
         local binary = "";
         for i=0,bytes-1 do
             local byte = memory.read_u8(address+i);
             for i=0,7 do
-                binary = binary .. tostring(game.get_bit(byte, 7-i));
+                if bit.check(byte, 7-i) then
+                    binary = binary .. "1";
+                else
+                    binary = binary .. "0";
+                end
                 if i==3 and with_spaces then
                     binary = binary .. " ";
                 end
