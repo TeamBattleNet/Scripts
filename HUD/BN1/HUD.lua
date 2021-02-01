@@ -49,20 +49,6 @@ local function position_bottom_right()
     anchor = "bottomright";
 end
 
-local function display_ramdom_bytes(ram_addr, count, jump)
-    for i=1,count do
-        to_screen(string.format("%08X: %02X", ram_addr, memory.read_u8(ram_addr)));
-        ram_addr = ram_addr + jump;
-    end
-end
-
-local function display_ramdom_words(ram_addr, count, jump)
-    for i=1,count do
-        to_screen(string.format("%08X: %08X", ram_addr, memory.read_u32_le(ram_addr)));
-        ram_addr = ram_addr + jump;
-    end
-end
-
 local function display_RNG(and_value)
     if and_value then
         to_screen("RNG Value: "   .. string.format("%08X", ram.get_RNG_value()));
@@ -110,33 +96,24 @@ local function display_routing()
     position_top_left();
     x = 190;
     y =  16;
-    display_ramdom_words(0x02000000, 6, 4);
-    x = 390;
-    y =  16;
-    display_ramdom_words(0x02000018, 6, 4);
-    x = 590;
-    y =  16;
-    display_ramdom_words(0x02000030, 6, 4);
-    x = 190;
-    y = 120;
-    to_screen(string.format("%08X: %08X", 0x02000070, memory.read_u32_le(0x02000070)));
-    x = 390;
-    y = 120;
-    to_screen(string.format("%08X: %02X", 0x02000216, memory.read_u8(0x02000216)));
-    x = 530;
-    y = 120;
+    to_screen("0000: " .. ram.get_string_hex(0x02000000, 16, true));
+    to_screen("0010: " .. ram.get_string_hex(0x02000010, 16, true));
+    to_screen("0000: " .. ram.get_string_binary(0x02000000, 4, true));
+    to_screen("0004: " .. ram.get_string_binary(0x02000000, 4, true));
+    to_screen("0008: " .. ram.get_string_binary(0x02000000, 4, true));
+    to_screen("000C: " .. ram.get_string_binary(0x02000000, 4, true));
+    to_screen("01FC: " .. ram.get_string_hex(0x020001FC, 8, true));
+    x = 500;
+    y = 112;
     to_screen(ram.is_go_mode());
-    x = 590;
-    y = 120;
-    to_screen(string.format("%08X: %02X", 0x0200001D, memory.read_u8(0x0200001D)));
-    x = 720;
-    y = 120;
-    to_screen(string.format("IB:%2u", ram.get_IceBlock_available()));
+    x = 550;
+    y = 112;
+    to_screen(ram.get_string_binary(0x0200001D, 1, true));
 end
 
 local function display_commands()
     position_top_left();
-    x = 290;
+    x = 230;
     y = 16+128;
     options = commands.display_options();
     for i=1,table.getn(options) do

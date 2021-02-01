@@ -181,7 +181,7 @@ function command_progress.update_options(option_value)
     command_progress.scenario = nil;
     
     if not option_value then
-        command_progress.description = function() return "Select a scenario:"; end;
+        command_progress.description = function() return "Select a scenario group:"; end;
         table.insert( command_progress.options, { value = 0x00; text = "0x00 ProbablyAVirus";  } );
         table.insert( command_progress.options, { value = 0x10; text = "0x10 School Takeover"; } );
         table.insert( command_progress.options, { value = 0x20; text = "0x20 Complex Complex"; } );
@@ -279,30 +279,37 @@ table.insert(commands, teleport_digital_world);
 
 
 
+local command_misc = {};
+command_misc.selection = 1;
+command_misc.description = function() return "Misc Commands:"; end;
+command_misc.options = {
+    { value = ram.go_mode;               text = "Go Mode";               };
+    { value = ram.set_star_flag;         text = "Set Star Flag";         };
+    { value = ram.clear_star_flag;       text = "Clear Star Flag";       };
+    { value = ram.ignite_oven_fires;     text = "Ignite Oven Fires";     };
+    { value = ram.extinguish_oven_fires; text = "Extinguish Oven Fires"; };
+    { value = ram.ignite_WWW_fires;      text = "Ignite WWW Fires";      };
+    { value = ram.extinguish_WWW_fires;  text = "Extinguish WWW Fires";  };
+};
+command_misc.doit = function(value) value(); end;
+table.insert(commands, command_misc);
+
+
+
 local command_combat = {};
+command_combat.selection = 1;
+command_combat.description = function() return "Battle Options:"; end;
 command_combat.options = {
+    { value = function(value) ram.kill_enemy(0); end; text = "Delete Everything"; };
+    { value = function(value) ram.kill_enemy(1); end; text = "Delete Enemy 1"; };
+    { value = function(value) ram.kill_enemy(2); end; text = "Delete Enemy 2"; };
+    { value = function(value) ram.kill_enemy(3); end; text = "Delete Enemy 3"; };
     { value = ram.fill_custom_gauge;  text = "Fill Custom Gauge";    };
     { value = ram.empty_custom_gauge; text = "Empty Custom Gauge";   };
     { value = ram.reset_delete_time;  text = "Set Delete Time to 0"; };
 };
-command_combat.selection = 1;
-command_combat.description = function() return "Battle Options:"; end;
 command_combat.doit = function(value) value(); end;
 table.insert(commands, command_combat);
-
-
-
-local command_kill = {};
-command_kill.options = {
-    { value = 0; text = "Everything"; };
-    { value = 1; text = "Enemy 1";    };
-    { value = 2; text = "Enemy 2";    };
-    { value = 3; text = "Enemy 3";    };
-};
-command_kill.selection = 1;
-command_kill.description = function() return "Kill?"; end;
-command_kill.doit = function(value) ram.kill_enemy(value); end;
-table.insert(commands, command_kill);
 
 
 

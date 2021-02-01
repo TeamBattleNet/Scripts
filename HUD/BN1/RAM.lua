@@ -42,7 +42,10 @@ local title_star_flag    = 0x02000000; -- 0x04 1 bit for 1 star :)
 
 local metro_ticket       = 0x02000005; -- TBD
 
-local magic_flag         = 0x0200001D; -- 0x---10--- (progress must be == 0x54)
+local fire_flags_oven    = 0x02000014; -- 30 bit flags
+local fire_flags_www     = 0x0200001B; -- 23 bit flags
+
+local magic_byte         = 0x0200001D; -- 0x---10--- (progress must be == 0x54)
 
 local library_start      = 0x02000020; -- starts at 2nd bit  flag
 local library_end        = 0x02000034; -- or later?
@@ -65,28 +68,43 @@ local fire_flags         = 0x02000070; -- 4 bytes, 32 fire bit flags
 local folder_ID          = 0x020001C0; -- 1 byte, chip  ID  of folder slot 1, ends at 0x020001FB
 local folder_code        = 0x020001C1; -- 1 byte, chip Code of folder slot 1, ends at TBD
 
-local WHAT_IS_THIS       = 0x020001FF; -- 1 byte?
+-- 1FC-203 ??? 1FF changes a lot
 
---local                  = 0x02000200; -- 1 byte flags?
---local                  = 0x02000210; -- 1 byte TBD fight GutsMan
+--local                  = 0x02000200; -- ? byte
+--local                  = 0x02000210; -- ? byte
 local main_area          = 0x02000214; -- 1 byte
 local sub_area           = 0x02000215; -- 1 byte
 local progress           = 0x02000216; -- 1 byte
 local music_progress     = 0x02000217; -- 1 byte
---local                  = 0x02000218; -- 1 byte TBD
---local                  = 0x02000219; -- 1 byte TBD
---230-233 block of 1's
---local link_flags       = 0x02000234; -- 1 byte TBD hp & internet
---21D ???
+--local                  = 0x02000218; -- ? byte
+--local                  = 0x02000219; -- ? byte
+
+local buster_attack      = 0x02000224; -- 1 byte, max is 0x04
+local buster_rapid       = 0x02000225; -- 1 byte, max is 0x04
+local buster_charge      = 0x02000226; -- 1 byte, max is 0x04
+local armor_equipped     = 0x02000227; -- 1 byte, max is 0x04
+
+local HP_max_1           = 0x0200022C; -- 2 bytes, max is 0x03E8
+local HP_max_2           = 0x0200022E; -- 2 bytes, max is 0x03E8
+
+-- 230 more flags?
+
+--local                  = 0x02000234; -- ? byte HP & Internet links
+
+-- 21D ???
+
 local zenny              = 0x02000284; -- 4 bytes, 999999 "max"
+
 -- 2AC-2CF
+
+-- Key Items are 1 byte each, some are counters
 local key_PET            = 0x020002D0; -- 1 byte
-local IceBlock_count     = 0x020002D1; -- 1 byte, for both Oven and WWW 1
+local key_IceBlock_count = 0x020002D1; -- 1 byte, for both Oven and WWW 1
 local key_WaterGun       = 0x020002D2; -- 1 byte value of 0x05?
 local key_SchoolID       = 0x020002D3; -- 1 byte
 local key_SciLabID       = 0x020002D4; -- 1 byte, snip snip
 local key_Handle         = 0x020002D5; -- 1 byte
-local key_Message        = 0x020002D6; -- 1 byte, 5th grade Froid
+local key_Message        = 0x020002D6; -- 1 byte, from 5th grade Froid
 local key_Response       = 0x020002D7; -- 1 byte, to Mayl's email
 local key_WWW_PIN        = 0x020002D8; -- 1 byte
 local key_BatteryA       = 0x020002D9; -- 1 byte
@@ -98,7 +116,7 @@ local key_Charger        = 0x020002DE; -- 1 byte
 local key_WWW_Pass       = 0x020002DF; -- 1 byte, expired
 --local key_invalid      = 0x020002E0; -- 1 byte
 local key_Dentures       = 0x020002E1; -- 1 byte TBD
--- 0x020002E2 to 0x020002EF invalid
+--local key_invalid      = 0x020002E2 to 0x020002EF
 --local key_invalid      = 0x020002F0; -- 1 byte
 local key_at_Mayl        = 0x020002F1; -- 1 byte
 local key_at_Yai         = 0x020002F2; -- 1 byte
@@ -132,13 +150,14 @@ local key_GovtPass       = 0x0200030D; -- 1 byte
 local key_TownPass       = 0x0200030E; -- 1 byte
 --local key_invalid      = 0x0200030F; -- 1 byte
 
-local HPMemory           = 0x02000310; -- 1 byte TBD
+local HPMemory           = 0x02000310; -- 1 byte
 local powerups_available = 0x02000311; -- 1 byte
 --local                  = 0x02000312; -- 1 byte
 --local                  = 0x02000313; -- 1 byte
 local armor_heat         = 0x02000314; -- 1 byte
---local armor_           = 0x02000315; -- 1 byte
+local armor_aqua         = 0x02000315; -- 1 byte
 local armor_wood         = 0x02000316; -- 1 byte
+--local                  = 0x02000317; -- 1 byte
 
 -- 370-3CF divider
 
@@ -372,12 +391,16 @@ function ram.set_star_flag()
     ram.set_star_byte(bit.bor(ram.get_star_byte(), 0x04));
 end
 
+function ram.clear_star_flag()
+    ram.set_star_byte(bit.band(ram.get_star_byte(), 0xFB));
+end
+
 function ram.get_magic_byte()
-    return memory.read_u8(magic_flag);
+    return memory.read_u8(magic_byte);
 end
 
 function ram.set_magic_byte(new_magic)
-    return memory.read_u8(magic_flag, new_magic);
+    memory.write_u8(magic_byte, new_magic);
 end
 
 function ram.is_magic_bit_set()
@@ -394,7 +417,7 @@ end
 
 function ram.is_go_mode()
     if ram.is_magic_bit_set() and ram.get_progress() == 0x54 then
-        return "Yes!";
+        return "Yep!";
     end
     return "Nope";
 end
@@ -541,7 +564,7 @@ function ram.get_mega_level()
 end
 
 function ram.get_IceBlock_available()
-    return memory.read_u8(IceBlock_count);
+    return memory.read_u8(key_IceBlock_count);
 end
 
 function ram.set_IceBlock_available(new_IceBlock_available)
@@ -550,7 +573,7 @@ function ram.set_IceBlock_available(new_IceBlock_available)
     elseif new_IceBlock_available > 53 then
         new_IceBlock_available = 53;
     end
-    return memory.write_u8(IceBlock_count, new_IceBlock_available);
+    return memory.write_u8(key_IceBlock_count, new_IceBlock_available);
 end
 
 function ram.add_IceBlock_available(some_IceBlock)
@@ -661,53 +684,63 @@ function ram.near_number_doors() -- School Comps or WWW Comp 2
 end
 
 function ram.get_fire_flags()
-    return memory.read_u32_le(fires_flags);
+    return memory.read_u32_le(fire_flags);
 end
 
 function ram.ignite_oven_fires()
-    --memory.write_u32_le(fires_flags, 0x00000000);
-    --memory.write_u32_le(0x02000014 , 0x00000000);
+    memory.write_u32_le(fire_flags,      0x00000000);
+    memory.write_u32_le(fire_flags_oven, 0x00000000);
 end
 
 function ram.extinguish_oven_fires()
-    --memory.write_u32_le(fires_flags, 0xFFFFFFFF);
-    --memory.write_u32_le(0x02000014 , 0xFFFFFFFF);
+    memory.write_u32_le(fire_flags,      0xFFFFFFFF);
+    memory.write_u32_le(fire_flags_oven, 0xFFFFFFFF);
 end
 
 function ram.ignite_WWW_fires()
-    --memory.write_u32_le(fires_flags, 0x00000000);
-    --memory.write_u32_le(0x0200001B , 0x00000000);
+    memory.write_u32_le(fire_flags,     0x00000000);
+    memory.write_u32_le(fire_flags_www, 0x00000000);
 end
 
 function ram.extinguish_WWW_fires()
-    --memory.write_u32_le(fires_flags, 0xFFFFFFFF);
-    --memory.write_u32_le(0x0200001B , 0xFFFFFFFF);
-end
-
-function ram.get_string_hex(address, bytes)
-    if address and bytes then
-        local hex = "0x";
-        for i=0,bytes-1 do
-            hex = hex .. string.format("%02X", memory.read_u8(address+i));
-        end
-        return hex;
-    end
+    memory.write_u32_le(fire_flags,     0x00FEFFFF);
+    memory.write_u32_le(fire_flags_www, 0xFCFFFF01);
 end
 
 function ram.get_bit(byte, bindex) -- 0 indexed
-    bit.rshift( bit.band( byte, bit.lshift( 0x01, bindex ) ), bindex );
+    return bit.rshift( bit.band( byte, bit.lshift( 0x01, bindex ) ), bindex );
 end
 
-function ram.get_string_binary(address, bytes)
+function ram.get_string_binary(address, bytes, with_spaces)
     if address and bytes then
         local binary = "";
         for i=0,bytes-1 do
             local byte = memory.read_u8(address+i);
             for i=0,7 do
                 binary = binary .. tostring(ram.get_bit(byte, i));
+                if i==3 and with_spaces then
+                    binary = binary .. " ";
+                end
+            end
+            if with_spaces then
+                binary = binary .. " ";
             end
         end
         return binary;
+    end
+end
+
+function ram.get_string_hex(address, bytes, with_spaces)
+    if address and bytes then
+        local hex = "";
+        local format = "%02X";
+        if with_spaces then
+            format = format .. " ";
+        end
+        for i=0,bytes-1 do
+            hex = hex .. string.format(format, memory.read_u8(address+i));
+        end
+        return hex;
     end
 end
 
