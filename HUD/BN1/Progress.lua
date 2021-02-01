@@ -4,8 +4,6 @@
 
 local progress_names = {};
 
-progress_names[0xFF] = "No Save Data";
-
 progress_names[0x00] = "New Game";
 progress_names[0x01] = "Tutorial Start";
 progress_names[0x02] = "Tutorial Finished";
@@ -49,6 +47,8 @@ progress_names[0x51] = "Door Virus Deleted";
 progress_names[0x52] = "BombMan Deleted";
 progress_names[0x53] = "BombMan Bedtime";
 progress_names[0x54] = "Final State";
+
+progress_names[0xFF] = "No Save Data";
 
 --ram.progress_names[ram.get_progress()];
 

@@ -206,6 +206,10 @@ local pack_code          = 0x0201900A; -- 1 byte, chip code of pack slot 1
 -- Addresses -> 08000000-09FFFFFF - Game Pak ROM/FlashROM (max 32MB)
 
 local version            = 0x080000AF; -- 1 byte
+local battle_data        = 0x080852B0; -- plus offset from TBD?
+-- ProtoManV3? Battle Data at 0x080856D8
+
+-- Address Groupings and Names
 
 local encounter_odds = {};
 encounter_odds[0x45] = 0x08009934; -- US
@@ -416,6 +420,11 @@ function ram.set_sub_area(new_sub_area)
     return memory.write_u8(sub_area, new_sub_area);
 end
 
+function ram.teleport(new_area, new_sub_area)
+    ram.set_area(new_area);
+    ram.set_sub_area(new_sub_area);
+end
+
 function ram.get_area_name()
     if ram.areas.names[ram.get_area()] then
         if ram.areas.names[ram.get_area()][ram.get_sub_area()] then
@@ -428,6 +437,18 @@ end
 
 function ram.does_area_exist(main_area, sub_area)
     return ram.areas.names[main_area] and ram.areas.names[main_area][sub_area];
+end
+
+function ram.get_area_groups_real()
+    return areas.real_groups;
+end
+
+function ram.get_area_groups_digital()
+    return areas.digital_groups;
+end
+
+function ram.get_area_group_name(main_area)
+    return areas[main_area].group;
 end
 
 function ram.in_real_world()
