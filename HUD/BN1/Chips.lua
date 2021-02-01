@@ -1,4 +1,4 @@
--- Battlechip values for MMBN 1 scripting, enjoy.
+-- Battlechip names for MMBN 1 scripting, enjoy.
 
 local chips = {};
 

@@ -65,10 +65,10 @@ end
 
 local function display_RNG(and_value)
     if and_value then
-        to_screen("RNG Value: "   .. string.format("%08X", ram.rng.get_RNG_value()));
+        to_screen("RNG Value: "   .. string.format("%08X", ram.get_RNG_value()));
     end
-    to_screen(string.format("RNG Index: %4s", (ram.rng.get_RNG_index() or "?")));
-    to_screen(string.format("RNG Delta: %4s", (ram.rng.get_RNG_delta() or "?")));
+    to_screen(string.format("RNG Index: %4s", (ram.get_RNG_index() or "?")));
+    to_screen(string.format("RNG Delta: %4s", (ram.get_RNG_delta() or "?")));
 end
 
 local function display_steps()

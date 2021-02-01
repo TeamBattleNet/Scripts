@@ -69,9 +69,9 @@ end
 
 local command_blank = {};
 command_blank.options = {
-    {value = nil; text = "Press  Up  or  Down to change Options !"};
-    {value = nil; text = "Press Left or Right to change Commands!"};
-    {value = nil; text = "You can use the controller or keyboard!"};
+    { value = nil; text = "Press  Up  or  Down to change Options !"; };
+    { value = nil; text = "Press Left or Right to change Commands!"; };
+    { value = nil; text = "You can use the controller or keyboard!"; };
 };
 command_blank.selection = 1;
 command_blank.description = function() return "Welcome to the Command list!"; end;
@@ -82,8 +82,8 @@ table.insert(commands, command_blank);
 
 local command_encounters = {};
 command_encounters.options = {
-    {value =  true; text = "Block Random Encounters"};
-    {value = false; text = "Allow Random Encounters"};
+    { value =  true; text = "Block Random Encounters"; };
+    { value = false; text = "Allow Random Encounters"; };
 };
 command_encounters.selection = 1;
 command_encounters.description = function() return "Random Encounters: " .. tostring(not ram.skip_encounters); end
@@ -94,14 +94,14 @@ table.insert(commands, command_encounters);
 
 local command_zenny = {};
 command_zenny.options = {
-    {value =  100000; text = "Increase by 100000"};
-    {value =   10000; text = "Increase by  10000"};
-    {value =    1000; text = "Increase by   1000"};
-    {value =     100; text = "Increase by    100"};
-    {value =    -100; text = "Decrease by    100"};
-    {value =   -1000; text = "Decrease by   1000"};
-    {value =  -10000; text = "Decrease by  10000"};
-    {value = -100000; text = "Decrease by 100000"};
+    { value =  100000; text = "Increase by 100000"; };
+    { value =   10000; text = "Increase by  10000"; };
+    { value =    1000; text = "Increase by   1000"; };
+    { value =     100; text = "Increase by    100"; };
+    { value =    -100; text = "Decrease by    100"; };
+    { value =   -1000; text = "Decrease by   1000"; };
+    { value =  -10000; text = "Decrease by  10000"; };
+    { value = -100000; text = "Decrease by 100000"; };
 };
 command_zenny.selection = 1;
 command_zenny.description = function() return string.format("Zenny: %11u", ram.get_zenny()); end;
@@ -112,10 +112,10 @@ table.insert(commands, command_zenny);
 
 local command_power = {};
 command_power.options = {
-    {value =  10; text = "Give 10"};
-    {value =   1; text = "Give  1"};
-    {value =  -1; text = "Take  1"};
-    {value = -10; text = "Take 10"};
+    { value =  10; text = "Give 10"; };
+    { value =   1; text = "Give  1"; };
+    { value =  -1; text = "Take  1"; };
+    { value = -10; text = "Take 10"; };
 };
 command_power.selection = 1;
 command_power.description = function() return "PowerUPs: " .. ram.get_powerups_available(); end
@@ -126,10 +126,10 @@ table.insert(commands, command_power);
 
 local command_ice_block = {};
 command_ice_block.options = {
-    {value =  53; text = "Give 53"};
-    {value =   1; text = "Give  1"};
-    {value =  -1; text = "Take  1"};
-    {value = -53; text = "Take 53"};
+    { value =  53; text = "Give 53"; };
+    { value =   1; text = "Give  1"; };
+    { value =  -1; text = "Take  1"; };
+    { value = -53; text = "Take 53"; };
 };
 command_ice_block.selection = 1;
 command_ice_block.description = function() return "IceBlocks: " .. ram.get_IceBlock_available(); end;
@@ -140,14 +140,14 @@ table.insert(commands, command_ice_block);
 
 local command_RNG = {};
 command_RNG.options = {
-    {value =  1000; text = "Increase by 1000"};
-    {value =   100; text = "Increase by  100"};
-    {value =    10; text = "Increase by   10"};
-    {value =     1; text = "Increase by    1"};
-    {value =    -1; text = "Decrease by    1"};
-    {value =   -10; text = "Decrease by   10"};
-    {value =  -100; text = "Decrease by  100"};
-    {value = -1000; text = "Decrease by 1000"};
+    { value =  1000; text = "Increase by 1000"; };
+    { value =   100; text = "Increase by  100"; };
+    { value =    10; text = "Increase by   10"; };
+    { value =     1; text = "Increase by    1"; };
+    { value =    -1; text = "Decrease by    1"; };
+    { value =   -10; text = "Decrease by   10"; };
+    { value =  -100; text = "Decrease by  100"; };
+    { value = -1000; text = "Decrease by 1000"; };
 };
 command_RNG.selection = 1;
 command_RNG.description = function() return string.format("RNG Index: %5s", (ram.rng.get_RNG_index() or "????")); end;
@@ -155,16 +155,17 @@ command_RNG.doit = function(value) ram.rng.adjust_RNG(value); end;
 table.insert(commands, command_RNG);
 
 
+
 local command_RNG = {};
 command_RNG.options = {
-    {value =  9999; text = "Increase by 9999"};
-    {value =    64; text = "Increase by   64"};
-    {value =     2; text = "Increase by    2"};
-    {value =     1; text = "Increase by    1"};
-    {value =    -1; text = "Decrease by    1"};
-    {value =    -2; text = "Decrease by    2"};
-    {value =   -64; text = "Decrease by   64"};
-    {value = -9999; text = "Decrease by 9999"};
+    { value =  9999; text = "Increase by 9999"; };
+    { value =    64; text = "Increase by   64"; };
+    { value =     2; text = "Increase by    2"; };
+    { value =     1; text = "Increase by    1"; };
+    { value =    -1; text = "Decrease by    1"; };
+    { value =    -2; text = "Decrease by    2"; };
+    { value =   -64; text = "Decrease by   64"; };
+    { value = -9999; text = "Decrease by 9999"; };
 };
 command_RNG.selection = 1;
 command_RNG.description = function() return "Modify Steps: " .. ram.get_steps(); end;
@@ -181,12 +182,12 @@ function command_progress.update_options(option_value)
     
     if not option_value then
         command_progress.description = function() return "Select a scenario:"; end;
-        table.insert( command_progress.options, { value = 0x00; text = "0x00 ProbablyAVirus"; } );
+        table.insert( command_progress.options, { value = 0x00; text = "0x00 ProbablyAVirus";  } );
         table.insert( command_progress.options, { value = 0x10; text = "0x10 School Takeover"; } );
         table.insert( command_progress.options, { value = 0x20; text = "0x20 Complex Complex"; } );
-        table.insert( command_progress.options, { value = 0x30; text = "0x30 City Traffic"; } );
-        table.insert( command_progress.options, { value = 0x40; text = "0x40 Power Plant"; } );
-        table.insert( command_progress.options, { value = 0x50; text = "0x50 Get the Memos"; } );
+        table.insert( command_progress.options, { value = 0x30; text = "0x30 City Traffic";    } );
+        table.insert( command_progress.options, { value = 0x40; text = "0x40 Power Plant";     } );
+        table.insert( command_progress.options, { value = 0x50; text = "0x50 Get the Memos";   } );
     else
         command_progress.description = function() return "Select an option:"; end;
         command_progress.scenario = option_value;
@@ -278,12 +279,25 @@ table.insert(commands, teleport_digital_world);
 
 
 
+local command_combat = {};
+command_combat.options = {
+    { value = ram.fill_custom_gauge;  text = "Fill Custom Gauge";    };
+    { value = ram.empty_custom_gauge; text = "Empty Custom Gauge";   };
+    { value = ram.reset_delete_time;  text = "Set Delete Time to 0"; };
+};
+command_combat.selection = 1;
+command_combat.description = function() return "Battle Options:"; end;
+command_combat.doit = function(value) value(); end;
+table.insert(commands, command_combat);
+
+
+
 local command_kill = {};
 command_kill.options = {
-    {value = 0; text = "Everything"};
-    {value = 1; text = "Enemy 1   "};
-    {value = 2; text = "Enemy 2   "};
-    {value = 3; text = "Enemy 3   "};
+    { value = 0; text = "Everything"; };
+    { value = 1; text = "Enemy 1";    };
+    { value = 2; text = "Enemy 2";    };
+    { value = 3; text = "Enemy 3";    };
 };
 command_kill.selection = 1;
 command_kill.description = function() return "Kill?"; end;

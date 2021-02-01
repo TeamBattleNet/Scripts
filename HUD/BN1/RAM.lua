@@ -606,8 +606,29 @@ function ram.get_battle_pointer()
     return memory.read_u16_le(battle_pointer);
 end
 
+function ram.get_custom_gauge()
+    return memory.read_u16_le(battle_custom_fill);
+end
+
+function ram.set_custom_gauge(new_custom_gauge)
+    if new_custom_gauge < 0 then
+        new_custom_gauge = 0;
+    elseif new_custom_gauge > 0x4000 then
+        new_custom_gauge = 0x4000;
+    end
+    return memory.write_u16_le(battle_custom_fill, new_custom_gauge);
+end
+
+function ram.empty_custom_gauge()
+    ram.set_custom_gauge(0x0000);
+end
+
 function ram.fill_custom_gauge()
-    memory.write_u16_le(battle_custom_fill, 0x4000);
+    ram.set_custom_gauge(0x4000);
+end
+
+function ram.reset_delete_time()
+    memory.write_u16_le(battle_timer, 0);
 end
 
 function ram.get_draw_slot(which_slot) -- convert from 1 to 0 index, then back
@@ -713,8 +734,8 @@ function ram.get_encounter_chance()
     return (threshold / 32) * 100;
 end
 
-function ram.would_get_encounter() -- Encounter if rand(0x20) >= rate
-    return ram.rng.get_rng_value() % 0x20 > ram.get_encounter_chance();
+function ram.would_get_encounter()
+    return ram.get_encounter_threshold() > (ram.get_RNG_value() % 0x20);
 end
 
 ram.skip_encounters = false;
