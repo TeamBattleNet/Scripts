@@ -265,5 +265,17 @@ chips.names[199] = "Bass";
 
 -- PAs?
 
+function chips.get_random_code()
+    return math.random(0,25);
+end
+
+function chips.get_random_ID()
+    local ID = 120;
+    while chips.names[ID] == "Unused ID" do
+        ID = math.random(1,199);
+    end
+    return ID;
+end
+
 return chips;
 

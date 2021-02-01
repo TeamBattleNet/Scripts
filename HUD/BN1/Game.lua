@@ -396,6 +396,30 @@ function game.get_library_count()
     -- TODO
 end
 
+function game.set_all_folder_to_ID(chip_ID)
+    for i=0,29 do
+        game.ram.set.folder_ID(i, chip_ID);
+    end
+end
+
+function game.randomize_folder_IDs()
+    for i=0,29 do
+        game.ram.set.folder_ID(i, game.chips.get_random_ID());
+    end
+end
+
+function game.set_all_folder_to_code(chip_code)
+    for i=0,29 do
+        game.ram.set.folder_code(i, chip_code);
+    end
+end
+
+function game.randomize_folder_codes()
+    for i=0,29 do
+        game.ram.set.folder_code(i, game.chips.get_random_code());
+    end
+end
+
 ----------------------------------------Mega Modifications ----------------------------------------
 
 function game.set_buster_stats(power_level)
@@ -452,10 +476,6 @@ function game.kill_enemy(which_enemy)
     end
 end
 
-function game.get_custom_gauge()
-    return game.ram.get.custom_gauge();
-end
-
 function game.set_custom_gauge(new_custom_gauge)
     if new_custom_gauge < 0 then
         new_custom_gauge = 0;
@@ -471,6 +491,10 @@ end
 
 function game.fill_custom_gauge()
     game.set_custom_gauge(0x4000);
+end
+
+function game.max_chip_window_count()
+    game.ram.set.chip_window_count(15);
 end
 
 function game.get_delete_timer()
@@ -492,7 +516,7 @@ function game.get_draw_slot(which_slot)
     if 1 <= which_slot and which_slot <= 30 then
         return game.ram.get.draw_slot(which_slot-1) + 1; -- convert from 1 to 0 index, then back
     end
-    return -1;
+    return 0xFF;
 end
 
 function game.get_draw_slots()
@@ -501,6 +525,18 @@ function game.get_draw_slots()
         slots[i] = game.get_draw_slot(i);
     end
     return slots;
+end
+
+function game.draw_in_order()
+    for i=0,29 do
+        game.ram.set.draw_slot(i, i);
+    end
+end
+
+function game.draw_only_slot(which_slot)
+    for i=0,29 do
+        game.ram.set.draw_slot(i, which_slot%30);
+    end
 end
 
 ---------------------------------------- Miscellaneous ----------------------------------------

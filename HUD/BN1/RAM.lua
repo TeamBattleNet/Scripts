@@ -65,8 +65,8 @@ ram.addr.fire_flags          = 0x02000070; -- 4 bytes, 32 fire bit flags
 
 -- 170-1BF ??? all 1's
 
-ram.addr.folder_ID           = 0x020001C0; -- 1 byte, chip  ID  of folder slot 1, ends at 0x020001FB
-ram.addr.folder_code         = 0x020001C1; -- 1 byte, chip Code of folder slot 1, ends at TBD
+ram.addr.folder_ID           = 0x020001C0; -- every other byte, chip  ID  of folder slot 1, ends at 0x020001FA
+ram.addr.folder_code         = 0x020001C1; -- every other byte, chip code of folder slot 1, ends at 0x020001FB
 
 -- 1FC-203 ??? 1FF changes a lot
 
@@ -187,16 +187,17 @@ ram.addr.check               = 0x020003F8; -- 4 bytes, steps at the last encount
 
 ram.addr.battle_state        = 0x02003712; -- 2 byte?
 ram.addr.battle_turns        = 0x0200371C; -- 1 byte, number of custom gauge opens + 1
+ram.addr.chip_window_count   = 0x02003720; -- 1 byte, number of chips in the custom menu
 ram.addr.battle_timer        = 0x02003730; -- 2 bytes, frame counter for current battle
 ram.addr.battle_pointer      = 0x02003784; -- 2 bytes? ROM offset?
 ram.addr.battle_custom_gauge = 0x0200374E; -- 2 bytes, counts up to 0x4000
 
-ram.addr.battle_draw_slots   = 0x02004910; -- 1 byte each, in battle chip draws, ends at TBD
+ram.addr.battle_draw_slots   = 0x02004910; -- 1 byte each, in battle chip draws, ends at 492D
 ram.addr.your_X              = 0x02004954; -- 2 bytes ???
 ram.addr.your_Y              = 0x02004956; -- 2 bytes ???
 
 ram.addr.cursor_ID           = 0x020062E4; -- 1 byte, chip  ID  of cursor
-ram.addr.cursor_code         = 0x020062E5; -- 1 byte, chip Code of cursor
+ram.addr.cursor_code         = 0x020062E5; -- 1 byte, chip code of cursor
 ram.addr.in_folder_count     = 0x020062F0; -- 1 byte, number of chips in folder
 ram.addr.GMD_reward          = 0x02006380; -- 2 bytes, how to decode?
 ram.addr.game_state          = 0x02006CB8; -- 1 byte
@@ -210,6 +211,8 @@ ram.addr.selected_offset     = 0x02006308; -- 2 bytes?, offset value of selected
 ram.addr.selected_cursor     = 0x0200630A; -- 2 bytes?, cursor value of selected chip
 
 ram.addr.button_flags        = 0x020065F0; -- many bytes, many flags
+
+ram.addr.chip_cooldown       = 0202006719; -- 1 byte, BstrBomb HYPE
 
 ram.addr.number_door_code    = 0x02009A90; -- 1 byte?
 
@@ -250,6 +253,9 @@ ram.set.buster_rapid = function(buster_rapid) memory.write_u8(ram.addr.buster_ra
 ram.get.buster_charge = function() return memory.read_u8(ram.addr.buster_charge); end;
 ram.set.buster_charge = function(buster_charge) memory.write_u8(ram.addr.buster_charge, buster_charge); end;
 
+ram.get.chip_window_count = function() return memory.read_u8(ram.addr.chip_window_count); end;
+ram.set.chip_window_count = function(chip_window_count) memory.write_u8(ram.addr.chip_window_count, chip_window_count); end;
+
 ram.get.check = function() return memory.read_u16_le(ram.addr.check); end;
 ram.set.check = function(check) memory.write_u16_le(ram.addr.check, check); end;
 
@@ -262,8 +268,14 @@ ram.set.door_code = function(number_door_code) memory.write_u8(ram.addr.number_d
 ram.get.delete_timer = function() return memory.read_u16_le(ram.addr.battle_timer); end;
 ram.set.delete_timer = function(battle_timer) memory.write_u16_le(ram.addr.battle_timer, battle_timer); end;
 
-ram.get.draw_slot = function(offset) return memory.read_u8(ram.addr.battle_draw_slots+offset); end;
-ram.set.draw_slot = function(offset, battle_draw_slots) memory.write_u8(ram.addr.battle_draw_slots+offset, battle_draw_slots); end;
+ram.get.folder_ID = function(which_slot) return memory.read_u8(ram.addr.folder_ID+(2*which_slot)); end;
+ram.set.folder_ID = function(which_slot, chip_ID) memory.write_u8(ram.addr.folder_ID+(2*which_slot), chip_ID); end;
+
+ram.get.folder_code = function(which_slot) return memory.read_u8(ram.addr.folder_code+(2*which_slot)); end;
+ram.set.folder_code = function(which_slot, chip_code) memory.write_u8(ram.addr.folder_code+(2*which_slot), chip_code); end;
+
+ram.get.draw_slot = function(which_slot) return memory.read_u8(ram.addr.battle_draw_slots+which_slot); end;
+ram.set.draw_slot = function(which_slot, battle_draw_slot) memory.write_u8(ram.addr.battle_draw_slots+which_slot, battle_draw_slot); end;
 
 ram.get.fire_flags = function() return memory.read_u32_le(ram.addr.fire_flags); end;
 ram.set.fire_flags = function(fire_flags) memory.write_u32_le(ram.addr.fire_flags, fire_flags); end;
