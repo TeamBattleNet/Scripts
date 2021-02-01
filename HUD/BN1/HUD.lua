@@ -166,7 +166,7 @@ local function display_HUD()
         to_screen("");
         display_RNG(true);
         position_bottom_right();
-        to_screen(ram.get_area_name());
+        to_screen(ram.get_current_area_name());
     elseif ram.in_world() then
         display_RNG();
         display_steps();
@@ -174,7 +174,7 @@ local function display_HUD()
             to_screen("Door Code: " .. ram.get_door_code());
         end
         position_bottom_right();
-        to_screen(ram.get_area_name());
+        to_screen(ram.get_current_area_name());
     elseif ram.in_battle() or ram.in_game_over() then
         display_draws(10);
         position_top_left();

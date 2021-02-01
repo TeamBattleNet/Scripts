@@ -69,7 +69,7 @@ local WHAT_IS_THIS       = 0x020001FF; -- 1 byte?
 
 --local                  = 0x02000200; -- 1 byte flags?
 --local                  = 0x02000210; -- 1 byte TBD fight GutsMan
-local area               = 0x02000214; -- 1 byte
+local main_area          = 0x02000214; -- 1 byte
 local sub_area           = 0x02000215; -- 1 byte
 local progress           = 0x02000216; -- 1 byte
 local music_progress     = 0x02000217; -- 1 byte
@@ -163,20 +163,6 @@ local battle_draw_slots  = 0x02004910; -- 1 byte each, in battle chip draws, end
 local your_X             = 0x02004954; -- 2 bytes ???
 local your_Y             = 0x02004956; -- 2 bytes ???
 
-local enemy = {};
-enemy[1]      =         {}; -- TBD
-enemy[1].ID   = 0x02003774; -- 1 byte
-enemy[1].HP   = 0x02006790; -- 2 bytes
-enemy[1].text = 0x02004D30; -- 2 bytes, for counting down HP over time
-enemy[2]      =         {}; -- TBD
-enemy[2].ID   = 0x02003775; -- 1 byte
-enemy[2].HP   = 0x02006850; -- 2 bytes
-enemy[2].text = 0x020050A0; -- 2 bytes, for counting down HP over time
-enemy[3]      =         {}; -- TBD
-enemy[3].ID   = 0x02003776; -- 1 byte
-enemy[3].HP   = 0x02006910; -- 2 bytes
-enemy[3].text = 0x02005200; -- 2 bytes, for counting down HP over time
-
 local cursor_ID          = 0x020062E4; -- 1 byte, chip  ID  of cursor
 local cursor_code        = 0x020062E5; -- 1 byte, chip Code of cursor
 local in_folder_count    = 0x020062F0; -- 1 byte, number of chips in folder
@@ -191,17 +177,14 @@ local pack_offset        = 0x02006300; -- 2 bytes?, offset value in the pack
 local selected_offset    = 0x02006308; -- 2 bytes?, offset value of selected chip
 local selected_cursor    = 0x0200630A; -- 2 bytes?, cursor value of selected chip
 
+local button_flags       = 0x020065F0; -- many bytes, many flags
+
 local number_door_code   = 0x02009A90; -- 1 byte?
 
 local pack_ID            = 0x02019018; -- 1 byte, chip  ID  of pack slot 1
 local pack_code          = 0x0201900A; -- 1 byte, chip code of pack slot 1
 
--- 0x02047FFF end of WRAM
-
--- Unverified
-
---local mega_level         = 0x02000000; -- 1 byte ???
---local world_HP_max       = 0x02000000; -- 2 bytes ???
+-- 0x02047FFF end of WRAM?
 
 -- Addresses -> 08000000-09FFFFFF - Game Pak ROM/FlashROM (max 32MB)
 
@@ -210,6 +193,20 @@ local battle_data        = 0x080852B0; -- plus offset from TBD?
 -- ProtoManV3? Battle Data at 0x080856D8
 
 -- Address Groupings and Names
+
+local enemy = {};
+enemy[1]      =         {}; -- TBD
+enemy[1].ID   = 0x02003774; -- 1 byte
+enemy[1].HP   = 0x02006790; -- 2 bytes
+enemy[1].text = 0x02004D30; -- 2 bytes, for counting down HP over time
+enemy[2]      =         {}; -- TBD
+enemy[2].ID   = 0x02003775; -- 1 byte
+enemy[2].HP   = 0x02006850; -- 2 bytes
+enemy[2].text = 0x020050A0; -- 2 bytes, for counting down HP over time
+enemy[3]      =         {}; -- TBD
+enemy[3].ID   = 0x02003776; -- 1 byte
+enemy[3].HP   = 0x02006910; -- 2 bytes
+enemy[3].text = 0x02005200; -- 2 bytes, for counting down HP over time
 
 local encounter_odds = {};
 encounter_odds[0x45] = 0x08009934; -- US
@@ -405,11 +402,11 @@ end
 -- Functions -> Position 
 
 function ram.get_area()
-    return memory.read_u8(area);
+    return memory.read_u8(main_area);
 end
 
 function ram.set_area(new_area)
-    return memory.write_u8(area, new_area);
+    return memory.write_u8(main_area, new_area);
 end
 
 function ram.get_sub_area()
@@ -425,14 +422,18 @@ function ram.teleport(new_area, new_sub_area)
     ram.set_sub_area(new_sub_area);
 end
 
-function ram.get_area_name()
-    if ram.areas.names[ram.get_area()] then
-        if ram.areas.names[ram.get_area()][ram.get_sub_area()] then
-            return ram.areas.names[ram.get_area()][ram.get_sub_area()];
+function ram.get_area_name(main_area, sub_area)
+    if ram.areas.names[main_area] then
+        if ram.areas.names[main_area][sub_area] then
+            return ram.areas.names[main_area][sub_area];
         end
         return "Unknown Sub Area";
     end
-    return "Unknown Area";
+    return "Unknown Main Area";
+end
+
+function ram.get_current_area_name()
+    return ram.get_area_name(ram.get_area(), ram.get_sub_area());
 end
 
 function ram.does_area_exist(main_area, sub_area)
@@ -440,15 +441,15 @@ function ram.does_area_exist(main_area, sub_area)
 end
 
 function ram.get_area_groups_real()
-    return areas.real_groups;
+    return ram.areas.real_groups;
 end
 
 function ram.get_area_groups_digital()
-    return areas.digital_groups;
+    return ram.areas.digital_groups;
 end
 
 function ram.get_area_group_name(main_area)
-    return areas[main_area].group;
+    return ram.areas.names[main_area].group;
 end
 
 function ram.in_real_world()
@@ -563,8 +564,8 @@ end
 function ram.set_powerups_available(new_powerups_available)
     if new_powerups_available < 0 then
         new_powerups_available = 0;
-    elseif new_powerups_available > 20 then
-        new_powerups_available = 20;
+    elseif new_powerups_available > 50 then
+        new_powerups_available = 50;
     end
     return memory.write_u8(powerups_available, new_powerups_available);
 end
