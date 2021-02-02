@@ -37,8 +37,13 @@ https://problemkaputt.de/gbatek.htm#gbamemorymap
 ram.addr = {};
 
 ram.addr.title_star_byte     = 0x02000000; -- 0x04 1 bit for 1 star :)
+ram.addr.flags_0000          = 0x02000000; -- 00000 star 00
+ram.addr.flags_0001          = 0x02000001; -- 000 try_access_internet_2 0000 | internet_2_access?
+ram.addr.flags_0002          = 0x02000002; -- 00000000
+ram.addr.flags_0003          = 0x02000003; -- 00000000
+ram.addr.flags_0004          = 0x02000004; -- 00000000
 
--- 000-00F ??? WWW Pin Doors
+-- 004-00F ??? WWW Pin Doors
 
 ram.addr.metro_ticket        = 0x02000005; -- TBD
 

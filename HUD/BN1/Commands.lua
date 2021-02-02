@@ -319,7 +319,7 @@ command_combat.options = {
     { value = game.draw_in_order;                     text = "Draw In Order";         };
     { value = game.fill_custom_gauge;                 text = "Fill Custom Gauge";     };
     { value = game.empty_custom_gauge;                text = "Empty Custom Gauge";    };
-    { value = game.reset_delete_time;                 text = "Set Delete Time to 0";  };
+    { value = game.reset_delete_timer;                text = "Set Delete Time to 0";  };
     { value = game.disable_chip_cooldown;             text = "Disable Chip Cooldown"; };
     { value = game.enable_chip_cooldown;              text = "Enable Chip Cooldown";  };
     { value = game.max_chip_window_count;             text = "15 Selectable Chips";   };

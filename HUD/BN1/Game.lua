@@ -429,7 +429,7 @@ end
 
 function game.randomize_folder_IDs()
     for i=0,29 do
-        game.ram.set.folder_ID(i, game.chips.get_random_ID());
+        game.ram.set.folder_ID(i, game.chips.get_random_ID_standard());
     end
 end
 

@@ -99,8 +99,8 @@ chips.names[ 31] = "Dash";
 chips.names[ 32] = "KngtSwrd";
 chips.names[ 33] = "HeroSwrd";
 chips.names[ 34] = "MetGuard";
-chips.names[ 35] = "Unused ID";
-chips.names[ 36] = "Unused ID";
+chips.names[ 35] = nil; -- unused ID
+chips.names[ 36] = nil; -- unused ID
 chips.names[ 37] = "TriArrow";
 chips.names[ 38] = "TriSpear";
 chips.names[ 39] = "TriLance";
@@ -111,17 +111,17 @@ chips.names[ 43] = "Howitzer";
 chips.names[ 44] = "Thunder1";
 chips.names[ 45] = "Thunder2";
 chips.names[ 46] = "Thunder3";
-chips.names[ 47] = "Unused ID";
-chips.names[ 48] = "Unused ID";
+chips.names[ 47] = nil; -- unused ID
+chips.names[ 48] = nil; -- unused ID
 chips.names[ 49] = "Snakegg1";
 chips.names[ 50] = "Snakegg2";
 chips.names[ 51] = "Snakegg3";
 chips.names[ 52] = "Hammer";
-chips.names[ 53] = "Unused ID";
-chips.names[ 54] = "Unused ID";
+chips.names[ 53] = nil; -- unused ID
+chips.names[ 54] = nil; -- unused ID
 chips.names[ 55] = "BodyBurn";
-chips.names[ 56] = "Unused ID";
-chips.names[ 57] = "Unused ID";
+chips.names[ 56] = nil; -- unused ID
+chips.names[ 57] = nil; -- unused ID
 chips.names[ 58] = "Ratton1";
 chips.names[ 59] = "Ratton2";
 chips.names[ 60] = "Ratton3";
@@ -130,7 +130,7 @@ chips.names[ 62] = "Lockon2";
 chips.names[ 63] = "Lockon3";
 chips.names[ 64] = "X-Panel1";
 chips.names[ 65] = "X-Panel3";
-chips.names[ 66] = "Unused ID";
+chips.names[ 66] = nil; -- unused ID
 chips.names[ 67] = "Recov10";
 chips.names[ 68] = "Recov30";
 chips.names[ 69] = "Recov50";
@@ -139,13 +139,13 @@ chips.names[ 71] = "Recov120";
 chips.names[ 72] = "Recov150";
 chips.names[ 73] = "Recov200";
 chips.names[ 74] = "Recov300";
-chips.names[ 75] = "Unused ID";
+chips.names[ 75] = nil; -- unused ID
 chips.names[ 76] = "Steal";
-chips.names[ 77] = "Unused ID";
-chips.names[ 78] = "Unused ID";
+chips.names[ 77] = nil; -- unused ID
+chips.names[ 78] = nil; -- unused ID
 chips.names[ 79] = "Geddon1";
 chips.names[ 80] = "Geddon2";
-chips.names[ 81] = "Unused ID";
+chips.names[ 81] = nil; -- unused ID
 chips.names[ 82] = "Escape";
 chips.names[ 83] = "Interupt";
 chips.names[ 84] = "LifeAura";
@@ -153,14 +153,14 @@ chips.names[ 85] = "AquaAura";
 chips.names[ 86] = "FireAura";
 chips.names[ 87] = "WoodAura";
 chips.names[ 88] = "Repair";
-chips.names[ 89] = "Unused ID";
-chips.names[ 90] = "Unused ID";
+chips.names[ 89] = nil; -- unused ID
+chips.names[ 90] = nil; -- unused ID
 chips.names[ 91] = "Cloud";
 chips.names[ 92] = "Cloudier";
 chips.names[ 93] = "Cloudest";
 chips.names[ 94] = "IceCube";
 chips.names[ 95] = "RockCube";
-chips.names[ 96] = "Unused ID";
+chips.names[ 96] = nil; -- unused ID
 chips.names[ 97] = "TimeBom1";
 chips.names[ 98] = "TimeBom2";
 chips.names[ 99] = "TimeBom3";
@@ -168,7 +168,7 @@ chips.names[100] = "Invis1";
 chips.names[101] = "Invis2";
 chips.names[102] = "Invis3";
 chips.names[103] = "IronBody";
-chips.names[104] = "Unused ID";
+chips.names[104] = nil; -- unused ID
 chips.names[105] = "Remobit1";
 chips.names[106] = "Remobit2";
 chips.names[107] = "Remobit3";
@@ -184,7 +184,7 @@ chips.names[116] = "Candle2";
 chips.names[117] = "Candle3";
 chips.names[118] = "SloGauge";
 chips.names[119] = "FstGauge";
-chips.names[120] = "Unused ID";
+chips.names[120] = nil; -- unused ID
 chips.names[121] = "Drain1";
 chips.names[122] = "Drain2";
 chips.names[123] = "Drain3";
@@ -207,8 +207,8 @@ chips.names[139] = "Dynamyt1";
 chips.names[140] = "Dynamyt2";
 chips.names[141] = "Dynamyt3";
 chips.names[142] = "Anubis";
-chips.names[143] = "Unused ID";
-chips.names[144] = "Unused ID";
+chips.names[143] = nil; -- unused ID
+chips.names[144] = nil; -- unused ID
 chips.names[145] = "IronShld";
 chips.names[146] = "LeafShld";
 chips.names[147] = "Barrier";
@@ -218,9 +218,9 @@ chips.names[150] = "PharoMn3";
 chips.names[151] = "ShadoMan";
 chips.names[152] = "ShadoMn2";
 chips.names[153] = "ShadoMn3";
-chips.names[154] = "Unused ID";
-chips.names[155] = "Unused ID";
-chips.names[156] = "Unused ID";
+chips.names[154] = nil; -- unused ID
+chips.names[155] = nil; -- unused ID
+chips.names[156] = nil; -- unused ID
 chips.names[157] = "MagicMan";
 chips.names[158] = "MagicMn2";
 chips.names[159] = "MagicMn3";
@@ -306,16 +306,32 @@ function chips.get_random_code()
     return math.random(0,25);
 end
 
-function chips.get_random_ID()
-    local ID = 120;
-    while chips.names[ID] == "Unused ID" do
-        ID = math.random(1,199);
+function chips.get_random_ID_standard()
+    local ID = nil;
+    while not chips.names[ID] do
+        ID = math.random(1,147);
     end
     return ID;
 end
 
-function chips.get_random_PA()
+function chips.get_random_ID_navi()
+    local ID = nil;
+    while not chips.names[ID] do
+        ID = math.random(148,199);
+    end
+    return ID;
+end
+
+function chips.get_random_ID_PA()
     return math.random(202,237);
+end
+
+function chips.get_random_ID_all()
+    local ID = nil;
+    while not chips.names[ID] do
+        ID = math.random(1,237);
+    end
+    return ID;
 end
 
 return chips;
