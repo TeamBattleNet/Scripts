@@ -51,6 +51,7 @@ game.game_state_names[0x20] = "game_over";
 game.game_state_names[0x24] = "trader";
 game.game_state_names[0x28] = "credits";
 game.game_state_names[0x2C] = "ubisoft_logo";  -- PAL only
+game.game_state_previous = 0x00;
 
 function game.get_game_state()
     return game.ram.get.game_state();
@@ -98,6 +99,10 @@ end
 
 function game.in_credits()
     return game.get_game_state() == 0x28;
+end
+
+function game.game_state_changed()
+    return game.get_game_state() ~= game.game_state_previous;
 end
 
 ---------------------------------------- RNG ----------------------------------------
@@ -686,6 +691,7 @@ end
 
 function game.update_post(options)
     game.ram.update_post(options);
+    game.game_state_previous = game.get_game_state();
 end
 
 return game;
