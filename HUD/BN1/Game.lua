@@ -22,10 +22,6 @@ end
 
 ---------------------------------------- Game State ----------------------------------------
 
-function game.get_version_byte()
-    return game.ram.version_byte;
-end
-
 function game.get_version_name()
     return game.ram.version_name;
 end
@@ -108,23 +104,23 @@ end
 ---------------------------------------- RNG ----------------------------------------
 
 function game.get_RNG_value()
-    return game.ram.get_RNG_value();
+    return game.ram.get.RNG_value();
 end
 
 function game.set_RNG_value(new_rng)
-    game.ram.set_RNG_value(new_rng);
+    game.ram.set.RNG_value(new_rng);
 end
 
 function game.get_RNG_index()
-    return game.ram.get_RNG_index();
+    return game.ram.get.RNG_index();
 end
 
 function game.set_RNG_index(new_index)
-    game.ram.set_RNG_index(new_index)
+    game.ram.set.RNG_index(new_index)
 end
 
 function game.get_RNG_delta()
-    return game.ram.get_RNG_delta();
+    return game.ram.get.RNG_delta();
 end
 
 function game.adjust_RNG(steps)

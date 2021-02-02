@@ -150,7 +150,7 @@ command_RNG.options = {
     { value = -1000; text = "Decrease by 1000"; };
 };
 command_RNG.selection = 1;
-command_RNG.description = function() return string.format("RNG Index: %5s", (game.ram.get_RNG_index() or "?????")); end;
+command_RNG.description = function() return string.format("RNG Index: %5s", (game.ram.get.RNG_index() or "?????")); end;
 command_RNG.doit = function(value) game.ram.adjust_RNG(value); end;
 table.insert(commands, command_RNG);
 

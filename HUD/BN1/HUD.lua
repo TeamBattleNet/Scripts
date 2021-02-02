@@ -169,8 +169,7 @@ local function set_default_text(font, color)
 end
 
 local function to_screen(text)
-    gui.pixelText(x*xs, y*ys, text);
-    y = y + 1;
+    gui.pixelText(x*xs, y*ys, text); y = y + 1;
 end
 
 local function to_screen_corner(text)
@@ -214,8 +213,8 @@ end
 local function display_player_info()
     to_screen(string.format("Zenny  : %6u", game.get_zenny()));
     to_screen(string.format("Max  HP: %6u", game.calculate_max_HP()));
-    to_screen(string.format("Level  : %6u", game.calculate_mega_level()));
     to_screen(string.format("Library: %6u", game.count_library()));
+    to_screen(string.format("Level  : %6u", game.calculate_mega_level()));
 end
 
 local function display_game_info()
@@ -303,9 +302,7 @@ end
 
 function hud.initialize(options)
     print("Initializing HUD for MMBN 1...");
-    --set_default_text(font, 0x00000000); -- none
-    set_default_text("gens", 0x77000000); -- transparent
-    --set_default_text(font, 0xFF000000); -- solid
+    set_default_text("fceux", 0x77000000);
     hud.version = options.major_version .. "." .. hud.minor_version;
     options.maximum_RNG_index = 10 * 60 * 60; -- 10 minutes of frames
     game.initialize(options);

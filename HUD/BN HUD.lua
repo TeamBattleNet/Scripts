@@ -36,7 +36,6 @@ print("");
 if hud then
     local options = {};
     options.major_version = "0.3";
-    options.rng = require("All/RNG");
     hud.initialize(options);
     while true do
         hud.update();
