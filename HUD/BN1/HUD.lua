@@ -85,8 +85,39 @@ local function record_menu_buttons()
     end
 end
 
-local function process_inputs()
+local function disable_button(button, to_set)
+    if buttons_ignore[button] then
+        if buttons_held[button] then
+            joypad.set(to_set);
+            buttons_down[button] = false;
+        elseif buttons_previous[button] then
+            -- wait 1 more frame
+        else
+            buttons_ignore[button] = false;
+        end
+    elseif buttons_down[button] then
+        joypad.set(to_set);
+        buttons_ignore[button] = true;
+    end
+end
+
+local function disable_buttons_in_command_mode()
+    disable_button("Up"    , {Up=false}    );
+    disable_button("Down"  , {Down=false}  );
+    disable_button("Left"  , {Left=false}  );
+    disable_button("Right" , {Right=false} );
+    disable_button("Start" , {Start=false} );
+    disable_button("Select", {Select=false});
+    disable_button("B"     , {B=false}     );
+    disable_button("A"     , {A=false}     );
+    disable_button("L"     , {L=false}     );
+    disable_button("R"     , {R=false}     );
+end
+
+local function process_inputs_BN_HUD()
     buttons_held = joypad.get(); -- controller only
+    keys_held = input.get(); -- controller, keyboard, and mouse
+    
     buttons_down.Up     = (buttons_held.Up     and not buttons_previous.Up    );
     buttons_down.Down   = (buttons_held.Down   and not buttons_previous.Down  );
     buttons_down.Left   = (buttons_held.Left   and not buttons_previous.Left  );
@@ -97,31 +128,31 @@ local function process_inputs()
     buttons_down.A      = (buttons_held.A      and not buttons_previous.A     );
     buttons_down.L      = (buttons_held.L      and not buttons_previous.L     );
     buttons_down.R      = (buttons_held.R      and not buttons_previous.R     );
-    buttons_previous = buttons_held;
     
-    record_menu_buttons(); -- for folder edits
-    
-    keys_held = input.get(); -- controller, keyboard, and mouse
     keys_down.Up           = (keys_held.Up           and not keys_previous.Up          );
     keys_down.Down         = (keys_held.Down         and not keys_previous.Down        );
     keys_down.Left         = (keys_held.Left         and not keys_previous.Left        );
     keys_down.Right        = (keys_held.Right        and not keys_previous.Right       );
     keys_down.Keypad0      = (keys_held.Keypad0      and not keys_previous.Keypad0     );
     keys_down.KeypadPeriod = (keys_held.KeypadPeriod and not keys_previous.KeypadPeriod);
+    
+    record_menu_buttons(); -- for folder edits
+    
+    if command_mode then
+        disable_buttons_in_command_mode();
+    end
+    
+    buttons_previous = buttons_held;
     keys_previous = keys_held;
 end
+
+process_inputs_BN_HUD_reference = event.onframestart(process_inputs_BN_HUD, "process_inputs_BN_HUD");
 
 ---------------------------------------- Display Functions ----------------------------------------
 
 local x = 0; -- font is positioned as if 10 pixels by 13 pixels
 local y = 0; -- letters can be as wide as 14, or as tall as 17
 local anchor = ""; -- one of the four corners
-
-local function to_screen(text, color)
-    color = color or 0xFFFFFFFF;
-    gui.text(x, y, text, color, anchor);
-    y = y + 16;
-end
 
 local function position_top_left()
     if     game.in_battle() then     -- align with HP
@@ -141,6 +172,12 @@ local function position_bottom_right()
     x = 3;
     y = 3;
     anchor = "bottomright";
+end
+
+local function to_screen(text, color)
+    color = color or 0xFFFFFFFF;
+    gui.text(x, y, text, color, anchor);
+    y = y + 16;
 end
 
 local function display_RNG(and_value)
@@ -275,8 +312,6 @@ function hud.initialize(options)
 end
 
 function hud.update()
-    process_inputs();
-    
     options = {};
     game.update_pre(options);
     
