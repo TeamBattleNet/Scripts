@@ -1,4 +1,4 @@
--- Story Progress Byte values for MMBN 1 scripting, enjoy.
+-- Progress values for MMBN 1 scripting, enjoy.
 
 -- https://forums.therockmanexezone.com/viewtopic.php?p=346421#p346421
 

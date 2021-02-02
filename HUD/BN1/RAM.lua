@@ -1,4 +1,4 @@
--- RAM Addresses for MMBN 1 scripting, enjoy.
+-- RAM functions for MMBN 1 scripting, enjoy.
 
 local ram  = {};
 

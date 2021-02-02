@@ -1,4 +1,4 @@
--- Commands for the HUD Script for MMBN 1, enjoy.
+-- Commands for MMBN 1 scripting, enjoy.
 
 local controls = {};
 

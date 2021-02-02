@@ -1,4 +1,4 @@
--- Functions for MMBN 1 Scripting, enjoy.
+-- Functions for MMBN 1 scripting, enjoy.
 
 local game = {};
 
