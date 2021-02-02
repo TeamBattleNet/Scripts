@@ -200,15 +200,25 @@ ram.addr.chip_window_count   = 0x02003720; -- 1 byte, number of chips in the cus
 ram.addr.battle_timer        = 0x02003730; -- 2 bytes, frame counter for current battle
 ram.addr.battle_pointer      = 0x02003784; -- 2 bytes? ROM offset?
 ram.addr.battle_custom_gauge = 0x0200374E; -- 2 bytes, counts up to 0x4000
+ram.addr.enemy_ID            = 0x02003774; -- 1 byte
+ram.addr.enemy_ID_2          = 0x02003775; -- 1 byte
+ram.addr.enemy_ID_3          = 0x02003776; -- 1 byte
 
 ram.addr.battle_draw_slots   = 0x02004910; -- 1 byte each, in battle chip draws, ends at 492D
 ram.addr.your_X              = 0x02004954; -- 2 bytes ???
 ram.addr.your_Y              = 0x02004956; -- 2 bytes ???
 
+ram.addr.enemy_HP_text_1     = 0x02004D30; -- 2 bytes, for counting down HP over time
+ram.addr.enemy_HP_text_2     = 0x020050A0; -- 2 bytes, for counting down HP over time
+ram.addr.enemy_HP_text_3     = 0x02005200; -- 2 bytes, for counting down HP over time
+
 ram.addr.cursor_ID           = 0x020062E4; -- 1 byte, chip  ID  of cursor
 ram.addr.cursor_code         = 0x020062E5; -- 1 byte, chip code of cursor
 ram.addr.in_folder_count     = 0x020062F0; -- 1 byte, number of chips in folder
 ram.addr.GMD_reward          = 0x02006380; -- 2 bytes, how to decode?
+ram.addr.enemy_HP            = 0x02006790; -- 2 bytes, which_enemy * 0xC0
+ram.addr.enemy_HP_2          = 0x02006850; -- 2 bytes, which_enemy * 0xC0
+ram.addr.enemy_HP_3          = 0x02006910; -- 2 bytes, which_enemy * 0xC0
 ram.addr.game_state          = 0x02006CB8; -- 1 byte
 ram.addr.RNG                 = 0x02006CC0; -- 4 bytes, resets and pauses on the title screen
 
@@ -287,14 +297,19 @@ ram.set.door_code = function(number_door_code) memory.write_u8(ram.addr.number_d
 ram.get.delete_timer = function() return memory.read_u16_le(ram.addr.battle_timer); end;
 ram.set.delete_timer = function(battle_timer) memory.write_u16_le(ram.addr.battle_timer, battle_timer); end;
 
+ram.get.draw_slot = function(which_slot) return memory.read_u8(ram.addr.battle_draw_slots+which_slot); end;
+ram.set.draw_slot = function(which_slot, battle_draw_slot) memory.write_u8(ram.addr.battle_draw_slots+which_slot, battle_draw_slot); end;
+
+ram.get.enemy_ID = function(which_enemy) return memory.read_u8(ram.addr.enemy_ID+which_enemy); end;
+ram.set.enemy_ID = function(which_enemy, enemy_ID) memory.write_u8(ram.addr.enemy_ID+which_enemy, enemy_ID); end;
+ram.get.enemy_HP = function(which_enemy) return memory.read_u16_le(ram.addr.enemy_HP+(0xC0*which_enemy)); end;
+ram.set.enemy_HP = function(which_enemy, enemy_HP) memory.write_u16_le(ram.addr.enemy_HP+(0xC0*which_enemy), enemy_HP); end;
+
 ram.get.folder_ID = function(which_slot) return memory.read_u8(ram.addr.folder_ID+(2*which_slot)); end;
 ram.set.folder_ID = function(which_slot, chip_ID) memory.write_u8(ram.addr.folder_ID+(2*which_slot), chip_ID); end;
 
 ram.get.folder_code = function(which_slot) return memory.read_u8(ram.addr.folder_code+(2*which_slot)); end;
 ram.set.folder_code = function(which_slot, chip_code) memory.write_u8(ram.addr.folder_code+(2*which_slot), chip_code); end;
-
-ram.get.draw_slot = function(which_slot) return memory.read_u8(ram.addr.battle_draw_slots+which_slot); end;
-ram.set.draw_slot = function(which_slot, battle_draw_slot) memory.write_u8(ram.addr.battle_draw_slots+which_slot, battle_draw_slot); end;
 
 ram.get.fire_flags = function() return memory.read_u32_le(ram.addr.fire_flags); end;
 ram.set.fire_flags = function(fire_flags) memory.write_u32_le(ram.addr.fire_flags, fire_flags); end;
@@ -340,51 +355,6 @@ ram.set.your_Y = function(your_Y) memory.write_s16_le(ram.addr.your_Y, your_Y); 
 
 ram.get.zenny = function() return memory.read_u32_le(ram.addr.zenny); end;
 ram.set.zenny = function(zenny) memory.write_u32_le(ram.addr.zenny, zenny); end;
-
-ram.get.name = function() return memory.read_u8(ram.addr.name); end;
-ram.set.name = function(name) memory.write_u8(ram.addr.name, name); end;
-ram.get.name = function() return memory.read_u16_le(ram.addr.name); end;
-ram.set.name = function(name) memory.write_u16_le(ram.addr.name, name); end;
-ram.get.name = function() return memory.read_u32_le(ram.addr.name); end;
-ram.set.name = function(name) memory.write_u32_le(ram.addr.name, name); end;
-
------------------------------- Address Groupings ------------------------------
-
-ram.addr.enemy         =         {}; -- TODO: Use offset instead
-ram.addr.enemy[1]      =         {};
-ram.addr.enemy[1].ID   = 0x02003774; -- 1 byte
-ram.addr.enemy[1].HP   = 0x02006790; -- 2 bytes
-ram.addr.enemy[1].text = 0x02004D30; -- 2 bytes, for counting down HP over time
-ram.addr.enemy[2]      =         {};
-ram.addr.enemy[2].ID   = 0x02003775; -- 1 byte
-ram.addr.enemy[2].HP   = 0x02006850; -- 2 bytes
-ram.addr.enemy[2].text = 0x020050A0; -- 2 bytes, for counting down HP over time
-ram.addr.enemy[3]      =         {};
-ram.addr.enemy[3].ID   = 0x02003776; -- 1 byte
-ram.addr.enemy[3].HP   = 0x02006910; -- 2 bytes
-ram.addr.enemy[3].text = 0x02005200; -- 2 bytes, for counting down HP over time
-
-ram.get.enemy       = {};
-ram.get.enemy[1]    = {};
-ram.get.enemy[1].ID = function() return memory.read_u8    (ram.addr.enemy[1].ID); end;
-ram.get.enemy[1].HP = function() return memory.read_u16_le(ram.addr.enemy[1].HP); end;
-ram.get.enemy[2]    = {};
-ram.get.enemy[2].ID = function() return memory.read_u8    (ram.addr.enemy[2].ID); end;
-ram.get.enemy[2].HP = function() return memory.read_u16_le(ram.addr.enemy[2].HP); end;
-ram.get.enemy[3]    = {};
-ram.get.enemy[3].ID = function() return memory.read_u8    (ram.addr.enemy[3].ID); end;
-ram.get.enemy[3].HP = function() return memory.read_u16_le(ram.addr.enemy[3].HP); end;
-
-ram.set.enemy       = {};
-ram.set.enemy[1]    = {};
-ram.set.enemy[1].ID = function(enemy_ID) memory.write_u8    (ram.addr.enemy[1].ID, enemy_ID); end;
-ram.set.enemy[1].HP = function(enemy_HP) memory.write_u16_le(ram.addr.enemy[1].HP, enemy_HP); end;
-ram.set.enemy[2]    = {};
-ram.set.enemy[2].ID = function(enemy_ID) memory.write_u8    (ram.addr.enemy[2].ID, enemy_ID); end;
-ram.set.enemy[2].HP = function(enemy_HP) memory.write_u16_le(ram.addr.enemy[2].HP, enemy_HP); end;
-ram.set.enemy[3]    = {};
-ram.set.enemy[3].ID = function(enemy_ID) memory.write_u8    (ram.addr.enemy[3].ID, enemy_ID); end;
-ram.set.enemy[3].HP = function(enemy_HP) memory.write_u16_le(ram.addr.enemy[3].HP, enemy_HP); end;
 
 ------------------------------ Verion Dependent ------------------------------
 

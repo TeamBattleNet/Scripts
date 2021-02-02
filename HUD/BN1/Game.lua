@@ -496,7 +496,7 @@ function game.get_battle_pointer()
 end
 
 function game.get_enemy_ID(which_enemy)
-    return game.ram.get.enemy[which_enemy].ID();
+    return game.ram.get.enemy_ID(which_enemy-1);
 end
 
 function game.get_enemy_name(which_enemy)
@@ -504,11 +504,11 @@ function game.get_enemy_name(which_enemy)
 end
 
 function game.get_enemy_HP(which_enemy)
-    return game.ram.get.enemy[which_enemy].HP();
+    return game.ram.get.enemy_HP(which_enemy-1);
 end
 
 function game.set_enemy_HP(which_enemy, new_HP)
-    game.ram.set.enemy[which_enemy].HP(new_HP);
+    game.ram.set.enemy_HP(which_enemy-1, new_HP);
 end
 
 function game.kill_enemy(which_enemy)
