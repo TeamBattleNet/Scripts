@@ -2,38 +2,11 @@
 
 local game = {};
 
-game.ram      = require("BN1/RAM"     );
 game.areas    = require("BN1/Areas"   );
 game.chips    = require("BN1/Chips"   );
 game.enemies  = require("BN1/Enemies" );
 game.progress = require("BN1/Progress");
-game.rng      = require("BN1/RNG"     );
-
----------------------------------------- RNG Wrapper ----------------------------------------
-
-function game.get_RNG_value()
-    return game.rng.get_RNG_value();
-end
-
-function game.set_RNG_value(new_rng)
-    game.rng.set_RNG_value(new_rng);
-end
-
-function game.get_RNG_index()
-    return game.rng.get_RNG_index();
-end
-
-function game.set_RNG_index(new_index)
-    game.rng.set_RNG_index(new_index)
-end
-
-function game.get_RNG_delta()
-    return game.rng.get_RNG_delta();
-end
-
-function game.adjust_RNG(steps)
-    game.rng.adjust_RNG(steps);
-end
+game.ram      = require("BN1/RAM"     );
 
 ---------------------------------------- Game State ----------------------------------------
 
@@ -115,6 +88,32 @@ function game.in_credits()
     return game.get_game_state() == 0x28;
 end
 
+---------------------------------------- RNG ----------------------------------------
+
+function game.get_RNG_value()
+    return game.ram.get_RNG_value();
+end
+
+function game.set_RNG_value(new_rng)
+    game.ram.set_RNG_value(new_rng);
+end
+
+function game.get_RNG_index()
+    return game.ram.get_RNG_index();
+end
+
+function game.set_RNG_index(new_index)
+    game.ram.set_RNG_index(new_index)
+end
+
+function game.get_RNG_delta()
+    return game.ram.get_RNG_delta();
+end
+
+function game.adjust_RNG(steps)
+    game.ram.adjust_RNG(steps);
+end
+
 ---------------------------------------- Progress ----------------------------------------
 
 function game.get_progress()
@@ -163,9 +162,9 @@ function game.ignite_oven_fires()
     game.ram.set.fire_flags_oven(0x00000000);
 end
 
-function game.extinguish_oven_fires() -- TODO: Improve precision
-    game.ram.set.fire_flags     (0xFFFFFFFF);
-    game.ram.set.fire_flags_oven(0xFFFFFFFF);
+function game.extinguish_oven_fires()
+    game.ram.set.fire_flags     (0xFFCFFFFF);
+    game.ram.set.fire_flags_oven(0xFFCFFFFF);
 end
 
 function game.ignite_WWW_fires()
@@ -664,16 +663,16 @@ end
 ---------------------------------------- Module Controls ----------------------------------------
 
 function game.initialize(options)
-    game.rng.initialize(options.max_RNG_index);
+    game.ram.initialize(options);
 end
 
 function game.update_pre()
     encounter_check();
-    game.rng.update_pre();
+    game.ram.update_pre();
 end
 
 function game.update_post()
-    game.rng.update_post();
+    game.ram.update_post();
 end
 
 return game;

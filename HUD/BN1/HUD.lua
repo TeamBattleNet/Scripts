@@ -175,7 +175,7 @@ end
 function hud.initialize(options)
     print("Initializing HUD for MMBN 1...");
     hud.version = options.major_version .. "." .. hud.minor_version;
-    options.max_RNG_index = 10 * 60 * 60; -- 10 minutes of frames
+    options.maximum_RNG_index = 10 * 60 * 60; -- 10 minutes of frames
     game.initialize(options);
     print("HUD for MMBN 1 " .. game.get_version_name() .. " Initialized.");
 end

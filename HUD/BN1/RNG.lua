@@ -2,12 +2,7 @@
 
 local rng = {};
 
--- RAM Address
-
-local RNG_address = 0x02006CC0; -- resets and pauses on the title screen
-
--- local variables
-
+local RNG_address = nil;
 local current_RNG_index = 0;
 local maximum_RNG_index = 60 * 60; -- minimum value
 local previous_RNG_index = 0;
@@ -31,7 +26,7 @@ function rng.calculate_RNG_delta(temp, goal)
     return nil;
 end
 
--- Create lookup table
+-- RNG Index Table
 
 function rng.initialize_table()
     rng.value = {};
@@ -109,9 +104,10 @@ end
 
 -- Module Controls
 
-function rng.initialize(target_RNG_index)
-    if target_RNG_index and target_RNG_index > maximum_RNG_index then
-        maximum_RNG_index = target_RNG_index;
+function rng.initialize(options)
+    RNG_address = options.RNG_address;
+    if options.maximum_RNG_index > maximum_RNG_index then
+        maximum_RNG_index = options.maximum_RNG_index;
     end
     rng.initialize_table();
     print("Creating RNG Table with max index of: " .. maximum_RNG_index);

@@ -2,6 +2,8 @@
 
 local ram  = {};
 
+ram.rng = require("BN1/RNG");
+
 --[[
 General Internal Memory
     00000000-00003FFF   BIOS - System ROM         (16 KBytes)
@@ -401,6 +403,47 @@ else
     ram.addr.encounter_odds = nil;
     ram.addr.encounter_curve = nil;
     print("RAM: Unrecognized game version. Unable to set certain values!");
+end
+
+---------------------------------------- RNG Wrapper ----------------------------------------
+
+function ram.get_RNG_value()
+    return ram.rng.get_RNG_value();
+end
+
+function ram.set_RNG_value(new_rng)
+    ram.rng.set_RNG_value(new_rng);
+end
+
+function ram.get_RNG_index()
+    return ram.rng.get_RNG_index();
+end
+
+function ram.set_RNG_index(new_index)
+    ram.rng.set_RNG_index(new_index)
+end
+
+function ram.get_RNG_delta()
+    return ram.rng.get_RNG_delta();
+end
+
+function ram.adjust_RNG(steps)
+    ram.rng.adjust_RNG(steps);
+end
+
+---------------------------------------- Module Controls ----------------------------------------
+
+function ram.initialize(options)
+    options.RNG_address = ram.addr.RNG;
+    ram.rng.initialize(options);
+end
+
+function ram.update_pre()
+    ram.rng.update_pre();
+end
+
+function ram.update_post()
+    ram.rng.update_post();
 end
 
 return ram;
