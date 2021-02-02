@@ -180,11 +180,13 @@ function hud.initialize(options)
     print("HUD for MMBN 1 " .. game.get_version_name() .. " Initialized.");
 end
 
+local options = {};
 local previous_keys = {};
 local previous_buttons = {};
 
 function hud.update()
-    game.update_pre();
+    options = {};
+    game.update_pre(options);
     
     local keys = joypad.get();
     local buttons = input.get();
@@ -241,7 +243,7 @@ function hud.update()
         display_HUD();
     end
     
-    game.update_post();
+    game.update_post(options);
     
     previous_keys = keys;
     previous_buttons = buttons;

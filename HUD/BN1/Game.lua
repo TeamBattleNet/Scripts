@@ -8,6 +8,18 @@ game.enemies  = require("BN1/Enemies" );
 game.progress = require("BN1/Progress");
 game.ram      = require("BN1/RAM"     );
 
+---------------------------------------- Fun Flags ----------------------------------------
+
+local no_chip_cooldown = false;
+
+function game.enable_chip_cooldown()
+    no_chip_cooldown = false;
+end
+
+function game.disable_chip_cooldown()
+    no_chip_cooldown = true;
+end
+
 ---------------------------------------- Game State ----------------------------------------
 
 function game.get_version_byte()
@@ -666,13 +678,14 @@ function game.initialize(options)
     game.ram.initialize(options);
 end
 
-function game.update_pre()
+function game.update_pre(options)
     encounter_check();
-    game.ram.update_pre();
+    options.no_chip_cooldown = no_chip_cooldown;
+    game.ram.update_pre(options);
 end
 
-function game.update_post()
-    game.ram.update_post();
+function game.update_post(options)
+    game.ram.update_post(options);
 end
 
 return game;

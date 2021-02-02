@@ -216,7 +216,7 @@ ram.addr.selected_cursor     = 0x0200630A; -- 2 bytes?, cursor value of selected
 
 ram.addr.button_flags        = 0x020065F0; -- many bytes, many flags
 
-ram.addr.chip_cooldown       = 0202006719; -- 1 byte, BstrBomb HYPE
+ram.addr.chip_cooldown       = 0x02006719; -- 1 byte, BstrBomb HYPE
 
 ram.addr.number_door_code    = 0x02009A90; -- 1 byte?
 
@@ -263,6 +263,9 @@ ram.get.buster_rapid = function() return memory.read_u8(ram.addr.buster_rapid); 
 ram.set.buster_rapid = function(buster_rapid) memory.write_u8(ram.addr.buster_rapid, buster_rapid); end;
 ram.get.buster_charge = function() return memory.read_u8(ram.addr.buster_charge); end;
 ram.set.buster_charge = function(buster_charge) memory.write_u8(ram.addr.buster_charge, buster_charge); end;
+
+ram.get.chip_cooldown = function() return memory.read_u8(ram.addr.chip_cooldown); end;
+ram.set.chip_cooldown = function(chip_cooldown) memory.write_u8(ram.addr.chip_cooldown, chip_cooldown); end;
 
 ram.get.chip_window_count = function() return memory.read_u8(ram.addr.chip_window_count); end;
 ram.set.chip_window_count = function(chip_window_count) memory.write_u8(ram.addr.chip_window_count, chip_window_count); end;
@@ -438,12 +441,15 @@ function ram.initialize(options)
     ram.rng.initialize(options);
 end
 
-function ram.update_pre()
-    ram.rng.update_pre();
+function ram.update_pre(options)
+    if options.no_chip_cooldown then
+        ram.set.chip_cooldown(0);
+    end
+    ram.rng.update_pre(options);
 end
 
-function ram.update_post()
-    ram.rng.update_post();
+function ram.update_post(options)
+    ram.rng.update_post(options);
 end
 
 return ram;

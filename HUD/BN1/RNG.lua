@@ -111,9 +111,10 @@ function rng.initialize(options)
     end
     rng.initialize_table();
     print("Creating RNG Table with max index of: " .. maximum_RNG_index);
+    print("Calculating RNG with max calculations per frame of: " .. maximum_calculations_per_frame);
 end
 
-function rng.update_pre()
+function rng.update_pre(options)
     if current_RNG_index < maximum_RNG_index then
         rng.expand_table(maximum_calculations_per_frame);
         if current_RNG_index >= maximum_RNG_index then
@@ -122,7 +123,7 @@ function rng.update_pre()
     end
 end
 
-function rng.update_post()
+function rng.update_post(options)
     previous_RNG_index = rng.get_RNG_index();
     previous_RNG_value = rng.get_RNG_value();
 end

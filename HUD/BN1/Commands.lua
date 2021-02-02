@@ -311,20 +311,21 @@ local command_combat = {};
 command_combat.selection = 1;
 command_combat.description = function() return "Battle Options:"; end;
 command_combat.options = {
-    { value = function() game.kill_enemy(0);     end; text = "Delete Everything";    };
-    { value = function() game.kill_enemy(1);     end; text = "Delete Enemy 1";       };
-    { value = function() game.kill_enemy(2);     end; text = "Delete Enemy 2";       };
-    { value = function() game.kill_enemy(3);     end; text = "Delete Enemy 3";       };
-    { value = function() game.draw_only_slot(0); end; text = "Draw Only Slot 1";     };
-    { value = game.draw_in_order;                     text = "Draw In Order";        };
-    { value = game.fill_custom_gauge;                 text = "Fill Custom Gauge";    };
-    { value = game.empty_custom_gauge;                text = "Empty Custom Gauge";   };
-    { value = game.reset_delete_time;                 text = "Set Delete Time to 0"; };
-    { value = game.max_chip_window_count;             text = "15 Selectable Chips";  };
+    { value = function() game.kill_enemy(0);     end; text = "Delete Everything";     };
+    { value = function() game.kill_enemy(1);     end; text = "Delete Enemy 1";        };
+    { value = function() game.kill_enemy(2);     end; text = "Delete Enemy 2";        };
+    { value = function() game.kill_enemy(3);     end; text = "Delete Enemy 3";        };
+    { value = function() game.draw_only_slot(0); end; text = "Draw Only Slot 1";      };
+    { value = game.draw_in_order;                     text = "Draw In Order";         };
+    { value = game.fill_custom_gauge;                 text = "Fill Custom Gauge";     };
+    { value = game.empty_custom_gauge;                text = "Empty Custom Gauge";    };
+    { value = game.reset_delete_time;                 text = "Set Delete Time to 0";  };
+    { value = game.disable_chip_cooldown;             text = "Disable Chip Cooldown"; };
+    { value = game.enable_chip_cooldown;              text = "Enable Chip Cooldown";  };
+    { value = game.max_chip_window_count;             text = "15 Selectable Chips";   };
 };
 command_combat.doit = function(value) value(); end;
 table.insert(commands, command_combat);
-
 
 
 return controls;
