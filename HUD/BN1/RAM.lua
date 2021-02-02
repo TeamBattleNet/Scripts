@@ -350,7 +350,7 @@ ram.set.name = function(name) memory.write_u32_le(ram.addr.name, name); end;
 
 ------------------------------ Address Groupings ------------------------------
 
-ram.addr.enemy         =         {};
+ram.addr.enemy         =         {}; -- TODO: Use offset instead
 ram.addr.enemy[1]      =         {};
 ram.addr.enemy[1].ID   = 0x02003774; -- 1 byte
 ram.addr.enemy[1].HP   = 0x02006790; -- 2 bytes

@@ -29,9 +29,13 @@ local hud = load_HUD();
 
 console.clear();
 
+print("ROM Hash: " .. gameinfo.getromhash());
+print("ROM Name: " .. gameinfo.getromname());
+print("");
+
 if hud then
     local options = {};
-    options.major_version = "0.2";
+    options.major_version = "0.3";
     options.rng = require("All/RNG");
     hud.initialize(options);
     while true do

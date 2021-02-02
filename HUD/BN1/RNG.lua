@@ -110,15 +110,19 @@ function rng.initialize(options)
         maximum_RNG_index = options.maximum_RNG_index;
     end
     rng.initialize_table();
+    print("");
     print("Creating RNG Table with max index of: " .. maximum_RNG_index);
     print("Calculating RNG with max calculations per frame of: " .. maximum_calculations_per_frame);
+    print("");
 end
 
 function rng.update_pre(options)
     if current_RNG_index < maximum_RNG_index then
         rng.expand_table(maximum_calculations_per_frame);
         if current_RNG_index >= maximum_RNG_index then
-            print("RNG Table Created.");
+            print("");
+            print(emu.framecount() .. ": RNG Table Created.");
+            print("");
         end
     end
 end

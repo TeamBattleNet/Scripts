@@ -9,7 +9,7 @@
 -- https://docs.google.com/spreadsheets/d/e/2PACX-1vT5JrlG2InVHk4Rxpz_o3wQ5xbpNj2_n87wY0R99StH9F5P5Cp8AFyjsEQCG6MVEaEMn9dJND-k5M-P/pubhtml Did you check the notes?
 
 local hud = {};
-hud.minor_version = "1.2";
+hud.minor_version = "0.0";
 
 local game = require("BN1/Game");
 local commands = require("BN1/Commands");
@@ -150,51 +150,51 @@ process_inputs_BN_HUD_reference = event.onframestart(process_inputs_BN_HUD, "pro
 
 ---------------------------------------- Display Functions ----------------------------------------
 
-local x = 0; -- font is positioned as if 10 pixels by 13 pixels
-local y = 0; -- letters can be as wide as 14, or as tall as 17
-local anchor = ""; -- one of the four corners
+local x = 0;
+local y = 0;
 
-local function position_top_left()
-    if     game.in_battle() then     -- align with HP
-        x =  0;
-        y = 64;
-    elseif game.in_world() and game.in_real_world() then -- aligned with PET
-        x = 10;
-        y = 96;
-    else
-        x = 5;
-        y = 8;
+local xs = 0;
+local ys = 0;
+
+local function set_default_text(font, color)
+    if font == "gens" then
+        xs = 4;
+        ys = 7;
+    elseif font == "fceux" then
+        xs = 6;
+        ys = 9;
     end
-    anchor = "topleft";
+    gui.defaultPixelFont(font);
+    gui.defaultTextBackground(color);
 end
 
-local function position_bottom_right()
-    x = 3;
-    y = 3;
-    anchor = "bottomright";
+local function to_screen(text)
+    gui.pixelText(x*xs, y*ys, text);
+    y = y + 1;
 end
 
-local function to_screen(text, color)
-    color = color or 0xFFFFFFFF;
-    gui.text(x, y, text, color, anchor);
-    y = y + 16;
+local function to_screen_corner(text)
+    local x2 = 239 - ( xs * string.len(text) );
+    local y2 = 160 - ( ys * (y+1) );
+    gui.pixelText(x2, y2, text);
+    y = y + 1;
 end
 
 local function display_RNG(and_value)
     if and_value then
         to_screen("RNG Value: "   .. string.format("%08X", game.get_RNG_value()));
     end
-    to_screen(string.format("RNG Index: %4s", (game.get_RNG_index() or "?")));
-    to_screen(string.format("RNG Delta: %4s", (game.get_RNG_delta() or "?")));
+    to_screen(string.format("RNG Index: %4s", (game.get_RNG_index() or "????")));
+    to_screen(string.format("RNG Delta: %4s", (game.get_RNG_delta() or    "?")));
 end
 
 local function display_steps()
     if game.in_digital_world() then
-        to_screen(string.format("Steps : %7u", game.get_steps()));
-        to_screen(string.format("Check : %7u", game.get_check()));
-        to_screen(string.format("Checks: %7u", game.get_encounter_checks()));
+        to_screen(string.format("Steps : %7u"    , game.get_steps()));
+        to_screen(string.format("Check : %7u"    , game.get_check()));
+        to_screen(string.format("Checks: %7u"    , game.get_encounter_checks()));
         to_screen(string.format("Chance: %6.3f%%", game.get_encounter_chance()));
-        to_screen(string.format("Next  : %7i", (64 - (game.get_steps() - game.get_check()))));
+        to_screen(string.format("Next  : %7i"    , game.get_next_check()));
     end
     to_screen(string.format("X: %7i", game.get_X()));
     to_screen(string.format("Y: %7i", game.get_Y()));
@@ -202,8 +202,8 @@ end
 
 local function display_draws(how_many, start_at)
     start_at = start_at or 1;
-    for i=1,how_many do
-        to_screen(string.format("%2i: %2i", i+start_at-1, game.get_draw_slot(i+start_at-1)));
+    for i=0,how_many-1 do
+        to_screen(string.format("%2i: %2i", i+start_at, game.get_draw_slot(i+start_at)));
     end
 end
 
@@ -215,7 +215,7 @@ local function display_player_info()
     to_screen(string.format("Zenny  : %6u", game.get_zenny()));
     to_screen(string.format("Max  HP: %6u", game.calculate_max_HP()));
     to_screen(string.format("Level  : %6u", game.calculate_mega_level()));
-    to_screen(string.format("Library: %6u", game.get_library_count()));
+    to_screen(string.format("Library: %6u", game.count_library()));
 end
 
 local function display_game_info()
@@ -225,9 +225,8 @@ local function display_game_info()
 end
 
 local function display_routing()
-    position_top_left();
-    x = 240;
-    y =  16;
+    x = 10;
+    y =  1;
     to_screen("0000: " .. game.get_string_binary(0x02000000, 5, true));
     to_screen("0005: " .. game.get_string_binary(0x02000005, 5, true));
     to_screen("000A: " .. game.get_string_binary(0x0200000A, 5, true));
@@ -235,18 +234,17 @@ local function display_routing()
     to_screen("0000: " .. game.get_string_hex(0x02000000, 16, true));
     to_screen("0010: " .. game.get_string_hex(0x02000010, 16, true));
     to_screen("01FC: " .. game.get_string_hex(0x020001FC, 8, true));
-    x = 550;
-    y = 112;
+    x = 20;
+    y = y - 1;
     to_screen(game.get_string_binary(0x0200001D, 1, true));
-    x = 650;
-    y = 112;
+    x = 29;
+    y = y - 1;
     to_screen(tostring(game.is_go_mode()));
 end
 
 local function display_commands()
-    position_top_left();
-    x = 230;
-    y = 16+128;
+    x = 10;
+    y =  1;
     options = commands.display_options();
     for i=1,table.getn(options) do
         to_screen(options[i]);
@@ -254,40 +252,40 @@ local function display_commands()
 end
 
 local function display_HUD()
-    position_top_left();
+    x=0;
+    y=0;
     if game.in_title() or game.in_splash() then
         display_game_info();
         to_screen("");
         display_player_info()
-        position_bottom_right();
-        to_screen(game.get_current_area_name());
+        y=0;
+        to_screen_corner(game.get_current_area_name());
     elseif game.in_world() then
         display_RNG();
         display_steps();
         if game.near_number_doors() then
             to_screen("Door Code: " .. game.get_door_code());
         end
-        position_bottom_right();
-        to_screen(game.get_current_area_name());
+        y=0;
+        to_screen_corner(game.get_current_area_name());
     elseif game.in_battle() or game.in_game_over() then
         display_draws(10);
-        position_top_left();
-        x = x + 71;
+        x=8;
+        y=0;
         to_screen(string.format("Battle ID:   0x%4X", game.get_battle_pointer()));
         display_RNG(true);
         to_screen("");
         to_screen(string.format("Checks: %2u", game.get_encounter_checks()));
-        position_bottom_right();
-        to_screen(game.get_enemy_name(1));
-        to_screen(game.get_enemy_name(2));
-        to_screen(game.get_enemy_name(3));
+        y=0;
+        to_screen_corner(game.get_enemy_name(1));
+        to_screen_corner(game.get_enemy_name(2));
+        to_screen_corner(game.get_enemy_name(3));
     elseif game.in_transition() then
         to_screen("HUD Version: " .. hud.version);
     elseif game.in_menu() or game.in_shop() or game.in_chip_trader() then
         display_in_menu();
     elseif game.in_credits() then
-        position_bottom_right();
-        to_screen("t r o u t", 0x10000000);
+        gui.text(0, 0, "t r o u t", 0x10000000, "bottomright");
     else
         to_screen("Unknown Game State!");
     end
@@ -305,6 +303,9 @@ end
 
 function hud.initialize(options)
     print("Initializing HUD for MMBN 1...");
+    --set_default_text(font, 0x00000000); -- none
+    set_default_text("gens", 0x77000000); -- transparent
+    --set_default_text(font, 0xFF000000); -- solid
     hud.version = options.major_version .. "." .. hud.minor_version;
     options.maximum_RNG_index = 10 * 60 * 60; -- 10 minutes of frames
     game.initialize(options);
@@ -322,7 +323,7 @@ function hud.update()
     end
     
     if show_HUD then
-        if command_mode then
+        if command_mode or keys_down.KeypadPeriod then
             if     buttons_down.Select or keys_down.KeypadPeriod then
                 command_mode = not command_mode;
             elseif buttons_down.Right  or keys_down.Right   then
@@ -345,16 +346,13 @@ function hud.update()
                 elseif buttons_down.Left   then
                     routing_mode = not routing_mode;
                 elseif buttons_down.Up     then
-                    -- nothing
+                    set_default_text("gens",  0x77000000);
                 elseif buttons_down.Down   then
-                    -- nothing
+                    set_default_text("fceux", 0x77000000);
                 elseif buttons_down.B      then
-                    -- nothing
+                    game.print_draw_slots();
                 elseif buttons_down.A      then
-                    --print(game.get_draw_slots());
-                    --print(buttons_held);
-                    --print(keys_held);
-                    print((string.len(buttons_string)/2) .. " Buttons: " .. buttons_string);
+                    print((string.len(buttons_string)/2) .. " Buttons:" .. buttons_string);
                 end
             end
         end

@@ -9,7 +9,6 @@ local command_index = 1;
 
 local function show_text(message)
     print(message);
-    gui.addmessage(message);
 end
 
 function controls.next()

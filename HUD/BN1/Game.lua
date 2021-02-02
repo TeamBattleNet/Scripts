@@ -341,6 +341,10 @@ function game.add_check(some_check)
     game.set_check(game.get_check() + some_check);
 end
 
+function game.get_next_check()
+    return 64 - (game.get_steps() - game.get_check());
+end
+
 ---------------------------------------- Inventory ----------------------------------------
 
 function game.get_zenny()
@@ -404,7 +408,7 @@ function game.get_chip_code(code)
     return game.chips.codes[code];
 end
 
-function game.get_library_count()
+function game.count_library()
     local count = 0;
     for i=0,0x1F do
         local byte = game.ram.get.library(i);
@@ -566,6 +570,13 @@ function game.get_draw_slots()
         slots[i] = game.get_draw_slot(i);
     end
     return slots;
+end
+
+function game.print_draw_slots()
+    slots = game.get_draw_slots();
+    for i=1,15 do -- limited to 25 prints per frame
+        print(string.format("%02u: %02u | %02u: %02u", i, slots[i], i+15, slots[i+15]));
+    end
 end
 
 function game.draw_in_order()
