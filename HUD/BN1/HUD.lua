@@ -9,7 +9,7 @@
 -- https://docs.google.com/spreadsheets/d/e/2PACX-1vT5JrlG2InVHk4Rxpz_o3wQ5xbpNj2_n87wY0R99StH9F5P5Cp8AFyjsEQCG6MVEaEMn9dJND-k5M-P/pubhtml Did you check the notes?
 
 local hud = {};
-hud.minor_version = "0.2";
+hud.minor_version = "0.3";
 
 local game = require("BN1/Game");
 local commands = require("BN1/Commands");
@@ -156,6 +156,9 @@ local y = 0;
 local xs = 0;
 local ys = 0;
 
+local current_font = "fceux";
+local current_color = 0x77000000;
+
 local function set_default_text(font, color)
     if font == "gens" then
         xs = 4;
@@ -168,6 +171,15 @@ local function set_default_text(font, color)
     gui.defaultTextBackground(color);
 end
 
+local function toggle_default_text()
+    if current_font == "gens" then
+        current_font = "fceux";
+    else
+        current_font = "gens";
+    end
+    set_default_text(current_font, current_color);
+end
+
 local function to_screen(text)
     gui.pixelText(x*xs, y*ys, text); y = y + 1;
 end
@@ -177,6 +189,15 @@ local function to_screen_corner(text)
     local y2 = 160 - ( ys * (y+1) );
     gui.pixelText(x2, y2, text);
     y = y + 1;
+end
+
+local function display_commands()
+    x = 0;
+    y = 0;
+    options = commands.display_options();
+    for i=1,table.getn(options) do
+        to_screen(options[i]);
+    end
 end
 
 local function display_RNG(and_value)
@@ -223,31 +244,43 @@ local function display_game_info()
     to_screen("HUD  Version: " .. hud.version);
 end
 
-local function display_routing()
+local function HUD_routing()
     x =  0;
     y =  0;
-    to_screen("0000: " .. game.get_string_binary(0x02000000, 5, true));
-    to_screen("0005: " .. game.get_string_binary(0x02000005, 5, true));
-    to_screen("000A: " .. game.get_string_binary(0x0200000A, 5, true));
-    to_screen("000F: " .. game.get_string_binary(0x0200000F, 5, true));
     to_screen("0000: " .. game.get_string_hex(0x02000000, 16, true));
     to_screen("0010: " .. game.get_string_hex(0x02000010, 16, true));
+    to_screen("0000: " .. game.get_string_binary(0x02000000, 4, true));
+    to_screen("0004: " .. game.get_string_binary(0x02000004, 4, true));
+    to_screen("0008: " .. game.get_string_binary(0x02000008, 4, true));
+    to_screen("000C: " .. game.get_string_binary(0x0200000C, 4, true));
     to_screen("01FC: " .. game.get_string_hex(0x020001FC, 8, true));
     y = y - 1;
     x = 31;
     to_screen(tostring(game.is_go_mode()));
 end
 
-local function display_commands()
-    x = 0;
-    y = 0;
-    options = commands.display_options();
-    for i=1,table.getn(options) do
-        to_screen(options[i]);
-    end
+local function HUD_battle()
+    x=0;
+    y=0;
+    display_draws(10);
+    x=7;
+    y=0;
+    display_draws(10, 11);
+    x=14;
+    y=0;
+    display_draws(10, 21);
+    x=21;
+    y=0;
+    to_screen(string.format("Fight: 0x%4X", game.get_battle_pointer()));
+    display_RNG(true);
+    to_screen(string.format("Checks: %2u", game.get_encounter_checks()));
+    y=0;
+    to_screen_corner(game.get_enemy_name(1));
+    to_screen_corner(game.get_enemy_name(2));
+    to_screen_corner(game.get_enemy_name(3));
 end
 
-local function display_HUD()
+local function HUD_auto()
     x=0;
     y=0;
     if game.in_title() or game.in_splash() then
@@ -290,11 +323,18 @@ local function display_HUD()
     end
 end
 
+local HUDs = {};
+local HUD_mode = 1;
+
+table.insert(HUDs, HUD_auto);
+table.insert(HUDs, HUD_battle);
+table.insert(HUDs, HUD_routing);
+
 ---------------------------------------- Module Controls ----------------------------------------
 
 function hud.initialize(options)
     print("Initializing HUD for MMBN 1...");
-    set_default_text("fceux", 0x77000000);
+    set_default_text(current_font, current_color);
     hud.version = options.major_version .. "." .. hud.minor_version;
     options.maximum_RNG_index = 10 * 60 * 60; -- 10 minutes of frames
     game.initialize(options);
@@ -332,20 +372,23 @@ function hud.update()
                 if     buttons_down.Select then
                     command_mode = not command_mode;
                 elseif buttons_down.Right  then
-                    routing_mode = not routing_mode;
+                    HUD_mode = (HUD_mode % table.getn(HUDs)) + 1;
                 elseif buttons_down.Left   then
-                    routing_mode = not routing_mode;
+                    HUD_mode = HUD_mode - 1;
+                    if HUD_mode == 0 then
+                        HUD_mode = table.getn(HUDs);
+                    end
                 elseif buttons_down.Up     then
-                    set_default_text("gens",  0x77000000);
+                    toggle_default_text();
                 elseif buttons_down.Down   then
-                    set_default_text("fceux", 0x77000000);
+                    toggle_default_text();
                 elseif buttons_down.B      then
                     game.print_draw_slots();
                 elseif buttons_down.A      then
                     print((string.len(buttons_string)/2) .. " Buttons:" .. buttons_string);
                 end
             end
-            display_HUD();
+            HUDs[HUD_mode]();
         end
     end
     
