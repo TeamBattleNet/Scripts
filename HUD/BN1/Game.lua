@@ -58,10 +58,12 @@ function game.get_game_state_name()
 end
 
 game.battle_state_names       = {};
+game.battle_state_names[0x00] = "loading";
 game.battle_state_names[0x04] = "busy";
 game.battle_state_names[0x08] = "transition";
 game.battle_state_names[0x0C] = "combat";
 game.battle_state_names[0x10] = "PAUSE";
+game.battle_state_names[0x14] = "time_stop";
 game.battle_state_names[0x18] = "opening_custom";
 game.battle_state_previous = 0x00;
 
