@@ -671,6 +671,14 @@ function game.print_draw_slots()
     end
 end
 
+function game.shuffle_folder()
+    -- TODO: Literally shuffle your folder
+end
+
+function game.shuffle_folder_simulate(battle_RNG_index)
+    return game.ram.shuffle_folder_simulate(battle_RNG_index);
+end
+
 function game.draw_in_order()
     for i=0,29 do
         game.ram.set.draw_slot(i, i);

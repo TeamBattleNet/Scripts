@@ -153,6 +153,10 @@ local rng_table = nil;
 local previous_RNG_value = 0;
 local calculations_per_frame = 200; -- careful tweaking this
 
+function ram.to_int(seed)
+    return bit.band(seed, 0x7FFFFFFF);
+end
+
 function ram.simulate_RNG(seed) -- 0x8000000C 0x72 (run twice?)
     -- seed = ((seed << 1) + (seed >> 31) + 1) ^ 0x873CA9E5;
     return bit.bxor((bit.lshift(seed,1) + bit.rshift(seed, 31) + 1), 0x873CA9E5);
@@ -164,6 +168,26 @@ function ram.iterate_RNG(seed, iterations)
         seed = ram.simulate_RNG(seed);
     end
     return seed;
+end
+
+function ram.shuffle_folder_simulate(battle_RNG_index)
+    local seed_index = battle_RNG_index - 120 + 1;
+    local slots = {};
+    local slot_a = nil;
+    local slot_b = nil;
+    for i=1,30 do
+        slots[i] = i;
+    end
+    for i=1,60 do
+        seed = ram.to_int(bit.rshift(ram.get.RNG_value_at(seed_index),1));
+        seed_index = seed_index + 1;
+        slot_a = (seed % 30) + 1;
+        seed = ram.to_int(bit.rshift(ram.get.RNG_value_at(seed_index),1));
+        seed_index = seed_index + 1;
+        slot_b = (seed % 30) + 1;
+        slots[slot_a], slots[slot_b] = slots[slot_b], slots[slot_a];
+    end
+    return slots;
 end
 
 function ram.calculate_RNG_delta(temp, goal)
