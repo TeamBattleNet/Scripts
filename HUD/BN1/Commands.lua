@@ -14,7 +14,8 @@ end
 function controls.next()
     command_index = (command_index % table.getn(commands)) + 1;
     local command = commands[command_index];
-    show_text("Selected: " .. command.description());
+    print("");
+    show_text("Command Change: " .. command.description());
 end
 
 function controls.previous()
@@ -23,14 +24,15 @@ function controls.previous()
         command_index = table.getn(commands);
     end
     local command = commands[command_index];
-    show_text("Selected: " .. command.description());
+    print("");
+    show_text("Command Change: " .. command.description());
 end
 
 function controls.option_down()
     local command = commands[command_index];
     command.selection = (command.selection % table.getn(command.options)) + 1;
     local option = command.options[command.selection];
-    show_text("Selected: " .. option.text);
+    show_text("Option Change: " .. option.text);
 end
 
 function controls.option_up()
@@ -40,12 +42,13 @@ function controls.option_up()
         command.selection = table.getn(command.options);
     end
     local option = command.options[command.selection];
-    show_text("Selected: " .. option.text);
+    show_text("Option Change: " .. option.text);
 end
 
 function controls.doit()
     local command = commands[command_index];
     local option = command.options[command.selection];
+    print("");
     show_text("Executing: " .. command.description());
     show_text("With Option: " .. option.text);
     command.doit(option.value);

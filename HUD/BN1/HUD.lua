@@ -395,7 +395,9 @@ function hud.update()
                 elseif buttons_down.Down   then
                     toggle_default_text();
                 elseif buttons_down.B      then
+                    print("");
                     game.print_draw_slots();
+                    print(game.get_draw_slots_text());
                 elseif buttons_down.A      then
                     print((string.len(buttons_string)/2) .. " Buttons:" .. buttons_string);
                 end

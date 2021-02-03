@@ -638,10 +638,20 @@ function game.get_draw_slots()
     return slots;
 end
 
+function game.get_draw_slots_text()
+    local slots = game.get_draw_slots();
+    local slots_text = "";
+    for i=1,30 do
+        slots_text = string.format("%s %02u", slots_text, slots[i]);
+    end
+    local RNG_index = game.get_RNG_index() or "????";
+    return string.format("%s:%s", RNG_index, slots_text);
+end
+
 function game.print_draw_slots()
     slots = game.get_draw_slots();
-    for i=1,15 do -- limited to 25 prints per frame
-        print(string.format("%02u: %02u | %02u: %02u", i, slots[i], i+15, slots[i+15]));
+    for i=1,10 do -- limited to 25 prints per frame
+        print(string.format("%02u: %02u | %02u: %02u | %02u: %02u", i, slots[i], i+10, slots[i+10], i+20, slots[i+20]));
     end
 end
 
