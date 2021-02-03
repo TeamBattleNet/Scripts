@@ -469,6 +469,12 @@ function game.op_buster_stats()
     game.set_buster_stats(7); -- 327 buster shots
 end
 
+function game.give_armor()
+    game.ram.set.armor_heat(1);
+    game.ram.set.armor_aqua(1);
+    game.ram.set.armor_wood(1);
+end
+
 function game.get_HPMemory_count()
     return game.ram.get.HPMemory();
 end

@@ -54,12 +54,13 @@ end
 function controls.display_options()
     local command = commands[command_index];
     local options = command.options;
-    local lines = {"       " .. command.description()};
+    local lines = {string.format("       %-30s", command.description())};
+    
     for i=1,table.getn(options) do
         if i == command.selection then
-            table.insert(lines, string.format("-> %2i: %s", i, options[i].text));
+            table.insert(lines, string.format("-> %2i: %-30s", i, options[i].text));
         else
-            table.insert(lines, string.format("   %2i: %s", i, options[i].text));
+            table.insert(lines, string.format("   %2i: %-30s", i, options[i].text));
         end
     end
     return lines;
@@ -69,7 +70,7 @@ end
 
 local command_blank = {};
 command_blank.options = {
-    { value = nil; text = " Up  or  Down to change Options !"; };
+    { value = nil; text = "Use Up or Down to change Options!"; };
     { value = nil; text = "Left or Right to change Commands!"; };
     { value = nil; text = "Use the controller or a keyboard!"; };
 };
@@ -151,39 +152,64 @@ table.insert(commands, command_items);
 
 
 
-local command_RNG = {};
-command_RNG.options = {
-    { value =  1000; text = "Increase by 1000"; };
-    { value =   100; text = "Increase by  100"; };
-    { value =    10; text = "Increase by   10"; };
-    { value =     1; text = "Increase by    1"; };
-    { value =    -1; text = "Decrease by    1"; };
-    { value =   -10; text = "Decrease by   10"; };
-    { value =  -100; text = "Decrease by  100"; };
-    { value = -1000; text = "Decrease by 1000"; };
-};
-command_RNG.selection = 1;
-command_RNG.description = function() return string.format("RNG Index: %5s", (game.ram.get.RNG_index() or "?????")); end;
-command_RNG.doit = function(value) game.ram.adjust_RNG(value); end;
-table.insert(commands, command_RNG);
-
-
-
-local command_RNG = {};
-command_RNG.options = {
-    { value =  9999; text = "Increase by 9999"; };
-    { value =    64; text = "Increase by   64"; };
-    { value =     2; text = "Increase by    2"; };
-    { value =     1; text = "Increase by    1"; };
-    { value =    -1; text = "Decrease by    1"; };
-    { value =    -2; text = "Decrease by    2"; };
-    { value =   -64; text = "Decrease by   64"; };
-    { value = -9999; text = "Decrease by 9999"; };
-};
-command_RNG.selection = 1;
-command_RNG.description = function() return "Modify Steps: " .. game.get_steps(); end;
-command_RNG.doit = function(value) game.add_steps(value); end;
-table.insert(commands, command_RNG);
+local command_routing = {};
+function command_routing.update_options(option_value)
+    command_routing.options = {};
+    command_routing.selection = 1;
+    command_routing.FUNction = nil;
+    
+    if not option_value then
+        command_routing.description = function() return "Wanna see some RNG manip?"; end;
+        table.insert( command_routing.options, { value = 1; text = "RNG Index"   ; } );
+        table.insert( command_routing.options, { value = 2; text = "Step Counter" ; } );
+        table.insert( command_routing.options, { value = 3; text = "Flag Flipper" ; } );
+    else
+        command_routing.description = function() return "Bzzt! (something broke)"; end;
+        table.insert( command_routing.options, { value = nil; text = "Previous Menu"; } );
+        if option_value == 1 then
+            command_routing.description = function() return string.format("RNG Index: %5s", (game.ram.get.RNG_index() or "?????")); end;
+            table.insert( command_routing.options, { value =  1000; text = "Increase by 1000"; } );
+            table.insert( command_routing.options, { value =   100; text = "Increase by  100"; } );
+            table.insert( command_routing.options, { value =    10; text = "Increase by   10"; } );
+            table.insert( command_routing.options, { value =     1; text = "Increase by    1"; } );
+            table.insert( command_routing.options, { value =    -1; text = "Decrease by    1"; } );
+            table.insert( command_routing.options, { value =   -10; text = "Decrease by   10"; } );
+            table.insert( command_routing.options, { value =  -100; text = "Decrease by  100"; } );
+            table.insert( command_routing.options, { value = -1000; text = "Decrease by 1000"; } );
+            command_routing.FUNction = function(value) game.ram.adjust_RNG(value); end;
+        elseif option_value == 2 then
+            command_routing.description = function() return string.format("Modify Steps: %5s", game.get_steps()); end;
+            table.insert( command_routing.options, { value =  9999; text = "Increase by 9999"; } );
+            table.insert( command_routing.options, { value =    64; text = "Increase by   64"; } );
+            table.insert( command_routing.options, { value =     2; text = "Increase by    2"; } );
+            table.insert( command_routing.options, { value =     1; text = "Increase by    1"; } );
+            table.insert( command_routing.options, { value =    -1; text = "Decrease by    1"; } );
+            table.insert( command_routing.options, { value =    -2; text = "Decrease by    2"; } );
+            table.insert( command_routing.options, { value =   -64; text = "Decrease by   64"; } );
+            table.insert( command_routing.options, { value = -9999; text = "Decrease by 9999"; } );
+            command_routing.FUNction = function(value) game.add_steps(value); end;
+        elseif option_value == 3 then
+            command_routing.description = function() return "Bits, Nibbles, Bytes, and Words."; end;
+            table.insert( command_routing.options, { value = game.go_mode;               text = "Go Mode";               } );
+            table.insert( command_routing.options, { value = game.set_star_flag;         text = "Set Star Flag";         } );
+            table.insert( command_routing.options, { value = game.clear_star_flag;       text = "Clear Star Flag";       } );
+            table.insert( command_routing.options, { value = game.ignite_oven_fires;     text = "Ignite Oven Fires";     } );
+            table.insert( command_routing.options, { value = game.extinguish_oven_fires; text = "Extinguish Oven Fires"; } );
+            table.insert( command_routing.options, { value = game.ignite_WWW_fires;      text = "Ignite WWW Fires";      } );
+            table.insert( command_routing.options, { value = game.extinguish_WWW_fires;  text = "Extinguish WWW Fires";  } );
+            command_routing.FUNction = function(value) value(); end;
+        end
+    end
+end
+command_routing.update_options();
+function command_routing.doit(value)
+    if command_routing.FUNction and value then
+        command_routing.FUNction(value);
+    else
+        command_routing.update_options(value);
+    end
+end
+table.insert(commands, command_routing);
 
 
 
@@ -292,30 +318,48 @@ table.insert(commands, teleport_digital_world);
 
 
 
-local command_misc = {};
-command_misc.selection = 1;
-command_misc.description = function() return "Misc Commands:"; end;
-command_misc.options = {
-    { value = game.go_mode;               text = "Go Mode";               };
-    { value = game.set_star_flag;         text = "Set Star Flag";         };
-    { value = game.clear_star_flag;       text = "Clear Star Flag";       };
-    { value = game.ignite_oven_fires;     text = "Ignite Oven Fires";     };
-    { value = game.extinguish_oven_fires; text = "Extinguish Oven Fires"; };
-    { value = game.ignite_WWW_fires;      text = "Ignite WWW Fires";      };
-    { value = game.extinguish_WWW_fires;  text = "Extinguish WWW Fires";  };
-    { value = game.reset_buster_stats;    text = "Reset Buster Stats";    };
-    { value = game.max_buster_stats;      text = "Max Buster Stats";      };
-    { value = game.hub_buster_stats;      text = "Hub Buster Stats";      };
-    { value = game.op_buster_stats;       text = "OP Buster Stats";       };
-    { value = function() game.set_all_folder_to_ID(109); end; text = "Only Draw BstrBomb";     };
-    { value = function() game.set_all_folder_to_ID(102); end; text = "Only Draw Invis3";       };
-    { value = function() game.set_all_folder_to_ID( 33); end; text = "Only Draw HeroSwrd";     };
-    { value = function() game.randomize_folder_IDs(   ); end; text = "Randomize Folder IDs";   };
-    { value = function() game.set_all_folder_to_code(0); end; text = "Monocode A Folder";      };
-    { value = function() game.randomize_folder_codes( ); end; text = "Randomize Folder Codes"; };
-};
-command_misc.doit = function(value) value(); end;
-table.insert(commands, command_misc);
+local command_battle = {};
+function command_battle.update_options(option_value)
+    command_battle.options = {};
+    command_battle.selection = 1;
+    command_battle.FUNction = nil;
+    
+    if not option_value then
+        command_battle.description = function() return "Boost which feature?"; end;
+        table.insert( command_battle.options, { value = 1; text = "Buster & Armor"; } );
+        table.insert( command_battle.options, { value = 2; text = "Battlechips"; } );
+    else
+        command_battle.description = function() return "Bzzt! (something broke)"; end;
+        table.insert( command_battle.options, { value = nil; text = "Previous Menu"; } );
+        if option_value == 1 then
+            command_battle.description = function() return string.format("Power Level: %4u", game.calculate_mega_level()); end;
+            table.insert( command_battle.options, { value = game.reset_buster_stats; text = "Reset Buster Stats"; } );
+            table.insert( command_battle.options, { value = game.max_buster_stats;   text = "Max   Buster Stats"; } );
+            table.insert( command_battle.options, { value = game.hub_buster_stats;   text = "Hub   Buster Stats"; } );
+            table.insert( command_battle.options, { value = game.op_buster_stats;    text = "OP    Buster Stats"; } );
+            table.insert( command_battle.options, { value = game.give_armor;         text = "Get Equip with Armor!"; } );
+            command_battle.FUNction = function(value) value(); end;
+        elseif option_value == 2 then
+            command_battle.description = function() return string.format("Modify Steps: %5s", game.get_steps()); end;
+            table.insert( command_battle.options, { value = function() game.set_all_folder_to_code(0); end; text = "Monocode A Folder";      } );
+            table.insert( command_battle.options, { value = function() game.randomize_folder_codes( ); end; text = "Randomize Folder Codes"; } );
+            table.insert( command_battle.options, { value = function() game.randomize_folder_IDs(   ); end; text = "Randomize Folder IDs";   } );
+            table.insert( command_battle.options, { value = function() game.set_all_folder_to_ID(109); end; text = "Only Draw BstrBomb";     } );
+            table.insert( command_battle.options, { value = function() game.set_all_folder_to_ID(102); end; text = "Only Draw Invis3";       } );
+            table.insert( command_battle.options, { value = function() game.set_all_folder_to_ID( 33); end; text = "Only Draw HeroSwrd";     } );
+            command_battle.FUNction = function(value) value(); end;
+        end
+    end
+end
+command_battle.update_options();
+function command_battle.doit(value)
+    if command_battle.FUNction and value then
+        command_battle.FUNction(value);
+    else
+        command_battle.update_options(value);
+    end
+end
+table.insert(commands, command_battle);
 
 
 
