@@ -49,6 +49,25 @@ ram.set.chip_window_count = function(chip_window_count) memory.write_u8(ram.addr
 ram.get.check = function() return memory.read_u32_le(ram.addr.check); end;
 ram.set.check = function(check) memory.write_u32_le(ram.addr.check, check); end;
 
+ram.get.cursor_ID = function() return memory.read_u8(ram.addr.cursor_ID); end;
+ram.set.cursor_ID = function(cursor_ID) memory.write_u8(ram.addr.cursor_ID, cursor_ID); end;
+ram.get.cursor_code = function() return memory.read_u8(ram.addr.cursor_code); end;
+ram.set.cursor_code = function(cursor_code) memory.write_u8(ram.addr.cursor_code, cursor_code); end;
+
+ram.get.cursor_folder = function() return memory.read_u16_le(ram.addr.cursor_folder); end;
+ram.set.cursor_folder = function(cursor_folder) memory.write_u16_le(ram.addr.cursor_folder, cursor_folder); end;
+ram.get.cursor_pack = function() return memory.read_u16_le(ram.addr.cursor_pack); end;
+ram.set.cursor_pack = function(cursor_pack) memory.write_u16_le(ram.addr.cursor_pack, cursor_pack); end;
+ram.get.cursor_selected = function() return memory.read_u16_le(ram.addr.cursor_selected); end;
+ram.set.cursor_selected = function(cursor_selected) memory.write_u16_le(ram.addr.cursor_selected, cursor_selected); end;
+
+ram.get.offset_folder = function() return memory.read_u16_le(ram.addr.offset_folder); end;
+ram.set.offset_folder = function(offset_folder) memory.write_u16_le(ram.addr.offset_folder, offset_folder); end;
+ram.get.offset_pack = function() return memory.read_u16_le(ram.addr.offset_pack); end;
+ram.set.offset_pack = function(offset_pack) memory.write_u16_le(ram.addr.offset_pack, offset_pack); end;
+ram.get.offset_selected = function() return memory.read_u16_le(ram.addr.offset_selected); end;
+ram.set.offset_selected = function(offset_selected) memory.write_u16_le(ram.addr.offset_selected, offset_selected); end;
+
 ram.get.custom_gauge = function() return memory.read_u16_le(ram.addr.battle_custom_gauge); end;
 ram.set.custom_gauge = function(battle_custom_gauge) memory.write_u16_le(ram.addr.battle_custom_gauge, battle_custom_gauge); end;
 
@@ -68,9 +87,10 @@ ram.set.enemy_HP = function(which_enemy, enemy_HP) memory.write_u16_le(ram.addr.
 
 ram.get.folder_ID = function(which_slot) return memory.read_u8(ram.addr.folder_ID+(2*which_slot)); end;
 ram.set.folder_ID = function(which_slot, chip_ID) memory.write_u8(ram.addr.folder_ID+(2*which_slot), chip_ID); end;
-
 ram.get.folder_code = function(which_slot) return memory.read_u8(ram.addr.folder_code+(2*which_slot)); end;
 ram.set.folder_code = function(which_slot, chip_code) memory.write_u8(ram.addr.folder_code+(2*which_slot), chip_code); end;
+ram.get.folder_count = function() return memory.read_u8(ram.addr.folder_count); end;
+ram.set.folder_count = function(folder_count) memory.write_u8(ram.addr.folder_count, folder_count); end;
 
 ram.get.fire_flags = function() return memory.read_u32_le(ram.addr.fire_flags); end;
 ram.set.fire_flags = function(fire_flags) memory.write_u32_le(ram.addr.fire_flags, fire_flags); end;

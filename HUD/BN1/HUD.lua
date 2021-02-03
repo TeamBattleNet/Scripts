@@ -231,6 +231,14 @@ local function display_in_menu()
     to_screen("TODO: Menu HUD");
 end
 
+local function display_in_shop()
+    to_screen("TODO: Shop HUD");
+end
+
+local function display_in_chip_trader()
+    to_screen("TODO: Chip Trader HUD");
+end
+
 local function display_player_info()
     to_screen(string.format("Zenny  : %6u", game.get_zenny()));
     to_screen(string.format("Max  HP: %6u", game.calculate_max_HP()));
@@ -310,16 +318,16 @@ local function HUD_auto()
         to_screen_corner(game.get_enemy_name(3));
     elseif game.in_transition() then
         to_screen("HUD Version: " .. hud.version);
-    elseif game.in_menu() or game.in_shop() or game.in_chip_trader() then
+    elseif game.in_menu() then
         display_in_menu();
+    elseif game.in_shop() then
+        display_in_shop();
+    elseif game.in_chip_trader() then
+        display_in_chip_trader();
     elseif game.in_credits() then
         gui.text(0, 0, "t r o u t", 0x10000000, "bottomright");
     else
         to_screen("Unknown Game State!");
-    end
-    
-    if routing_mode then
-        display_routing();
     end
 end
 

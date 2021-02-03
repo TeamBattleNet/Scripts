@@ -190,8 +190,12 @@ addresses.check               = 0x020003F8; -- 4 bytes, steps at the last encoun
 
 -- 5AA broken divider?
 
--- 13A0 first usable?
+-- 13A0 first usable? textures/animations?
 
+-- 13B9 sayonara mom
+
+--addresses.                  = 0x02003710; -- ? byte TBD
+--addresses.                  = 0x02003711; -- ? byte TBD
 addresses.battle_state        = 0x02003712; -- ? byte TBD
 addresses.battle_turns        = 0x0200371C; -- 1 byte, number of custom gauge opens + 1
 addresses.chip_window_count   = 0x02003720; -- 1 byte, number of chips in the custom menu
@@ -202,7 +206,14 @@ addresses.enemy_ID            = 0x02003774; -- 1 byte
 addresses.enemy_ID_2          = 0x02003775; -- 1 byte
 addresses.enemy_ID_3          = 0x02003776; -- 1 byte
 
--- 4904 & 4906 fade in and out?
+-- 37E0-449F mostly 1's?
+
+-- 44A0+ TBD
+
+-- 4713 animation timer
+-- 4718 dog know
+
+-- 4904 & 4906 fade in and out
 
 addresses.battle_draw_slots   = 0x02004910; -- 1 byte each, in battle chip draws, ends at 492D
 addresses.your_X              = 0x02004954; -- 2 bytes
@@ -210,34 +221,74 @@ addresses.your_Y              = 0x02004956; -- 2 bytes
 addresses.your_X2             = 0x02004958; -- 2 bytes
 addresses.your_Y2             = 0x0200495A; -- 2 bytes
 
--- 49A2+ textures?
-
 addresses.enemy_HP_text_1     = 0x02004D30; -- 2 bytes, for counting down HP over time
 addresses.enemy_HP_text_2     = 0x020050A0; -- 2 bytes, for counting down HP over time
 addresses.enemy_HP_text_3     = 0x02005200; -- 2 bytes, for counting down HP over time
 
+-- 49A2+ textures? marked by 0x83 and a counter up to 0x0F, ending around 62E0
+
+--addresses.                  = 0x020062E0; -- 1 byte, unused?
+addresses.folder_menu_state   = 0x020062E1; -- 1 byte, 0x04 normal 0x14 sorting 0x10 go right 0x0C go left 0x08 left
+--addresses.                  = 0x020062E2; -- 1 byte, unused?
+--addresses.                  = 0x020062E3; -- 1 byte, unused?
 addresses.cursor_ID           = 0x020062E4; -- 1 byte, chip  ID  of cursor
 addresses.cursor_code         = 0x020062E5; -- 1 byte, chip code of cursor
-addresses.in_folder_count     = 0x020062F0; -- 1 byte, number of chips in folder
-addresses.GMD_reward          = 0x02006380; -- 2 bytes, how to decode?
-addresses.enemy_HP            = 0x02006790; -- 2 bytes, which_enemy * 0xC0
-addresses.enemy_HP_2          = 0x02006850; -- 2 bytes, which_enemy * 0xC0
-addresses.enemy_HP_3          = 0x02006910; -- 2 bytes, which_enemy * 0xC0
-addresses.game_state          = 0x02006CB8; -- 1 byte
-addresses.RNG                 = 0x02006CC0; -- 4 bytes, resets and pauses on the title screen
+--addresses.                  = 0x020062E6; -- 1 byte, unused?
+--addresses.                  = 0x020062E7; -- 1 byte, unused?
+--addresses.                  = 0x020062E8; -- 1 byte, chip graphics offset?
+--addresses.                  = 0x020062E9; -- 1 byte, chip graphics offset?
+--addresses.                  = 0x020062EA; -- 1 byte, unused?
+--addresses.                  = 0x020062EB; -- 1 byte, always 0x08?
+--addresses.                  = 0x020062EC; -- 1 byte, menu transition offset?
+--addresses.                  = 0x020062ED; -- 1 byte, menu transition offset sync'd?
+--addresses.                  = 0x020062EE; -- 1 byte, unused?
+addresses.cursor_animation    = 0x020062EF; -- 1 byte
 
-addresses.folder_cursor       = 0x020062F4; -- 2 bytes?, cursor value in the folder
-addresses.folder_offset       = 0x020062F6; -- 2 bytes?, offset value in the folder
-addresses.pack_cursor         = 0x020062FE; -- 2 bytes?, cursor value in the pack
-addresses.pack_offset         = 0x02006300; -- 2 bytes?, offset value in the pack
-addresses.selected_offset     = 0x02006308; -- 2 bytes?, offset value of selected chip
-addresses.selected_cursor     = 0x0200630A; -- 2 bytes?, cursor value of selected chip
+addresses.folder_count        = 0x020062F0; -- 1 byte, number of chips in folder
+addresses.chip_selected       = 0x020062F1; -- 1 byte, flag: 0x01 folder 0x02 pack
+addresses.cursor_folder       = 0x020062F2; -- 2 bytes, cursor value in the folder
+addresses.cursor_folder_copy  = 0x020062F4; -- 2 bytes, copy
+addresses.offset_folder       = 0x020062F6; -- 2 bytes, offset value in the folder
+addresses.offset_folder_copy  = 0x020062F8; -- 2 bytes, copy
+addresses.folder_bottom_index = 0x020062FA; -- 2 bytes, to limit cursor
+addresses.cursor_pack         = 0x020062FC; -- 2 bytes, cursor value in the pack
+addresses.cursor_pack_copy    = 0x020062FE; -- 2 bytes, copy
+addresses.offset_pack         = 0x02006300; -- 2 bytes, offset value in the pack
+addresses.offset_pack_copy    = 0x02006302; -- 2 bytes, copy
+addresses.pack_bottom_index   = 0x02006304; -- 2 bytes, to limit cursor
+addresses.chip_selected_flag  = 0x02006306; -- 1 byte, flag: 0x12 folder 0x1C pack
+addresses.offset_selected     = 0x02006308; -- 2 bytes, offset value of selected chip
+addresses.cursor_selected     = 0x0200630A; -- 2 bytes, cursor value of selected chip
+
+-- 6312 & 631A some kind of counters, flanked by matching flags
+
+-- 632C-632F folder transition timer/offset & flags?
+
+-- 6338 flashing cursor (can't freeze?)
+
+addresses.GMD_reward          = 0x02006380; -- 2 bytes, how to decode?
+
+addresses.power_on_frames     = 0x020064A0; -- 2 bytes, session counter
 
 addresses.button_flags        = 0x020065F0; -- many bytes, many flags
 
 addresses.chip_cooldown       = 0x02006719; -- 1 byte, BstrBomb HYPE
 
-addresses.number_door_code    = 0x02009A90; -- 1 byte?
+addresses.enemy_HP            = 0x02006790; -- 2 bytes, which_enemy * 0xC0
+addresses.enemy_HP_2          = 0x02006850; -- 2 bytes, which_enemy * 0xC0
+addresses.enemy_HP_3          = 0x02006910; -- 2 bytes, which_enemy * 0xC0
+
+addresses.game_state          = 0x02006CB8; -- 1 byte
+addresses.RNG                 = 0x02006CC0; -- 4 bytes, resets and pauses on the title screen
+
+-- 7210-74C6 all 1's
+
+-- 74CD sprite animation counter?
+-- 74D4 sprite animation timer
+
+-- 8010 more texture animation timers
+
+addresses.number_door_code    = 0x02009A90; -- 1 byte, only set when entering a number
 
 addresses.pack_ID             = 0x02019018; -- 1 byte, chip  ID  of pack slot 1
 addresses.pack_code           = 0x0201900A; -- 1 byte, chip code of pack slot 1
