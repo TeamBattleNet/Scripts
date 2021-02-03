@@ -76,15 +76,15 @@ function game.get_battle_state_name()
 end
 
 function game.battle_pause()
-    game.ram.set.battle_state(0x10);
+    --game.ram.set.battle_state(0x10);
     game.ram.set.battle_paused(0x01);
-    game.ram.set.battle_paused_also(0x08);
+    --game.ram.set.battle_paused_also(0x08);
 end
 
 function game.battle_unpause()
-    game.ram.set.battle_state(0x0C);
+    --game.ram.set.battle_state(0x0C);
     game.ram.set.battle_paused(0x00);
-    game.ram.set.battle_paused_also(0x00);
+    --game.ram.set.battle_paused_also(0x00);
 end
 
 game.folder_state_names       = {};

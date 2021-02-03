@@ -366,7 +366,7 @@ function hud.update()
         if command_mode then
             if     buttons_down.Select or keys_down.KeypadPeriod then
                 command_mode = false;
-                --game.battle_unpause();
+                game.battle_unpause();
             elseif buttons_down.Right  or keys_down.Right   then
                 commands.next();
             elseif buttons_down.Left   or keys_down.Left    then
@@ -383,7 +383,7 @@ function hud.update()
             if (buttons_held.L and buttons_held.R) or keys_down.KeypadPeriod then
                 if     buttons_down.Select or keys_down.KeypadPeriod then
                     command_mode = true;
-                    --game.battle_pause();
+                    game.battle_pause();
                 elseif buttons_down.Right  then
                         HUD_mode = (HUD_mode % table.getn(HUDs)) + 1;
                 elseif buttons_down.Left   then
