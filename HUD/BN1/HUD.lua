@@ -228,7 +228,7 @@ local function display_draws(how_many, start_at)
 end
 
 local function display_in_menu()
-    to_screen("State: " .. game.get_folder_state_name());
+    to_screen("State: " .. game.get_folder_state_name() .. " " .. game.is_folder_or_pack());
     to_screen("TODO: Menu HUD");
 end
 

@@ -93,6 +93,8 @@ ram.get.folder_count = function() return memory.read_u8(ram.addr.folder_count); 
 ram.set.folder_count = function(folder_count) memory.write_u8(ram.addr.folder_count, folder_count); end;
 ram.get.folder_menu_state = function() return memory.read_u8(ram.addr.folder_menu_state); end;
 ram.set.folder_menu_state = function(folder_menu_state) memory.write_u8(ram.addr.folder_menu_state, folder_menu_state); end;
+ram.get.folder_to_pack = function() return memory.read_u8(ram.addr.folder_to_pack); end;
+ram.set.folder_to_pack = function(folder_to_pack) memory.write_u8(ram.addr.folder_to_pack, folder_to_pack); end;
 
 ram.get.fire_flags = function() return memory.read_u32_le(ram.addr.fire_flags); end;
 ram.set.fire_flags = function(fire_flags) memory.write_u32_le(ram.addr.fire_flags, fire_flags); end;

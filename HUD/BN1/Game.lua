@@ -73,6 +73,20 @@ function game.get_folder_state_name()
     return game.folder_state_names[game.get_folder_state()] or "unknown";
 end
 
+function game.get_folder_or_pack()
+    return game.ram.get.folder_to_pack();
+end
+
+function game.is_folder_or_pack()
+    local folder_state = game.get_folder_or_pack();
+    if folder_state == 0x20 then
+        return "folder";
+    elseif folder_state == 0x02 then
+        return "pack";
+    end
+    return "transitioning";
+end
+
 function game.in_title()
     return game.get_game_state() == 0x00;
 end

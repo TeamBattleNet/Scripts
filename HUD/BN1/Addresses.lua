@@ -194,6 +194,8 @@ addresses.check               = 0x020003F8; -- 4 bytes, steps at the last encoun
 
 -- 13B9 sayonara mom
 
+-- 1500 repair man
+
 --addresses.                  = 0x02003710; -- ? byte TBD
 --addresses.                  = 0x02003711; -- ? byte TBD
 addresses.battle_state        = 0x02003712; -- ? byte TBD
@@ -239,8 +241,8 @@ addresses.cursor_code         = 0x020062E5; -- 1 byte, chip code of cursor
 --addresses.                  = 0x020062E9; -- 1 byte, chip graphics offset?
 --addresses.                  = 0x020062EA; -- 1 byte, unused?
 --addresses.                  = 0x020062EB; -- 1 byte, always 0x08?
---addresses.                  = 0x020062EC; -- 1 byte, menu transition offset?
---addresses.                  = 0x020062ED; -- 1 byte, menu transition offset sync'd?
+addresses.folder_to_pack      = 0x020062EC; -- 1 byte, menu transition and tracker
+addresses.folder_to_pack_copy = 0x020062ED; -- 1 byte, copy
 --addresses.                  = 0x020062EE; -- 1 byte, unused?
 addresses.cursor_animation    = 0x020062EF; -- 1 byte
 
