@@ -57,6 +57,10 @@ function game.get_game_state_name()
     return game.game_state_names[game.get_game_state()] or "unknown";
 end
 
+function game.game_state_changed()
+    return game.get_game_state() ~= game.game_state_previous;
+end
+
 game.battle_state_names       = {};
 game.battle_state_names[0x00] = "loading";
 game.battle_state_names[0x04] = "busy";
@@ -73,6 +77,10 @@ end
 
 function game.get_battle_state_name()
     return game.battle_state_names[game.get_battle_state()] or "unknown";
+end
+
+function game.battle_state_changed()
+    return game.get_battle_state() ~= game.battle_state_previous;
 end
 
 function game.battle_pause()
@@ -101,6 +109,10 @@ end
 
 function game.get_folder_state_name()
     return game.folder_state_names[game.get_folder_state()] or "unknown";
+end
+
+function game.folder_state_changed()
+    return game.get_folder_state() ~= game.folder_state_previous;
 end
 
 function game.get_folder_or_pack()
@@ -155,10 +167,6 @@ end
 
 function game.in_credits()
     return game.get_game_state() == 0x28;
-end
-
-function game.game_state_changed()
-    return game.get_game_state() ~= game.game_state_previous;
 end
 
 ---------------------------------------- RNG ----------------------------------------
@@ -505,6 +513,14 @@ function game.randomize_folder_codes()
     end
 end
 
+function game.get_cursor_offset_folder()
+    return game.ram.get.offset_folder();
+end
+
+function game.get_cursor_position_folder()
+    return game.ram.get.cursor_folder();
+end
+
 ----------------------------------------Mega Modifications ----------------------------------------
 
 function game.set_buster_stats(power_level)
@@ -779,6 +795,7 @@ end
 function game.update_post(options)
     game.ram.update_post(options);
     game.game_state_previous = game.get_game_state();
+    game.battle_state_previous = game.get_battle_state();
     game.folder_state_previous = game.get_folder_state();
 end
 

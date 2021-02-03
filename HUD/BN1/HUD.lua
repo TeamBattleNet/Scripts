@@ -228,7 +228,9 @@ end
 
 local function display_in_menu()
     to_screen("State: " .. game.get_folder_state_name() .. " " .. game.is_folder_or_pack());
-    to_screen("TODO: Menu HUD");
+    x = 17;
+    y =  4;
+    to_screen(string.format("%2u", game.get_cursor_offset_folder() + 1)); y = y + 1;
 end
 
 local function display_in_shop()
