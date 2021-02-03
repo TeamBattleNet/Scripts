@@ -601,8 +601,8 @@ function game.set_door_code(new_door_code)
     game.ram.set.door_code(new_door_code);
 end
 
-function game.near_number_doors() -- School Comps or WWW Comp 2
-    return game.get_main_area() == 0x80 or (game.get_main_area() == 0x85 and game.get_sub_area() == 0x01);
+function game.near_number_doors() -- NumberMan Scenario or WWW Comp 2
+    return (0x12 <= game.get_progress() and game.get_progress() <= 0x15) or (game.get_main_area() == 0x85 and game.get_sub_area() == 0x01);
 end
 
 ---------------------------------------- Routing ----------------------------------------
