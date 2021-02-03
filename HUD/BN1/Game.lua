@@ -57,6 +57,34 @@ function game.get_game_state_name()
     return game.game_state_names[game.get_game_state()] or "unknown";
 end
 
+game.battle_state_names       = {};
+game.battle_state_names[0x04] = "busy";
+game.battle_state_names[0x08] = "transition";
+game.battle_state_names[0x0C] = "combat";
+game.battle_state_names[0x10] = "PAUSE";
+game.battle_state_names[0x18] = "opening_custom";
+game.battle_state_previous = 0x00;
+
+function game.get_battle_state()
+    return game.ram.get.battle_state();
+end
+
+function game.get_battle_state_name()
+    return game.battle_state_names[game.get_battle_state()] or "unknown";
+end
+
+function game.battle_pause()
+    game.ram.set.battle_state(0x10);
+    game.ram.set.battle_paused(0x01);
+    game.ram.set.battle_paused_also(0x08);
+end
+
+function game.battle_unpause()
+    game.ram.set.battle_state(0x0C);
+    game.ram.set.battle_paused(0x00);
+    game.ram.set.battle_paused_also(0x00);
+end
+
 game.folder_state_names       = {};
 game.folder_state_names[0x04] = "editing";
 game.folder_state_names[0x14] = "sorting";

@@ -310,6 +310,7 @@ local function HUD_auto()
         display_draws(10);
         x=7;
         y=0;
+        to_screen(string.format("State: %6s", game.get_battle_state_name()));
         to_screen(string.format("Fight: 0x%4X", game.get_battle_pointer()));
         display_RNG(true);
         to_screen(string.format("Checks: %2u", game.get_encounter_checks()));
@@ -363,7 +364,8 @@ function hud.update()
     if show_HUD then
         if command_mode or keys_down.KeypadPeriod then
             if     buttons_down.Select or keys_down.KeypadPeriod then
-                command_mode = not command_mode;
+                command_mode = false;
+                --game.battle_unpause();
             elseif buttons_down.Right  or keys_down.Right   then
                 commands.next();
             elseif buttons_down.Left   or keys_down.Left    then
@@ -379,8 +381,9 @@ function hud.update()
         else
             if buttons_held.L and buttons_held.R then
                 if     buttons_down.Select then
-                    command_mode = not command_mode;
-                elseif buttons_down.Right  then
+                    command_mode = true;
+                    --game.battle_pause();
+            elseif buttons_down.Right  then
                     HUD_mode = (HUD_mode % table.getn(HUDs)) + 1;
                 elseif buttons_down.Left   then
                     HUD_mode = HUD_mode - 1;

@@ -30,8 +30,14 @@ ram.set.armor_aqua = function(armor_aqua) memory.write_u8(ram.addr.armor_aqua, a
 ram.get.armor_wood = function() return memory.read_u8(ram.addr.armor_wood); end;
 ram.set.armor_wood = function(armor_wood) memory.write_u8(ram.addr.armor_wood, armor_wood); end;
 
+ram.get.battle_paused = function() return memory.read_u8(ram.addr.battle_paused); end;
+ram.set.battle_paused = function(battle_paused) memory.write_u8(ram.addr.battle_paused, battle_paused); end;
+ram.get.battle_paused_also = function() return memory.read_u8(ram.addr.battle_paused_also); end;
+ram.set.battle_paused_also = function(battle_paused_also) memory.write_u8(ram.addr.battle_paused_also, battle_paused_also); end;
 ram.get.battle_pointer = function() return memory.read_u16_le(ram.addr.battle_pointer); end;
 ram.set.battle_pointer = function(battle_pointer) memory.write_u16_le(ram.addr.battle_pointer, battle_pointer); end;
+ram.get.battle_state = function() return memory.read_u8(ram.addr.battle_state); end;
+ram.set.battle_state = function(battle_state) memory.write_u8(ram.addr.battle_state, battle_state); end;
 
 ram.get.buster_attack = function() return memory.read_u8(ram.addr.buster_attack); end;
 ram.set.buster_attack = function(buster_attack) memory.write_u8(ram.addr.buster_attack, buster_attack); end;
