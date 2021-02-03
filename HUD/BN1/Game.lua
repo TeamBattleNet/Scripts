@@ -469,13 +469,17 @@ function game.op_buster_stats()
     game.set_buster_stats(7); -- 327 buster shots
 end
 
+function game.get_HPMemory_count()
+    return game.ram.get.HPMemory();
+end
+
 function game.calculate_max_HP()
-    return 100 + 20 * game.ram.get.HPMemory();
+    return 100 + 20 * game.get_HPMemory_count();
 end
 
 function game.calculate_mega_level()
     level = 1; -- starting level
-    level = level + 1 * game.ram.get.HPMemory();
+    level = level + 1 * game.get_HPMemory_count();
     level = level + 3 * game.ram.get.buster_attack();
     level = level + 3 * game.ram.get.buster_rapid();
     level = level + 3 * game.ram.get.buster_charge();
@@ -661,7 +665,7 @@ function game.get_encounter_chance()
     return (game.get_encounter_threshold() / 32) * 100;
 end
 
-function game.would_get_encounter()
+function game.would_get_encounter() -- 0x8000000C 0x72
     return game.get_encounter_threshold() > (game.get_RNG_value() % 0x20);
 end
 

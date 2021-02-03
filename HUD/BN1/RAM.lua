@@ -123,7 +123,7 @@ local rng_table = nil;
 local previous_RNG_value = 0;
 local calculations_per_frame = 200; -- careful tweaking this
 
-function ram.simulate_RNG(seed)
+function ram.simulate_RNG(seed) -- 0x8000000C 0x72
     -- seed = ((seed << 1) + (seed >> 31) + 1) ^ 0x873CA9E5;
     return bit.bxor((bit.lshift(seed,1) + bit.rshift(seed, 31) + 1), 0x873CA9E5);
 end
@@ -235,6 +235,20 @@ function ram.adjust_RNG(steps)
     ram.set.RNG_index(new_index);
 end
 
+---------------------------------------- RAMsacking ----------------------------------------
+
+local function fun_flags(options)
+    if options.no_encounters then
+        ram.set.RNG_value(0x8000000C);
+    elseif options.yes_encounters then
+        ram.set.RNG_value(0x72      );
+    end
+    
+    if options.no_chip_cooldown then
+        ram.set.chip_cooldown(0);
+    end
+end
+
 ---------------------------------------- Module Controls ----------------------------------------
 
 function ram.initialize(options)
@@ -245,9 +259,7 @@ function ram.initialize(options)
 end
 
 function ram.update_pre(options)
-    if options.no_chip_cooldown then
-        ram.set.chip_cooldown(0);
-    end
+    fun_flags(options);
     expand_RNG_table(rng_table);
 end
 

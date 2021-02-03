@@ -54,12 +54,12 @@ end
 function controls.display_options()
     local command = commands[command_index];
     local options = command.options;
-    local lines = {"         " .. command.description()};
+    local lines = {"       " .. command.description()};
     for i=1,table.getn(options) do
         if i == command.selection then
-            table.insert(lines, string.format("--> [%2i] %s", i, options[i].text));
+            table.insert(lines, string.format("-> %2i: %s", i, options[i].text));
         else
-            table.insert(lines, string.format("    [%2i] %s", i, options[i].text));
+            table.insert(lines, string.format("   %2i: %s", i, options[i].text));
         end
     end
     return lines;
@@ -69,9 +69,9 @@ end
 
 local command_blank = {};
 command_blank.options = {
-    { value = nil; text = "Press  Up  or  Down to change Options !"; };
-    { value = nil; text = "Press Left or Right to change Commands!"; };
-    { value = nil; text = "You can use the controller or keyboard!"; };
+    { value = nil; text = " Up  or  Down to change Options !"; };
+    { value = nil; text = "Left or Right to change Commands!"; };
+    { value = nil; text = "Use the controller or a keyboard!"; };
 };
 command_blank.selection = 1;
 command_blank.description = function() return "Welcome to the Command list!"; end;
@@ -92,49 +92,62 @@ table.insert(commands, command_encounters);
 
 
 
-local command_zenny = {};
-command_zenny.options = {
-    { value =  100000; text = "Increase by 100000"; };
-    { value =   10000; text = "Increase by  10000"; };
-    { value =    1000; text = "Increase by   1000"; };
-    { value =     100; text = "Increase by    100"; };
-    { value =    -100; text = "Decrease by    100"; };
-    { value =   -1000; text = "Decrease by   1000"; };
-    { value =  -10000; text = "Decrease by  10000"; };
-    { value = -100000; text = "Decrease by 100000"; };
-};
-command_zenny.selection = 1;
-command_zenny.description = function() return string.format("Zenny: %11u", game.get_zenny()); end;
-command_zenny.doit = function(value) game.add_zenny(value); end;
-table.insert(commands, command_zenny);
-
-
-
-local command_power = {};
-command_power.options = {
-    { value =  10; text = "Give 10"; };
-    { value =   1; text = "Give  1"; };
-    { value =  -1; text = "Take  1"; };
-    { value = -10; text = "Take 10"; };
-};
-command_power.selection = 1;
-command_power.description = function() return "PowerUPs: " .. game.get_PowerUPs(); end
-command_power.doit = function(value) game.add_PowerUPs(value); end;
-table.insert(commands, command_power);
-
-
-
-local command_ice_block = {};
-command_ice_block.options = {
-    { value =  53; text = "Give 53"; };
-    { value =   1; text = "Give  1"; };
-    { value =  -1; text = "Take  1"; };
-    { value = -53; text = "Take 53"; };
-};
-command_ice_block.selection = 1;
-command_ice_block.description = function() return "IceBlocks: " .. game.get_IceBlocks(); end;
-command_ice_block.doit = function(value) game.add_IceBlocks(value); end;
-table.insert(commands, command_ice_block);
+local command_items = {};
+function command_items.update_options(option_value)
+    command_items.options = {};
+    command_items.selection = 1;
+    command_items.FUNction = nil;
+    
+    if not option_value then
+        command_items.description = function() return "What will U buy?"; end;
+        table.insert( command_items.options, { value = 1; text = "Zenny"   ; } );
+        table.insert( command_items.options, { value = 2; text = "PowerUP" ; } );
+        table.insert( command_items.options, { value = 3; text = "HPMemory"; } );
+        table.insert( command_items.options, { value = 4; text = "IceBlock";  } );
+    else
+        command_items.description = function() return "Bzzt! (something broke)"; end;
+        table.insert( command_items.options, { value = nil; text = "Previous Menu"; } );
+        if option_value == 1 then
+            command_items.description = function() return string.format("Zenny: %11u", game.get_zenny()); end;
+            table.insert( command_items.options, { value =  100000; text = "Increase by 100000"; } );
+            table.insert( command_items.options, { value =   10000; text = "Increase by  10000"; } );
+            table.insert( command_items.options, { value =    1000; text = "Increase by   1000"; } );
+            table.insert( command_items.options, { value =     100; text = "Increase by    100"; } );
+            table.insert( command_items.options, { value =    -100; text = "Decrease by    100"; } );
+            table.insert( command_items.options, { value =   -1000; text = "Decrease by   1000"; } );
+            table.insert( command_items.options, { value =  -10000; text = "Decrease by  10000"; } );
+            table.insert( command_items.options, { value = -100000; text = "Decrease by 100000"; } );
+            command_items.FUNction = function(value) game.add_zenny(value); end;
+        elseif option_value == 2 then
+            command_items.description = function() return string.format("PowerUPs: %2u", game.get_PowerUPs()); end;
+            table.insert( command_items.options, { value =  10; text = "Give 10"; } );
+            table.insert( command_items.options, { value =   1; text = "Give  1"; } );
+            table.insert( command_items.options, { value =  -1; text = "Take  1"; } );
+            table.insert( command_items.options, { value = -10; text = "Take 10"; } );
+            command_items.FUNction = function(value) game.add_PowerUPs(value); end;
+        elseif option_value == 3 then
+            command_items.description = function() return string.format("HPMemory: %2u", game.get_HPMemory_count()); end;
+            table.insert( command_items.options, { value = nil; text = "Apologies... That is sold out..."; } );
+            command_items.FUNction = function(value) game.add_zenny(value); end;
+        elseif option_value == 4 then
+            command_items.description = function() return string.format("IceBlocks: %2u", game.get_IceBlocks()); end;
+            table.insert( command_items.options, { value =  53; text = "Give 53"; } );
+            table.insert( command_items.options, { value =   1; text = "Give  1"; } );
+            table.insert( command_items.options, { value =  -1; text = "Take  1"; } );
+            table.insert( command_items.options, { value = -53; text = "Take 53"; } );
+            command_items.FUNction = function(value) game.add_IceBlocks(value); end;
+        end
+    end
+end
+command_items.update_options();
+function command_items.doit(value)
+    if command_items.FUNction and value then
+        command_items.FUNction(value);
+    else
+        command_items.update_options(value);
+    end
+end
+table.insert(commands, command_items);
 
 
 

@@ -181,19 +181,19 @@ end
 
 local function display_RNG(and_value)
     if and_value then
-        to_screen("RNG  : "   .. string.format("%08X", game.get_RNG_value()));
+        to_screen(string.format("RNG: %08X", game.get_RNG_value()));
     end
-    to_screen(string.format("Index: %4s", (game.get_RNG_index() or "????")));
-    to_screen(string.format("Delta: %4s", (game.get_RNG_delta() or    "?")));
+    to_screen(string.format("Index: %5s", (game.get_RNG_index() or "?????")));
+    to_screen(string.format("Delta: %5s", (game.get_RNG_delta() or    "?")));
 end
 
 local function display_steps()
     if game.in_digital_world() then
-        to_screen(string.format("Steps : %7u"    , game.get_steps()));
-        to_screen(string.format("Check : %7u"    , game.get_check()));
-        to_screen(string.format("Checks: %7u"    , game.get_encounter_checks()));
-        to_screen(string.format("Chance: %6.3f%%", game.get_encounter_chance()));
-        to_screen(string.format("Next  : %7i"    , game.get_next_check()));
+        to_screen(string.format("Steps: %4u" , game.get_steps()));
+        to_screen(string.format("Check: %4u" , game.get_check()));
+        to_screen(string.format("Checks: %3u", game.get_encounter_checks()));
+        to_screen(string.format("%%: %7.3f%%", game.get_encounter_chance()));
+        to_screen(string.format("Next: %2i"  , game.get_next_check()));
     end
     to_screen(string.format("X: %5i", game.get_X()));
     to_screen(string.format("Y: %5i", game.get_Y()));
@@ -224,8 +224,8 @@ local function display_game_info()
 end
 
 local function display_routing()
-    x = 10;
-    y =  1;
+    x =  0;
+    y =  0;
     to_screen("0000: " .. game.get_string_binary(0x02000000, 5, true));
     to_screen("0005: " .. game.get_string_binary(0x02000005, 5, true));
     to_screen("000A: " .. game.get_string_binary(0x0200000A, 5, true));
@@ -233,17 +233,14 @@ local function display_routing()
     to_screen("0000: " .. game.get_string_hex(0x02000000, 16, true));
     to_screen("0010: " .. game.get_string_hex(0x02000010, 16, true));
     to_screen("01FC: " .. game.get_string_hex(0x020001FC, 8, true));
-    x = 20;
     y = y - 1;
-    to_screen(game.get_string_binary(0x0200001D, 1, true));
-    x = 29;
-    y = y - 1;
+    x = 31;
     to_screen(tostring(game.is_go_mode()));
 end
 
 local function display_commands()
-    x = 10;
-    y =  1;
+    x = 0;
+    y = 0;
     options = commands.display_options();
     for i=1,table.getn(options) do
         to_screen(options[i]);
@@ -263,7 +260,7 @@ local function display_HUD()
         display_RNG();
         display_steps();
         if game.near_number_doors() then
-            to_screen("Door Code: " .. game.get_door_code());
+            to_screen(string.format("Door: %2u", game.get_door_code()));
         end
         y=0;
         to_screen_corner(game.get_current_area_name());
@@ -271,9 +268,8 @@ local function display_HUD()
         display_draws(10);
         x=7;
         y=0;
-        to_screen(string.format("Fight ID: 0x%4X", game.get_battle_pointer()));
+        to_screen(string.format("Fight: 0x%4X", game.get_battle_pointer()));
         display_RNG(true);
-        to_screen("");
         to_screen(string.format("Checks: %2u", game.get_encounter_checks()));
         y=0;
         to_screen_corner(game.get_enemy_name(1));
@@ -287,10 +283,6 @@ local function display_HUD()
         gui.text(0, 0, "t r o u t", 0x10000000, "bottomright");
     else
         to_screen("Unknown Game State!");
-    end
-    
-    if command_mode then
-        display_commands();
     end
     
     if routing_mode then
@@ -334,6 +326,7 @@ function hud.update()
             elseif buttons_down.B      or keys_down.Keypad0 then
                 commands.doit();
             end
+            display_commands();
         else
             if buttons_held.L and buttons_held.R then
                 if     buttons_down.Select then
@@ -352,9 +345,8 @@ function hud.update()
                     print((string.len(buttons_string)/2) .. " Buttons:" .. buttons_string);
                 end
             end
+            display_HUD();
         end
-        
-        display_HUD();
     end
     
     game.update_post(options);
