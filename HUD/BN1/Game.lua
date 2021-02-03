@@ -57,6 +57,22 @@ function game.get_game_state_name()
     return game.game_state_names[game.get_game_state()] or "unknown";
 end
 
+game.folder_state_names       = {};
+game.folder_state_names[0x04] = "editing";
+game.folder_state_names[0x14] = "sorting";
+game.folder_state_names[0x10] = "to_pack";
+game.folder_state_names[0x0C] = "to_folder";
+game.folder_state_names[0x08] = "exited";
+game.folder_state_previous = 0x00;
+
+function game.get_folder_state()
+    return game.ram.get.folder_menu_state();
+end
+
+function game.get_folder_state_name()
+    return game.folder_state_names[game.get_folder_state()] or "unknown";
+end
+
 function game.in_title()
     return game.get_game_state() == 0x00;
 end
@@ -709,6 +725,7 @@ end
 function game.update_post(options)
     game.ram.update_post(options);
     game.game_state_previous = game.get_game_state();
+    game.folder_state_previous = game.get_folder_state();
 end
 
 return game;
