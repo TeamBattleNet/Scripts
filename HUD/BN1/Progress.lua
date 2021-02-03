@@ -1,6 +1,6 @@
 -- Progress values for MMBN 1 scripting, enjoy.
 
--- https://forums.therockmanexezone.com/viewtopic.php?p=346421#p346421
+-- https://forums.therockmanexezone.com/bn1-story-progression-value-list-t5340.html
 
 local progress = {};
 

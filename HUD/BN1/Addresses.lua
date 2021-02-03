@@ -251,6 +251,8 @@ addresses.version_byte        = 0x080000AF;
 
 addresses.battle_data         = 0x080852B0; -- plus offset from TBD?
 
+-- https://forums.therockmanexezone.com/mmbn1-mystery-data-t5326.html
+
 ---------------------------------------- Verion Dependent ----------------------------------------
 
 local version_byte = memory.read_u8(addresses.version_byte);

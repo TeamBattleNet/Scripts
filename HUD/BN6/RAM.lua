@@ -140,6 +140,11 @@ local battle_HP_max     = 0; -- 1 byte
 
 local version           = 0; -- 1 byte
 
+-- unverified
+-- 020047D5 0x0032 50MB Reg Memory
+-- 0200480A 0x03E8 1000 Max HP
+-- 020348BC current battle offset
+
 ------------------------------------------------------------------------------------------------------------------------
 
 local style_elements = {}; -- FWEG but Elec is first, 1 indexed
