@@ -253,15 +253,18 @@ addresses.cursor_folder       = 0x020062F2; -- 2 bytes, cursor value in the fold
 addresses.cursor_folder_copy  = 0x020062F4; -- 2 bytes, copy
 addresses.offset_folder       = 0x020062F6; -- 2 bytes, offset value in the folder
 addresses.offset_folder_copy  = 0x020062F8; -- 2 bytes, copy
-addresses.folder_bottom_index = 0x020062FA; -- 2 bytes, to limit cursor
+addresses.bottom_index_folder = 0x020062FA; -- 2 bytes, to limit cursor
 addresses.cursor_pack         = 0x020062FC; -- 2 bytes, cursor value in the pack
 addresses.cursor_pack_copy    = 0x020062FE; -- 2 bytes, copy
 addresses.offset_pack         = 0x02006300; -- 2 bytes, offset value in the pack
 addresses.offset_pack_copy    = 0x02006302; -- 2 bytes, copy
-addresses.pack_bottom_index   = 0x02006304; -- 2 bytes, to limit cursor
+addresses.bottom_index_pack   = 0x02006304; -- 2 bytes, to limit cursor
 addresses.chip_selected_flag  = 0x02006306; -- 1 byte, flag: 0x12 folder 0x1C pack
 addresses.offset_selected     = 0x02006308; -- 2 bytes, offset value of selected chip
 addresses.cursor_selected     = 0x0200630A; -- 2 bytes, cursor value of selected chip
+addresses.cursor_sort         = 0x0200631C; -- 2 bytes, sort menu cursor position
+addresses.cursor_sort_copy    = 0x0200631E; -- 2 bytes, copy
+--addresses.                  = 0x02006324; -- ? bytes, 0x06 ???
 
 -- 6312 & 631A some kind of counters, flanked by matching flags
 

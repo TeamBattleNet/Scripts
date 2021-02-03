@@ -179,7 +179,7 @@ local function toggle_default_text()
     set_default_text(current_font, current_color);
 end
 
-local function to_screen(text)
+local function to_screen(text) -- GBA is 240x160
     gui.pixelText(x*xs, y*ys, text); y = y + 1;
 end
 
@@ -228,17 +228,6 @@ end
 
 local function display_in_menu()
     to_screen("State: " .. game.get_folder_state_name() .. " " .. game.is_folder_or_pack());
-    x = 17;
-    y =  4;
-    to_screen(string.format("%2u", game.get_cursor_offset_folder() + 1)); y = y + 1;
-end
-
-local function display_in_shop()
-    to_screen("TODO: Shop HUD");
-end
-
-local function display_in_chip_trader()
-    to_screen("TODO: Chip Trader HUD");
 end
 
 local function display_player_info()
@@ -326,9 +315,9 @@ local function HUD_auto()
     elseif game.in_menu() then
         display_in_menu();
     elseif game.in_shop() then
-        display_in_shop();
+        display_player_info()
     elseif game.in_chip_trader() then
-        display_in_chip_trader();
+        display_RNG(true);
     elseif game.in_credits() then
         gui.text(0, 0, "t r o u t", 0x10000000, "bottomright");
     else
@@ -368,7 +357,7 @@ function hud.update()
         if command_mode then
             if     buttons_down.Select or keys_down.KeypadPeriod then
                 command_mode = false;
-                game.battle_unpause();
+                --game.battle_unpause();
             elseif buttons_down.Right  or keys_down.Right   then
                 commands.next();
             elseif buttons_down.Left   or keys_down.Left    then
@@ -385,7 +374,7 @@ function hud.update()
             if (buttons_held.L and buttons_held.R) or keys_down.KeypadPeriod then
                 if     buttons_down.Select or keys_down.KeypadPeriod then
                     command_mode = true;
-                    game.battle_pause();
+                    --game.battle_pause();
                 elseif buttons_down.Right  then
                         HUD_mode = (HUD_mode % table.getn(HUDs)) + 1;
                 elseif buttons_down.Left   then
