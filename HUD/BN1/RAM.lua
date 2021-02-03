@@ -153,7 +153,7 @@ local rng_table = nil;
 local previous_RNG_value = 0;
 local calculations_per_frame = 200; -- careful tweaking this
 
-function ram.simulate_RNG(seed) -- 0x8000000C 0x72
+function ram.simulate_RNG(seed) -- 0x8000000C 0x72 (run twice?)
     -- seed = ((seed << 1) + (seed >> 31) + 1) ^ 0x873CA9E5;
     return bit.bxor((bit.lshift(seed,1) + bit.rshift(seed, 31) + 1), 0x873CA9E5);
 end

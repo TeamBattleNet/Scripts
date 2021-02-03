@@ -343,7 +343,7 @@ function command_battle.update_options(option_value)
             table.insert( command_battle.options, { value = game.give_armor;         text = "Get Equip with Armor!"; } );
             command_battle.FUNction = function(value) value(); end;
         elseif option_value == 2 then
-            command_battle.description = function() return string.format("Modify Steps: %5s", game.get_steps()); end;
+            command_battle.description = function() return string.format("Customize or Randomize!"); end;
             table.insert( command_battle.options, { value = function() game.set_all_folder_to_code(0); end; text = "Monocode A Folder";      } );
             table.insert( command_battle.options, { value = function() game.randomize_folder_codes( ); end; text = "Randomize Folder Codes"; } );
             table.insert( command_battle.options, { value = function() game.randomize_folder_IDs(   ); end; text = "Randomize Folder IDs";   } );

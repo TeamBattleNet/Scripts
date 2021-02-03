@@ -19,7 +19,6 @@ local commands = require("BN1/Commands");
 local options = {};
 
 local show_HUD = true;
-local routing_mode = false;
 local command_mode = false;
 
 local current_state = nil;
@@ -253,6 +252,8 @@ local function display_game_info()
     to_screen("HUD  Version: " .. hud.version);
 end
 
+---------------------------------------- HUD Functions ----------------------------------------
+
 local function HUD_routing()
     x =  0;
     y =  0;
@@ -362,7 +363,7 @@ function hud.update()
     end
     
     if show_HUD then
-        if command_mode or keys_down.KeypadPeriod then
+        if command_mode then
             if     buttons_down.Select or keys_down.KeypadPeriod then
                 command_mode = false;
                 --game.battle_unpause();
@@ -379,12 +380,12 @@ function hud.update()
             end
             display_commands();
         else
-            if buttons_held.L and buttons_held.R then
-                if     buttons_down.Select then
+            if (buttons_held.L and buttons_held.R) or keys_down.KeypadPeriod then
+                if     buttons_down.Select or keys_down.KeypadPeriod then
                     command_mode = true;
                     --game.battle_pause();
-            elseif buttons_down.Right  then
-                    HUD_mode = (HUD_mode % table.getn(HUDs)) + 1;
+                elseif buttons_down.Right  then
+                        HUD_mode = (HUD_mode % table.getn(HUDs)) + 1;
                 elseif buttons_down.Left   then
                     HUD_mode = HUD_mode - 1;
                     if HUD_mode == 0 then
