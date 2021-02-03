@@ -131,9 +131,9 @@ addresses.key_BatteryC        = 0x020002DB; -- 1 byte
 addresses.key_BatteryD        = 0x020002DC; -- 1 byte
 addresses.key_BatteryE        = 0x020002DD; -- 1 byte
 addresses.key_Charger         = 0x020002DE; -- 1 byte
-addresses.key_WWW_Pass        = 0x020002DF; -- 1 byte, expired
+addresses.key_WWW_Pass        = 0x020002DF; -- 1 byte, expired?
 --addresses.key_invalid       = 0x020002E0; -- 1 byte
-addresses.key_Dentures        = 0x020002E1; -- 1 byte TBD
+addresses.key_Dentures        = 0x020002E1; -- 1 byte
 --addresses.key_invalid       = 0x020002E2 to 0x020002EF
 --addresses.key_invalid       = 0x020002F0; -- 1 byte
 addresses.key_at_Mayl         = 0x020002F1; -- 1 byte
@@ -141,9 +141,9 @@ addresses.key_at_Yai          = 0x020002F2; -- 1 byte
 addresses.key_at_Dex          = 0x020002F3; -- 1 byte
 --addresses.key_invalid       = 0x020002F4; -- 1 byte
 addresses.key_at_Dad          = 0x020002F5; -- 1 byte
-addresses.key_at_Sal          = 0x020002F6; -- 1 byte TBD
+addresses.key_at_Sal          = 0x020002F6; -- 1 byte
 --addresses.key_invalid       = 0x020002F7; -- 1 byte
-addresses.key_at_Miyu         = 0x020002F8; -- 1 byte TBD
+addresses.key_at_Miyu         = 0x020002F8; -- 1 byte
 --addresses.key_invalid       = 0x020002F9; -- 1 byte
 --addresses.key_invalid       = 0x020002FA; -- 1 byte
 addresses.key_at_Masa         = 0x020002FB; -- 1 byte
@@ -179,8 +179,10 @@ addresses.armor_wood          = 0x02000316; -- 1 byte
 
 -- 370-3CF divider
 
-addresses.steps_also          = 0x020003E0; -- 3 bytes ???
+addresses.steps_total         = 0x020003E0; -- 3 bytes, since new game
 addresses.play_time_frames    = 0x020003E8; -- 4 bytes, check for skipped frames
+addresses.battle_timer_total  = 0x020003EC; -- 4 bytes, from load in to load out
+--addresses.                  = 0x020003F0; -- 4 bytes TBD
 addresses.steps               = 0x020003F4; -- 4 bytes
 addresses.check               = 0x020003F8; -- 4 bytes, steps at the last encounter check
 
@@ -190,7 +192,7 @@ addresses.check               = 0x020003F8; -- 4 bytes, steps at the last encoun
 
 -- 13A0 first usable?
 
-addresses.battle_state        = 0x02003712; -- 2 byte?
+addresses.battle_state        = 0x02003712; -- ? byte TBD
 addresses.battle_turns        = 0x0200371C; -- 1 byte, number of custom gauge opens + 1
 addresses.chip_window_count   = 0x02003720; -- 1 byte, number of chips in the custom menu
 addresses.battle_timer        = 0x02003730; -- 2 bytes, frame counter for current battle
@@ -200,9 +202,15 @@ addresses.enemy_ID            = 0x02003774; -- 1 byte
 addresses.enemy_ID_2          = 0x02003775; -- 1 byte
 addresses.enemy_ID_3          = 0x02003776; -- 1 byte
 
+-- 4904 & 4906 fade in and out?
+
 addresses.battle_draw_slots   = 0x02004910; -- 1 byte each, in battle chip draws, ends at 492D
-addresses.your_X              = 0x02004954; -- 2 bytes ???
-addresses.your_Y              = 0x02004956; -- 2 bytes ???
+addresses.your_X              = 0x02004954; -- 2 bytes
+addresses.your_Y              = 0x02004956; -- 2 bytes
+addresses.your_X2             = 0x02004958; -- 2 bytes
+addresses.your_Y2             = 0x0200495A; -- 2 bytes
+
+-- 49A2+ textures?
 
 addresses.enemy_HP_text_1     = 0x02004D30; -- 2 bytes, for counting down HP over time
 addresses.enemy_HP_text_2     = 0x020050A0; -- 2 bytes, for counting down HP over time

@@ -46,8 +46,8 @@ ram.set.chip_cooldown = function(chip_cooldown) memory.write_u8(ram.addr.chip_co
 ram.get.chip_window_count = function() return memory.read_u8(ram.addr.chip_window_count); end;
 ram.set.chip_window_count = function(chip_window_count) memory.write_u8(ram.addr.chip_window_count, chip_window_count); end;
 
-ram.get.check = function() return memory.read_u16_le(ram.addr.check); end;
-ram.set.check = function(check) memory.write_u16_le(ram.addr.check, check); end;
+ram.get.check = function() return memory.read_u32_le(ram.addr.check); end;
+ram.set.check = function(check) memory.write_u32_le(ram.addr.check, check); end;
 
 ram.get.custom_gauge = function() return memory.read_u16_le(ram.addr.battle_custom_gauge); end;
 ram.set.custom_gauge = function(battle_custom_gauge) memory.write_u16_le(ram.addr.battle_custom_gauge, battle_custom_gauge); end;
@@ -103,8 +103,8 @@ ram.set.PowerUP = function(PowerUP) memory.write_u8(ram.addr.PowerUP, PowerUP); 
 ram.get.progress = function() return memory.read_u8(ram.addr.progress); end;
 ram.set.progress = function(progress) memory.write_u8(ram.addr.progress, progress); end;
 
-ram.get.steps = function() return memory.read_u16_le(ram.addr.steps); end;
-ram.set.steps = function(steps) memory.write_u16_le(ram.addr.steps, steps); end;
+ram.get.steps = function() return memory.read_u32_le(ram.addr.steps); end;
+ram.set.steps = function(steps) memory.write_u32_le(ram.addr.steps, steps); end;
 
 ram.get.title_star_byte = function() return memory.read_u8(ram.addr.title_star_byte); end;
 ram.set.title_star_byte = function(title_star_byte) memory.write_u8(ram.addr.title_star_byte, title_star_byte); end;
@@ -119,7 +119,7 @@ ram.set.zenny = function(zenny) memory.write_u32_le(ram.addr.zenny, zenny); end;
 
 ---------------------------------------- RNG Functions ----------------------------------------
 
-ram.rng = {};
+local rng_table = nil;
 local previous_RNG_value = 0;
 local calculations_per_frame = 200; -- careful tweaking this
 
@@ -189,7 +189,7 @@ function ram.get.RNG_value()
 end
 
 function ram.get.RNG_value_at(new_RNG_index)
-    return ram.rng[ram.addr.RNG].value[new_RNG_index];
+    return rng_table.value[new_RNG_index];
 end
 
 function ram.set.RNG_value(new_RNG_value)
@@ -197,7 +197,7 @@ function ram.set.RNG_value(new_RNG_value)
 end
 
 function ram.get.RNG_index_of(new_RNG_value)
-    return ram.rng[ram.addr.RNG].index[new_RNG_value];
+    return rng_table.index[new_RNG_value];
 end
 
 function ram.get.RNG_index()
@@ -228,8 +228,8 @@ function ram.adjust_RNG(steps)
         new_index = 1;
     end
     
-    if new_index > ram.rng[ram.addr.RNG].current_RNG_index then
-        new_index = ram.rng[ram.addr.RNG].current_RNG_index;
+    if new_index > rng_table.current_RNG_index then
+        new_index = rng_table.current_RNG_index;
     end
     
     ram.set.RNG_index(new_index);
@@ -239,7 +239,7 @@ end
 
 function ram.initialize(options)
     print("");
-    ram.rng[ram.addr.RNG] = create_RNG_table(0xA338244F, options.maximum_RNG_index);
+    rng_table = create_RNG_table(0xA338244F, options.maximum_RNG_index);
     print("Calculating RNG with max calculations per frame of: " .. calculations_per_frame);
     print("");
 end
@@ -248,7 +248,7 @@ function ram.update_pre(options)
     if options.no_chip_cooldown then
         ram.set.chip_cooldown(0);
     end
-    expand_RNG_table(ram.rng[ram.addr.RNG]);
+    expand_RNG_table(rng_table);
 end
 
 function ram.update_post(options)

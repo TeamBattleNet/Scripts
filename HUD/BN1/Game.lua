@@ -310,8 +310,8 @@ end
 function game.set_steps(new_steps)
     if new_steps < 0 then
         new_steps = 0
-    elseif new_steps > 0xFFFF then
-        new_steps = 0xFFFF;
+    elseif new_steps > 0xFFFFFF then
+        new_steps = 0xFFFFFF;
     end
     game.ram.set.steps(new_steps);
 end
@@ -327,8 +327,8 @@ end
 function game.set_check(new_check)
     if new_check < 0 then
         new_check = 0
-    elseif new_check > 0xFFFF then
-        new_check = 0xFFFF;
+    elseif new_check > 0xFFFFFF then
+        new_check = 0xFFFFFF;
     end
     game.ram.set.check(new_check);
 end
@@ -496,7 +496,7 @@ function game.get_enemy_ID(which_enemy)
 end
 
 function game.get_enemy_name(which_enemy)
-    return game.enemies.names[game.get_enemy_ID(which_enemy)];
+    return game.enemies.names[game.get_enemy_ID(which_enemy)] or "Unknown";
 end
 
 function game.get_enemy_HP(which_enemy)

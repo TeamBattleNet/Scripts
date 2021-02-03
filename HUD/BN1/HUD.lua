@@ -181,10 +181,10 @@ end
 
 local function display_RNG(and_value)
     if and_value then
-        to_screen("RNG Value: "   .. string.format("%08X", game.get_RNG_value()));
+        to_screen("RNG  : "   .. string.format("%08X", game.get_RNG_value()));
     end
-    to_screen(string.format("RNG Index: %4s", (game.get_RNG_index() or "????")));
-    to_screen(string.format("RNG Delta: %4s", (game.get_RNG_delta() or    "?")));
+    to_screen(string.format("Index: %4s", (game.get_RNG_index() or "????")));
+    to_screen(string.format("Delta: %4s", (game.get_RNG_delta() or    "?")));
 end
 
 local function display_steps()
@@ -195,8 +195,8 @@ local function display_steps()
         to_screen(string.format("Chance: %6.3f%%", game.get_encounter_chance()));
         to_screen(string.format("Next  : %7i"    , game.get_next_check()));
     end
-    to_screen(string.format("X: %7i", game.get_X()));
-    to_screen(string.format("Y: %7i", game.get_Y()));
+    to_screen(string.format("X: %5i", game.get_X()));
+    to_screen(string.format("Y: %5i", game.get_Y()));
 end
 
 local function display_draws(how_many, start_at)
@@ -269,9 +269,9 @@ local function display_HUD()
         to_screen_corner(game.get_current_area_name());
     elseif game.in_battle() or game.in_game_over() then
         display_draws(10);
-        x=8;
+        x=7;
         y=0;
-        to_screen(string.format("Battle ID:   0x%4X", game.get_battle_pointer()));
+        to_screen(string.format("Fight ID: 0x%4X", game.get_battle_pointer()));
         display_RNG(true);
         to_screen("");
         to_screen(string.format("Checks: %2u", game.get_encounter_checks()));
