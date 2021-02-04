@@ -5,7 +5,7 @@
 local enemies = {};
 
 enemies.names = {};
-enemies.names[0x0000] = "Test Virus"; -- 500 HP Mettaur with no attacks
+enemies.names[0x0000] = "Empty";
 enemies.names[0x0001] = "Mettaur";
 enemies.names[0x0002] = "Mettaur2";
 enemies.names[0x0003] = "Mettaur3";

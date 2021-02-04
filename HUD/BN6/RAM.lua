@@ -1,543 +1,388 @@
--- RAM Addresses & Functions for MMBN 6 Scripting, enjoy.
+-- RAM functions for MMBN 1 scripting, enjoy.
 
-local ram = {};
+local ram  = {};
 
-ram.rng = require("BN6/RNG");
-ram.areas = require("BN6/Areas");
-ram.chips = require("BN6/Chips");
-ram.enemies = require("BN6/Enemies");
+ram.addr = require("BN6/Addresses");
 
---[[
-General Internal Memory
-    00000000-00003FFF   BIOS - System ROM         (16 KBytes)
-    00004000-01FFFFFF   Not used
-    02000000-0203FFFF   WRAM - On-board Work RAM  (256 KBytes) 2 Wait
-    02040000-02FFFFFF   Not used
-    03000000-03007FFF   WRAM - On-chip Work RAM   (32 KBytes)
-    03008000-03FFFFFF   Not used
-    04000000-040003FE   I/O Registers
-    04000400-04FFFFFF   Not used
-Internal Display Memory
-    05000000-050003FF   BG/OBJ Palette RAM        (1 Kbyte)
-    05000400-05FFFFFF   Not used
-    06000000-06017FFF   VRAM - Video RAM          (96 KBytes)
-    06018000-06FFFFFF   Not used
-    07000000-070003FF   OAM - OBJ Attributes      (1 Kbyte)
-    07000400-07FFFFFF   Not used
-External Memory (Game Pak)
-    08000000-09FFFFFF   Game Pak ROM/FlashROM (max 32MB) - Wait State 0
-    0A000000-0BFFFFFF   Game Pak ROM/FlashROM (max 32MB) - Wait State 1
-    0C000000-0DFFFFFF   Game Pak ROM/FlashROM (max 32MB) - Wait State 2
-    0E000000-0E00FFFF   Game Pak SRAM    (max 64 KBytes) - 8bit Bus width
-    0E010000-0FFFFFFF   Not used
-Unused Memory Area
-    10000000-FFFFFFFF   Not used (upper 4bits of address bus unused)
-https://problemkaputt.de/gbatek.htm#gbamemorymap
---]]
+ram.version_name = ram.addr.version_name;
 
--- GMD_value and number_code use the same address
--- Pressing LButton during CopyMan skip could be an exploit
--- Flags to find: Beta Navis, Key Items, MDs, Jobs, Trades, Vines, Fires, Animals, Jack-Out Lock Out
+------------------------------ Getters & Setters ------------------------------
 
--- Addresses -> 02000000-0203FFFF - On-board Work RAM (WRAM) (256 KBytes)
+local slots = {};
 
-local folder_state      = 0; -- 1 byte
-local HP_memory_value   = 0; -- 1 byte ???
+ram.get = {};
+ram.set = {};
 
-local library_flags     = 0; -- 1 bit per chip, runs for ~44 bytes
+ram.get.bytes_1 = function(addr) return memory.read_u8 (addr       )    ; end;
+ram.set.bytes_1 = function(addr, value) memory.write_u8(addr, value)    ; end;
+ram.get.bytes_2 = function(addr) return memory.read_u16_le (addr       ); end;
+ram.set.bytes_2 = function(addr, value) memory.write_u16_le(addr, value); end;
+ram.get.bytes_4 = function(addr) return memory.read_u32_le (addr       ); end;
+ram.set.bytes_4 = function(addr, value) memory.write_u32_le(addr, value); end;
 
---local                 = 0x02000E67; -- 1 byte TBD
+ram.get.main_area = function() return memory.read_u8(ram.addr.main_area); end;
+ram.set.main_area = function(main_area) memory.write_u8(ram.addr.main_area, main_area); end;
+ram.get.sub_area = function() return memory.read_u8(ram.addr.sub_area); end;
+ram.set.sub_area = function(sub_area) memory.write_u8(ram.addr.sub_area, sub_area); end;
 
-local folder_1_ID       = 0; -- 2 bytes, chip  ID  of folder 1 slot 1, ends 0x02001484
-local folder_1_code     = 0; -- 2 bytes, chip Code of folder 1 slot 1, ends 0x02001486
-local folder_2_ID       = 0; -- 2 bytes, chip  ID  of folder 1 slot 1, ends 0x02001574
-local folder_2_code     = 0; -- 2 bytes, chip Code of folder 1 slot 1, ends 0x02001576
-local folder_3_ID       = 0; -- 2 bytes, chip  ID  of folder 1 slot 1, ends 0x020014FC
-local folder_3_code     = 0; -- 2 bytes, chip Code of folder 1 slot 1, ends 0x020014FE
+ram.get.battle_paused = function() return memory.read_u8(ram.addr.battle_paused); end;
+ram.set.battle_paused = function(battle_paused) memory.write_u8(ram.addr.battle_paused, battle_paused); end;
+ram.get.battle_paused_also = function() return memory.read_u8(ram.addr.battle_paused_also); end;
+ram.set.battle_paused_also = function(battle_paused_also) memory.write_u8(ram.addr.battle_paused_also, battle_paused_also); end;
+ram.get.battle_pointer = function() return memory.read_u16_le(ram.addr.battle_pointer); end;
+ram.set.battle_pointer = function(battle_pointer) memory.write_u16_le(ram.addr.battle_pointer, battle_pointer); end;
+ram.get.battle_state = function() return memory.read_u8(ram.addr.battle_state); end;
+ram.set.battle_state = function(battle_state) memory.write_u8(ram.addr.battle_state, battle_state); end;
 
-local control_flags     = 0; -- 1 byte ???
-local style_active      = 0; -- 1 byte
---local                 = 0x02001882; -- 1 byte TBD
---local                 = 0x02001883; -- 1 byte TBD
-local     area          = 0x02001B84; -- 1 byte
-local sub_area          = 0x02001B85; -- 1 byte
-local progress          = 0x02001B86; -- 1 byte
---local                 = 0x02001887; -- 1 byte TBD music???
---local                 = 0x02001888; -- 1 byte TBD
-local battle_paused     = 0; -- 1 byte, paused or custom menu in battle
-local style_stored      = 0; -- 1 byte
-local world_HP_current  = 0; -- 2 bytes
-local world_HP_max      = 0; -- 2 bytes
-local zenny             = 0x02001DBC; -- 4 bytes, 999999 "max"
-local bug_frags         = 0x02001BE0; -- 4 bytes,   9999 "max"
+ram.get.buster_attack = function() return memory.read_u8(ram.addr.buster_attack); end;
+ram.set.buster_attack = function(buster_attack) memory.write_u8(ram.addr.buster_attack, buster_attack); end;
+ram.get.buster_rapid = function() return memory.read_u8(ram.addr.buster_rapid); end;
+ram.set.buster_rapid = function(buster_rapid) memory.write_u8(ram.addr.buster_rapid, buster_rapid); end;
+ram.get.buster_charge = function() return memory.read_u8(ram.addr.buster_charge); end;
+ram.set.buster_charge = function(buster_charge) memory.write_u8(ram.addr.buster_charge, buster_charge); end;
 
-local next_element      = 0; -- 1 byte, next element
-local battle_count      = 0; -- 1 byte, number of battles since last style change
-local steps             = 0x02001C16; -- 2 bytes
-local check             = 0x02001C18; -- 2 bytes, steps at the last encounter check
-local sneak             = 0x02001C28; -- 4 bytes, starts at 6000
+ram.get.chip_cooldown = function() return memory.read_u8(ram.addr.chip_cooldown); end;
+ram.set.chip_cooldown = function(chip_cooldown) memory.write_u8(ram.addr.chip_cooldown, chip_cooldown); end;
 
-local battle_escape_lvl = 0; -- 1 byte ???
+ram.get.chip_window_count = function() return memory.read_u8(ram.addr.chip_window_count); end;
+ram.set.chip_window_count = function(chip_window_count) memory.write_u8(ram.addr.chip_window_count, chip_window_count); end;
 
-local pack_chip_counts  = 0; -- 18*312 bytes, first 6 of every 18 bytes are used, ends 0x02003550?
+ram.get.check = function() return memory.read_u32_le(ram.addr.check); end;
+ram.set.check = function(check) memory.write_u32_le(ram.addr.check, check); end;
 
-local credits_cutscene  = 0; -- 1 byte ???
+ram.get.cursor_ID = function() return memory.read_u8(ram.addr.cursor_ID); end;
+ram.set.cursor_ID = function(cursor_ID) memory.write_u8(ram.addr.cursor_ID, cursor_ID); end;
+ram.get.cursor_code = function() return memory.read_u8(ram.addr.cursor_code); end;
+ram.set.cursor_code = function(cursor_code) memory.write_u8(ram.addr.cursor_code, cursor_code); end;
 
-local buster1           = 0; -- 1 byte ???
-local buster2           = 0; -- 1 byte ???
-local buster3           = 0; -- 1 byte ???
-local max_HP_over_five  = 0; -- 1 byte, Maximum HP Check for HP Memory (Max HP/5)
+ram.get.cursor_folder = function() return memory.read_u16_le(ram.addr.cursor_folder); end;
+ram.set.cursor_folder = function(cursor_folder) memory.write_u16_le(ram.addr.cursor_folder, cursor_folder); end;
+ram.get.cursor_pack = function() return memory.read_u16_le(ram.addr.cursor_pack); end;
+ram.set.cursor_pack = function(cursor_pack) memory.write_u16_le(ram.addr.cursor_pack, cursor_pack); end;
+ram.get.cursor_selected = function() return memory.read_u16_le(ram.addr.cursor_selected); end;
+ram.set.cursor_selected = function(cursor_selected) memory.write_u16_le(ram.addr.cursor_selected, cursor_selected); end;
 
-local battle_enemy_ID   = 0x02000000; -- 2 bytes, per enemy up to 3 (changed to something less jittery)
+ram.get.offset_folder = function() return memory.read_u16_le(ram.addr.offset_folder); end;
+ram.set.offset_folder = function(offset_folder) memory.write_u16_le(ram.addr.offset_folder, offset_folder); end;
+ram.get.offset_pack = function() return memory.read_u16_le(ram.addr.offset_pack); end;
+ram.set.offset_pack = function(offset_pack) memory.write_u16_le(ram.addr.offset_pack, offset_pack); end;
+ram.get.offset_selected = function() return memory.read_u16_le(ram.addr.offset_selected); end;
+ram.set.offset_selected = function(offset_selected) memory.write_u16_le(ram.addr.offset_selected, offset_selected); end;
 
-local cursor_ID         = 0x0200845E; -- 2 bytes? chip ID of cursor
-local cursor_code       = 0x0200845C; -- 2 bytes? chip Code of cursor
-local folder_or_pack    = 0x02019A67; -- 1 byte, 26 == folder, 8 == pack
+ram.get.custom_gauge = function() return memory.read_u16_le(ram.addr.battle_custom_gauge); end;
+ram.set.custom_gauge = function(battle_custom_gauge) memory.write_u16_le(ram.addr.battle_custom_gauge, battle_custom_gauge); end;
 
-local your_X            = 0x0200AC50; -- 2 bytes freezing doesn't prevent movement???
-local your_Y            = 0x0200AC52; -- 2 bytes freezing doesn't prevent movement???
-local map_offset_x      = 0; -- 2 bytes % 256 to scroll screen
-local map_offset_y      = 0; -- 2 bytes % 256 to scroll screen
+ram.get.delete_timer = function() return memory.read_u16_le(ram.addr.battle_timer); end;
+ram.set.delete_timer = function(battle_timer) memory.write_u16_le(ram.addr.battle_timer, battle_timer); end;
 
-local folder_cursor     = 0; -- 2 bytes?, cursor value in the folder
-local folder_offset     = 0x02009A54; -- 2 bytes?, offset value in the folder
-local pack_cursor       = 0; -- 2 bytes?, cursor value in the pack
-local pack_offset       = 0x02009A5E; -- 2 bytes?, offset value in the pack
-local folder_count      = 0; -- 1 byte, number of chips in folder being edited
-local reg				= 0x020047FA; -- 1 byte, Reg Chip. 255 if no reg
+ram.get.draw_slot = function(which_slot) return slots[which_slot]; end;
 
-local selected_offset_folder = 0; -- 2 bytes?, offset value of selected chip in folder
-local selected_cursor_folder = 0; -- 2 bytes?, cursor value of selected chip in folder
-local selected_offset_pack   = 0; -- 2 bytes?, offset value of selected chip in pack
-local selected_cursor_pack   = 0; -- 2 bytes?, cursor value of selected chip in pack
+ram.get.enemy_ID = function(which_enemy) return memory.read_u16_le(ram.addr.enemy_ID+(which_enemy * 2)); end;
+ram.set.enemy_ID = function(which_enemy, enemy_ID) memory.write_u16_le(ram.addr.enemy_ID+which_enemy, enemy_ID); end;
+ram.get.enemy_HP = function(which_enemy) return memory.read_u16_le(ram.addr.enemy_HP+(0xD8*which_enemy)); end;
+ram.set.enemy_HP = function(which_enemy, enemy_HP) memory.write_u16_le(ram.addr.enemy_HP+(0xD8*which_enemy), enemy_HP); end;
 
-local is_interacting    = 0; -- 1 byte ???
-local interact_with     = 0; -- 1 byte ???
-local interact_offset   = 0; -- 4 bytes ???
-local GMD_value         = 0; -- 2 bytes, how to decode?
-local number_code       = 0; -- 1 byte per 8 digits
-local lazy_RNG          = 0x02001120; -- 4 bytes, controls encounter ID and chip draws
-local bbs_jobs_new      = 0; -- 1 byte ???
-local bbs_jobs_total    = 0; -- 1 byte ???
-local game_state        = 0x02001B80; -- 1 byte
-local main_RNG          = 0x020013F0; -- 4 bytes, controls everything else
+ram.get.folder_ID = function(which_slot) return memory.read_u8(ram.addr.folder_ID+(2*which_slot)); end;
+ram.set.folder_ID = function(which_slot, chip_ID) memory.write_u8(ram.addr.folder_ID+(2*which_slot), chip_ID); end;
+ram.get.folder_code = function(which_slot) return memory.read_u8(ram.addr.folder_code+(2*which_slot)); end;
+ram.set.folder_code = function(which_slot, chip_code) memory.write_u8(ram.addr.folder_code+(2*which_slot), chip_code); end;
+ram.get.folder_count = function() return memory.read_u8(ram.addr.folder_count); end;
+ram.set.folder_count = function(folder_count) memory.write_u8(ram.addr.folder_count, folder_count); end;
+ram.get.folder_menu_state = function() return memory.read_u8(ram.addr.folder_menu_state); end;
+ram.set.folder_menu_state = function(folder_menu_state) memory.write_u8(ram.addr.folder_menu_state, folder_menu_state); end;
+ram.get.folder_to_pack = function() return memory.read_u8(ram.addr.folder_to_pack); end;
+ram.set.folder_to_pack = function(folder_to_pack) memory.write_u8(ram.addr.folder_to_pack, folder_to_pack); end;
 
-local title_star_flags  = 0; -- 1 bit per star 0xFE
+ram.get.reg_slot = function() return memory.readbyte(ram.addr.reg_slot); end;
 
---local battle_         = 0; -- 2 bytes, something battle related
-local battle_reward     = 0; -- 2 bytes, how to decode? (mask 0x40 means zenny)
---local battle_         = 0; -- 2 bytes, stats? S+?
-local battle_field      = 0; -- 8*3 bytes, current battlefield
+ram.get.game_state = function() return memory.read_u8(ram.addr.game_state); end;
+ram.set.game_state = function(game_state) memory.write_u8(ram.addr.game_state, game_state); end;
 
-local pack_ID           = 0; -- 2 bytes, chip ID of pack
-local pack_code         = 0; -- 2 bytes, chip code of pack
+ram.get.HPMemory = function() return memory.read_u8(ram.addr.HPMemory); end;
+ram.set.HPMemory = function(HPMemory) memory.write_u8(ram.addr.HPMemory, HPMemory); end;
 
-local battle_draw_slots = 0; -- 1 byte each, in battle chip draws, ends at 0x0203405D
-local battle_HP_current = 0; -- 1 byte
-local battle_HP_max     = 0; -- 1 byte
+ram.get.library = function(offset) return memory.read_u8(ram.addr.library+offset); end;
+ram.set.library = function(offset, bit_flags) memory.write_u8(ram.addr.library+offset, bit_flags); end;
 
--- Addresses -> 08000000-09FFFFFF - Game Pak ROM/FlashROM (max 32MB)
+ram.get.magic_byte = function() return memory.read_u8(ram.addr.magic_byte); end;
+ram.set.magic_byte = function(magic_byte) memory.write_u8(ram.addr.magic_byte, magic_byte); end;
 
-local version           = 0; -- 1 byte
+ram.get.play_time = function() return memory.read_u32_le(ram.addr.play_time_frames); end;
+ram.set.play_time = function(play_time_frames) memory.write_u32_le(ram.addr.play_time_frames, play_time_frames); end;
 
--- unverified
--- 020047D5 0x0032 50MB Reg Memory
--- 0200480A 0x03E8 1000 Max HP
--- 020348BC current battle offset
+ram.get.progress = function() return memory.read_u8(ram.addr.progress); end;
+ram.set.progress = function(progress) memory.write_u8(ram.addr.progress, progress); end;
 
-------------------------------------------------------------------------------------------------------------------------
+ram.get.steps = function() return memory.read_u16_le(ram.addr.steps); end;
+ram.set.steps = function(steps) memory.write_u16_le(ram.addr.steps, steps); end;
 
-local style_elements = {}; -- FWEG but Elec is first, 1 indexed
-style_elements[0x00] = "None";
-style_elements[0x01] = "Elec";
-style_elements[0x02] = "Heat";
-style_elements[0x03] = "Aqua";
-style_elements[0x04] = "Wood";
+ram.get.title_star_byte = function() return memory.read_u8(ram.addr.title_star_byte); end;
+ram.set.title_star_byte = function(title_star_byte) memory.write_u8(ram.addr.title_star_byte, title_star_byte); end;
 
-local style_names = {};
-style_names[0x00] = "Norm";
-style_names[0x01] = "Guts";
-style_names[0x02] = "Cust";
-style_names[0x03] = "Team";
-style_names[0x04] = "Shld";
-style_names[0x05] = "Grnd";
-style_names[0x06] = "Shdw";
-style_names[0x07] = "Bug";
+ram.get.your_X = function() return memory.read_s16_le(ram.addr.your_X); end;
+ram.set.your_X = function(your_X) memory.write_s16_le(ram.addr.your_X, your_X); end;
+ram.get.your_Y = function() return memory.read_s16_le(ram.addr.your_Y); end;
+ram.set.your_Y = function(your_Y) memory.write_s16_le(ram.addr.your_Y, your_Y); end;
 
-local game_state_names = {};
-game_state_names[0x00] = "ow_init";
-game_state_names[0x04] = "ow";
-game_state_names[0x08] = "battle_init";
-game_state_names[0x0C] = "battle";
-game_state_names[0x10] = "map_change";
-game_state_names[0x14] = "player_change";
-game_state_names[0x18] = "menu";
-game_state_names[0x1C] = "bbs";
-game_state_names[0x20] = "shop";
-game_state_names[0x24] = "chip_trader";
-game_state_names[0x30] = "request_bbs";
-game_state_names[0x34] = "mailbox";
-game_state_names[0x38] = "chargeman_minigame";
+ram.get.zenny = function() return memory.read_u32_le(ram.addr.zenny); end;
+ram.set.zenny = function(zenny) memory.write_u32_le(ram.addr.zenny, zenny); end;
 
--- Chip Draw Simulation
-local drawIndex = {};
+ram.get.bugfrags = function() return memory.read_u32_le(ram.addr.bugfrags); end;
+ram.set.bugfrags = function(bugfrags) memory.write_u32_le(ram.addr.bugfrags, bugfrags); end;
 
--- Functions -> Game State
+---------------------------------------- RNG Functions ----------------------------------------
 
---[[
-Gregar BR5E US
-Falzar BR6E US
-Gregar BR5P EU
-Falzar BR6P EU
-Gregar BR5J JP
-Falzar BR6J JP
---]]
+local main_rng_table = nil;
+local lazy_rng_table = nil;
+local previous_main_RNG_value = 0;
+local previous_lazy_RNG_value = 0;
+local calculations_per_frame = 200; -- careful tweaking this
 
-function ram.get_version()
-    if     memory.read_u8(version) == 0x00 then
-        return "Gregar";
-    elseif memory.read_u8(version) == 0x00 then
-        return "Falzar";
+function ram.simulate_RNG(seed) -- 0x8000000C 0x72 (run twice?)
+    -- seed = ((seed << 1) + (seed >> 31) + 1) ^ 0x873CA9E5;
+    return bit.bxor((bit.lshift(seed,1) + bit.rshift(seed, 31) + 1), 0x873CA9E5);
+end
+
+function ram.iterate_RNG(seed, iterations)
+    iterations = iterations or 1;
+    for i=1,math.min(iterations,calculations_per_frame) do
+        seed = ram.simulate_RNG(seed);
     end
-    return "???";
+    return seed;
 end
 
-function ram.get_progress()
-    return memory.read_u8(progress);
-end
-
-function ram.get_game_state()
-    return memory.read_u8(game_state);
-end
-
-function ram.get_game_state_name()
-    return game_state_names[ram.get_game_state()] or "unknown";
-end
-
-function ram.in_title()
-    return ram.get_game_state() == 0x00;
-end
-
-function ram.in_world()
-    return ram.get_game_state() == 0x04;
-end
-
-function ram.in_battle()
-    return ram.get_game_state() == 0x0C;
-end
-
-function ram.in_transition()
-    return ram.get_game_state() == 0x10;
-end
-
-function ram.in_splash()
-    return ram.get_game_state() == 0x14;
-end
-
-function ram.in_menu()
-    return ram.get_game_state() == 0x18;
-end
-
-function ram.in_credits()
-    return ram.get_game_state() == 0x30;
-end
-
-function ram.get_stars()
-    return memory.read_u8(title_star_flags);
-end
-
--- Functions -> Position 
-
-function ram.get_area()
-    return memory.read_u8(area);
-end
-
-function ram.set_area(new_area)
-    return memory.write_u8(area, new_area);
-end
-
-function ram.get_sub_area()
-    return memory.read_u8(sub_area);
-end
-
-function ram.set_sub_area(new_sub_area)
-    return memory.write_u8(sub_area, new_sub_area);
-end
-
-function ram.get_area_name()
-    if ram.areas.names[ram.get_area()] then
-        if ram.areas.names[ram.get_area()][ram.get_sub_area()] then
-            return ram.areas.names[ram.get_area()][ram.get_sub_area()];
+function ram.calculate_RNG_delta(temp, goal)
+    for delta=0,calculations_per_frame do
+        if temp == goal then
+            return delta;
         end
-        return "Unknown Sub Area";
+        temp = ram.simulate_RNG(temp);
     end
-    return "Unknown Area";
+    return nil;
 end
 
-function ram.does_area_exist(main_area, sub_area)
-    return ram.areas.names[main_area] and ram.areas.names[main_area][sub_area];
+local function create_RNG_table(seed, max_index)
+    print(string.format("Creating RNG Table with seed 0x%08X and max index %u", seed, max_index));
+    
+    new_RNG_table = {};
+    
+    new_RNG_table.value = {};
+    new_RNG_table.index = {};
+    
+    new_RNG_table.value[0] = 0;
+    new_RNG_table.index[0] = 0;
+    
+    new_RNG_table.value[1] = seed;
+    new_RNG_table.index[seed] = 1;
+    
+    new_RNG_table.current_RNG_index = 1;
+    new_RNG_table.maximum_RNG_index = max_index;
+    
+    return new_RNG_table;
 end
 
-function ram.in_real_world()
-    if ram.get_area() < 0x80 then
-        return true;
+local function expand_RNG_table(RNG_table)
+    if RNG_table.current_RNG_index < RNG_table.maximum_RNG_index then
+        for i=1, calculations_per_frame do
+            local RNG_next = ram.simulate_RNG(RNG_table.value[RNG_table.current_RNG_index]);
+            
+            RNG_table.current_RNG_index = RNG_table.current_RNG_index + 1;
+            
+            RNG_table.value[RNG_table.current_RNG_index] = RNG_next;
+            RNG_table.index[RNG_next] = RNG_table.current_RNG_index;
+        end
+        if RNG_table.current_RNG_index >= RNG_table.maximum_RNG_index then
+            print("");
+            print(string.format("%u: RNG Table Created for seed: 0x%08X", emu.framecount(), RNG_table.value[1]));
+            print("");
+        end
     end
-    return false;
 end
 
-function ram.in_digital_world()
-    return not ram.in_real_world();
+function ram.get.lazy_RNG_value()
+    return memory.read_u32_le(ram.addr.lazy_RNG);
 end
 
-function ram.get_x()
-    return memory.read_s16_le(your_X);
+function ram.get.lazy_RNG_value_at(new_RNG_index)
+    return lazy_rng_table.value[new_lazy_RNG_index];
 end
 
-function ram.get_y()
-    return memory.read_s16_le(your_Y);
+function ram.set.lazy_RNG_value(new_RNG_value)
+    memory.write_u32_le(ram.addr.lazy_RNG, new_RNG_value);
 end
 
-function ram.get_steps()
-    return memory.read_u16_le(steps);
+function ram.get.lazy_RNG_index_of(new_RNG_value)
+    return lazy_rng_table.index[new_RNG_value];
 end
 
-function ram.set_steps(new_steps)
-    if new_steps < 0 then
-        new_steps = 0
+function ram.get.lazy_RNG_index()
+    return ram.get.lazy_RNG_index_of(ram.get.lazy_RNG_value());
+end
+
+function ram.set.lazy_RNG_index(new_RNG_index)
+    new_RNG_value = ram.get.lazy_RNG_value_at(new_RNG_index);
+    if new_RNG_value then
+        ram.set.lazy_RNG_value(new_RNG_value);
     end
-    memory.write_u16_le(steps, new_steps);
 end
 
-function ram.add_steps(some_steps)
-    ram.set_steps(ram.get_steps() + some_steps);
+function ram.get.lazy_RNG_delta()
+    return ram.calculate_RNG_delta(previous_lazy_RNG_value, ram.get.lazy_RNG_value());
 end
 
-function ram.get_check()
-    return memory.read_u16_le(check);
-end
-
-function ram.set_check(new_check)
-    if new_check < 0 then
-        new_check = 0
+function ram.adjust_lazy_RNG(steps)
+    local lazy_RNG_index = ram.get.lazy_RNG_index();
+    
+    if not lazy_RNG_index then
+        return;
     end
-    memory.write_u16_le(check, new_check);
-end
-
-function ram.add_check(some_check)
-    ram.set_check(ram.get_check() + some_check);
-end
-
-function ram.get_sneak()
-    return memory.read_u32_le(sneak);
-end
-
-function ram.reset_sneak(new_sneak)
-    memory.write_u32_le(sneak, 6000);
-end
-
--- Functions -> Inventory
-
-function ram.get_zenny()
-    return memory.read_u32_le(zenny);
-end
-
-function ram.set_zenny(new_zenny)
-    if new_zenny < 0 then
-        new_zenny = 0;
-    elseif new_zenny > 999999 then
-        new_zenny = 999999;
+    
+    local new_index = lazy_RNG_index + steps;
+    
+    if new_index < 1 then -- steps could be negative
+        new_index = 1;
     end
-    return memory.write_u32_le(zenny, new_zenny);
-end
-
-function ram.add_zenny(some_zenny)
-    return ram.set_zenny(ram.get_zenny() + some_zenny)
-end
-
-function ram.get_bug_frags()
-    return memory.read_u32_le(bug_frags);
-end
-
-function ram.set_bug_frags(new_bug_frags)
-    if new_bug_frags < 0 then
-        new_bug_frags = 0;
-    elseif new_bug_frags > 9999 then
-        new_bug_frags = 9999;
+    
+    if new_index > rng_table.current_lazy_RNG_index then
+        new_index = rng_table.current_lazy_RNG_index;
     end
-    return memory.write_u32_le(bug_frags, new_bug_frags);
+    
+    ram.set.RNG_index(new_index);
 end
 
-function ram.add_bug_frags(some_bug_frags)
-    return ram.set_bug_frags(ram.get_bug_frags() + some_bug_frags);
+function ram.get.main_RNG_value()
+    return memory.read_u32_le(ram.addr.main_RNG);
 end
 
-function ram.get_reg_slot()
-	return memory.readbyte(reg);
+function ram.get.main_RNG_value_at(new_RNG_index)
+    return main_rng_table.value[new_RNG_index];
 end
 
--- Functions -> Battlechips
-
-function ram.get_chip_name(ID)
-    return ram.chips.names[ID];
+function ram.set.main_RNG_value(new_RNG_value)
+    memory.write_u32_le(ram.addr.main_RNG, new_RNG_value);
 end
 
-function ram.get_chip_code(code)
-    return ram.chips.codes[code];
+function ram.get.main_RNG_index_of(new_RNG_value)
+    return main_rng_table.index[new_RNG_value];
 end
 
--- Functions -> Mega Man
-
-function ram.get_max_HP()
-    return memory.read_u16_le(world_HP_max);
+function ram.get.main_RNG_index()
+    return ram.get.main_RNG_index_of(ram.get.main_RNG_value());
 end
 
-function ram.get_battle_count()
-    return memory.read_u8(battle_count);
-end
-
-function ram.set_battle_count(new_battle_count)
-    return memory.write_u8(battleCount, new_battle_count);
-end
-
-function ram.add_battle_count(some_battles)
-    return ram.set_battle_count(ram.get_battle_count() + some_battles);
-end
-
--- Functions -> Battle Information
-
-function ram.get_enemy_ID(enemy_number) -- convert from 1 to 0 index
-    return memory.read_u16_le(battle_enemy_ID + enemy_number - 1);
-end
-
-function ram.get_enemy_name(enemy_number)
-    return ram.enemies.names[ram.get_enemy_ID(enemy_number)] or "Unknown ID";
-end
-
-function ram.get_draw_slot(which_slot) -- convert from 1 to 0 index, then back
-    if 1 <= which_slot and which_slot <= 30 then
-        return drawIndex[which_slot - 1] + 1;
+function ram.set.main_RNG_index(new_RNG_index)
+    new_RNG_value = ram.get.main_RNG_value_at(new_RNG_index);
+    if new_RNG_value then
+        ram.set.main_RNG_value(new_RNG_value);
     end
-    return -1;
 end
+
+function ram.get.main_RNG_delta()
+    return ram.calculate_RNG_delta(previous_main_RNG_value, ram.get.main_RNG_value());
+end
+
+function ram.adjust_main_RNG(steps)
+    local main_RNG_index = ram.get.main_RNG_index();
+    
+    if not main_RNG_index then
+        return;
+    end
+    
+    local new_index = main_RNG_index + steps;
+    
+    if new_index < 1 then -- steps could be negative
+        new_index = 1;
+    end
+    
+    if new_index > main_rng_table.current_RNG_index then
+        new_index = main_rng_table.current_RNG_index;
+    end
+    
+    ram.set.main_RNG_index(new_index);
+end
+
+---------------------------------------- Draw Simulation ----------------------------------------
 
 function ram.to_int(seed)
 	return bit.band(seed, 0x7FFFFFFF)
 end
 
-function ram.get_draw_slots()
-	return drawIndex;
-end
-
-function ram.simulate_draw()
-	-- Need to simulate draw after BN3
+function ram.simulate_shuffle_folder(seed)
     for i=0,29 do
-		drawIndex[i] = i;
+		slots[i] = i;
 	end
 	
-	drawSeed = ram.rng.get_lazy_RNG_value();
-	
-	for i=0,135 do
-		drawSeed = ram.rng.simulate_RNG(drawSeed);
-	end
-	
-	regSlot = ram.get_reg_slot();
+	regSlot = ram.get.reg_slot();
 	
 	if regSlot == 255 then
 		for i=1,30 do
-			drawSeed = ram.rng.simulate_RNG(drawSeed);
-			slot1 = ram.to_int(drawSeed) % 30;
-			drawSeed = ram.rng.simulate_RNG(drawSeed);
-			slot2 = ram.to_int(drawSeed) % 30;
+			seed = ram.simulate_RNG(seed);
+			slot1 = ram.to_int(seed) % 30;
+			seed = ram.simulate_RNG(seed);
+			slot2 = ram.to_int(seed) % 30;
 
-			drawIndex[slot1], drawIndex[slot2] = drawIndex[slot2], drawIndex[slot1];
+			slots[slot1], slots[slot2] = slots[slot2], slots[slot1];
 		end
 	else
 		for i=1,29 do
-			drawSeed = ram.rng.simulate_RNG(drawSeed);
-			slot1 = ram.to_int(drawSeed) % 29;
+			seed = ram.simulate_RNG(seed);
+			slot1 = ram.to_int(seed) % 29;
 			if slot1 >= regSlot then
 				slot1 = slot1 + 1
 			end
 			
-			drawSeed = ram.rng.simulate_RNG(drawSeed);
-			slot2 = ram.to_int(drawSeed) % 29;
+			seed = ram.simulate_RNG(seed);
+			slot2 = ram.to_int(seed) % 29;
 			if slot2 >= regSlot then
 				slot2 = slot2 + 1
 			end
 
-			drawIndex[slot1], drawIndex[slot2] = drawIndex[slot2], drawIndex[slot1];
+			slots[slot1], slots[slot2] = slots[slot2], slots[slot1];
 		end
 		
 		-- In BN6, place reg chip at top and move other chips down.
 		-- In other games, swap the reg slot with the top chip.
 		for i=regSlot,0,-1 do
-			drawIndex[i] = drawIndex[i - 1];
+			slots[i] = slots[i - 1];
 		end
 		
-		drawIndex[0] = regSlot;
+		slots[0] = regSlot;
 	end
 end
 
--- Functions -> Misc.
+---------------------------------------- RAMsacking ----------------------------------------
 
-function ram.get_GMD_RNG()
-    return memory.read_u32_le(GMD_RNG);
-end
-
-function ram.set_GMD_RNG(new_GMD_RNG)
-    return memory.write_u32_le(GMD_RNG, new_GMD_RNG);
-end
-
-function ram.randomize_GMD_RNG()
-    return ram.set_GMD_RNG(rng.get_main_RNG_value());
-end
-
-function ram.get_GMD_value()
-    return memory.read_u32_le(GMD_value);
-end
-
-------------------------------------------------------------------------------------------------------------------------
-
--- Encounter Tracking and Avoidance
-
-local last_encounter_check = 0; -- the previous value of check
-
-function ram.get_encounter_checks()
-    return math.floor(last_encounter_check / 64); -- approximate
-end
-
-ram.skip_encounters = false;
-
-local function encounter_check()
-    if ram.in_world() then
-        if ram.get_check() < last_encounter_check then
-            last_encounter_check = 0; -- dodged encounter or area (re)load or state load
-        elseif ram.get_check() > last_encounter_check then
-            last_encounter_check = ram.get_check();
-        end
-        
-        if ram.skip_encounters then
-            if ram.get_steps() > 64 then
-                ram.set_steps(ram.get_steps() % 64);
-                ram.set_check(ram.get_check() % 64);
-            end
-        end
+local function fun_flags(options)
+    if options.no_encounters then
+        ram.set.RNG_value(0x8000000C);
+    elseif options.yes_encounters then
+        ram.set.RNG_value(0x72      );
+    end
+    
+    if options.no_chip_cooldown then
+        ram.set.chip_cooldown(0);
     end
 end
 
--- Controls
+---------------------------------------- Module Controls ----------------------------------------
 
 function ram.initialize(options)
-    ram.rng.initialize(options.max_RNG_index);
+    print("");
+    lazy_rng_table = create_RNG_table(0x873CA9E4, options.maximum_RNG_index);
+	main_rng_table = create_RNG_table(0xA338244F, options.maximum_RNG_index);
+    print("Calculating RNG with max calculations per frame of: " .. calculations_per_frame);
+    print("");
 end
 
-function ram.update_pre()
-    encounter_check();
-    ram.rng.update_pre();
+function ram.update_pre(options)
+    fun_flags(options);
+    expand_RNG_table(lazy_rng_table);
+	expand_RNG_table(main_rng_table);
 end
 
-function ram.update_post()
-    ram.rng.update_post();
+function ram.update_post(options)
+    previous_lazy_RNG_value = ram.get.lazy_RNG_value();
+	previous_main_RNG_value = ram.get.main_RNG_value();
 end
 
 return ram;

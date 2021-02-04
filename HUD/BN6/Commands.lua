@@ -1,27 +1,21 @@
--- Commands for the HUD Script for MMBN 3, enjoy.
-
-local ram = require("BN6/RAM");
-local resetter = require("BN6/Resetter");
+-- Commands for MMBN 1 scripting, enjoy.
 
 local controls = {};
 
-local command_index = 1;
-local commands = {};
-local options = {};
+local game = require("BN6/Game");
 
-local first_command_option = nil;
-local display_sub_option = false;
+local commands = {};
+local command_index = 1;
 
 local function show_text(message)
     print(message);
-    gui.addmessage(message);
 end
 
 function controls.next()
     command_index = (command_index % table.getn(commands)) + 1;
     local command = commands[command_index];
-    show_text(command.description());
-	display_sub_option = false;
+    print("");
+    show_text("Command Change: " .. command.description());
 end
 
 function controls.previous()
@@ -30,228 +24,258 @@ function controls.previous()
         command_index = table.getn(commands);
     end
     local command = commands[command_index];
-    show_text(command.description());
-	display_sub_option = false;
+    print("");
+    show_text("Command Change: " .. command.description());
 end
 
 function controls.option_down()
-    local options = commands[command_index];
-	if not display_sub_option then
-		options.selection = (options.selection % table.getn(options)) + 1;
-		local option = options[options.selection];
-		show_text("Selected: " .. option.text);
-	else
-		options.sub_options.selection = (options.sub_options.selection % table.getn(options.sub_options)) + 1;
-		local sub_option = options.sub_options[options.sub_options.selection];
-		show_text("Selected: " .. sub_option.text);
-	end
+    local command = commands[command_index];
+    command.selection = (command.selection % table.getn(command.options)) + 1;
+    local option = command.options[command.selection];
+    show_text("Option Change: " .. option.text);
 end
 
 function controls.option_up()
-    local options = commands[command_index];
-	if not display_sub_option then
-		options.selection = options.selection - 1;
-		if options.selection == 0 then
-			options.selection = table.getn(options);
-		end
-		local option = options[options.selection];
-		show_text("Selected: " .. option.text);
-	else
-		options.sub_options.selection = options.sub_options.selection - 1;
-		if options.sub_options.selection == 0 then
-			options.sub_options.selection = table.getn(options.sub_options);
-		end
-		local sub_option = options.sub_options[options.sub_options.selection];
-		show_text("Selected: " .. sub_option.text);
-	end
+    local command = commands[command_index];
+    command.selection = command.selection - 1;
+    if command.selection == 0 then
+        command.selection = table.getn(command.options);
+    end
+    local option = command.options[command.selection];
+    show_text("Option Change: " .. option.text);
 end
 
 function controls.doit()
     local command = commands[command_index];
-    local option = command[command.selection];
-    show_text("Executed: " .. option.text);
-	if command.sub_options ~= nil then
-		show_text("Command has sub_option");
-		if not display_sub_option then
-			show_text("Showing sub_options");
-			display_sub_option = true;
-			first_command_option = option;
-		else
-			local sub_option = command.sub_options[command.sub_options.selection];
-			show_text("Executing sub_options: " .. first_command_option.value .. " " .. sub_option.value);
-			command.doit(first_command_option.value, sub_option.value);
-			display_sub_option = false;
-		end
-	else
-		show_text("TEST");
-		command.doit(option.value);
-	end
+    local option = command.options[command.selection];
+    print("");
+    show_text("Executing: " .. command.description());
+    show_text("With Option: " .. option.text);
+    command.doit(option.value);
 end
 
 function controls.display_options()
-    local options = commands[command_index];
-	local sub_options = commands[command_index].sub_options;
-    local lines = {};
-	if not display_sub_option then
-		table.insert(lines, options.description());
-		for i=1,table.getn(options) do
-			line = string.format("[%2i] %s", i, options[i].text);
-			if i == options.selection then
-				line = line .. " <--";
-			end
-			table.insert(lines, line);
-		end
-	else
-		table.insert(lines, sub_options.description());
-		for i=1,table.getn(sub_options) do
-			line = string.format("[%2i] %s", i, sub_options[i].text);
-			if i == sub_options.selection then
-				line = line .. " <--";
-			end
-			table.insert(lines, line);
-		end
-	end
+    local command = commands[command_index];
+    local options = command.options;
+    local lines = {string.format("       %-30s", command.description())};
+    
+    for i=1,table.getn(options) do
+        if i == command.selection then
+            table.insert(lines, string.format("-> %2i: %-30s", i, options[i].text));
+        else
+            table.insert(lines, string.format("   %2i: %-30s", i, options[i].text));
+        end
+    end
     return lines;
 end
 
 ------------------------------------------------------------------------------------------------------------------------
 
-options = {};
-table.insert(options, {value = 0; text = "Press  Up  or  Down to change Options "});
-table.insert(options, {value = 0; text = "Press Left or Right to change Commands"});
-options.selection = 1; -- default option
-options.description = function() return "Settings Menu"; end;
-options.doit = function(value) return; end;
-table.insert(commands, options);
+local command_blank = {};
+command_blank.options = {
+    { value = nil; text = "Use Up or Down to change Options!"; };
+    { value = nil; text = "Left or Right to change Commands!"; };
+    { value = nil; text = "Use the controller or a keyboard!"; };
+};
+command_blank.selection = 1;
+command_blank.description = function() return "Welcome to the Command list!"; end;
+command_blank.doit = function() return; end;
+table.insert(commands, command_blank);
 
-options = {};
-table.insert(options, {value = false; text = "Allow Random Encounters"});
-table.insert(options, {value =  true; text = "Block Random Encounters"});
-options.selection = 1; -- default option
-options.description = function() return "Random Encounters: " .. tostring(not ram.skip_encounters); end;
-options.doit = function(value) ram.skip_encounters = value; end;
-table.insert(commands, options);
 
-options = {};
-table.insert(options, {value =  100000; text = "Increase Zenny by 100000"});
-table.insert(options, {value =   10000; text = "Increase Zenny by  10000"});
-table.insert(options, {value =    1000; text = "Increase Zenny by   1000"});
-table.insert(options, {value =     100; text = "Increase Zenny by    100"});
-table.insert(options, {value =    -100; text = "Decrease Zenny by    100"});
-table.insert(options, {value =   -1000; text = "Decrease Zenny by   1000"});
-table.insert(options, {value =  -10000; text = "Decrease Zenny by  10000"});
-table.insert(options, {value = -100000; text = "Decrease Zenny by 100000"});
-options.selection = 1; -- default option
-options.description = function() return string.format("Modify Zenny: %u", ram.get_zenny()); end;
-options.doit = function(value) ram.add_zenny(value); end;
-table.insert(commands, options);
 
-options = {};
-table.insert(options, {value =  1000; text = "Increase Bug Frags by 1000"});
-table.insert(options, {value =   100; text = "Increase Bug Frags by  100"});
-table.insert(options, {value =    10; text = "Increase Bug Frags by   10"});
-table.insert(options, {value =     1; text = "Increase Bug Frags by    1"});
-table.insert(options, {value =    -1; text = "Decrease Bug Frags by    1"});
-table.insert(options, {value =   -10; text = "Decrease Bug Frags by   10"});
-table.insert(options, {value =  -100; text = "Decrease Bug Frags by  100"});
-table.insert(options, {value = -1000; text = "Decrease Bug Frags by 1000"});
-options.selection = 1; -- default option
-options.description = function() return string.format("Modify Bug Frags: %u", ram.get_bug_frags()); end;
-options.doit = function(value) ram.add_bug_frags(value); end;
-table.insert(commands, options);
+local command_encounters = {};
+command_encounters.options = {
+    { value =  true; text = "Block Random Encounters"; };
+    { value = false; text = "Allow Random Encounters"; };
+};
+command_encounters.selection = 1;
+command_encounters.description = function() return "Random Encounters: " .. tostring(not game.skip_encounters); end
+command_encounters.doit = function(value) game.skip_encounters = value; end;
+table.insert(commands, command_encounters);
 
-options = {};
-table.insert(options, {value =  9999; text = "Increase Steps by 9999"});
-table.insert(options, {value =    64; text = "Increase Steps by   64"});
-table.insert(options, {value =     2; text = "Increase Steps by    2"});
-table.insert(options, {value =     1; text = "Increase Steps by    1"});
-table.insert(options, {value =    -1; text = "Decrease Steps by    1"});
-table.insert(options, {value =    -2; text = "Decrease Steps by    2"});
-table.insert(options, {value =   -64; text = "Decrease Steps by   64"});
-table.insert(options, {value = -9999; text = "Decrease Steps by 9999"});
-options.selection = 1; -- default option
-options.description = function() return string.format("Modify Steps: %u", ram.get_steps()); end;
-options.doit = function(value) ram.add_steps(value); end;
-table.insert(commands, options);
 
-options = {};
-table.insert(options, {value =  100; text = "Increase Main RNG by 100"});
-table.insert(options, {value =   10; text = "Increase Main RNG by  10"});
-table.insert(options, {value =    1; text = "Increase Main RNG by   1"});
-table.insert(options, {value =   -1; text = "Decrease Main RNG by   1"});
-table.insert(options, {value =  -10; text = "Decrease Main RNG by  10"});
-table.insert(options, {value = -100; text = "Decrease Main RNG by 100"});
-options.selection = 1; -- default option
-options.description = function() return string.format("Modify Main RNG: %4s: %08X", (ram.rng.get_main_RNG_index() or "????"), ram.rng.get_main_RNG_value()); end;
-options.doit = function(value) ram.rng.adjust_main_RNG(value); end;
-table.insert(commands, options);
 
-options = {};
-table.insert(options, {value =  100; text = "Increase Lazy RNG by 100"});
-table.insert(options, {value =   10; text = "Increase Lazy RNG by  10"});
-table.insert(options, {value =    1; text = "Increase Lazy RNG by   1"});
-table.insert(options, {value =   -1; text = "Decrease Lazy RNG by   1"});
-table.insert(options, {value =  -10; text = "Decrease Lazy RNG by  10"});
-table.insert(options, {value = -100; text = "Decrease Lazy RNG by 100"});
-options.selection = 1; -- default option
-options.description = function() return string.format("Modify Lazy RNG: %4s: %08X", (ram.rng.get_lazy_RNG_index() or "????"), ram.rng.get_lazy_RNG_value()); end;
-options.doit = function(value) ram.rng.adjust_lazy_RNG(value); end;
-table.insert(commands, options);
+local command_items = {};
+function command_items.update_options(option_value)
+    command_items.options = {};
+    command_items.selection = 1;
+    command_items.FUNction = nil;
+    
+    if not option_value then
+        command_items.description = function() return "What will U buy?"; end;
+        table.insert( command_items.options, { value = 1; text = "Zenny"   ; } );
+        table.insert( command_items.options, { value = 2; text = "BugFrag"; } );
+		table.insert( command_items.options, { value = 3; text = "HPMemory"; } );
+    else
+        command_items.description = function() return "Bzzt! (something broke)"; end;
+        table.insert( command_items.options, { value = nil; text = "Previous Menu"; } );
+        if option_value == 1 then
+            command_items.description = function() return string.format("Zenny: %11u", game.get_zenny()); end;
+			table.insert( command_items.options, { value =    nil; text = "Note: Command does not work as expected."; } );
+            table.insert( command_items.options, { value =  100000; text = "Increase by 100000"; } );
+            table.insert( command_items.options, { value =   10000; text = "Increase by  10000"; } );
+            table.insert( command_items.options, { value =    1000; text = "Increase by   1000"; } );
+            table.insert( command_items.options, { value =     100; text = "Increase by    100"; } );
+            table.insert( command_items.options, { value =    -100; text = "Decrease by    100"; } );
+            table.insert( command_items.options, { value =   -1000; text = "Decrease by   1000"; } );
+            table.insert( command_items.options, { value =  -10000; text = "Decrease by  10000"; } );
+            table.insert( command_items.options, { value = -100000; text = "Decrease by 100000"; } );
+            command_items.FUNction = function(value) game.add_zenny(value); end;
+        elseif option_value == 2 then
+            command_items.description = function() return string.format("BugFrags: %2u", game.get_bugfrags()); end;
+			table.insert( command_items.options, { value =    nil; text = "Note: Command does not work as expected."; } );
+            table.insert( command_items.options, { value =    1000; text = "Increase by 1000"; } );
+            table.insert( command_items.options, { value =     100; text = "Increase by  100"; } );
+			table.insert( command_items.options, { value =      10; text = "Increase by   10"; } );
+            table.insert( command_items.options, { value =       1; text = "Increase by    1"; } );
+			table.insert( command_items.options, { value =      -1; text = "Decrease by    1"; } );
+            table.insert( command_items.options, { value =     -10; text = "Decrease by   10"; } );
+            table.insert( command_items.options, { value =    -100; text = "Decrease by  100"; } );
+            table.insert( command_items.options, { value =   -1000; text = "Decrease by 1000"; } );
+            command_items.FUNction = function(value) game.add_bugfrags(value); end;
+        elseif option_value == 3 then
+            command_items.description = function() return string.format("HPMemory: %2u", game.get_HPMemory_count()); end;
+            table.insert( command_items.options, { value = nil; text = "Apologies... That is sold out..."; } );
+            command_items.FUNction = function(value) game.add_zenny(value); end;
+        end
+    end
+end
+command_items.update_options();
+function command_items.doit(value)
+    if command_items.FUNction and value then
+        command_items.FUNction(value);
+    else
+        command_items.update_options(value);
+    end
+end
+table.insert(commands, command_items);
 
-options = {};
-table.insert(options, {value = 0x00; text = "ACDC Town    "});
-table.insert(options, {value = 0x01; text = "Central Town "});
-table.insert(options, {value = 0x02; text = "Cyber Academy"});
-table.insert(options, {value = 0x03; text = "Seaside Town "});
-table.insert(options, {value = 0x04; text = "Green Town   "});
-table.insert(options, {value = 0x05; text = "Sky Town     "});
-table.insert(options, {value = 0x06; text = "Expo Site    "});
-options.selection = 1; -- default option
-options.description = function() return "Pick Real World Main Area: " .. ram.get_area_name(); end;
-options.doit = function(firstVal, secondVal) if ram.does_area_exist(firstVal, secondVal) then ram.set_area(firstVal); ram.set_sub_area(secondVal); end end;
 
-sub_options = {};
-table.insert(sub_options, {value = 0x00; text = "Sub Area 0x00"});
-table.insert(sub_options, {value = 0x01; text = "Sub Area 0x01"});
-table.insert(sub_options, {value = 0x02; text = "Sub Area 0x02"});
-table.insert(sub_options, {value = 0x03; text = "Sub Area 0x03"});
-table.insert(sub_options, {value = 0x04; text = "Sub Area 0x04"});
-table.insert(sub_options, {value = 0x05; text = "Sub Area 0x05"});
-table.insert(sub_options, {value = 0x06; text = "Sub Area 0x06"});
-table.insert(sub_options, {value = 0x07; text = "Sub Area 0x07"});
-table.insert(sub_options, {value = 0x08; text = "Sub Area 0x08"});
-table.insert(sub_options, {value = 0x09; text = "Sub Area 0x09"});
-table.insert(sub_options, {value = 0x0A; text = "Sub Area 0x0A"});
-table.insert(sub_options, {value = 0x0B; text = "Sub Area 0x0B"});
-table.insert(sub_options, {value = 0x0C; text = "Sub Area 0x0C"});
-table.insert(sub_options, {value = 0x0D; text = "Sub Area 0x0E"});
-table.insert(sub_options, {value = 0x0E; text = "Sub Area 0x0E"});
-table.insert(sub_options, {value = 0x0F; text = "Sub Area 0x0F"});
-sub_options.selection = 1; -- default option
-sub_options.description = function() return "Pick Sub Area: " .. ram.get_area_name(); end;
-options.sub_options = sub_options;
-table.insert(commands, options);
 
-options = {};
-table.insert(options, {value = 0x80; text = "Robo Control Comps     "});
-table.insert(options, {value = 0x81; text = "Aquarium Comps         "});
-table.insert(options, {value = 0x82; text = "JudgeTree Comps        "});
-table.insert(options, {value = 0x83; text = "Mr. Weather Comps      "});
-table.insert(options, {value = 0x85; text = "Pavilion Comps         "});
-table.insert(options, {value = 0x88; text = "HomePages              "});
-table.insert(options, {value = 0x8C; text = "Small Comps 1          "});
-table.insert(options, {value = 0x8D; text = "Small Comps 2          "});
-table.insert(options, {value = 0x90; text = "Central Area           "});
-table.insert(options, {value = 0x91; text = "Seaside Area           "});
-table.insert(options, {value = 0x92; text = "Green Area             "});
-table.insert(options, {value = 0x93; text = "Underground Area       "});
-table.insert(options, {value = 0x94; text = "Sky/ACDC Area          "});
-table.insert(options, {value = 0x95; text = "Undernet               "});
-table.insert(options, {value = 0x95; text = "Graveyard/Immortal Area"});
-options.selection = 1; -- default option
-options.description = function() return "Pick Digital World Main Area: " .. ram.get_area_name(); end;
-options.doit = function(value) if ram.does_area_exist(value, ram.get_sub_area()) then ram.set_area(value); end end;
-table.insert(commands, options);
+local command_progress = {};
+function command_progress.update_options(option_value)
+    command_progress.options = {};
+    command_progress.selection = 1;
+    command_progress.scenario = nil;
+    
+    if not option_value then
+        command_progress.description = function() return "Select a Progress scenario:"; end;
+        table.insert( command_progress.options, { value = nil; text = "Command currently WIP"; } );
+    else
+        command_progress.description = function() return "Select a Progress value:"; end;
+        command_progress.scenario = option_value;
+        table.insert( command_progress.options, { value = nil; text = "Previous Menu"; } );
+        for i=option_value,option_value+0xF do
+            if game.get_progress_name(i) then
+                table.insert( command_progress.options, { value = i; text = string.format("0x%02X: %s", i, game.get_progress_name(i)); } );
+            end
+        end
+    end
+end
+command_progress.update_options();
+function command_progress.doit(value)
+    if command_progress.scenario and value then
+        game.set_progress(value);
+    else
+        command_progress.update_options(value);
+    end
+end
+table.insert(commands, command_progress);
+
+
+
+local teleport_real_world = {};
+function teleport_real_world.update_options(option_value)
+    teleport_real_world.options = {};
+    teleport_real_world.selection = 1;
+    teleport_real_world.main_area = nil;
+    
+    if not option_value then
+        teleport_real_world.description = function() return "Select a real world group:"; end;
+        for i,group in pairs(game.get_area_groups_real()) do
+            table.insert( teleport_real_world.options, { value = group; text = game.get_area_group_name(group); } );
+        end
+    else
+        teleport_real_world.description = function() return "Select an area:"; end;
+        teleport_real_world.main_area = option_value;
+        table.insert( teleport_real_world.options, { value = nil; text = "Previous Menu"; } );
+        for i=0,0xF do
+            if game.does_area_exist(option_value, i) then
+                table.insert( teleport_real_world.options, { value = i; text = game.get_area_name(option_value, i); } );
+            end
+        end
+    end
+end
+teleport_real_world.update_options();
+function teleport_real_world.doit(value)
+    if teleport_real_world.main_area and value then
+        game.teleport(teleport_real_world.main_area, value);
+    else
+        teleport_real_world.update_options(value);
+    end
+end
+table.insert(commands, teleport_real_world);
+
+
+
+local teleport_digital_world = {};
+function teleport_digital_world.update_options(option_value)
+    teleport_digital_world.options = {};
+    teleport_digital_world.selection = 1;
+    teleport_digital_world.main_area = nil;
+    
+    if not option_value then
+        teleport_digital_world.description = function() return "Select a digital world group:"; end;
+        for i,group in pairs(game.get_area_groups_digital()) do
+            table.insert( teleport_digital_world.options, { value = group; text = game.get_area_group_name(group); } );
+        end
+    else
+        teleport_digital_world.description = function() return "Select an area:"; end;
+        teleport_digital_world.main_area = option_value;
+        table.insert( teleport_digital_world.options, { value = nil; text = "Previous Menu"; } );
+        for i=0,0xF do
+            if game.does_area_exist(option_value, i) then
+                table.insert( teleport_digital_world.options, { value = i; text = game.get_area_name(option_value, i); } );
+            end
+        end
+    end
+end
+teleport_digital_world.update_options();
+function teleport_digital_world.doit(value)
+    if teleport_digital_world.main_area and value then
+        game.teleport(teleport_digital_world.main_area, value);
+    else
+        teleport_digital_world.update_options(value);
+    end
+end
+table.insert(commands, teleport_digital_world);
+
+
+
+local command_combat = {};
+command_combat.selection = 1;
+command_combat.description = function() return "Battle Options:"; end;
+command_combat.options = {
+    { value = function() game.kill_enemy(0);     end; text = "Delete Everything";     };
+    { value = function() game.kill_enemy(1);     end; text = "Delete Enemy 1";        };
+    { value = function() game.kill_enemy(2);     end; text = "Delete Enemy 2";        };
+    { value = function() game.kill_enemy(3);     end; text = "Delete Enemy 3";        };
+	--[[
+    { value = function() game.kill_enemy(3);     end; text = "Delete Enemy 3";        };
+    { value = function() game.draw_only_slot(0); end; text = "Draw Only Slot 1";      };
+    { value = game.draw_in_order;                     text = "Draw In Order";         };
+    { value = game.fill_custom_gauge;                 text = "Fill Custom Gauge";     };
+    { value = game.empty_custom_gauge;                text = "Empty Custom Gauge";    };
+    { value = game.reset_delete_timer;                text = "Set Delete Time to 0";  };
+    { value = game.disable_chip_cooldown;             text = "Disable Chip Cooldown"; };
+    { value = game.enable_chip_cooldown;              text = "Enable Chip Cooldown";  };
+    { value = game.max_chip_window_count;             text = "15 Selectable Chips";   };
+	]]--
+};
+command_combat.doit = function(value) value(); end;
+table.insert(commands, command_combat);
+
 
 return controls;
 
