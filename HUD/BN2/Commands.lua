@@ -246,6 +246,71 @@ table.insert(commands, command_progress);
 
 
 
+local command_battle = {};
+function command_battle.update_options(option_value)
+    command_battle.options = {};
+    command_battle.selection = 1;
+    command_battle.FUNction = nil;
+    
+    if not option_value then
+        command_battle.description = function() return "Boost which feature?"; end;
+        table.insert( command_battle.options, { value = 1; text = "Buster & Styles"; } );
+        table.insert( command_battle.options, { value = 2; text = "Battlechips"; } );
+    else
+        command_battle.description = function() return "Bzzt! (something broke)"; end;
+        table.insert( command_battle.options, { value = nil; text = "Previous Menu"; } );
+        if option_value == 1 then
+            command_battle.description = function() return string.format("Power Level: %4u", game.calculate_mega_level()); end;
+            table.insert( command_battle.options, { value = game.reset_buster_stats; text = "Reset Buster Stats"; } );
+            table.insert( command_battle.options, { value = game.max_buster_stats;   text = "Max   Buster Stats"; } );
+            table.insert( command_battle.options, { value = game.hub_buster_stats;   text = "Hub   Buster Stats"; } );
+            table.insert( command_battle.options, { value = game.set_style;          text = "Become AquaCust!"; } );
+            table.insert( command_battle.options, { value = game.set_style;          text = "Become HubStyle!"; } );
+            command_battle.FUNction = function(value) value(); end;
+        elseif option_value == 2 then
+            command_battle.description = function() return string.format("Customize or Randomize!"); end;
+            table.insert( command_battle.options, { value = function() game.set_all_folder_to_code(0); end; text = "Monocode A Folder";      } );
+            table.insert( command_battle.options, { value = function() game.randomize_folder_codes( ); end; text = "Randomize Folder Codes"; } );
+            table.insert( command_battle.options, { value = function() game.randomize_folder_IDs(   ); end; text = "Randomize Folder IDs";   } );
+            table.insert( command_battle.options, { value = function() game.set_all_folder_to_ID(  1); end; text = "Only Draw Cannon!";     } );
+            command_battle.FUNction = function(value) value(); end;
+        end
+    end
+end
+command_battle.update_options();
+function command_battle.doit(value)
+    if command_battle.FUNction and value then
+        command_battle.FUNction(value);
+    else
+        command_battle.update_options(value);
+    end
+end
+table.insert(commands, command_battle);
+
+
+
+local command_combat = {};
+command_combat.selection = 1;
+command_combat.description = function() return "Battle Options:"; end;
+command_combat.options = {
+    { value = function() game.kill_enemy(0);     end; text = "Delete Everything";     };
+    { value = function() game.kill_enemy(1);     end; text = "Delete Enemy 1";        };
+    { value = function() game.kill_enemy(2);     end; text = "Delete Enemy 2";        };
+    { value = function() game.kill_enemy(3);     end; text = "Delete Enemy 3";        };
+    { value = function() game.draw_only_slot(0); end; text = "Draw Only Slot 1";      };
+    { value = game.draw_in_order;                     text = "Draw In Order";         };
+    { value = game.fill_custom_gauge;                 text = "Fill Custom Gauge";     };
+    { value = game.empty_custom_gauge;                text = "Empty Custom Gauge";    };
+    { value = game.reset_delete_timer;                text = "Set Delete Time to 0";  };
+    { value = game.disable_chip_cooldown;             text = "Disable Chip Cooldown"; };
+    { value = game.enable_chip_cooldown;              text = "Enable Chip Cooldown";  };
+    { value = game.max_chip_window_count;             text = "10 Selectable Chips";   };
+};
+command_combat.doit = function(value) value(); end;
+table.insert(commands, command_combat);
+
+
+
 local teleport_real_world = {};
 function teleport_real_world.update_options(option_value)
     teleport_real_world.options = {};
@@ -311,71 +376,6 @@ function teleport_digital_world.doit(value)
     end
 end
 table.insert(commands, teleport_digital_world);
-
-
-
-local command_battle = {};
-function command_battle.update_options(option_value)
-    command_battle.options = {};
-    command_battle.selection = 1;
-    command_battle.FUNction = nil;
-    
-    if not option_value then
-        command_battle.description = function() return "Boost which feature?"; end;
-        table.insert( command_battle.options, { value = 1; text = "Buster & Styles"; } );
-        table.insert( command_battle.options, { value = 2; text = "Battlechips"; } );
-    else
-        command_battle.description = function() return "Bzzt! (something broke)"; end;
-        table.insert( command_battle.options, { value = nil; text = "Previous Menu"; } );
-        if option_value == 1 then
-            command_battle.description = function() return string.format("Power Level: %4u", game.calculate_mega_level()); end;
-            table.insert( command_battle.options, { value = game.reset_buster_stats; text = "Reset Buster Stats"; } );
-            table.insert( command_battle.options, { value = game.max_buster_stats;   text = "Max   Buster Stats"; } );
-            table.insert( command_battle.options, { value = game.hub_buster_stats;   text = "Hub   Buster Stats"; } );
-            table.insert( command_battle.options, { value = game.set_style;          text = "Become AquaCust!"; } );
-            table.insert( command_battle.options, { value = game.set_style;          text = "Become HubStyle!"; } );
-            command_battle.FUNction = function(value) value(); end;
-        elseif option_value == 2 then
-            command_battle.description = function() return string.format("Customize or Randomize!"); end;
-            table.insert( command_battle.options, { value = function() game.set_all_folder_to_code(0); end; text = "Monocode A Folder";      } );
-            table.insert( command_battle.options, { value = function() game.randomize_folder_codes( ); end; text = "Randomize Folder Codes"; } );
-            table.insert( command_battle.options, { value = function() game.randomize_folder_IDs(   ); end; text = "Randomize Folder IDs";   } );
-            table.insert( command_battle.options, { value = function() game.set_all_folder_to_ID(  1); end; text = "Only Draw Cannon!";     } );
-            command_battle.FUNction = function(value) value(); end;
-        end
-    end
-end
-command_battle.update_options();
-function command_battle.doit(value)
-    if command_battle.FUNction and value then
-        command_battle.FUNction(value);
-    else
-        command_battle.update_options(value);
-    end
-end
-table.insert(commands, command_battle);
-
-
-
-local command_combat = {};
-command_combat.selection = 1;
-command_combat.description = function() return "Battle Options:"; end;
-command_combat.options = {
-    { value = function() game.kill_enemy(0);     end; text = "Delete Everything";     };
-    { value = function() game.kill_enemy(1);     end; text = "Delete Enemy 1";        };
-    { value = function() game.kill_enemy(2);     end; text = "Delete Enemy 2";        };
-    { value = function() game.kill_enemy(3);     end; text = "Delete Enemy 3";        };
-    { value = function() game.draw_only_slot(0); end; text = "Draw Only Slot 1";      };
-    { value = game.draw_in_order;                     text = "Draw In Order";         };
-    { value = game.fill_custom_gauge;                 text = "Fill Custom Gauge";     };
-    { value = game.empty_custom_gauge;                text = "Empty Custom Gauge";    };
-    { value = game.reset_delete_timer;                text = "Set Delete Time to 0";  };
-    { value = game.disable_chip_cooldown;             text = "Disable Chip Cooldown"; };
-    { value = game.enable_chip_cooldown;              text = "Enable Chip Cooldown";  };
-    { value = game.max_chip_window_count;             text = "10 Selectable Chips";   };
-};
-command_combat.doit = function(value) value(); end;
-table.insert(commands, command_combat);
 
 
 
