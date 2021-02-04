@@ -3,6 +3,7 @@
 local controls = {};
 
 local game = require("BN1/Game");
+local setups = require("BN1/Setups");
 
 local commands = {};
 local command_index = 1;
@@ -45,25 +46,28 @@ function controls.option_up()
     show_text("Option Change: " .. option.text);
 end
 
-function controls.doit()
+function controls.doit(set_command_mode)
     local command = commands[command_index];
     local option = command.options[command.selection];
     print("");
     show_text("Executing: " .. command.description());
     show_text("With Option: " .. option.text);
+    if command.enable_inputs then
+        set_command_mode(false);
+    end
     command.doit(option.value);
 end
 
 function controls.display_options()
     local command = commands[command_index];
     local options = command.options;
-    local lines = {string.format("       %-30s", command.description())};
+    local lines = {string.format("       %-33s", command.description())};
     
     for i=1,table.getn(options) do
         if i == command.selection then
-            table.insert(lines, string.format("-> %2i: %-30s", i, options[i].text));
+            table.insert(lines, string.format("-> %2i: %-33s", i, options[i].text));
         else
-            table.insert(lines, string.format("   %2i: %-30s", i, options[i].text));
+            table.insert(lines, string.format("   %2i: %-33s", i, options[i].text));
         end
     end
     return lines;
@@ -385,6 +389,20 @@ command_combat.options = {
 };
 command_combat.doit = function(value) value(); end;
 table.insert(commands, command_combat);
+
+
+
+local command_setups = {};
+command_setups.options = {};
+command_setups.selection = 1;
+command_setups.enable_inputs = true;
+command_setups.description = function() return "Automated Button Pressing:"; end;
+for i,setup in pairs(setups) do
+    table.insert( command_setups.options, { value = setup.doit; text = setup.description; } );
+end
+command_setups.doit = function(value) value(); end;
+table.insert(commands, command_setups);
+
 
 
 return controls;

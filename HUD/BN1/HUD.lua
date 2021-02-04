@@ -9,7 +9,7 @@
 -- https://docs.google.com/spreadsheets/d/e/2PACX-1vT5JrlG2InVHk4Rxpz_o3wQ5xbpNj2_n87wY0R99StH9F5P5Cp8AFyjsEQCG6MVEaEMn9dJND-k5M-P/pubhtml Did you check the notes?
 
 local hud = {};
-hud.minor_version = "0.3";
+hud.minor_version = "0.4";
 
 local game = require("BN1/Game");
 local commands = require("BN1/Commands");
@@ -35,6 +35,10 @@ local buttons_down = {};
 
 local buttons_ignore = {};
 local buttons_string = "";
+
+local function set_command_mode(new_command_mode)
+    command_mode = new_command_mode;
+end
 
 local function record_menu_buttons()
     if game.in_menu() then
@@ -219,6 +223,19 @@ local function display_steps()
     to_screen(string.format("Y: %5i", game.get_Y()));
 end
 
+local function display_enemy(which_enemy)
+    if game.get_enemy_name(which_enemy) ~= "Unknown" and game.get_enemy_name(which_enemy) ~= "Empty" then
+        to_screen_corner(game.get_enemy_name(which_enemy));
+    end
+end
+
+local function display_enemies()
+    y=0;
+    display_enemy(1);
+    display_enemy(2);
+    display_enemy(3);
+end
+
 local function display_draws(how_many, start_at)
     start_at = start_at or 1;
     for i=0,how_many-1 do
@@ -306,10 +323,7 @@ local function HUD_auto()
         to_screen(string.format("Fight: 0x%4X", game.get_battle_pointer()));
         display_RNG(true);
         to_screen(string.format("Checks: %2u", game.get_encounter_checks()));
-        y=0;
-        to_screen_corner(game.get_enemy_name(1));
-        to_screen_corner(game.get_enemy_name(2));
-        to_screen_corner(game.get_enemy_name(3));
+        display_enemies();
     elseif game.in_transition() then
         to_screen("HUD Version: " .. hud.version);
     elseif game.in_menu() then
@@ -356,8 +370,8 @@ function hud.update()
     if show_HUD then
         if command_mode then
             if     buttons_down.Select or keys_down.KeypadPeriod then
-                command_mode = false;
-                --game.battle_unpause();
+                set_command_mode(false);
+                game.battle_unpause();
             elseif buttons_down.Right  or keys_down.Right   then
                 commands.next();
             elseif buttons_down.Left   or keys_down.Left    then
@@ -367,14 +381,14 @@ function hud.update()
             elseif buttons_down.Down   or keys_down.Down    then
                 commands.option_down();
             elseif buttons_down.B      or keys_down.Keypad0 then
-                commands.doit();
+                commands.doit(set_command_mode);
             end
             display_commands();
         else
             if (buttons_held.L and buttons_held.R) or keys_down.KeypadPeriod then
                 if     buttons_down.Select or keys_down.KeypadPeriod then
-                    command_mode = true;
-                    --game.battle_pause();
+                    set_command_mode(true);
+                    game.battle_pause();
                 elseif buttons_down.Right  then
                         HUD_mode = (HUD_mode % table.getn(HUDs)) + 1;
                 elseif buttons_down.Left   then
