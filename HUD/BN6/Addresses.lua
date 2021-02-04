@@ -41,7 +41,6 @@ addresses.flags_0002          = 0; -- 00000000
 addresses.flags_0003          = 0; -- 00000000
 addresses.flags_0004          = 0; -- 00000000
 addresses.library             = 0; -- bit flags (with gaps) ends at 0x38
-addresses.library_bass        = 0; -- 00000001b
 addresses.emails_gave_flags   = 0; -- maybe? ends at 47
 addresses.emails_read_flags   = 0; -- maybe? ends at 4F
 addresses.BMD_flags           = 0; -- ends at 6F? 0x80 is shelf PET
@@ -86,6 +85,7 @@ addresses.button_flags        = 0; -- many bytes, many flags
 addresses.chip_cooldown       = 0; -- 1 byte, BstrBomb HYPE
 addresses.pack_ID             = 0; -- 1 byte, chip  ID  of pack slot 1
 addresses.pack_code           = 0; -- 1 byte, chip code of pack slot 1
+addresses.version_byte        = 0; -- 1 byte
 
 -- 001100 - 0011FF
 
