@@ -169,7 +169,7 @@ addresses.key_TownPass        = 0x0200030E; -- 1 byte
 --addresses.key_invalid       = 0x0200030F; -- 1 byte
 
 addresses.HPMemory            = 0x02000310; -- 1 byte, collected
-addresses.PowerUP             = 0x02000311; -- 1 byte, unused
+addresses.PowerUP             = 0x02000311; -- 1 byte, available
 --addresses.                  = 0x02000312; -- 1 byte
 --addresses.                  = 0x02000313; -- 1 byte
 addresses.armor_heat          = 0x02000314; -- 1 byte
@@ -314,15 +314,15 @@ addresses.battle_data         = 0x080852B0; -- plus offset from TBD?
 
 local version_byte = memory.read_u8(addresses.version_byte);
 
-if     version_byte == 0x45 then
+if     version_byte == 0x45 then -- E
     addresses.version_name    = "English";
     addresses.encounter_odds  = 0x08009934;
     addresses.encounter_curve = 0x080099BC;
-elseif version_byte == 0x4A then
+elseif version_byte == 0x4A then -- J
     addresses.version_name    = "Japanese";
     addresses.encounter_odds  = 0x08009900;
     addresses.encounter_curve = 0x08009988;
-elseif version_byte == 0x50 then
+elseif version_byte == 0x50 then -- P
     addresses.version_name    = "PAL";
     addresses.encounter_odds  = 0x08009940;
     addresses.encounter_curve = 0x080099C8;

@@ -206,7 +206,7 @@ function game.get_progress()
 end
 
 function game.get_progress_name(progress_value)
-    return game.progress[progress_value];
+    return game.progress[progress_value] or "Unknown";
 end
 
 function game.get_current_progress_name()

@@ -12,7 +12,7 @@ function load_HUD()
     local code = bit.band(memory.read_u32_le(0x080000AC), 0xFFFFFF);
     if     (code == 0x455241) then
         return require("BN1/HUD");
-    elseif (code == 0x324541) then
+    elseif (code == 0x324541 or code == 0x324D41) then
         return require("BN2/HUD");
     elseif (code == 0x423641 or code == 0x583341) then
         return require("BN3/HUD");

@@ -349,9 +349,9 @@ table.insert(HUDs, HUD_routing);
 ---------------------------------------- Module Controls ----------------------------------------
 
 function hud.initialize(options)
-    print("Initializing HUD for MMBN 1...");
-    set_default_text(current_font, current_color);
     hud.version = options.major_version .. "." .. hud.minor_version;
+    print("Initializing HUD " .. hud.version .. " for MMBN 1...");
+    set_default_text(current_font, current_color);
     options.maximum_RNG_index = 10 * 60 * 60; -- 10 minutes of frames
     game.initialize(options);
     print("HUD for MMBN 1 " .. game.get_version_name() .. " Initialized.");
