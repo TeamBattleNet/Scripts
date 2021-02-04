@@ -29,6 +29,34 @@ local function soft_reset()
     next_frame();
 end
 
+local setup_teleport = {description = "Open & Close Menu"};
+function setup_teleport.doit()
+    joypad.set({Start=true});
+    next_frame();
+    joypad.set({Start=true});
+    next_frame();
+    wait_for("Menu", 20);
+    
+    joypad.set({A=true});
+    next_frame();
+    joypad.set({A=true});
+    next_frame();
+    wait_for("Menu", 40);
+    
+    joypad.set({B=true});
+    next_frame();
+    joypad.set({B=true});
+    next_frame();
+    wait_for("Menu", 60);
+    
+    joypad.set({B=true});
+    next_frame();
+    joypad.set({B=true});
+    next_frame();
+    wait_for("Menu", 30);
+end
+table.insert(setups, setup_teleport);
+
 local setup_gutsman = {description = "GutsMan"};
 function setup_gutsman.doit()
     soft_reset();
