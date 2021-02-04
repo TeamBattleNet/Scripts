@@ -149,7 +149,7 @@ function ram.iterate_RNG(seed, iterations)
     return seed;
 end
 
-function ram.shuffle_folder_simulate(battle_RNG_index)
+function ram.shuffle_folder_simulate(battle_RNG_index) -- unverified copy from BN 1
     local seed_index = battle_RNG_index - 120 + 1;
     local slots = {};
     local slot_a = nil;

@@ -32,13 +32,27 @@ https://problemkaputt.de/gbatek.htm#gbamemorymap
 
 ---------------------------------------- WRAM 02000000-0203FFFF ----------------------------------------
 
+addresses.flags               = 0x02000000; -- N bytes, to 5F at most
+addresses.star_byte_yellow    = 0x02000000; -- Somewhere in the first row
+addresses.star_byte_green     = 0x02000000; -- Somewhere in the second row
+addresses.library             = 0x02000060; -- ? bytes, bit flags, ends at 82?
+
+-- 91-9F PAs in here somewhere...
+
+-- A0+ don't write to these bytes!
+-- 100-10F don't write to these bytes!
+-- 10A Pause state?
+-- 10B Don't write to this byte...
+
+--addresses.                  = 0x02000DC0; -- 1 byte, start of important things?
 addresses.main_area           = 0x02000DC4; -- 1 byte
 addresses.sub_area            = 0x02000DC5; -- 1 byte
 addresses.progress            = 0x02000000; -- 1 byte
 addresses.music_progress      = 0x02000000; -- 1 byte
 
-addresses.RNG                 = 0x02009080; -- 4 bytes, resets and pauses on the title screen
+--addresses.                  = 0x02009070; -- 4 bytes, state transition related?
 addresses.game_state          = 0x02009078; -- 1 byte
+addresses.RNG                 = 0x02009080; -- 4 bytes, restarts on the title screen
 addresses.battle_state        = 0x02000000; -- 1 byte
 addresses.folder_menu_state   = 0x02000000; -- 1 byte
 
@@ -59,12 +73,12 @@ addresses.your_Y              = 0x02006376; -- 2 bytes
 addresses.your_X2             = 0x02000000; -- 2 bytes
 addresses.your_Y2             = 0x02000000; -- 2 bytes
 
-addresses.folder_ID_1         = 0x02000AB0; -- every other byte, chip  ID  of folder slot 1, ends at 0x020001FA
+addresses.folder_1_ID         = 0x02000AB0; -- every other 2 bytes, chip  ID  of folder slot 1, ends at ???
 --2 bytes, chip ID of folder 1 slot 1
-addresses.folder_code_1       = 0x02000AB2; -- every other byte, chip code of folder slot 1, ends at 0x020001FB
+addresses.folder_1_code       = 0x02000AB2; -- every other 2 bytes, chip code of folder slot 1, ends at ???
 --2 bytes, chip Code of folder 1 slot 1
 
--- TODO:
+-- TODO: V
 
 -- in order of tie breaker (according to faq)
 addresses.battles_shld = 0x02003A74; -- 4 bytes
@@ -77,15 +91,10 @@ addresses.points_cust = 0x02003A62; -- 2 bytes
 addresses.points_team = 0x02003A64; -- 2 bytes
 addresses.points_guts = 0x02003A5D; -- 2 bytes
 
-
-
-
-
-addresses.library             = 0x02000000; -- bit flags
 addresses.BMD                 = 0x02000000; -- bit flags
 addresses.GMD_reward          = 0x02000000; -- 2 bytes, how to decode?
 addresses.steps_total         = 0x02000000; -- 3 bytes, since new game
-addresses.play_time_frames    = 0x02000000; -- 4 bytes, check for skipped frames
+addresses.play_time_frames    = 0x02001144; -- 4 bytes, check for skipped frames
 addresses.power_on_frames     = 0x02000000; -- 2 bytes, session counter
 addresses.button_flags        = 0x02000000; -- many bytes, many flags
 
