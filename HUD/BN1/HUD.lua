@@ -9,7 +9,7 @@
 -- https://docs.google.com/spreadsheets/d/e/2PACX-1vT5JrlG2InVHk4Rxpz_o3wQ5xbpNj2_n87wY0R99StH9F5P5Cp8AFyjsEQCG6MVEaEMn9dJND-k5M-P/pubhtml Did you check the notes?
 
 local hud = {};
-hud.minor_version = "0.4";
+hud.minor_version = "0.5";
 
 local game = require("BN1/Game");
 local commands = require("BN1/Commands");
@@ -183,8 +183,8 @@ local function toggle_default_text()
     set_default_text(current_font, current_color);
 end
 
-local function to_screen(text) -- GBA is 240x160
-    gui.pixelText(x*xs, y*ys, text); y = y + 1;
+local function to_screen(text)
+    gui.pixelText(x*xs, y*ys, text); y = y + 1; -- GBA is 240x160
 end
 
 local function to_screen_corner(text)
@@ -243,8 +243,31 @@ local function display_draws(how_many, start_at)
     end
 end
 
-local function display_in_menu()
-    to_screen("State: " .. game.get_folder_state_name() .. " " .. game.is_folder_or_pack());
+local function display_edit_slots()
+    if game.in_folder() then
+        for i=1,7 do
+            gui.pixelText(104, 20+16*i, string.format("%2i", game.get_cursor_offset_folder()+i));
+        end
+    elseif game.in_pack() then
+        for i=1,7 do
+            gui.pixelText(  4, 20+16*i, string.format("%3i", game.get_cursor_offset_pack()+i));
+        end
+    end
+end
+
+local function display_selected_chip()
+    if game.is_chip_selected() then
+        local location = game.get_selected_chip_location_name();
+        local slot = game.get_cursor_offset_selected() + game.get_cursor_position_selected() + 1;
+        local selected_ID = game.get_selected_ID();
+        local selected_name = game.get_chip_name(selected_ID);
+        local selected_code = game.get_chip_code(game.get_selected_code());
+        if game.in_folder() then
+            gui.pixelText(120, 13, string.format("In %6s %3i:\n%3i %8s %s", location, slot, selected_ID, selected_name, selected_code));
+        elseif game.in_pack() then
+            gui.pixelText( 24, 13, string.format("In %6s %3i:\n%3i %8s %s", location, slot, selected_ID, selected_name, selected_code));
+        end
+    end
 end
 
 local function display_player_info()
@@ -289,6 +312,8 @@ local function HUD_speedrun()
             to_screen(string.format("Level: %2u", game.calculate_mega_level()));
             to_screen(string.format("X: %4i", game.get_X()));
             to_screen(string.format("Y: %4i", game.get_Y()));
+            display_edit_slots();
+            display_selected_chip();
         else
             if game.in_digital_world() then
                 to_screen(string.format("Steps: %4u" , game.get_steps()));
@@ -389,7 +414,8 @@ local function HUD_auto()
     elseif game.in_transition() then
         to_screen("HUD Version: " .. hud.version);
     elseif game.in_menu() then
-        display_in_menu();
+        display_edit_slots();
+        display_selected_chip();
     elseif game.in_shop() then
         display_player_info();
     elseif game.in_chip_trader() then

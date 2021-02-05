@@ -248,7 +248,7 @@ addresses.folder_to_pack_copy = 0x020062ED; -- 1 byte, copy
 addresses.cursor_animation    = 0x020062EF; -- 1 byte
 
 addresses.folder_count        = 0x020062F0; -- 1 byte, number of chips in folder
-addresses.chip_selected       = 0x020062F1; -- 1 byte, flag: 0x01 folder 0x02 pack
+addresses.chip_selected_flag  = 0x020062F1; -- 1 byte, flag: 0x00 none 0x01 folder 0x02 pack
 addresses.cursor_folder       = 0x020062F2; -- 2 bytes, cursor value in the folder
 addresses.cursor_folder_copy  = 0x020062F4; -- 2 bytes, copy
 addresses.offset_folder       = 0x020062F6; -- 2 bytes, offset value in the folder
@@ -259,7 +259,7 @@ addresses.cursor_pack_copy    = 0x020062FE; -- 2 bytes, copy
 addresses.offset_pack         = 0x02006300; -- 2 bytes, offset value in the pack
 addresses.offset_pack_copy    = 0x02006302; -- 2 bytes, copy
 addresses.bottom_index_pack   = 0x02006304; -- 2 bytes, to limit cursor
-addresses.chip_selected_flag  = 0x02006306; -- 1 byte, flag: 0x12 folder 0x1C pack
+addresses.chip_selected_state = 0x02006306; -- 1 byte, flag: 0x12 folder 0x1C pack
 addresses.offset_selected     = 0x02006308; -- 2 bytes, offset value of selected chip
 addresses.cursor_selected     = 0x0200630A; -- 2 bytes, cursor value of selected chip
 addresses.cursor_sort         = 0x0200631C; -- 2 bytes, sort menu cursor position
@@ -296,8 +296,11 @@ addresses.RNG                 = 0x02006CC0; -- 4 bytes, resets and pauses on the
 
 addresses.number_door_code    = 0x02009A90; -- 1 byte, only set when entering a number
 
-addresses.pack_ID             = 0x02019018; -- 1 byte, chip  ID  of pack slot 1
-addresses.pack_code           = 0x0201900A; -- 1 byte, chip code of pack slot 1
+-- Each pack slot covers 32 bytes or 0x20 addresses
+addresses.pack_ID             = 0x02019018; -- 1 byte each, 0x20 offset
+addresses.pack_code           = 0x0201900A; -- 1 byte each, 0x20 offset
+addresses.pack_quantity       = 0x02019016; -- 1 byte each, number of copies
+-- Ends at 22FFF? Many of these values appear to be duplicates, possibly to help with sorting
 
 -- 0x0203FFFF end of WRAM?
 -- 0x02047FFF end of WRAM?

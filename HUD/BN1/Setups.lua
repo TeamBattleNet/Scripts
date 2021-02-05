@@ -155,6 +155,18 @@ local function folder_edit_buttons(buttons)
     end
 end
 
+local setup_folder_empty = {description = "Folder 0: Remove All Chips"};
+function setup_folder_empty.doit()
+    for i=1,30 do
+        folder_edit_buttons({
+            {A=true};
+            {A=true};
+            {Down=true};
+        });
+    end
+end
+table.insert(setups, setup_folder_empty);
+
 local setup_folder_tutorial = {description = "Folder 1: Tutorial"};
 function setup_folder_tutorial.doit()
     folder_edit_buttons({

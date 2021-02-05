@@ -54,7 +54,7 @@ function game.get_game_state()
 end
 
 function game.get_game_state_name()
-    return game.game_state_names[game.get_game_state()] or "unknown";
+    return game.game_state_names[game.get_game_state()] or "unknown_game_state";
 end
 
 function game.game_state_changed()
@@ -76,7 +76,7 @@ function game.get_battle_state()
 end
 
 function game.get_battle_state_name()
-    return game.battle_state_names[game.get_battle_state()] or "unknown";
+    return game.battle_state_names[game.get_battle_state()] or "unknown_battle_state";
 end
 
 function game.battle_state_changed()
@@ -112,25 +112,23 @@ function game.get_folder_state()
 end
 
 function game.get_folder_state_name()
-    return game.folder_state_names[game.get_folder_state()] or "unknown";
+    return game.folder_state_names[game.get_folder_state()] or "unknown_folder_state";
 end
 
 function game.folder_state_changed()
     return game.get_folder_state() ~= game.folder_state_previous;
 end
 
-function game.get_folder_or_pack()
+function game.folder_to_pack()
     return game.ram.get.folder_to_pack();
 end
 
-function game.is_folder_or_pack()
-    local folder_state = game.get_folder_or_pack();
-    if folder_state == 0x20 then
-        return "folder";
-    elseif folder_state == 0x02 then
-        return "pack";
-    end
-    return "transitioning";
+function game.in_folder()
+    return game.folder_to_pack() == 0x20;
+end
+
+function game.in_pack()
+    return game.folder_to_pack() == 0x02;
 end
 
 function game.in_title()
@@ -206,7 +204,7 @@ function game.get_progress()
 end
 
 function game.get_progress_name(progress_value)
-    return game.progress[progress_value] or "Unknown";
+    return game.progress[progress_value] or "Unknown Progress Value";
 end
 
 function game.get_current_progress_name()
@@ -353,7 +351,10 @@ function game.get_area_groups_digital()
 end
 
 function game.get_area_group_name(main_area)
-    return game.areas.names[main_area].group;
+    if game.areas.names[main_area] and game.areas.names[main_area].group then
+        return game.areas.names[main_area].group;
+    end
+    return "Unknown Main Area";
 end
 
 function game.in_real_world()
@@ -469,11 +470,11 @@ end
 ---------------------------------------- Battlechips ----------------------------------------
 
 function game.get_chip_name(ID)
-    return game.chips.names[ID];
+    return game.chips.names[ID] or "Unknown Chip ID";
 end
 
 function game.get_chip_code(code)
-    return game.chips.codes[code];
+    return game.chips.codes[code] or "Unknown Chip Code";
 end
 
 function game.count_library()
@@ -523,6 +524,56 @@ end
 
 function game.get_cursor_position_folder()
     return game.ram.get.cursor_folder();
+end
+
+function game.get_cursor_offset_pack()
+    return game.ram.get.offset_pack();
+end
+
+function game.get_cursor_position_pack()
+    return game.ram.get.cursor_pack();
+end
+
+function game.get_cursor_offset_selected()
+    return game.ram.get.offset_selected();
+end
+
+function game.get_cursor_position_selected()
+    return game.ram.get.cursor_selected();
+end
+
+function game.is_chip_selected()
+    return game.ram.get.chip_selected_flag() ~= 0x00;
+end
+
+function game.get_selected_chip_location_name()
+    local selected_flag = game.ram.get.chip_selected_flag();
+    if selected_flag == 0x01 then
+        return "Folder";
+    elseif selected_flag == 0x02 then
+        return "Pack";
+    end
+    return "None";
+end
+
+function game.get_selected_ID()
+    local selected_chip_location = game.get_selected_chip_location_name();
+    if selected_chip_location == "Folder" then
+        return game.ram.get.folder_ID(game.get_cursor_offset_selected()+game.get_cursor_position_selected());
+    elseif selected_chip_location == "Pack" then
+        return game.ram.get.pack_ID(game.get_cursor_offset_selected()+game.get_cursor_position_selected());
+    end
+    return -1;
+end
+
+function game.get_selected_code()
+    local selected_chip_location = game.get_selected_chip_location_name();
+    if selected_chip_location == "Folder" then
+        return game.ram.get.folder_code(game.get_cursor_offset_selected()+game.get_cursor_position_selected());
+    elseif selected_chip_location == "Pack" then
+        return game.ram.get.pack_code(game.get_cursor_offset_selected()+game.get_cursor_position_selected());
+    end
+    return -1;
 end
 
 ----------------------------------------Mega Modifications ----------------------------------------
@@ -586,7 +637,7 @@ function game.get_enemy_ID(which_enemy)
 end
 
 function game.get_enemy_name(which_enemy)
-    return game.enemies.names[game.get_enemy_ID(which_enemy)] or "Unknown";
+    return game.enemies.names[game.get_enemy_ID(which_enemy)] or "Unknown Enemy";
 end
 
 function game.get_enemy_HP(which_enemy)

@@ -49,6 +49,9 @@ ram.set.buster_charge = function(buster_charge) memory.write_u8(ram.addr.buster_
 ram.get.chip_cooldown = function() return memory.read_u8(ram.addr.chip_cooldown); end;
 ram.set.chip_cooldown = function(chip_cooldown) memory.write_u8(ram.addr.chip_cooldown, chip_cooldown); end;
 
+ram.get.chip_selected_flag = function() return memory.read_u8(ram.addr.chip_selected_flag); end;
+ram.set.chip_selected_flag = function(chip_selected_flag) memory.write_u8(ram.addr.chip_selected_flag, chip_selected_flag); end;
+
 ram.get.chip_window_count = function() return memory.read_u8(ram.addr.chip_window_count); end;
 ram.set.chip_window_count = function(chip_window_count) memory.write_u8(ram.addr.chip_window_count, chip_window_count); end;
 
@@ -95,6 +98,7 @@ ram.get.folder_ID = function(which_slot) return memory.read_u8(ram.addr.folder_I
 ram.set.folder_ID = function(which_slot, chip_ID) memory.write_u8(ram.addr.folder_ID+(2*which_slot), chip_ID); end;
 ram.get.folder_code = function(which_slot) return memory.read_u8(ram.addr.folder_code+(2*which_slot)); end;
 ram.set.folder_code = function(which_slot, chip_code) memory.write_u8(ram.addr.folder_code+(2*which_slot), chip_code); end;
+
 ram.get.folder_count = function() return memory.read_u8(ram.addr.folder_count); end;
 ram.set.folder_count = function(folder_count) memory.write_u8(ram.addr.folder_count, folder_count); end;
 ram.get.folder_menu_state = function() return memory.read_u8(ram.addr.folder_menu_state); end;
@@ -123,6 +127,13 @@ ram.set.library = function(offset, bit_flags) memory.write_u8(ram.addr.library+o
 
 ram.get.magic_byte = function() return memory.read_u8(ram.addr.magic_byte); end;
 ram.set.magic_byte = function(magic_byte) memory.write_u8(ram.addr.magic_byte, magic_byte); end;
+
+ram.get.pack_ID = function(which_slot) return memory.read_u8(ram.addr.pack_ID+(0x20*which_slot)); end;
+ram.set.pack_ID = function(which_slot, chip_ID) memory.write_u8(ram.addr.pack_ID+(0x20*which_slot), chip_ID); end;
+ram.get.pack_code = function(which_slot) return memory.read_u8(ram.addr.pack_code+(0x20*which_slot)); end;
+ram.set.pack_code = function(which_slot, chip_code) memory.write_u8(ram.addr.pack_code+(0x20*which_slot), chip_code); end;
+ram.get.pack_quantity = function(which_slot) return memory.read_u8(ram.addr.pack_quantity+(0x20*which_slot)); end;
+ram.set.pack_quantity = function(which_slot, chip_quantity) memory.write_u8(ram.addr.pack_quantity+(0x20*which_slot), chip_quantity); end;
 
 ram.get.play_time = function() return memory.read_u32_le(ram.addr.play_time_frames); end;
 ram.set.play_time = function(play_time_frames) memory.write_u32_le(ram.addr.play_time_frames, play_time_frames); end;
