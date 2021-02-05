@@ -371,52 +371,36 @@ function chips.get_random_code()
     return math.random(0,25);
 end
 
-function chips.get_random_ID_standard()
+local function get_valid(first_ID, last_ID)
     local ID = nil;
     while not chips.names[ID] do
-        ID = math.random(1,193);
+        ID = math.random(first_ID,last_ID);
     end
     return ID;
+end
+
+function chips.get_random_ID_standard()
+    return get_valid(  1, 193);
 end
 
 function chips.get_random_ID_navi()
-    local ID = nil;
-    while not chips.names[ID] do
-        ID = math.random(194,250);
-    end
-    return ID;
+    return get_valid(194, 250);
 end
 
-function chips.get_random_ID_Secret()
-    local ID = nil;
-    while not chips.names[ID] do
-        ID = math.random(251,270);
-    end
-    return ID;
-end
-
-function chips.get_random_ID_PA()
-    local ID = nil;
-    while not chips.names[ID] do
-        ID = math.random(272,303);
-    end
-    return ID;
+function chips.get_random_ID_secret()
+    return get_valid(251, 270);
 end
 
 function chips.get_random_ID_all_chips()
-    local ID = nil;
-    while not chips.names[ID] do
-        ID = math.random(1,270);
-    end
-    return ID;
+    return get_valid(  1, 270);
+end
+
+function chips.get_random_ID_PA()
+    return get_valid(272, 303);
 end
 
 function chips.get_random_ID_all()
-    local ID = nil;
-    while not chips.names[ID] do
-        ID = math.random(1,303);
-    end
-    return ID;
+    return get_valid(  1, 303);
 end
 
 return chips;
