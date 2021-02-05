@@ -333,7 +333,7 @@ else
     addresses.version_name    = "Unknown";
     addresses.encounter_odds  = 0x08000000;
     addresses.encounter_curve = 0x08000000;
-    print("RAM: Warning! Unrecognized game version! Unable to set certain addresses!");
+    print("\nRAM: Warning! Unrecognized game version! Unable to set certain addresses!");
 end
 
 return addresses;

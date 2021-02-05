@@ -303,9 +303,9 @@ end
 
 local function fun_flags(options)
     if options.no_encounters then
-        ram.set.RNG_value(0x8000000C);
+        ram.set.RNG_value(0xBC61AB0C);
     elseif options.yes_encounters then
-        ram.set.RNG_value(0x72      );
+        ram.set.RNG_value(0x439E54F2);
     end
     
     if options.no_chip_cooldown then

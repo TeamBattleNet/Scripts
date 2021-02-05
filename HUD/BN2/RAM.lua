@@ -198,7 +198,7 @@ function ram.calculate_RNG_delta(temp, goal)
 end
 
 local function create_RNG_table(seed, max_index)
-    print(string.format("Creating RNG Table with seed 0x%08X and max index %u", seed, max_index));
+    print(string.format("\nCreating RNG Table with seed 0x%08X and max index %u", seed, max_index));
     
     new_RNG_table = {};
     
@@ -228,9 +228,7 @@ local function expand_RNG_table(RNG_table)
             RNG_table.index[RNG_next] = RNG_table.current_RNG_index;
         end
         if RNG_table.current_RNG_index >= RNG_table.maximum_RNG_index then
-            print("");
-            print(string.format("%u: RNG Table Created for seed: 0x%08X", emu.framecount(), RNG_table.value[1]));
-            print("");
+            print(string.format("\n%u: RNG Table Created for seed: 0x%08X", emu.framecount(), RNG_table.value[1]));
         end
     end
 end
@@ -290,9 +288,9 @@ end
 
 local function fun_flags(options)
     if options.no_encounters then
-        ram.set.RNG_value(0x00000000);
+        ram.set.RNG_value(0xBC61AB0C);
     elseif options.yes_encounters then
-        ram.set.RNG_value(0xFFFFFFFF);
+        ram.set.RNG_value(0x439E54F2);
     end
     
     if options.no_chip_cooldown then
@@ -303,10 +301,8 @@ end
 ---------------------------------------- Module Controls ----------------------------------------
 
 function ram.initialize(options)
-    print("");
     rng_table = create_RNG_table(0xC14CE145, options.maximum_RNG_index);
-    print("Calculating RNG with max calculations per frame of: " .. calculations_per_frame);
-    print("");
+    print("\nCalculating RNG with max calculations per frame of: " .. calculations_per_frame);
 end
 
 function ram.update_pre(options)

@@ -842,8 +842,6 @@ function game.get_encounter_chance()
 end
 
 function game.would_get_encounter()
-    -- 0xBC61AB0C no encounters
-    -- 0x439E54F2 yes encounters
     return game.get_encounter_threshold() > (game.get_RNG_value() % 0x20);
 end
 
