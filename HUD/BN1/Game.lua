@@ -695,6 +695,24 @@ function game.draw_only_slot(which_slot)
     end
 end
 
+function game.draw_slot_check(chip_ID, draw_depth)
+    for i=0,draw_depth-1 do
+        if game.ram.get.folder_ID(game.ram.get.draw_slot(i)) == chip_ID then
+            return true;
+        end
+    end
+    return false;
+end
+
+function game.find_first(chip_ID)
+    for i=0,29 do
+        if game.ram.get.folder_ID(game.ram.get.draw_slot(i)) == chip_ID then
+            return i;
+        end
+    end
+    return -1;
+end
+
 ---------------------------------------- Miscellaneous ----------------------------------------
 
 function game.get_door_code()
