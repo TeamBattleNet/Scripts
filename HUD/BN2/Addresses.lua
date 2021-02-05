@@ -116,15 +116,25 @@ addresses.enemy_HP_text       = 0x0200EFD2; -- 2 bytes, which_enemy * 0x08, for 
 addresses.enemy_HP_text_2     = 0x0200EFDA; -- 2 bytes, which_enemy * 0x08, for counting down HP over time
 addresses.enemy_HP_text_3     = 0x0200EFE2; -- 2 bytes, which_enemy * 0x08, for counting down HP over time
 
+addresses.menu_state          = 0x02007EA1; -- 1 byte
 addresses.cursor_ID           = 0x02007EA8; -- 1 byte, chip  ID  of cursor
 addresses.cursor_code         = 0x02007EAA; -- 1 byte, chip code of cursor
 addresses.folder_count        = 0x02007EA5; -- 1 byte, number of chips in folder
 addresses.cursor_pack         = 0x02007EBC; -- 2 bytes, cursor value in the pack
+addresses.cursor_pack_copy    = 0x02007EBE; -- 2 bytes
 addresses.offset_pack         = 0x02007EC0; -- 2 bytes, offset value in the pack
+addresses.offset_pack_copy    = 0x02007EC2; -- 2 bytes
 addresses.offset_selected_pack   = 0x02007EF0; -- 2 bytes, offset value of selected chip
 addresses.cursor_selected_pack   = 0x02007EF2; -- 2 bytes, cursor value of selected chip
 addresses.offset_selected_folder = 0x02007EE8; -- 2 bytes, offset value of selected chip
 addresses.cursor_selected_folder = 0x02007EEA; -- 2 bytes, cursor value of selected chip
+
+addresses.cursor_folder       = 0x02007EB2; -- 2 bytes, cursor value in the folder
+addresses.cursor_folder_copy  = 0x02007EB4; -- 2 bytes
+addresses.offset_folder       = 0x02007EB6; -- 2 bytes, offset value in the folder
+addresses.offset_folder_copy  = 0x02007EB8; -- 2 bytes
+addresses.cursor_sort         = 0x0200EC06; -- 2 bytes, sort menu cursor position (both folder and pack)
+addresses.cursor_sort_copy    = 0x0200EC08; -- 2 bytes
 
 addresses.steps_menu          = 0x02008828; -- 4 bytes? steps since last menu?
 addresses.power_on_frames     = 0x02008880; -- 2 bytes, session counter
@@ -142,6 +152,12 @@ addresses.enemy_HP_max_3      = 0x02008CD6; -- 2 bytes, for healing
 addresses.game_state          = 0x02009078; -- 1 byte
 addresses.RNG                 = 0x02009080; -- 4 bytes, restarts on the title screen
 
+-- Each pack slot covers 32 bytes or 0x20 addresses
+addresses.pack_ID             = 0x0201901C; -- 2 bytes each, 0x20 offset
+addresses.pack_code           = 0x0201900A; -- 1 byte each, 0x20 offset
+addresses.pack_quantity       = 0x02019016; -- 1 byte each, number of copies
+-- Ends at 23FFF? 291FF? Many of these values appear to be duplicates, possibly to help with sorting
+
 -- TODO: V
 
 addresses.BMD                 = 0x02000000; -- bit flags
@@ -157,13 +173,6 @@ addresses.buster_charge       = 0x02000000; -- 1 byte, 0 indexed, can't change m
 
 addresses.battle_pointer      = 0x02000000; -- 2 bytes? ROM offset?
 addresses.battle_state        = 0x02000000; -- 1 byte
-addresses.folder_menu_state   = 0x02000000; -- 1 byte
-
-addresses.pack_ID             = 0x02000000; -- 1 byte, chip  ID  of pack slot 1
-addresses.pack_code           = 0x02000000; -- 1 byte, chip code of pack slot 1
-addresses.cursor_folder       = 0x02000000; -- 2 bytes, cursor value in the folder
-addresses.offset_folder       = 0x02000000; -- 2 bytes, offset value in the folder
-addresses.cursor_sort         = 0x02000000; -- 2 bytes, sort menu cursor position
 
 -- 0x0203FFFF end of WRAM?
 -- 0x02047FFF end of WRAM?

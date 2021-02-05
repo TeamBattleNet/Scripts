@@ -85,6 +85,7 @@ table.insert(commands, command_blank);
 
 
 
+-- TODO: Make the Fun Flag toggle menu (encounters, chip cool down, always fullcust, etc.)
 local command_encounters = {};
 command_encounters.options = {
     { value =  true; text = "Block Random Encounters"; };

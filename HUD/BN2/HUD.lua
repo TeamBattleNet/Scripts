@@ -16,14 +16,8 @@ local commands = require("BN2/Commands");
 
 ---------------------------------------- Support Functions ----------------------------------------
 
-local options = {};
-
 local show_HUD = true;
 local command_mode = false;
-
-local current_state = nil;
-local previous_state = nil;
-local state_changed = false;
 
 local keys_held = {};
 local keys_previous = {};
@@ -42,7 +36,7 @@ end
 
 local function record_menu_buttons()
     if game.in_menu() then
-        if game.game_state_changed() then
+        if game.is_game_state_changed() then
             buttons_string = "";
         end
         
@@ -197,7 +191,7 @@ end
 local function display_commands()
     x = 0;
     y = 0;
-    options = commands.display_options();
+    local options = commands.display_options();
     for i=1,table.getn(options) do
         to_screen(options[i]);
     end
@@ -216,7 +210,7 @@ local function display_steps()
         to_screen(string.format("Steps: %4u" , game.get_steps()));
         to_screen(string.format("Check: %4u" , game.get_check()));
         to_screen(string.format("Checks: %3u", game.get_encounter_checks()));
-        to_screen(string.format("%%: %7.3f%%", game.get_encounter_chance()));
+        --to_screen(string.format("%%: %7.3f%%", game.get_encounter_chance()));
         to_screen(string.format("Next: %2i"  , game.get_next_check()));
     end
     to_screen(string.format("X: %5i", game.get_X()));
@@ -244,28 +238,13 @@ local function display_draws(how_many, start_at)
 end
 
 local function display_edit_slots()
-    if game.in_folder() then
+    if game.in_pack() then
         for i=1,8 do
-            gui.pixelText(104, 20+16*i, string.format("%2i", game.get_cursor_offset_folder()+i));
+            gui.pixelText(129, 11+16*i, string.format("%3i", game.get_cursor_offset_pack()+i));
         end
-    elseif game.in_pack() then
+    else
         for i=1,8 do
-            gui.pixelText(  4, 20+16*i, string.format("%3i", game.get_cursor_offset_pack()+i));
-        end
-    end
-end
-
-local function display_selected_chip()
-    if game.is_chip_selected() then
-        local location = game.get_selected_chip_location_name();
-        local slot = game.get_cursor_offset_selected() + game.get_cursor_position_selected() + 1;
-        local selected_ID = game.get_selected_ID();
-        local selected_name = game.get_chip_name(selected_ID);
-        local selected_code = game.get_chip_code(game.get_selected_code());
-        if game.in_folder() then
-            gui.pixelText(120, 13, string.format("In %6s %3i:\n%3i %8s %s", location, slot, selected_ID, selected_name, selected_code));
-        elseif game.in_pack() then
-            gui.pixelText( 24, 13, string.format("In %6s %3i:\n%3i %8s %s", location, slot, selected_ID, selected_name, selected_code));
+            gui.pixelText( 91, 11+16*i, string.format("%2i", game.get_cursor_offset_folder()+i));
         end
     end
 end
@@ -313,7 +292,6 @@ local function HUD_speedrun()
             to_screen(string.format("X: %4i", game.get_X()));
             to_screen(string.format("Y: %4i", game.get_Y()));
             display_edit_slots();
-            display_selected_chip();
         else
             if game.in_digital_world() then
                 to_screen(string.format("Steps: %4u" , game.get_steps()));
@@ -412,7 +390,6 @@ local function HUD_auto()
         to_screen("HUD Version: " .. hud.version);
     elseif game.in_menu() then
         display_edit_slots();
-        display_selected_chip();
     elseif game.in_shop() then
         display_player_info();
     elseif game.in_chip_trader() then
@@ -444,7 +421,7 @@ function hud.initialize(options)
 end
 
 function hud.update()
-    options = {};
+    local options = {};
     game.update_pre(options);
     
     if buttons_held.L and buttons_held.R then

@@ -6,6 +6,13 @@ ram.addr = require("BN2/Addresses");
 
 ram.version_name = ram.addr.version_name;
 
+local calculations_per_frame = 200; -- careful tweaking this
+local previous_battle_state = 0;
+local previous_game_state = 0;
+local previous_menu_state = 0;
+local previous_RNG_value = 0;
+local rng_table = nil;
+
 ------------------------------ Getters & Setters ------------------------------
 
 ram.get = {};
@@ -89,8 +96,6 @@ ram.get.folder_1_code = function(which_slot) return memory.read_u8(ram.addr.fold
 ram.set.folder_1_code = function(which_slot, chip_code) memory.write_u8(ram.addr.folder_code+(2*which_slot), chip_code); end;
 ram.get.folder_1_count = function() return memory.read_u8(ram.addr.folder_count); end;
 ram.set.folder_1_count = function(folder_count) memory.write_u8(ram.addr.folder_count, folder_count); end;
-ram.get.folder_menu_state = function() return memory.read_u8(ram.addr.folder_menu_state); end;
-ram.set.folder_menu_state = function(folder_menu_state) memory.write_u8(ram.addr.folder_menu_state, folder_menu_state); end;
 
 ram.get.ice_flags = function() return memory.read_u32_le(ram.addr.ice_flags); end;
 ram.set.ice_flags = function(ice_flags) memory.write_u32_le(ram.addr.ice_flags, ice_flags); end;
@@ -103,6 +108,9 @@ ram.set.HPMemory = function(HPMemory) memory.write_u8(ram.addr.HPMemory, HPMemor
 
 ram.get.library = function(offset) return memory.read_u8(ram.addr.library+offset); end;
 ram.set.library = function(offset, bit_flags) memory.write_u8(ram.addr.library+offset, bit_flags); end;
+
+ram.get.menu_state = function() return memory.read_u8(ram.addr.menu_state); end;
+ram.set.menu_state = function(menu_state) memory.write_u8(ram.addr.menu_state, menu_state); end;
 
 ram.get.pack_ID = function(which_slot) return memory.read_u8(ram.addr.pack_ID+(0x20*which_slot)); end;
 ram.set.pack_ID = function(which_slot, chip_ID) memory.write_u8(ram.addr.pack_ID+(0x20*which_slot), chip_ID); end;
@@ -144,11 +152,143 @@ ram.set.zenny = function(zenny) memory.write_u32_le(ram.addr.zenny, zenny); end;
 --function ram.set.star_green() return  ; end
 --function ram.get.star_count() return 5; end
 
----------------------------------------- RNG Functions ----------------------------------------
+ram.elements = {"Elec", "Heat", "Aqua", "Wood"};
+ram.element_names = {};
+ram.element_names[0x01] = "Elec";
+ram.element_names[0x02] = "Heat";
+ram.element_names[0x03] = "Aqua";
+ram.element_names[0x04] = "Wood";
+ram.element_names[0x05] = "????";
+ram.element_names[0x06] = "????";
+ram.element_names[0x07] = "????";
 
-local rng_table = nil;
-local previous_RNG_value = 0;
-local calculations_per_frame = 200; -- careful tweaking this
+ram.styles = {"Guts", "Cust", "Team", "Shld"};
+ram.style_names = {};
+ram.style_names[0x01] = "Guts";
+ram.style_names[0x02] = "Cust";
+ram.style_names[0x03] = "Team";
+ram.style_names[0x04] = "Shld";
+ram.style_names[0x05] = "????";
+ram.style_names[0x06] = "????";
+ram.style_names[0x07] = "Hub?";
+
+-- TODO: Style Functions
+
+ram.game_state_names = {};
+ram.game_state_names[0x00] = "title";         -- or BIOS
+ram.game_state_names[0x04] = "world";         -- real and digital
+ram.game_state_names[0x08] = "battle";
+ram.game_state_names[0x0C] = "player_change"; -- jack-in / out
+ram.game_state_names[0x10] = "demo_end";      -- what is this?
+ram.game_state_names[0x14] = "capcom_logo";
+ram.game_state_names[0x18] = "menu";
+ram.game_state_names[0x1C] = "shop";
+ram.game_state_names[0x20] = "game_over";
+--ram.game_state_names[0x24] = "trader";
+--ram.game_state_names[0x28] = "credits";
+ram.game_state_names[0x34] = "ubisoft_logo";  -- PAL only
+
+function ram.get_game_state_name()
+    return ram.game_state_names[ram.get.game_state()] or "unknown_game_state";
+end
+
+function ram.is_game_state_changed()
+    return ram.get.game_state() ~= previous_game_state;
+end
+
+function ram.in_title()
+    return ram.get.game_state() == 0x00;
+end
+
+function ram.in_world()
+    return ram.get.game_state() == 0x04;
+end
+
+function ram.in_battle()
+    return ram.get.game_state() == 0x08;
+end
+
+function ram.in_transition()
+    return ram.get.game_state() == 0x0C;
+end
+
+function ram.in_splash()
+    return (ram.get.game_state() == 0x14 or ram.get.game_state() == 0x34);
+end
+
+function ram.in_menu()
+    return ram.get.game_state() == 0x18;
+end
+
+function ram.in_shop()
+    return ram.get.game_state() == 0x1C;
+end
+
+function ram.in_game_over()
+  return ram.get.game_state() == 0x20;
+end
+
+function ram.in_chip_trader()
+  return ram.get.game_state() == 0x24; -- TBD
+end
+
+function ram.in_credits()
+    return ram.get.game_state() == 0x28; -- TBD
+end
+
+ram.battle_state_names = {};
+--ram.battle_state_names[0x00] = "loading";
+--ram.battle_state_names[0x04] = "busy";
+--ram.battle_state_names[0x08] = "transition";
+--ram.battle_state_names[0x0C] = "combat";
+--ram.battle_state_names[0x10] = "PAUSE";
+--ram.battle_state_names[0x14] = "time_stop";
+--ram.battle_state_names[0x18] = "opening_custom";
+
+function ram.get_battle_state_name()
+    return ram.battle_state_names[ram.get.battle_state()] or "unknown_battle_state";
+end
+
+function ram.is_battle_state_changed()
+    return ram.get.battle_state() ~= previous_battle_state;
+end
+
+function ram.battle_pause()
+    if ram.get.battle_state() == 0xFF then
+    end
+end
+
+function ram.battle_unpause()
+    if ram.get.battle_state() == 0xFF then
+    end
+end
+
+ram.folder_state_names = {};
+ram.folder_state_names[0x04] = "editing_folder";
+ram.folder_state_names[0x08] = "editing_pack";
+ram.folder_state_names[0x10] = "to_folder";
+ram.folder_state_names[0x14] = "to_pack";
+ram.folder_state_names[0x18] = "sorting_folder";
+ram.folder_state_names[0x1C] = "sorting_pack";
+ram.folder_state_names[0x0C] = "exiting";
+
+function ram.get_folder_state_name()
+    return ram.folder_state_names[ram.get.menu_state()] or "unknown_folder_state";
+end
+
+function ram.is_folder_state_changed()
+    return ram.get.menu_state() ~= previous_menu_state;
+end
+
+function ram.in_folder()
+    return (ram.get.menu_state() == 0x04) or (ram.get.menu_state() == 0x18);
+end
+
+function ram.in_pack()
+    return (ram.get.menu_state() == 0x08) or (ram.get.menu_state() == 0x1C);
+end
+
+---------------------------------------- RNG Functions ----------------------------------------
 
 function ram.to_int(seed)
     return bit.band(seed, 0x7FFFFFFF);
@@ -311,6 +451,9 @@ function ram.update_pre(options)
 end
 
 function ram.update_post(options)
+    previous_battle_state = ram.get.battle_state();
+    previous_game_state = ram.get.game_state();
+    previous_menu_state = ram.get.menu_state();
     previous_RNG_value = ram.get.RNG_value();
 end
 
