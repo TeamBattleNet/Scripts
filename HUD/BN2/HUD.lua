@@ -1,4 +1,4 @@
--- HUD Script for Mega Man Battle Network 2, enjoy.
+-- HUD Script for Mega Man Battle Network 1, enjoy.
 
 -- To use: Hold L and R, then press:
 -- Start to turn HUD on/off
@@ -9,7 +9,7 @@
 -- https://docs.google.com/spreadsheets/d/e/2PACX-1vS1-XuptqnclG6GOlXjKIwuQWdM5HLPMh5KM6yAUrfaTva6uvfoBV98Sgm4flMnC07HNYXMR4HsEGbe/pubhtml Did you check the notes?
 
 local hud = {};
-hud.minor_version = "0.0";
+hud.minor_version = "0.1";
 
 local game = require("BN2/Game");
 local commands = require("BN2/Commands");
@@ -183,8 +183,8 @@ local function toggle_default_text()
     set_default_text(current_font, current_color);
 end
 
-local function to_screen(text) -- GBA is 240x160
-    gui.pixelText(x*xs, y*ys, text); y = y + 1;
+local function to_screen(text)
+    gui.pixelText(x*xs, y*ys, text); y = y + 1; -- GBA is 240x160
 end
 
 local function to_screen_corner(text)
@@ -213,13 +213,11 @@ end
 
 local function display_steps()
     if game.in_digital_world() then
-        to_screen(string.format("Sneak: %4u" , game.get_sneak()));
         to_screen(string.format("Steps: %4u" , game.get_steps()));
         to_screen(string.format("Check: %4u" , game.get_check()));
         to_screen(string.format("Checks: %3u", game.get_encounter_checks()));
         to_screen(string.format("%%: %7.3f%%", game.get_encounter_chance()));
         to_screen(string.format("Next: %2i"  , game.get_next_check()));
-        -- Threshold
     end
     to_screen(string.format("X: %5i", game.get_X()));
     to_screen(string.format("Y: %5i", game.get_Y()));
@@ -245,8 +243,31 @@ local function display_draws(how_many, start_at)
     end
 end
 
-local function display_in_menu()
-    to_screen("State: " .. game.get_folder_state_name() .. " " .. game.is_folder_or_pack());
+local function display_edit_slots()
+    if game.in_folder() then
+        for i=1,8 do
+            gui.pixelText(104, 20+16*i, string.format("%2i", game.get_cursor_offset_folder()+i));
+        end
+    elseif game.in_pack() then
+        for i=1,8 do
+            gui.pixelText(  4, 20+16*i, string.format("%3i", game.get_cursor_offset_pack()+i));
+        end
+    end
+end
+
+local function display_selected_chip()
+    if game.is_chip_selected() then
+        local location = game.get_selected_chip_location_name();
+        local slot = game.get_cursor_offset_selected() + game.get_cursor_position_selected() + 1;
+        local selected_ID = game.get_selected_ID();
+        local selected_name = game.get_chip_name(selected_ID);
+        local selected_code = game.get_chip_code(game.get_selected_code());
+        if game.in_folder() then
+            gui.pixelText(120, 13, string.format("In %6s %3i:\n%3i %8s %s", location, slot, selected_ID, selected_name, selected_code));
+        elseif game.in_pack() then
+            gui.pixelText( 24, 13, string.format("In %6s %3i:\n%3i %8s %s", location, slot, selected_ID, selected_name, selected_code));
+        end
+    end
 end
 
 local function display_player_info()
@@ -263,6 +284,70 @@ local function display_game_info()
 end
 
 ---------------------------------------- HUD Functions ----------------------------------------
+
+local function HUD_speedrun()
+    x=0;
+    y=0;
+    to_screen(string.format("Progress: 0x%02X %s", game.get_progress(), game.get_current_progress_name()));
+    if game.in_battle() or game.in_game_over() then
+        display_draws(10);
+        x=6;
+        y=1;
+        to_screen(string.format(" Escape:   %2i", game.find_first(82)));
+        to_screen(string.format(" Quake3:   %2i", game.find_first(24)));
+        to_screen(string.format(" Index: %5s", (game.get_RNG_index() or "?????")));
+        to_screen(string.format(" Delta: %2s", (game.get_RNG_delta() or     "?")));
+        to_screen(string.format(" Check: %2u", game.get_encounter_checks()));
+        display_enemies();
+    elseif game.in_credits() then
+        gui.text(0, 0, "t r o u t", 0x10000000, "bottomright");
+    else
+        if game.in_title() or game.in_splash() or game.in_transition() then
+            to_screen("Game : " .. game.get_version_name());
+            to_screen("HUD  : " .. hud.version);
+            to_screen(string.format("Chips: %2u", game.count_library()));
+            to_screen(string.format("Level: %2u", game.calculate_mega_level()));
+        elseif game.in_menu() then
+            to_screen(string.format("Chips: %2u", game.count_library()));
+            to_screen(string.format("Level: %2u", game.calculate_mega_level()));
+            to_screen(string.format("X: %4i", game.get_X()));
+            to_screen(string.format("Y: %4i", game.get_Y()));
+            display_edit_slots();
+            display_selected_chip();
+        else
+            if game.in_digital_world() then
+                to_screen(string.format("Steps: %4u" , game.get_steps()));
+                to_screen(string.format("Check: %4u" , game.get_check()));
+                to_screen(string.format("Checks: %3u", game.get_encounter_checks()));
+                to_screen(string.format("%%: %7.3f%%", game.get_encounter_chance()));
+                to_screen(string.format("Next:  %2i"  , game.get_next_check()));
+                if game.near_number_doors() then
+                    to_screen(string.format("Door: %3u", game.get_door_code()));
+                end
+                to_screen(string.format("X: %4i", game.get_X()));
+                to_screen(string.format("Y: %4i", game.get_Y()));
+                x=11;
+                y=1;
+                to_screen(string.format(" Index: %5s", (game.get_RNG_index() or "?????")));
+                to_screen(string.format(" Delta: %2s", (game.get_RNG_delta() or     "?")));
+                to_screen(string.format(" Chips: %2u", game.count_library()));
+                to_screen(string.format(" Level: %2u", game.calculate_mega_level()));
+            else
+                to_screen(string.format("Index: %5s", (game.get_RNG_index() or "?????")));
+                to_screen(string.format("Delta: %2s", (game.get_RNG_delta() or     "?")));
+                to_screen(string.format("Chips: %2u", game.count_library()));
+                to_screen(string.format("Level: %2u", game.calculate_mega_level()));
+                to_screen(string.format("X: %4i", game.get_X()));
+                to_screen(string.format("Y: %4i", game.get_Y()));
+                if game.near_number_doors() then
+                    to_screen(string.format("Door: %2u", game.get_door_code()));
+                end
+            end
+        end
+        y=0;
+        to_screen_corner(game.get_current_area_name());
+    end
+end
 
 local function HUD_routing()
     x =  0;
@@ -306,7 +391,7 @@ local function HUD_auto()
     if game.in_title() or game.in_splash() then
         display_game_info();
         to_screen("");
-        display_player_info()
+        display_player_info();
         y=0;
         to_screen_corner(game.get_current_area_name());
     elseif game.in_world() then
@@ -326,9 +411,10 @@ local function HUD_auto()
     elseif game.in_transition() then
         to_screen("HUD Version: " .. hud.version);
     elseif game.in_menu() then
-        display_in_menu();
+        display_edit_slots();
+        display_selected_chip();
     elseif game.in_shop() then
-        display_player_info()
+        display_player_info();
     elseif game.in_chip_trader() then
         display_RNG(true);
     elseif game.in_credits() then
@@ -344,6 +430,7 @@ local HUD_mode = 1;
 table.insert(HUDs, HUD_auto);
 table.insert(HUDs, HUD_battle);
 table.insert(HUDs, HUD_routing);
+table.insert(HUDs, HUD_speedrun);
 
 ---------------------------------------- Module Controls ----------------------------------------
 

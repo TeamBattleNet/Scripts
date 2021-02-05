@@ -61,8 +61,10 @@ addresses.style_stored_1      = 0x02000000; -- 1 byte
 addresses.style_stored_2      = 0x02000000; -- 1 byte
 
 addresses.zenny               = 0x02000000; -- 4 bytes, 999999 "max"
-addresses.element_next        = 0x0200112B; -- 1 byte, element of next style
+addresses.element_next        = 0x0200112B; -- 1 byte, element of next style?
 addresses.steps               = 0x02001150; -- 4 bytes
+addresses.steps_menu          = 0x02008828; -- 4 bytes? steps since last menu?
+addresses.steps_total         = 0x0200113C; -- 4 bytes? steps since new game?
 addresses.check               = 0x02001154; -- 4 bytes, steps at the last encounter check
 addresses.sneak               = 0x02001178; -- 4? bytes, starts at 6000
 
@@ -75,21 +77,24 @@ addresses.your_Y2             = 0x02000000; -- 2 bytes
 
 addresses.folder_1_ID         = 0x02000AB0; -- every other 2 bytes, chip  ID  of folder slot 1, ends at ???
 --2 bytes, chip ID of folder 1 slot 1
+-- folder_2 2000AB4
+-- folder_2 2000AB6
 addresses.folder_1_code       = 0x02000AB2; -- every other 2 bytes, chip code of folder slot 1, ends at ???
 --2 bytes, chip Code of folder 1 slot 1
 
 -- TODO: V
 
--- in order of tie breaker (according to faq)
-addresses.battles_shld = 0x02003A74; -- 4 bytes
+addresses.paused = 0x02000DC9; -- ? bytes
+-- ties go in order of: shield, custom, team, guts? (according to faq)
+addresses.battles_guts = 0x02003A68; -- 4 bytes
 addresses.battles_cust = 0x02003A6C; -- 4 bytes
 addresses.battles_team = 0x02003A70; -- 4 bytes
-addresses.battles_guts = 0x02003A68; -- 4 bytes
+addresses.battles_shld = 0x02003A74; -- 4 bytes
 
-addresses.points_shld = 0x02003A66; -- 2 bytes
+addresses.points_guts = 0x02003A5D; -- 2 bytes
 addresses.points_cust = 0x02003A62; -- 2 bytes
 addresses.points_team = 0x02003A64; -- 2 bytes
-addresses.points_guts = 0x02003A5D; -- 2 bytes
+addresses.points_shld = 0x02003A66; -- 2 bytes
 
 addresses.BMD                 = 0x02000000; -- bit flags
 addresses.GMD_reward          = 0x02000000; -- 2 bytes, how to decode?
