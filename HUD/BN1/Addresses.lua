@@ -231,7 +231,7 @@ addresses.enemy_HP_text_3     = 0x02005200; -- 2 bytes, for counting down HP ove
 -- 49A2+ textures? marked by 0x83 and a counter up to 0x0F, ending around 62E0
 
 --addresses.                  = 0x020062E0; -- 1 byte, unused?
-addresses.folder_menu_state   = 0x020062E1; -- 1 byte, 0x04 normal 0x14 sorting 0x10 go right 0x0C go left 0x08 left
+addresses.menu_state          = 0x020062E1; -- 1 byte, meaning differs between menus
 --addresses.                  = 0x020062E2; -- 1 byte, unused?
 --addresses.                  = 0x020062E3; -- 1 byte, unused?
 addresses.cursor_ID           = 0x020062E4; -- 1 byte, chip  ID  of cursor

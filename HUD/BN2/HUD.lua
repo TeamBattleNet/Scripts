@@ -249,6 +249,10 @@ local function display_edit_slots()
     end
 end
 
+local function display_selected_chip()
+    -- TODO
+end
+
 local function display_player_info()
     to_screen(string.format("Zenny  : %6u", game.get_zenny()));
     to_screen(string.format("Max  HP: %6u", game.calculate_max_HP()));

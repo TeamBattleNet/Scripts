@@ -282,6 +282,7 @@ function command_routing.update_options(option_value)
             table.insert( command_routing.options, { value = game.extinguish_oven_fires; text = "Extinguish Oven Fires"; } );
             table.insert( command_routing.options, { value = game.ignite_WWW_fires;      text = "Ignite WWW Fires";      } );
             table.insert( command_routing.options, { value = game.extinguish_WWW_fires;  text = "Extinguish WWW Fires";  } );
+            table.insert( command_routing.options, { value = function() game.set_RNG_index(1) end;  text = "Restart RNG";  } );
             command_routing.FUNction = function(value) value(); end;
         else
             command_routing.description = function() return "Bzzt! (something broke)"; end;

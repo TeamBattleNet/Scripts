@@ -265,9 +265,7 @@ function command_routing.update_options(option_value)
             command_routing.FUNction = function(value) game.add_steps(value); end;
         elseif option_value == 3 then
             command_routing.description = function() return "Bits, Nibbles, Bytes, and Words."; end;
-            table.insert( command_routing.options, { value = game.go_mode;         text = "Go Mode";                 } );
-            table.insert( command_routing.options, { value = game.set_star_flag;   text = "Set Yellow Star Flag";    } );
-            table.insert( command_routing.options, { value = game.clear_star_flag; text = "Clear Yellow  Star Flag"; } );
+            table.insert( command_routing.options, { value = function() game.set_RNG_index(1) end;  text = "Restart RNG";  } );
             command_routing.FUNction = function(value) value(); end;
         else
             command_routing.description = function() return "Bzzt! (something broke)"; end;

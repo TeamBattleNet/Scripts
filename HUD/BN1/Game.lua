@@ -12,9 +12,7 @@ game.fun_flags = {}; -- set in Commands, used in RAM
 
 ---------------------------------------- RAM Wrapper ----------------------------------------
 
--- TODO: Move state knowledge into RAM for HUD generalization
-
----------------------------------------- Game State ----------------------------------------
+-- Game Info
 
 function game.get_version_name()
     return game.ram.version_name;
@@ -28,144 +26,93 @@ function game.set_play_time(new_play_time)
     game.ram.set.play_time(new_play_time);
 end
 
-game.game_state_names       = {};
-game.game_state_names[0x00] = "title";         -- or BIOS
-game.game_state_names[0x04] = "world";         -- real and digital
-game.game_state_names[0x08] = "battle";
-game.game_state_names[0x0C] = "player_change"; -- jack-in / out
-game.game_state_names[0x10] = "demo_end";      -- what is this?
-game.game_state_names[0x14] = "capcom_logo";
-game.game_state_names[0x18] = "menu";
-game.game_state_names[0x1C] = "shop";
-game.game_state_names[0x20] = "game_over";
-game.game_state_names[0x24] = "trader";
-game.game_state_names[0x28] = "credits";
-game.game_state_names[0x2C] = "ubisoft_logo";  -- PAL only
-game.game_state_previous = 0x00;
-
-function game.get_game_state()
-    return game.ram.get.game_state();
-end
+-- Game State
 
 function game.get_game_state_name()
-    return game.game_state_names[game.get_game_state()] or "unknown_game_state";
+    return game.ram.get_game_state_name();
 end
 
-function game.game_state_changed()
-    return game.get_game_state() ~= game.game_state_previous;
-end
-
-game.battle_state_names       = {};
-game.battle_state_names[0x00] = "loading";
-game.battle_state_names[0x04] = "busy";
-game.battle_state_names[0x08] = "transition";
-game.battle_state_names[0x0C] = "combat";
-game.battle_state_names[0x10] = "PAUSE";
-game.battle_state_names[0x14] = "time_stop";
-game.battle_state_names[0x18] = "opening_custom";
-game.battle_state_previous = 0x00;
-
-function game.get_battle_state()
-    return game.ram.get.battle_state();
-end
-
-function game.get_battle_state_name()
-    return game.battle_state_names[game.get_battle_state()] or "unknown_battle_state";
-end
-
-function game.battle_state_changed()
-    return game.get_battle_state() ~= game.battle_state_previous;
-end
-
-function game.battle_pause()
-    if game.get_battle_state() == 0x0C then
-        --game.ram.set.battle_state(0x10);
-        game.ram.set.battle_paused(0x01);
-        --game.ram.set.battle_paused_also(0x08);
-    end
-end
-
-function game.battle_unpause()
-    if game.get_battle_state() == 0x0C then
-        --game.ram.set.battle_state(0x0C);
-        game.ram.set.battle_paused(0x00);
-        --game.ram.set.battle_paused_also(0x00);
-    end
-end
-
-game.folder_state_names       = {};
-game.folder_state_names[0x04] = "editing";
-game.folder_state_names[0x14] = "sorting";
-game.folder_state_names[0x10] = "to_pack";
-game.folder_state_names[0x0C] = "to_folder";
-game.folder_state_names[0x08] = "exited";
-game.folder_state_previous = 0x00;
-
-function game.get_folder_state()
-    return game.ram.get.folder_menu_state();
-end
-
-function game.get_folder_state_name()
-    return game.folder_state_names[game.get_folder_state()] or "unknown_folder_state";
-end
-
-function game.folder_state_changed()
-    return game.get_folder_state() ~= game.folder_state_previous;
-end
-
-function game.folder_to_pack()
-    return game.ram.get.folder_to_pack();
-end
-
-function game.in_folder()
-    return game.folder_to_pack() == 0x20;
-end
-
-function game.in_pack()
-    return game.folder_to_pack() == 0x02;
+function game.is_game_state_changed()
+    return game.ram.is_game_state_changed();
 end
 
 function game.in_title()
-    return game.get_game_state() == 0x00;
+    return game.ram.in_title();
 end
 
 function game.in_world()
-    return game.get_game_state() == 0x04;
+    return game.ram.in_world();
 end
 
 function game.in_battle()
-    return game.get_game_state() == 0x08;
+    return game.ram.in_battle();
 end
 
 function game.in_transition()
-    return game.get_game_state() == 0x0C;
+    return game.ram.in_transition();
 end
 
 function game.in_splash()
-    return (game.get_game_state() == 0x14 or game.get_game_state() == 0x2C);
+    return game.ram.in_splash();
 end
 
 function game.in_menu()
-    return game.get_game_state() == 0x18;
+    return game.ram.in_menu();
 end
 
 function game.in_shop()
-    return game.get_game_state() == 0x1C;
+    return game.ram.in_shop();
 end
 
 function game.in_game_over()
-  return game.get_game_state() == 0x20;
+  return game.ram.in_game_over();
 end
 
 function game.in_chip_trader()
-  return game.get_game_state() == 0x24;
+  return game.ram.in_chip_trader();
 end
 
 function game.in_credits()
-    return game.get_game_state() == 0x28;
+    return game.ram.in_credits();
 end
 
----------------------------------------- RNG ----------------------------------------
+-- Battle State
+
+function game.get_battle_state_name()
+    return game.ram.get_battle_state_name();
+end
+
+function game.is_battle_state_changed()
+    return game.ram.is_battle_state_changed();
+end
+
+function game.battle_pause()
+    game.ram.battle_pause();
+end
+
+function game.battle_unpause()
+    game.ram.battle_unpause();
+end
+
+-- Folder State
+
+function game.get_folder_state_name()
+    return game.ram.get_folder_state_name();
+end
+
+function game.is_folder_state_changed()
+    return game.ram.is_folder_state_changed();
+end
+
+function game.in_folder()
+    return game.ram.in_folder();
+end
+
+function game.in_pack()
+    return game.ram.in_pack();
+end
+
+-- RNG
 
 function game.get_RNG_value()
     return game.ram.get.RNG_value();
@@ -839,9 +786,6 @@ end
 
 function game.update_post(options)
     game.ram.update_post(options);
-    game.game_state_previous = game.get_game_state();
-    game.battle_state_previous = game.get_battle_state();
-    game.folder_state_previous = game.get_folder_state();
 end
 
 return game;

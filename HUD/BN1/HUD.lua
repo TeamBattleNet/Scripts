@@ -16,14 +16,8 @@ local commands = require("BN1/Commands");
 
 ---------------------------------------- Support Functions ----------------------------------------
 
-local options = {};
-
 local show_HUD = true;
 local command_mode = false;
-
-local current_state = nil;
-local previous_state = nil;
-local state_changed = false;
 
 local keys_held = {};
 local keys_previous = {};
@@ -42,7 +36,7 @@ end
 
 local function record_menu_buttons()
     if game.in_menu() then
-        if game.game_state_changed() then
+        if game.is_game_state_changed() then
             buttons_string = "";
         end
         
@@ -197,7 +191,7 @@ end
 local function display_commands()
     x = 0;
     y = 0;
-    options = commands.display_options();
+    local options = commands.display_options();
     for i=1,table.getn(options) do
         to_screen(options[i]);
     end
@@ -448,7 +442,7 @@ function hud.initialize(options)
 end
 
 function hud.update()
-    options = {};
+    local options = {};
     game.update_pre(options);
     
     if buttons_held.L and buttons_held.R then
