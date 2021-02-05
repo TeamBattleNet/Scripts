@@ -35,7 +35,7 @@ https://problemkaputt.de/gbatek.htm#gbamemorymap
 addresses.flags               = 0x02000000; -- N bytes, to 5F at most
 addresses.star_byte_yellow    = 0x02000000; -- Somewhere in the first row
 addresses.star_byte_green     = 0x02000000; -- Somewhere in the second row
-addresses.library             = 0x02000060; -- ? bytes, bit flags, ends at 82?
+addresses.library             = 0x02000060; -- ? bytes, bit flags, ends on 80?
 
 -- 91-9F PAs in here somewhere...
 
@@ -112,6 +112,10 @@ addresses.custom_gauge_visual = 0x0200EF91; -- 1 byte, loops
 addresses.battle_visual_state = 0x0200EFA5; -- 1 byte, normal, BATTLE START!, PAUSE
 addresses.battle_timer        = 0x0200EFBA; -- 2 bytes, frame counter for current battle (doesn't pause?)
 
+addresses.enemy_HP_text       = 0x0200EFD2; -- 2 bytes, which_enemy * 0x08, for counting down HP over time
+addresses.enemy_HP_text_2     = 0x0200EFDA; -- 2 bytes, which_enemy * 0x08, for counting down HP over time
+addresses.enemy_HP_text_3     = 0x0200EFE2; -- 2 bytes, which_enemy * 0x08, for counting down HP over time
+
 addresses.cursor_ID           = 0x02007EA8; -- 1 byte, chip  ID  of cursor
 addresses.cursor_code         = 0x02007EAA; -- 1 byte, chip code of cursor
 addresses.folder_count        = 0x02007EA5; -- 1 byte, number of chips in folder
@@ -125,15 +129,23 @@ addresses.cursor_selected_folder = 0x02007EEA; -- 2 bytes, cursor value of selec
 addresses.steps_menu          = 0x02008828; -- 4 bytes? steps since last menu?
 addresses.power_on_frames     = 0x02008880; -- 2 bytes, session counter
 
+addresses.enemy_HP            = 0x02008B54; -- 2 bytes, which_enemy * 0xC0
+addresses.enemy_HP_max        = 0x02008B56; -- 2 bytes, for healing
+
+addresses.enemy_HP_2          = 0x02008C14; -- 2 bytes, which_enemy * 0xC0
+addresses.enemy_HP_max_2      = 0x02008C16; -- 2 bytes, for healing
+
+addresses.enemy_HP_3          = 0x02008CD4; -- 2 bytes, which_enemy * 0xC0
+addresses.enemy_HP_max_3      = 0x02008CD6; -- 2 bytes, for healing
+
 --addresses.                  = 0x02009070; -- 4 bytes, state transition related?
 addresses.game_state          = 0x02009078; -- 1 byte
 addresses.RNG                 = 0x02009080; -- 4 bytes, restarts on the title screen
 
-addresses.folder_menu_state   = 0x02000000; -- 1 byte
-
 -- TODO: V
 
 addresses.BMD                 = 0x02000000; -- bit flags
+addresses.bug_frags           = 0x02000000; -- 1 byte, caps at 32?
 addresses.GMD_reward          = 0x02000000; -- 2 bytes, how to decode?
 addresses.button_flags        = 0x02000000; -- many bytes, many flags
 
@@ -144,9 +156,8 @@ addresses.buster_rapid        = 0x02000000; -- 1 byte, 0 indexed, can't change m
 addresses.buster_charge       = 0x02000000; -- 1 byte, 0 indexed, can't change mid-battle
 
 addresses.battle_pointer      = 0x02000000; -- 2 bytes? ROM offset?
-addresses.enemy_HP            = 0x02000000; -- 2 bytes, which_enemy * 0xC0
-addresses.enemy_HP_2          = 0x02000000; -- 2 bytes, which_enemy * 0xC0
-addresses.enemy_HP_3          = 0x02000000; -- 2 bytes, which_enemy * 0xC0
+addresses.battle_state        = 0x02000000; -- 1 byte
+addresses.folder_menu_state   = 0x02000000; -- 1 byte
 
 addresses.pack_ID             = 0x02000000; -- 1 byte, chip  ID  of pack slot 1
 addresses.pack_code           = 0x02000000; -- 1 byte, chip code of pack slot 1
