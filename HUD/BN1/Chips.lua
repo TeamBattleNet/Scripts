@@ -306,32 +306,32 @@ function chips.get_random_code()
     return math.random(0,25);
 end
 
-function chips.get_random_ID_standard()
+local function get_valid(first_ID, last_ID)
     local ID = nil;
     while not chips.names[ID] do
-        ID = math.random(1,147);
+        ID = math.random(first_ID,last_ID);
     end
     return ID;
+end
+
+function chips.get_random_ID_standard()
+    return get_valid(  1, 147);
 end
 
 function chips.get_random_ID_navi()
-    local ID = nil;
-    while not chips.names[ID] do
-        ID = math.random(148,199);
-    end
-    return ID;
+    return get_valid(148, 199);
+end
+
+function chips.get_random_ID_all_chips()
+    return get_valid(  1, 199);
 end
 
 function chips.get_random_ID_PA()
-    return math.random(202,237);
+    return get_valid(202, 237);
 end
 
 function chips.get_random_ID_all()
-    local ID = nil;
-    while not chips.names[ID] do
-        ID = math.random(1,237);
-    end
-    return ID;
+    return get_valid(  1, 237);
 end
 
 return chips;
