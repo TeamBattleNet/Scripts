@@ -85,15 +85,33 @@ table.insert(commands, command_blank);
 
 
 
-local command_encounters = {};
-command_encounters.options = {
-    { value =  true; text = "Block Random Encounters"; };
-    { value = false; text = "Allow Random Encounters"; };
-};
-command_encounters.selection = 1;
-command_encounters.description = function() return "Random Encounters: " .. tostring(not game.skip_encounters); end
-command_encounters.doit = function(value) game.skip_encounters = value; end;
-table.insert(commands, command_encounters);
+local function fun_flag_helper(fun_flag, fun_text)
+    if game.fun_flags[fun_flag] then
+        fun_text = "[ ON] " .. fun_text;
+    else
+        fun_text = "[off] " .. fun_text;
+    end
+    return { value = fun_flag; text = fun_text; };
+end
+
+local command_fun_flags = {};
+command_fun_flags.selection = 1;
+function command_fun_flags.update_options(option_value)
+    command_fun_flags.options = {};
+    command_fun_flags.description = function() return "These Fun Flags Are:"; end;
+    table.insert( command_fun_flags.options, fun_flag_helper("modulate_steps"   , "Step Modulation") );
+    table.insert( command_fun_flags.options, fun_flag_helper("always_fullcust"  , "Always Fullcust") );
+    table.insert( command_fun_flags.options, fun_flag_helper("no_chip_cooldown" , "No Chip Cooldown") );
+    table.insert( command_fun_flags.options, fun_flag_helper("delete_time_zero" , "Set Delete Time to 0") );
+    table.insert( command_fun_flags.options, fun_flag_helper("no_encounters"    , "Lock RNG to No  Encounters") );
+    table.insert( command_fun_flags.options, fun_flag_helper("yes_encounters"   , "Lock RNG to Yes Encounters") );
+end
+command_fun_flags.update_options();
+function command_fun_flags.doit(value)
+    game.fun_flags[value] = not game.fun_flags[value];
+    command_fun_flags.update_options();
+end
+table.insert(commands, command_fun_flags);
 
 
 
@@ -110,7 +128,6 @@ function command_items.update_options(option_value)
         table.insert( command_items.options, { value = 3; text = "HPMemory"; } );
         table.insert( command_items.options, { value = 4; text = "IceBlock";  } );
     else
-        command_items.description = function() return "Bzzt! (something broke)"; end;
         table.insert( command_items.options, { value = nil; text = "Previous Menu"; } );
         if option_value == 1 then
             command_items.description = function() return string.format("Zenny: %11u", game.get_zenny()); end;
@@ -141,6 +158,8 @@ function command_items.update_options(option_value)
             table.insert( command_items.options, { value =  -1; text = "Take  1"; } );
             table.insert( command_items.options, { value = -53; text = "Take 53"; } );
             command_items.FUNction = function(value) game.add_IceBlocks(value); end;
+        else
+            command_items.description = function() return "Bzzt! (something broke)"; end;
         end
     end
 end
@@ -156,6 +175,69 @@ table.insert(commands, command_items);
 
 
 
+local command_battle = {};
+function command_battle.update_options(option_value)
+    command_battle.options = {};
+    command_battle.selection = 1;
+    command_battle.FUNction = nil;
+    
+    if not option_value then
+        command_battle.description = function() return "Boost which feature?"; end;
+        table.insert( command_battle.options, { value = 1; text = "Buster & Armor"; } );
+        table.insert( command_battle.options, { value = 2; text = "Battlechips"; } );
+    else
+        table.insert( command_battle.options, { value = nil; text = "Previous Menu"; } );
+        if option_value == 1 then
+            command_battle.description = function() return string.format("Power Level: %4u", game.calculate_mega_level()); end;
+            table.insert( command_battle.options, { value = game.reset_buster_stats; text = "Reset Buster Stats"; } );
+            table.insert( command_battle.options, { value = game.max_buster_stats;   text = "Max   Buster Stats"; } );
+            table.insert( command_battle.options, { value = game.hub_buster_stats;   text = "Hub   Buster Stats"; } );
+            table.insert( command_battle.options, { value = game.op_buster_stats;    text = "OP    Buster Stats"; } );
+            table.insert( command_battle.options, { value = game.give_armor;         text = "Get Equip with Armor!"; } );
+            command_battle.FUNction = function(value) value(); end;
+        elseif option_value == 2 then
+            command_battle.description = function() return string.format("Customize or Randomize!"); end;
+            table.insert( command_battle.options, { value = function() game.set_all_folder_to_code(0); end; text = "Monocode A Folder";      } );
+            table.insert( command_battle.options, { value = function() game.randomize_folder_codes( ); end; text = "Randomize Folder Codes"; } );
+            table.insert( command_battle.options, { value = function() game.randomize_folder_IDs(   ); end; text = "Randomize Folder IDs";   } );
+            table.insert( command_battle.options, { value = function() game.set_all_folder_to_ID(109); end; text = "Only Draw BstrBomb";     } );
+            table.insert( command_battle.options, { value = function() game.set_all_folder_to_ID(102); end; text = "Only Draw Invis3";       } );
+            table.insert( command_battle.options, { value = function() game.set_all_folder_to_ID( 33); end; text = "Only Draw HeroSwrd";     } );
+            command_battle.FUNction = function(value) value(); end;
+        else
+            command_battle.description = function() return "Bzzt! (something broke)"; end;
+        end
+    end
+end
+command_battle.update_options();
+function command_battle.doit(value)
+    if command_battle.FUNction and value then
+        command_battle.FUNction(value);
+    else
+        command_battle.update_options(value);
+    end
+end
+table.insert(commands, command_battle);
+
+
+
+local command_combat = {};
+command_combat.selection = 1;
+command_combat.description = function() return "Battle Options:"; end;
+command_combat.options = {
+    { value = function() game.kill_enemy(0);     end; text = "Delete Everything";     };
+    { value = function() game.kill_enemy(1);     end; text = "Delete Enemy 1";        };
+    { value = function() game.kill_enemy(2);     end; text = "Delete Enemy 2";        };
+    { value = function() game.kill_enemy(3);     end; text = "Delete Enemy 3";        };
+    { value = function() game.draw_only_slot(0); end; text = "Draw Only Slot 1";      };
+    { value = game.draw_in_order;                     text = "Draw In Order";         };
+    { value = game.max_chip_window_count;             text = "15 Selectable Chips";   };
+};
+command_combat.doit = function(value) value(); end;
+table.insert(commands, command_combat);
+
+
+
 local command_routing = {};
 function command_routing.update_options(option_value)
     command_routing.options = {};
@@ -168,7 +250,6 @@ function command_routing.update_options(option_value)
         table.insert( command_routing.options, { value = 2; text = "Step Counter" ; } );
         table.insert( command_routing.options, { value = 3; text = "Flag Flipper" ; } );
     else
-        command_routing.description = function() return "Bzzt! (something broke)"; end;
         table.insert( command_routing.options, { value = nil; text = "Previous Menu"; } );
         if option_value == 1 then
             command_routing.description = function() return string.format("RNG Index: %5s", (game.ram.get.RNG_index() or "?????")); end;
@@ -202,6 +283,8 @@ function command_routing.update_options(option_value)
             table.insert( command_routing.options, { value = game.ignite_WWW_fires;      text = "Ignite WWW Fires";      } );
             table.insert( command_routing.options, { value = game.extinguish_WWW_fires;  text = "Extinguish WWW Fires";  } );
             command_routing.FUNction = function(value) value(); end;
+        else
+            command_routing.description = function() return "Bzzt! (something broke)"; end;
         end
     end
 end
@@ -319,73 +402,6 @@ function teleport_digital_world.doit(value)
     end
 end
 table.insert(commands, teleport_digital_world);
-
-
-
-local command_battle = {};
-function command_battle.update_options(option_value)
-    command_battle.options = {};
-    command_battle.selection = 1;
-    command_battle.FUNction = nil;
-    
-    if not option_value then
-        command_battle.description = function() return "Boost which feature?"; end;
-        table.insert( command_battle.options, { value = 1; text = "Buster & Armor"; } );
-        table.insert( command_battle.options, { value = 2; text = "Battlechips"; } );
-    else
-        command_battle.description = function() return "Bzzt! (something broke)"; end;
-        table.insert( command_battle.options, { value = nil; text = "Previous Menu"; } );
-        if option_value == 1 then
-            command_battle.description = function() return string.format("Power Level: %4u", game.calculate_mega_level()); end;
-            table.insert( command_battle.options, { value = game.reset_buster_stats; text = "Reset Buster Stats"; } );
-            table.insert( command_battle.options, { value = game.max_buster_stats;   text = "Max   Buster Stats"; } );
-            table.insert( command_battle.options, { value = game.hub_buster_stats;   text = "Hub   Buster Stats"; } );
-            table.insert( command_battle.options, { value = game.op_buster_stats;    text = "OP    Buster Stats"; } );
-            table.insert( command_battle.options, { value = game.give_armor;         text = "Get Equip with Armor!"; } );
-            command_battle.FUNction = function(value) value(); end;
-        elseif option_value == 2 then
-            command_battle.description = function() return string.format("Customize or Randomize!"); end;
-            table.insert( command_battle.options, { value = function() game.set_all_folder_to_code(0); end; text = "Monocode A Folder";      } );
-            table.insert( command_battle.options, { value = function() game.randomize_folder_codes( ); end; text = "Randomize Folder Codes"; } );
-            table.insert( command_battle.options, { value = function() game.randomize_folder_IDs(   ); end; text = "Randomize Folder IDs";   } );
-            table.insert( command_battle.options, { value = function() game.set_all_folder_to_ID(109); end; text = "Only Draw BstrBomb";     } );
-            table.insert( command_battle.options, { value = function() game.set_all_folder_to_ID(102); end; text = "Only Draw Invis3";       } );
-            table.insert( command_battle.options, { value = function() game.set_all_folder_to_ID( 33); end; text = "Only Draw HeroSwrd";     } );
-            command_battle.FUNction = function(value) value(); end;
-        end
-    end
-end
-command_battle.update_options();
-function command_battle.doit(value)
-    if command_battle.FUNction and value then
-        command_battle.FUNction(value);
-    else
-        command_battle.update_options(value);
-    end
-end
-table.insert(commands, command_battle);
-
-
-
-local command_combat = {};
-command_combat.selection = 1;
-command_combat.description = function() return "Battle Options:"; end;
-command_combat.options = {
-    { value = function() game.kill_enemy(0);     end; text = "Delete Everything";     };
-    { value = function() game.kill_enemy(1);     end; text = "Delete Enemy 1";        };
-    { value = function() game.kill_enemy(2);     end; text = "Delete Enemy 2";        };
-    { value = function() game.kill_enemy(3);     end; text = "Delete Enemy 3";        };
-    { value = function() game.draw_only_slot(0); end; text = "Draw Only Slot 1";      };
-    { value = game.draw_in_order;                     text = "Draw In Order";         };
-    { value = game.fill_custom_gauge;                 text = "Fill Custom Gauge";     };
-    { value = game.empty_custom_gauge;                text = "Empty Custom Gauge";    };
-    { value = game.reset_delete_timer;                text = "Set Delete Time to 0";  };
-    { value = game.disable_chip_cooldown;             text = "Disable Chip Cooldown"; };
-    { value = game.enable_chip_cooldown;              text = "Enable Chip Cooldown";  };
-    { value = game.max_chip_window_count;             text = "15 Selectable Chips";   };
-};
-command_combat.doit = function(value) value(); end;
-table.insert(commands, command_combat);
 
 
 
