@@ -31,7 +31,6 @@ console.clear();
 
 print("ROM Hash: " .. gameinfo.getromhash());
 print("ROM Name: " .. gameinfo.getromname());
-print("");
 
 if hud then
     local options = {};
@@ -42,7 +41,7 @@ if hud then
         emu.frameadvance();
     end
 else
-    print("Game not recognized.");
+    print("\nGame not recognized!\n");
     while true do
         emu.frameadvance(); -- idle until a new ROM is loaded
     end

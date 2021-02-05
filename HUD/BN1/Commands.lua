@@ -15,8 +15,7 @@ end
 function controls.next()
     command_index = (command_index % table.getn(commands)) + 1;
     local command = commands[command_index];
-    print("");
-    show_text("Command Change: " .. command.description());
+    show_text("\nCommand Change: " .. command.description());
 end
 
 function controls.previous()
@@ -25,8 +24,7 @@ function controls.previous()
         command_index = table.getn(commands);
     end
     local command = commands[command_index];
-    print("");
-    show_text("Command Change: " .. command.description());
+    show_text("\nCommand Change: " .. command.description());
 end
 
 function controls.option_down()
@@ -49,8 +47,7 @@ end
 function controls.doit(set_command_mode)
     local command = commands[command_index];
     local option = command.options[command.selection];
-    print("");
-    show_text("Executing: " .. command.description());
+    show_text("\nExecuting: " .. command.description());
     show_text("With Option: " .. option.text);
     if command.enable_inputs then
         set_command_mode(false);

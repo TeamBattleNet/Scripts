@@ -440,11 +440,11 @@ table.insert(HUDs, HUD_speedrun);
 
 function hud.initialize(options)
     hud.version = options.major_version .. "." .. hud.minor_version;
-    print("Initializing HUD " .. hud.version .. " for MMBN 1...");
+    print("\nInitializing HUD " .. hud.version .. " for MMBN 1...");
     set_default_text(current_font, current_color);
     options.maximum_RNG_index = 10 * 60 * 60; -- 10 minutes of frames
     game.initialize(options);
-    print("HUD for MMBN 1 " .. game.get_version_name() .. " Initialized.");
+    print("\nHUD for MMBN 1 " .. game.get_version_name() .. " Initialized.");
 end
 
 function hud.update()
@@ -494,7 +494,7 @@ function hud.update()
                     print("\n" .. game.get_draw_slots_text_multi_line());
                     print("\n" .. game.get_draw_slots_text_one_line());
                 elseif buttons_down.A      then
-                    print((string.len(buttons_string)/2) .. " Buttons:" .. buttons_string);
+                    print("\n" .. (string.len(buttons_string)/2) .. " Buttons:" .. buttons_string);
                 end
             end
             HUDs[HUD_mode]();
