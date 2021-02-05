@@ -8,17 +8,11 @@ game.enemies  = require("BN1/Enemies" );
 game.progress = require("BN1/Progress");
 game.ram      = require("BN1/RAM"     );
 
----------------------------------------- Fun Flags ----------------------------------------
+game.fun_flags = {}; -- set in Commands, used in RAM
 
-local no_chip_cooldown = false;
+---------------------------------------- RAM Wrapper ----------------------------------------
 
-function game.enable_chip_cooldown()
-    no_chip_cooldown = false;
-end
-
-function game.disable_chip_cooldown()
-    no_chip_cooldown = true;
-end
+-- TODO: Move state knowledge into RAM for HUD generalization
 
 ---------------------------------------- Game State ----------------------------------------
 
@@ -412,6 +406,18 @@ end
 
 function game.get_next_check()
     return 64 - (game.get_steps() - game.get_check());
+end
+
+function game.get_encounter_checks()
+    return game.ram.get.encounter_checks();
+end
+
+function game.get_encounter_chance()
+    return game.ram.get.encounter_chance();
+end
+
+function game.would_get_encounter()
+    return game.ram.would_get_encounter();
 end
 
 ---------------------------------------- Inventory ----------------------------------------
@@ -820,50 +826,6 @@ function game.get_string_hex(address, bytes, with_spaces)
     end
 end
 
----------------------------------------- Encounter Tracking and Avoidance ----------------------------------------
-
-local last_encounter_check = 0; -- the previous value of check
-
-function game.get_encounter_checks()
-    return math.floor(last_encounter_check / 64); -- approximate
-end
-
-function game.get_encounter_threshold()
-    local curve_addr = game.ram.addr.encounter_curve;
-    local curve_offset = (game.get_main_area() - 0x80) * 0x10 + game.get_sub_area();
-    curve = memory.read_u8(curve_addr + curve_offset);
-    local odds_addr = game.ram.addr.encounter_odds;
-    local test_level = math.min(math.floor(game.get_steps() / 64), 16);
-    return memory.read_u8(odds_addr + test_level * 8 + curve);
-end
-
-function game.get_encounter_chance()
-    return (game.get_encounter_threshold() / 32) * 100;
-end
-
-function game.would_get_encounter()
-    return game.get_encounter_threshold() > (game.get_RNG_value() % 0x20);
-end
-
-game.skip_encounters = false;
-
-local function encounter_check()
-    if game.in_world() then
-        if game.get_check() < last_encounter_check then
-            last_encounter_check = 0; -- dodged encounter or area (re)load or state load
-        elseif game.get_check() > last_encounter_check then
-            last_encounter_check = game.get_check();
-        end
-        
-        if game.skip_encounters then
-            if game.get_steps() > 64 then
-                game.set_steps(game.get_steps() % 64);
-                game.set_check(game.get_check() % 64);
-            end
-        end
-    end
-end
-
 ---------------------------------------- Module Controls ----------------------------------------
 
 function game.initialize(options)
@@ -871,8 +833,7 @@ function game.initialize(options)
 end
 
 function game.update_pre(options)
-    encounter_check();
-    options.no_chip_cooldown = no_chip_cooldown;
+    options.fun_flags = game.fun_flags;
     game.ram.update_pre(options);
 end
 

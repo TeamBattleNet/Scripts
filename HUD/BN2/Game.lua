@@ -508,23 +508,6 @@ function game.kill_enemy(which_enemy)
     end
 end
 
-function game.set_custom_gauge(new_custom_gauge)
-    if new_custom_gauge < 0 then
-        new_custom_gauge = 0;
-    elseif new_custom_gauge > 0x4000 then
-        new_custom_gauge = 0x4000;
-    end
-    game.ram.set.custom_gauge(new_custom_gauge);
-end
-
-function game.empty_custom_gauge()
-    game.set_custom_gauge(0x0000);
-end
-
-function game.fill_custom_gauge()
-    game.set_custom_gauge(0x4000);
-end
-
 function game.max_chip_window_count()
     game.ram.set.chip_window_count(10);
 end
