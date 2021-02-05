@@ -76,8 +76,8 @@ ram.set.cursor_selected = function(cursor_selected) memory.write_u16_le(ram.addr
 ram.get.offset_selected = function() return memory.read_u16_le(ram.addr.offset_selected); end;
 ram.set.offset_selected = function(offset_selected) memory.write_u16_le(ram.addr.offset_selected, offset_selected); end;
 
-ram.get.custom_gauge = function() return memory.read_u16_le(ram.addr.battle_custom_gauge); end;
-ram.set.custom_gauge = function(battle_custom_gauge) memory.write_u16_le(ram.addr.battle_custom_gauge, battle_custom_gauge); end;
+ram.get.custom_gauge = function() return memory.read_u16_le(ram.addr.custom_gauge_battle); end;
+ram.set.custom_gauge = function(custom_gauge_fill) memory.write_u16_le(ram.addr.custom_gauge_battle, custom_gauge_fill); end;
 
 ram.get.delete_timer = function() return memory.read_u16_le(ram.addr.battle_timer); end;
 ram.set.delete_timer = function(battle_timer) memory.write_u16_le(ram.addr.battle_timer, battle_timer); end;
@@ -424,17 +424,69 @@ function ram.adjust_RNG(steps)
     ram.set.RNG_index(new_index);
 end
 
+---------------------------------------- Encounter Tracking and Avoidance ----------------------------------------
+
+local last_encounter_check = 0; -- the previous value of check
+
+function ram.get.encounter_checks()
+    return math.floor(last_encounter_check / 64); -- approximate
+end
+
+function ram.get.encounter_threshold()
+    local curve_addr = ram.addr.encounter_curve;
+    local curve_offset = (ram.get.main_area() - 0x80) * 0x10 + ram.get.sub_area();
+    curve = memory.read_u8(curve_addr + curve_offset);
+    local odds_addr = ram.addr.encounter_odds;
+    local test_level = math.min(math.floor(ram.get.steps() / 64), 16);
+    return memory.read_u8(odds_addr + test_level * 8 + curve);
+end
+
+function ram.get.encounter_chance()
+    return (ram.get.encounter_threshold() / 32) * 100;
+end
+
+function ram.would_get_encounter()
+    return ram.get.encounter_threshold() > (ram.get.RNG_value() % 0x20);
+end
+
+local function encounter_check(modulate_steps)
+    if ram.in_world() then
+        if ram.get.check() < last_encounter_check then
+            last_encounter_check = 0; -- dodged encounter or area (re)load or state load
+        elseif ram.get.check() > last_encounter_check then
+            last_encounter_check = ram.get.check();
+        end
+        
+        if modulate_steps then
+            if ram.get.steps() > 64 then
+                ram.set.steps(ram.get.steps() % 64);
+                ram.set.check(ram.get.check() % 64);
+            end
+        end
+    end
+end
+
 ---------------------------------------- RAMsacking ----------------------------------------
 
-local function fun_flags(options)
-    if options.no_encounters then
+local function fun_flags(fun_flags)
+    encounter_check(fun_flags.modulate_steps);
+    
+    if fun_flags.no_encounters then
         ram.set.RNG_value(0xBC61AB0C);
-    elseif options.yes_encounters then
+    elseif fun_flags.yes_encounters then
         ram.set.RNG_value(0x439E54F2);
     end
     
-    if options.no_chip_cooldown then
+    if fun_flags.always_fullcust then
+        ram.set.custom_gauge(0x4000);
+    end
+    
+    if fun_flags.no_chip_cooldown then
         ram.set.chip_cooldown(0);
+    end
+    
+    if fun_flags.delete_time_zero then
+        ram.set.delete_timer(0);
     end
 end
 
@@ -446,7 +498,7 @@ function ram.initialize(options)
 end
 
 function ram.update_pre(options)
-    fun_flags(options);
+    fun_flags(options.fun_flags);
     expand_RNG_table(rng_table);
 end
 

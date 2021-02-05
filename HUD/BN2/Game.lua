@@ -10,18 +10,6 @@ game.ram      = require("BN2/RAM"     );
 
 game.fun_flags = {}; -- set in Commands, used in RAM
 
----------------------------------------- Fun Flags ----------------------------------------
-
-local no_chip_cooldown = false;
-
-function game.enable_chip_cooldown()
-    no_chip_cooldown = false;
-end
-
-function game.disable_chip_cooldown()
-    no_chip_cooldown = true;
-end
-
 ---------------------------------------- RAM Wrapper ----------------------------------------
 
 -- Game Info
@@ -314,6 +302,18 @@ function game.get_next_check()
     return 64 - (game.get_steps() - game.get_check());
 end
 
+function game.get_encounter_checks()
+    return game.ram.get.encounter_checks();
+end
+
+function game.get_encounter_chance()
+    return game.ram.get.encounter_chance();
+end
+
+function game.would_get_encounter()
+    return game.ram.would_get_encounter();
+end
+
 ---------------------------------------- Inventory ----------------------------------------
 
 function game.get_zenny()
@@ -529,21 +529,6 @@ function game.max_chip_window_count()
     game.ram.set.chip_window_count(10);
 end
 
-function game.get_delete_timer()
-    return game.ram.get.delete_timer();
-end
-
-function game.set_delete_timer(new_delete_timer)
-    if new_delete_timer < 0 then
-        new_delete_timer = 0;
-    end
-    game.ram.set.delete_timer(new_delete_timer);
-end
-
-function game.reset_delete_timer()
-    game.set_delete_timer(0);
-end
-
 function game.get_draw_slot(which_slot)
     if 1 <= which_slot and which_slot <= 30 then
         return game.ram.get.draw_slot(which_slot-1) + 1; -- convert from 1 to 0 index, then back
@@ -619,7 +604,7 @@ end
 
 ---------------------------------------- Miscellaneous ----------------------------------------
 
-
+-- None ATM
 
 ---------------------------------------- Routing ----------------------------------------
 
@@ -660,51 +645,6 @@ function game.get_string_hex(address, bytes, with_spaces)
     end
 end
 
----------------------------------------- Encounter Tracking and Avoidance ----------------------------------------
-
-local last_encounter_check = 0; -- the previous value of check
-
-function game.get_encounter_checks()
-    --return game.ram.get_encounter_checks();
-    return math.floor(last_encounter_check / 64); -- approximate
-end
-
-function game.get_encounter_threshold()
-    local curve_addr = game.ram.addr.encounter_curve;
-    local curve_offset = (game.get_main_area() - 0x80) * 0x10 + game.get_sub_area();
-    curve = memory.read_u8(curve_addr + curve_offset);
-    local odds_addr = game.ram.addr.encounter_odds;
-    local test_level = math.min(math.floor(game.get_steps() / 64), 16);
-    return memory.read_u8(odds_addr + test_level * 8 + curve);
-end
-
-function game.get_encounter_chance()
-    return (game.get_encounter_threshold() / 32) * 100;
-end
-
-function game.would_get_encounter()
-    return game.get_encounter_threshold() > (game.get_RNG_value() % 0x20);
-end
-
-game.skip_encounters = false; -- TODO: Move to fun flags and make commands consistent
-
-local function encounter_check()
-    if game.in_world() then
-        if game.get_check() < last_encounter_check then
-            last_encounter_check = 0; -- dodged encounter or area (re)load or state load
-        elseif game.get_check() > last_encounter_check then
-            last_encounter_check = game.get_check();
-        end
-        
-        if game.skip_encounters then
-            if game.get_steps() > 64 then
-                game.set_steps(game.get_steps() % 64);
-                game.set_check(game.get_check() % 64);
-            end
-        end
-    end
-end
-
 ---------------------------------------- Module Controls ----------------------------------------
 
 function game.initialize(options)
@@ -712,9 +652,7 @@ function game.initialize(options)
 end
 
 function game.update_pre(options)
-    encounter_check();
     options.fun_flags = game.fun_flags;
-    options.no_chip_cooldown = no_chip_cooldown;
     game.ram.update_pre(options);
 end
 

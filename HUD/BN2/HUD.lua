@@ -9,7 +9,7 @@
 -- https://docs.google.com/spreadsheets/d/e/2PACX-1vS1-XuptqnclG6GOlXjKIwuQWdM5HLPMh5KM6yAUrfaTva6uvfoBV98Sgm4flMnC07HNYXMR4HsEGbe/pubhtml Did you check the notes?
 
 local hud = {};
-hud.minor_version = "0.1";
+hud.minor_version = "0.2";
 
 local game = require("BN2/Game");
 local commands = require("BN2/Commands");
@@ -297,11 +297,8 @@ local function HUD_speedrun()
                 to_screen(string.format("Steps: %4u" , game.get_steps()));
                 to_screen(string.format("Check: %4u" , game.get_check()));
                 to_screen(string.format("Checks: %3u", game.get_encounter_checks()));
-                to_screen(string.format("%%: %7.3f%%", game.get_encounter_chance()));
+                --to_screen(string.format("%%: %7.3f%%", game.get_encounter_chance()));
                 to_screen(string.format("Next:  %2i"  , game.get_next_check()));
-                if game.near_number_doors() then
-                    to_screen(string.format("Door: %3u", game.get_door_code()));
-                end
                 to_screen(string.format("X: %4i", game.get_X()));
                 to_screen(string.format("Y: %4i", game.get_Y()));
                 x=11;
@@ -337,9 +334,6 @@ local function HUD_routing()
     to_screen("0008: " .. game.get_string_binary(0x02000008, 4, true));
     to_screen("000C: " .. game.get_string_binary(0x0200000C, 4, true));
     to_screen("01FC: " .. game.get_string_hex(0x020001FC, 8, true));
-    y = y - 1;
-    x = 31;
-    to_screen(tostring(game.is_go_mode()));
 end
 
 local function HUD_battle()

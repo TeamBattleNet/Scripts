@@ -73,8 +73,7 @@ addresses.play_time_frames    = 0x02001144; -- 4 bytes, check for skipped frames
 addresses.check               = 0x02001154; -- 4 bytes, steps at the last encounter check
 addresses.sneak               = 0x02001178; -- 4? bytes, starts at 6000
 
-addresses.custom_gauge_battle = 0x02004F0C; -- 2 bytes, counts up to 0x4000
-
+-- 3A50 style point area
 addresses.points_guts         = 0x02003A5D; -- 2 bytes
 addresses.points_cust         = 0x02003A62; -- 2 bytes
 addresses.points_team         = 0x02003A64; -- 2 bytes
@@ -85,13 +84,13 @@ addresses.battles_cust        = 0x02003A6C; -- 4 bytes
 addresses.battles_team        = 0x02003A70; -- 4 bytes
 addresses.battles_shld        = 0x02003A74; -- 4 bytes
 
+addresses.custom_gauge_battle = 0x02004F0C; -- 2 bytes, counts up to 0x4000
+
 addresses.enemy_ID            = 0x02004F3C; -- 1 byte
 addresses.enemy_ID_2          = 0x02004F3D; -- 1 byte
 addresses.enemy_ID_3          = 0x02004F3F; -- 1 byte
 
 addresses.battle_draw_slots   = 0x02005EC0; -- 1 byte each, in battle chip draws, ends at 492D
-
-addresses.chip_cooldown       = 0x0200626B; -- 1 byte ???
 
 addresses.your_X              = 0x02006374; -- 2 bytes
 addresses.your_Y              = 0x02006376; -- 2 bytes
@@ -159,6 +158,8 @@ addresses.pack_quantity       = 0x02019016; -- 1 byte each, number of copies
 -- Ends at 23FFF? 291FF? Many of these values appear to be duplicates, possibly to help with sorting
 
 -- TODO: V
+
+addresses.chip_cooldown       = 0x02000000; -- 1 byte ??? wrong
 
 addresses.BMD                 = 0x02000000; -- bit flags
 addresses.bug_frags           = 0x02000000; -- 1 byte, caps at 32?
