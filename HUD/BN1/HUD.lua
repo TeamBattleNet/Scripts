@@ -414,6 +414,7 @@ local function HUD_auto()
     elseif game.in_transition() then
         to_screen("HUD Version: " .. hud.version);
     elseif game.in_menu() then
+        display_RNG();
         display_edit_slots();
         display_selected_chip();
     elseif game.in_shop() then
@@ -490,9 +491,8 @@ function hud.update()
                 elseif buttons_down.Down   then
                     toggle_default_text();
                 elseif buttons_down.B      then
-                    print("");
-                    game.print_draw_slots();
-                    print(game.get_draw_slots_text());
+                    print("\n" .. game.get_draw_slots_text_multi_line());
+                    print("\n" .. game.get_draw_slots_text_one_line());
                 elseif buttons_down.A      then
                     print((string.len(buttons_string)/2) .. " Buttons:" .. buttons_string);
                 end

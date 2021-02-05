@@ -611,7 +611,7 @@ function game.get_HPMemory_count()
 end
 
 function game.calculate_max_HP()
-    return 100 + 20 * game.get_HPMemory_count();
+    return 100 + (20 * game.get_HPMemory_count());
 end
 
 function game.calculate_mega_level()
@@ -702,28 +702,31 @@ function game.get_draw_slot(which_slot)
 end
 
 function game.get_draw_slots()
-    slots = {};
+    local slots = {};
     for i=1,30 do
         slots[i] = game.get_draw_slot(i);
     end
     return slots;
 end
 
-function game.get_draw_slots_text()
+function game.get_draw_slots_text_one_line()
     local slots = game.get_draw_slots();
-    local slots_text = "";
+    local RNG_index = game.get_RNG_index() or "????";
+    local slots_text = string.format("%s:", RNG_index);
     for i=1,30 do
         slots_text = string.format("%s %02u", slots_text, slots[i]);
     end
-    local RNG_index = game.get_RNG_index() or "????";
-    return string.format("%s:%s", RNG_index, slots_text);
+    return slots_text;
 end
 
-function game.print_draw_slots()
-    slots = game.get_draw_slots();
-    for i=1,10 do -- limited to 25 prints per frame
-        print(string.format("%02u: %02u | %02u: %02u | %02u: %02u", i, slots[i], i+10, slots[i+10], i+20, slots[i+20]));
+function game.get_draw_slots_text_multi_line()
+    local slots = game.get_draw_slots();
+    local RNG_index = game.get_RNG_index() or "????";
+    local slots_text = string.format("%s:", RNG_index);
+    for i=1,30 do
+        slots_text = string.format("%s\n%02u: %02u", slots_text, i, slots[i]);
     end
+    return slots_text;
 end
 
 function game.shuffle_folder()
