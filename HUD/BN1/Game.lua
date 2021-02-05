@@ -833,7 +833,7 @@ function game.get_encounter_threshold()
     local curve_offset = (game.get_main_area() - 0x80) * 0x10 + game.get_sub_area();
     curve = memory.read_u8(curve_addr + curve_offset);
     local odds_addr = game.ram.addr.encounter_odds;
-    local test_level = math.min(math.floor(game.get_steps() / 64) + 1, 16);
+    local test_level = math.min(math.floor(game.get_steps() / 64), 16);
     return memory.read_u8(odds_addr + test_level * 8 + curve);
 end
 
@@ -841,7 +841,9 @@ function game.get_encounter_chance()
     return (game.get_encounter_threshold() / 32) * 100;
 end
 
-function game.would_get_encounter() -- 0x8000000C 0x72
+function game.would_get_encounter()
+    -- 0xBC61AB0C no encounters
+    -- 0x439E54F2 yes encounters
     return game.get_encounter_threshold() > (game.get_RNG_value() % 0x20);
 end
 

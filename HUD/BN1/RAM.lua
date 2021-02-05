@@ -169,7 +169,7 @@ function ram.to_int(seed)
     return bit.band(seed, 0x7FFFFFFF);
 end
 
-function ram.simulate_RNG(seed) -- 0x8000000C 0x72 (run twice?)
+function ram.simulate_RNG(seed)
     -- seed = ((seed << 1) + (seed >> 31) + 1) ^ 0x873CA9E5;
     return bit.bxor((bit.lshift(seed,1) + bit.rshift(seed, 31) + 1), 0x873CA9E5);
 end
