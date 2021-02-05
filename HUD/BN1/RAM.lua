@@ -65,15 +65,16 @@ ram.set.cursor_code = function(cursor_code) memory.write_u8(ram.addr.cursor_code
 
 ram.get.cursor_folder = function() return memory.read_u16_le(ram.addr.cursor_folder); end;
 ram.set.cursor_folder = function(cursor_folder) memory.write_u16_le(ram.addr.cursor_folder, cursor_folder); end;
-ram.get.cursor_pack = function() return memory.read_u16_le(ram.addr.cursor_pack); end;
-ram.set.cursor_pack = function(cursor_pack) memory.write_u16_le(ram.addr.cursor_pack, cursor_pack); end;
-ram.get.cursor_selected = function() return memory.read_u16_le(ram.addr.cursor_selected); end;
-ram.set.cursor_selected = function(cursor_selected) memory.write_u16_le(ram.addr.cursor_selected, cursor_selected); end;
-
 ram.get.offset_folder = function() return memory.read_u16_le(ram.addr.offset_folder); end;
 ram.set.offset_folder = function(offset_folder) memory.write_u16_le(ram.addr.offset_folder, offset_folder); end;
+
+ram.get.cursor_pack = function() return memory.read_u16_le(ram.addr.cursor_pack); end;
+ram.set.cursor_pack = function(cursor_pack) memory.write_u16_le(ram.addr.cursor_pack, cursor_pack); end;
 ram.get.offset_pack = function() return memory.read_u16_le(ram.addr.offset_pack); end;
 ram.set.offset_pack = function(offset_pack) memory.write_u16_le(ram.addr.offset_pack, offset_pack); end;
+
+ram.get.cursor_selected = function() return memory.read_u16_le(ram.addr.cursor_selected); end;
+ram.set.cursor_selected = function(cursor_selected) memory.write_u16_le(ram.addr.cursor_selected, cursor_selected); end;
 ram.get.offset_selected = function() return memory.read_u16_le(ram.addr.offset_selected); end;
 ram.set.offset_selected = function(offset_selected) memory.write_u16_le(ram.addr.offset_selected, offset_selected); end;
 
