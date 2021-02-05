@@ -23,6 +23,24 @@ end
 ---------------------------------------- Game State ----------------------------------------
 
 game.elements = {"Elec", "Heat", "Aqua", "Wood"};
+game.element_names = {};
+game.element_names[0x01] = "Elec";
+game.element_names[0x02] = "Heat";
+game.element_names[0x03] = "Aqua";
+game.element_names[0x04] = "Wood";
+game.element_names[0x05] = "????";
+game.element_names[0x06] = "????";
+game.element_names[0x07] = "????";
+
+game.styles = {"Guts", "Cust", "Team", "Shld"};
+game.style_names = {};
+game.style_names[0x01] = "Guts";
+game.style_names[0x02] = "Cust";
+game.style_names[0x03] = "Team";
+game.style_names[0x04] = "Shld";
+game.style_names[0x05] = "????";
+game.style_names[0x06] = "????";
+game.style_names[0x07] = "Hub?";
 
 function game.get_version_name()
     return game.ram.version_name;
@@ -41,13 +59,14 @@ game.game_state_names[0x00] = "title";         -- or BIOS
 game.game_state_names[0x04] = "world";         -- real and digital
 game.game_state_names[0x08] = "battle";
 game.game_state_names[0x0C] = "player_change"; -- jack-in / out
+game.game_state_names[0x10] = "demo_end";      -- what is this?
 game.game_state_names[0x14] = "capcom_logo";
 game.game_state_names[0x18] = "menu";
 game.game_state_names[0x1C] = "shop";
-game.game_state_names[0x34] = "ubisoft_logo";  -- PAL only
---game.game_state_names[0x20] = "game_over";
+game.game_state_names[0x20] = "game_over";
 --game.game_state_names[0x24] = "trader";
 --game.game_state_names[0x28] = "credits";
+game.game_state_names[0x34] = "ubisoft_logo";  -- PAL only
 game.game_state_previous = 0x00;
 
 function game.get_game_state()
@@ -55,7 +74,7 @@ function game.get_game_state()
 end
 
 function game.get_game_state_name()
-    return game.game_state_names[game.get_game_state()] or "unknown";
+    return game.game_state_names[game.get_game_state()] or "unknown_game_state";
 end
 
 function game.game_state_changed()
@@ -77,7 +96,7 @@ function game.get_battle_state()
 end
 
 function game.get_battle_state_name()
-    return game.battle_state_names[game.get_battle_state()] or "unknown";
+    return game.battle_state_names[game.get_battle_state()] or "unknown_battle_state";
 end
 
 function game.battle_state_changed()
@@ -86,13 +105,13 @@ end
 
 function game.battle_pause()
     if game.get_battle_state() == 0xFF then
-        game.ram.set.battle_paused(0x01);
+        --game.ram.set.battle_paused(0x01);
     end
 end
 
 function game.battle_unpause()
     if game.get_battle_state() == 0xFF then
-        game.ram.set.battle_paused(0x00);
+        --game.ram.set.battle_paused(0x00);
     end
 end
 
@@ -109,15 +128,23 @@ function game.get_folder_state()
 end
 
 function game.get_folder_state_name()
-    return game.folder_state_names[game.get_folder_state()] or "unknown";
+    return game.folder_state_names[game.get_folder_state()] or "unknown_folder_state";
 end
 
 function game.folder_state_changed()
     return game.get_folder_state() ~= game.folder_state_previous;
 end
 
-function game.is_folder_or_pack()
-    return "unknown";
+function game.folder_to_pack()
+    return 0x00; --game.ram.get.folder_to_pack();
+end
+
+function game.in_folder()
+    return game.folder_to_pack() == 0x20;
+end
+
+function game.in_pack()
+    return game.folder_to_pack() == 0x02;
 end
 
 function game.in_title()
@@ -153,11 +180,11 @@ function game.in_game_over()
 end
 
 function game.in_chip_trader()
-  return game.get_game_state() == 0x24;
+  return game.get_game_state() == 0x24; -- TBD
 end
 
 function game.in_credits()
-    return game.get_game_state() == 0x28;
+    return game.get_game_state() == 0x28; -- TBD
 end
 
 ---------------------------------------- RNG ----------------------------------------
@@ -193,7 +220,7 @@ function game.get_progress()
 end
 
 function game.get_progress_name(progress_value)
-    return game.progress[progress_value] or "Unknown";
+    return game.progress[progress_value] or "Unknown Progress Value";
 end
 
 function game.get_current_progress_name()
@@ -204,7 +231,7 @@ function game.set_progress(new_progress)
     if new_progress < 0x00 then
         new_progress = 0x00;
     elseif new_progress > 0x5F then
-        new_progress = 0x5F;
+        new_progress = 0x5F; -- TBD
     end
     game.ram.set.progress(new_progress);
 end
@@ -221,73 +248,12 @@ end
 
 ---------------------------------------- Flags ----------------------------------------
 
-function game.get_fire_flags()
-    return game.ram.get.fire_flags();
+function game.get_ice_flags()
+    return game.ram.get.ice_flags();
 end
 
-function game.set_fire_flags(fire_flags)
-    game.ram.set.fire_flags(fire_flags);
-end
-
-function game.ignite_oven_fires()
-    game.ram.set.fire_flags     (0x00000000);
-    game.ram.set.fire_flags_oven(0x00000000);
-end
-
-function game.extinguish_oven_fires()
-    game.ram.set.fire_flags     (0xFFCFFFFF);
-    game.ram.set.fire_flags_oven(0xFFCFFFFF);
-end
-
-function game.ignite_WWW_fires()
-    game.ram.set.fire_flags    (0x00000000);
-    game.ram.set.fire_flags_www(0x00000000);
-end
-
-function game.extinguish_WWW_fires()
-    game.ram.set.fire_flags    (0x00FEFFFF);
-    game.ram.set.fire_flags_www(0xFCFFFF01);
-end
-
-function game.get_star_byte()
-    return game.ram.get.title_star_byte();
-end
-
-function game.set_star_byte(new_star_byte)
-    game.ram.set.title_star_byte(new_star_byte);
-end
-
-function game.get_star_flag()
-    return bit.rshift(bit.band(game.get_star_byte(), 0x04), 2);
-end
-
-function game.set_star_flag()
-    game.set_star_byte(bit.set(game.get_star_byte(), 2));
-end
-
-function game.clear_star_flag()
-    game.set_star_byte(bit.band(game.get_star_byte(), 0xFB));
-end
-
-function game.get_magic_byte()
-    return game.ram.get.magic_byte();
-end
-
-function game.set_magic_byte(new_magic)
-    game.ram.set.magic_byte(new_magic);
-end
-
-function game.is_magic_bit_set()
-    return bit.band(game.get_magic_byte(), 0x18) == 0x10;
-end
-
-function game.is_go_mode()
-    return game.is_magic_bit_set() and (game.get_progress() == 0x54);
-end
-
-function game.go_mode()
-    game.set_progress(0x54);
-    game.set_magic_byte(0x10);
+function game.set_ice_flags(ice_flags)
+    game.ram.set.ice_flags(ice_flags);
 end
 
 ---------------------------------------- Position ----------------------------------------
@@ -340,7 +306,10 @@ function game.get_area_groups_digital()
 end
 
 function game.get_area_group_name(main_area)
-    return game.areas.names[main_area].group;
+    if game.areas.names[main_area] and game.areas.names[main_area].group then
+        return game.areas.names[main_area].group;
+    end
+    return "Unknown Main Area";
 end
 
 function game.in_real_world()
@@ -427,6 +396,23 @@ function game.add_zenny(some_zenny)
     game.set_zenny(game.get_zenny() + some_zenny);
 end
 
+function game.get_bug_frags()
+    return game.ram.get.bug_frags();
+end
+
+function game.set_bug_frags(new_bug_frags)
+    if new_bug_frags < 0 then
+        new_bug_frags = 0
+    elseif new_bug_frags > 32 then
+        new_bug_frags = 32; -- TBD
+    end
+    game.ram.set.bug_frags(new_bug_frags);
+end
+
+function game.add_bug_frags(some_bug_frags)
+    game.set_bug_frags(game.get_bug_frags() + some_bug_frags);
+end
+
 function game.get_PowerUPs()
     return game.ram.get.PowerUP();
 end
@@ -444,36 +430,19 @@ function game.add_PowerUPs(some_PowerUPs)
     game.set_PowerUPs(game.get_PowerUPs() + some_PowerUPs);
 end
 
-function game.get_IceBlocks()
-    return game.ram.get.IceBlock();
-end
-
-function game.set_IceBlocks(new_IceBlocks)
-    if new_IceBlocks < 0 then
-        new_IceBlocks = 0
-    elseif new_IceBlocks > 53 then
-        new_IceBlocks = 53;
-    end
-    game.ram.set.IceBlock(new_IceBlocks);
-end
-
-function game.add_IceBlocks(some_IceBlocks)
-    game.set_IceBlocks(game.get_IceBlocks() + some_IceBlocks);
-end
-
 ---------------------------------------- Battlechips ----------------------------------------
 
 function game.get_chip_name(ID)
-    return game.chips.names[ID];
+    return game.chips.names[ID] or "Unknown Chip ID";
 end
 
 function game.get_chip_code(code)
-    return game.chips.codes[code];
+    return game.chips.codes[code] or "Unknown Chip Code";
 end
 
 function game.count_library()
     local count = 0;
-    for i=0,0x1F do
+    for i=0,0x20 do -- 33 total bytes?
         local byte = game.ram.get.library(i);
         for i=0,7 do
             if bit.check(byte, i) then
@@ -520,6 +489,14 @@ function game.get_cursor_position_folder()
     return game.ram.get.cursor_folder();
 end
 
+function game.get_cursor_offset_pack()
+    return game.ram.get.offset_pack();
+end
+
+function game.get_cursor_position_pack()
+    return game.ram.get.cursor_pack();
+end
+
 ----------------------------------------Mega Modifications ----------------------------------------
 
 function game.set_buster_stats(power_level)
@@ -544,26 +521,21 @@ function game.op_buster_stats()
     game.set_buster_stats(7); -- 327 buster shots
 end
 
-function game.give_armor()
-    game.ram.set.armor_heat(1);
-    game.ram.set.armor_aqua(1);
-    game.ram.set.armor_wood(1);
-end
-
 function game.get_HPMemory_count()
     return game.ram.get.HPMemory();
 end
 
 function game.calculate_max_HP()
-    return 100 + 20 * game.get_HPMemory_count();
+    return 100 + (20 * game.get_HPMemory_count());
 end
 
 function game.calculate_mega_level()
     level = 1; -- starting level
     level = level + 1 * game.get_HPMemory_count();
-    level = level + 3 * game.ram.get.buster_attack();
-    level = level + 3 * game.ram.get.buster_rapid();
-    level = level + 3 * game.ram.get.buster_charge();
+    level = level + 4 * game.ram.get.buster_attack();
+    level = level + 4 * game.ram.get.buster_rapid();
+    level = level + 4 * game.ram.get.buster_charge();
+    -- plus 6 from style change
     return level;
 end
 
@@ -578,7 +550,7 @@ function game.get_enemy_ID(which_enemy)
 end
 
 function game.get_enemy_name(which_enemy)
-    return game.enemies.names[game.get_enemy_ID(which_enemy)] or "Unknown";
+    return game.enemies.names[game.get_enemy_ID(which_enemy)] or "Unknown Enemy";
 end
 
 function game.get_enemy_HP(which_enemy)
@@ -617,7 +589,7 @@ function game.fill_custom_gauge()
 end
 
 function game.max_chip_window_count()
-    game.ram.set.chip_window_count(15);
+    game.ram.set.chip_window_count(10);
 end
 
 function game.get_delete_timer()
@@ -643,28 +615,31 @@ function game.get_draw_slot(which_slot)
 end
 
 function game.get_draw_slots()
-    slots = {};
+    local slots = {};
     for i=1,30 do
         slots[i] = game.get_draw_slot(i);
     end
     return slots;
 end
 
-function game.get_draw_slots_text()
+function game.get_draw_slots_text_one_line()
     local slots = game.get_draw_slots();
-    local slots_text = "";
+    local RNG_index = game.get_RNG_index() or "????";
+    local slots_text = string.format("%s:", RNG_index);
     for i=1,30 do
         slots_text = string.format("%s %02u", slots_text, slots[i]);
     end
-    local RNG_index = game.get_RNG_index() or "????";
-    return string.format("%s:%s", RNG_index, slots_text);
+    return slots_text;
 end
 
-function game.print_draw_slots()
-    slots = game.get_draw_slots();
-    for i=1,10 do -- limited to 25 prints per frame
-        print(string.format("%02u: %02u | %02u: %02u | %02u: %02u", i, slots[i], i+10, slots[i+10], i+20, slots[i+20]));
+function game.get_draw_slots_text_multi_line()
+    local slots = game.get_draw_slots();
+    local RNG_index = game.get_RNG_index() or "????";
+    local slots_text = string.format("%s:", RNG_index);
+    for i=1,30 do
+        slots_text = string.format("%s\n%02u: %02u", slots_text, i, slots[i]);
     end
+    return slots_text;
 end
 
 function game.shuffle_folder()
@@ -687,19 +662,27 @@ function game.draw_only_slot(which_slot)
     end
 end
 
+function game.draw_slot_check(chip_ID, draw_depth)
+    for i=0,draw_depth-1 do
+        if game.ram.get.folder_ID(game.ram.get.draw_slot(i)) == chip_ID then
+            return true;
+        end
+    end
+    return false;
+end
+
+function game.find_first(chip_ID)
+    for i=0,29 do
+        if game.ram.get.folder_ID(game.ram.get.draw_slot(i)) == chip_ID then
+            return i;
+        end
+    end
+    return -1;
+end
+
 ---------------------------------------- Miscellaneous ----------------------------------------
 
-function game.get_door_code()
-    return game.ram.get.door_code();
-end
 
-function game.set_door_code(new_door_code)
-    game.ram.set.door_code(new_door_code);
-end
-
-function game.near_number_doors() -- NumberMan Scenario or WWW Comp 2
-    return (0x12 <= game.get_progress() and game.get_progress() <= 0x15) or (game.get_main_area() == 0x85 and game.get_sub_area() == 0x01);
-end
 
 ---------------------------------------- Routing ----------------------------------------
 
@@ -753,7 +736,7 @@ function game.get_encounter_threshold()
     local curve_offset = (game.get_main_area() - 0x80) * 0x10 + game.get_sub_area();
     curve = memory.read_u8(curve_addr + curve_offset);
     local odds_addr = game.ram.addr.encounter_odds;
-    local test_level = math.min(math.floor(game.get_steps() / 64) + 1, 16);
+    local test_level = math.min(math.floor(game.get_steps() / 64), 16);
     return memory.read_u8(odds_addr + test_level * 8 + curve);
 end
 
@@ -761,7 +744,9 @@ function game.get_encounter_chance()
     return (game.get_encounter_threshold() / 32) * 100;
 end
 
-function game.would_get_encounter() -- 0x8000000C 0x72
+function game.would_get_encounter()
+    -- 0xBC61AB0C no encounters
+    -- 0x439E54F2 yes encounters
     return game.get_encounter_threshold() > (game.get_RNG_value() % 0x20);
 end
 
