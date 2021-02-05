@@ -30,6 +30,9 @@ ram.set.battle_pointer = function(battle_pointer) memory.write_u16_le(ram.addr.b
 ram.get.battle_state = function() return memory.read_u8(ram.addr.battle_state); end;
 ram.set.battle_state = function(battle_state) memory.write_u8(ram.addr.battle_state, battle_state); end;
 
+ram.get.bug_frags = function() return memory.read_u8(ram.addr.bug_frags); end;
+ram.set.bug_frags = function(bug_frags) memory.write_u8(ram.addr.bug_frags, bug_frags); end;
+
 ram.get.buster_attack = function() return memory.read_u8(ram.addr.buster_attack); end;
 ram.set.buster_attack = function(buster_attack) memory.write_u8(ram.addr.buster_attack, buster_attack); end;
 ram.get.buster_rapid = function() return memory.read_u8(ram.addr.buster_rapid); end;
@@ -101,6 +104,13 @@ ram.set.HPMemory = function(HPMemory) memory.write_u8(ram.addr.HPMemory, HPMemor
 ram.get.library = function(offset) return memory.read_u8(ram.addr.library+offset); end;
 ram.set.library = function(offset, bit_flags) memory.write_u8(ram.addr.library+offset, bit_flags); end;
 
+ram.get.pack_ID = function(which_slot) return memory.read_u8(ram.addr.pack_ID+(0x20*which_slot)); end;
+ram.set.pack_ID = function(which_slot, chip_ID) memory.write_u8(ram.addr.pack_ID+(0x20*which_slot), chip_ID); end;
+ram.get.pack_code = function(which_slot) return memory.read_u8(ram.addr.pack_code+(0x20*which_slot)); end;
+ram.set.pack_code = function(which_slot, chip_code) memory.write_u8(ram.addr.pack_code+(0x20*which_slot), chip_code); end;
+ram.get.pack_quantity = function(which_slot) return memory.read_u8(ram.addr.pack_quantity+(0x20*which_slot)); end;
+ram.set.pack_quantity = function(which_slot, chip_quantity) memory.write_u8(ram.addr.pack_quantity+(0x20*which_slot), chip_quantity); end;
+
 ram.get.play_time = function() return memory.read_u32_le(ram.addr.play_time_frames); end;
 ram.set.play_time = function(play_time_frames) memory.write_u32_le(ram.addr.play_time_frames, play_time_frames); end;
 
@@ -125,6 +135,14 @@ ram.set.your_Y = function(your_Y) memory.write_s16_le(ram.addr.your_Y, your_Y); 
 
 ram.get.zenny = function() return memory.read_u32_le(ram.addr.zenny); end;
 ram.set.zenny = function(zenny) memory.write_u32_le(ram.addr.zenny, zenny); end;
+
+---------------------------------------- Abstraction Layer ----------------------------------------
+
+--function ram.get.star_yellow() return 0; end
+--function ram.set.star_yellow() return  ; end
+--function ram.get.star_green() return 0; end
+--function ram.set.star_green() return  ; end
+--function ram.get.star_count() return 5; end
 
 ---------------------------------------- RNG Functions ----------------------------------------
 
