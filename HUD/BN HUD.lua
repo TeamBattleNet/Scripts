@@ -17,7 +17,7 @@ function load_HUD()
     elseif (code == 0x423641 or code == 0x583341) then
         return require("BN3/HUD");
     elseif (code == 0x573442 or code == 0x423442) then
-        --return require("BN4/HUD");
+        return require("BN4/HUD");
     elseif (code == 0x425242 or code == 0x4B5242) then
         --return require("BN5/HUD");
     elseif (code == 0x355242 or code == 0x365242) then
