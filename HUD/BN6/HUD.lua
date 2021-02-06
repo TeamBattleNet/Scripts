@@ -1,4 +1,4 @@
--- HUD Script for Mega Man Battle Network 1, enjoy.
+-- HUD Script for Mega Man Battle Network 6, enjoy.
 
 -- To use: Hold L and R, then press:
 -- Start to turn HUD on/off
@@ -6,7 +6,7 @@
 -- Left/Right/Up/Down to navigate Commands
 -- B to activate the Command Option
 
--- https://docs.google.com/spreadsheets/d/e/2PACX-1vT5JrlG2InVHk4Rxpz_o3wQ5xbpNj2_n87wY0R99StH9F5P5Cp8AFyjsEQCG6MVEaEMn9dJND-k5M-P/pubhtml Did you check the notes?
+-- https://docs.google.com/spreadsheets/d/e/2PACX-1vQb_XCTr9e4NnilHQtTY7IYrGMIFYW3s5kUjy9GarFhGBOvDrvEHzfsLQPetXjP7mF7lRR6GhY4sQ-2/pubhtml Did you check the notes?
 
 local hud = {};
 hud.minor_version = "0.1";
@@ -20,10 +20,6 @@ local options = {};
 
 local show_HUD = true;
 local command_mode = false;
-
-local current_state = nil;
-local previous_state = nil;
-local state_changed = false;
 
 local keys_held = {};
 local keys_previous = {};
