@@ -12,7 +12,7 @@ local hud = {};
 hud.minor_version = "0.1";
 
 local game = require("BN6/Game");
-local commands = require("BN6/Commands");
+local commands = require("BN6/Controls");
 
 ---------------------------------------- Support Functions ----------------------------------------
 
