@@ -87,6 +87,10 @@ addresses.pack_ID             = 0; -- 1 byte, chip  ID  of pack slot 1
 addresses.pack_code           = 0; -- 1 byte, chip code of pack slot 1
 addresses.version_byte        = 0; -- 1 byte
 
+-- 000000 - 0000FF
+
+addresses.virus_deletions     = 0x02000071; -- 1 byte values, sorted by virus ID. Ends at 0x0200008D
+
 -- 001100 - 0011FF
 
 addresses.lazy_RNG            = 0x02001120; -- 4 bytes, resets and pauses on the title screen
