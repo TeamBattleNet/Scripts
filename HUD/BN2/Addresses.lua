@@ -218,7 +218,7 @@ if     version_byte == 0x4A then -- J
 elseif version_byte == 0x45 then -- E
     addresses.version_name      = "English";
     addresses.encounter_odds    = 0x08009934;
-    addresses.encounter_curve   = 0x080099BC;
+    addresses.encounter_curve   = 0x080099BC; -- 8DEB - 9F9C ?
 elseif version_byte == 0x50 then -- P
     addresses.version_name      = "PAL";
     addresses.encounter_odds    = 0x08009940;

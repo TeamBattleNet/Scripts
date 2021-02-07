@@ -509,6 +509,30 @@ end
 
 ------------------------------------------------------------------------------------------------------------------------
 
+--[[
+//encounter check every 64 steps
+//table of encounterRate table at 0800D2F4
+encounterRate = readByte(0800D2F4 + (area * 16) + subarea)
+if sneakrun is bugged encounterRate = 0
+encounterCheckNumber = steps / 64 //(capped out at 16)
+//encounterCheckValue table at 0800D26C
+encounterCheckValue = readByte(0800D26C + (encounterCheckNumber * 16) + encounterRate)
+//rng1 is the one at 02009800
+randomNum = rng1_get_uint() & 0x1F
+if randomNum is >= encounterCheckValue there is no encounter
+if locenemy is on
+    if rng1_get_int() & 1 == 0
+        do locenemybattle
+Gets list of battles filtered by your navi cust (oil body, battery ect)
+if that list is empty gets unfiltered list
+//rng2 is the one at 02009730
+randomNum = (rng2_get_int() >> 0x10) % sumBattleProbabilities
+loops through list of battle list subtracting the probability of that battle from the random number
+when that number if finally < 0 that battle is selected
+if sneakrun is not active ends encounter routine
+if hp is greater than battles threshold no encounter
+--]]
+
 -- Encounter Tracking and Avoidance
 
 local last_encounter_check = 0; -- the previous value of check
