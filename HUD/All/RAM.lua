@@ -45,6 +45,9 @@ ram.set.check = function(check) memory.write_u32_le(ram.addr.check, check); end;
 ram.get.chip_cooldown = function() return memory.read_u8(ram.addr.chip_cooldown); end;
 ram.set.chip_cooldown = function(chip_cooldown) memory.write_u8(ram.addr.chip_cooldown, chip_cooldown); end;
 
+ram.get.chip_window_size = function() return memory.read_u8(ram.addr.chip_window_size); end;
+ram.set.chip_window_size = function(chip_window_size) memory.write_u8(ram.addr.chip_window_size, chip_window_size); end;
+
 ram.get.cursor_ID = function() return memory.read_u16_le(ram.addr.cursor_ID); end;
 ram.set.cursor_ID = function(cursor_ID) memory.write_u16_le(ram.addr.cursor_ID, cursor_ID); end;
 ram.get.cursor_code = function() return memory.read_u16_le(ram.addr.cursor_code); end;
@@ -68,8 +71,8 @@ ram.set.offset_selected = function(offset_selected) memory.write_u16_le(ram.addr
 ram.get.custom_gauge = function() return memory.read_u16_le(ram.addr.battle_custom_gauge); end;
 ram.set.custom_gauge = function(custom_gauge_fill) memory.write_u16_le(ram.addr.battle_custom_gauge, custom_gauge_fill); end;
 
-ram.get.delete_timer = function() return memory.read_u16_le(ram.addr.battle_timer); end;
-ram.set.delete_timer = function(battle_timer) memory.write_u16_le(ram.addr.battle_timer, battle_timer); end;
+ram.get.delete_timer = function() return memory.read_u16_le(ram.addr.delete_timer); end;
+ram.set.delete_timer = function(delete_timer) memory.write_u16_le(ram.addr.delete_timer, delete_timer); end;
 
 ram.get.enemy = {}
 ram.set.enemy = {}

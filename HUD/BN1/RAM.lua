@@ -25,9 +25,6 @@ ram.set.battle_paused_also = function(battle_paused_also) memory.write_u8(ram.ad
 ram.get.chip_selected_flag = function() return memory.read_u8(ram.addr.chip_selected_flag); end;
 ram.set.chip_selected_flag = function(chip_selected_flag) memory.write_u8(ram.addr.chip_selected_flag, chip_selected_flag); end;
 
-ram.get.chip_window_count = function() return memory.read_u8(ram.addr.chip_window_count); end;
-ram.set.chip_window_count = function(chip_window_count) memory.write_u8(ram.addr.chip_window_count, chip_window_count); end;
-
 ram.get.check = function() return memory.read_u32_le(ram.addr.check); end;
 ram.set.check = function(check) memory.write_u32_le(ram.addr.check, check); end;
 
@@ -161,9 +158,9 @@ local function use_fun_flags(fun_flags)
     end
     
     if fun_flags.chip_selection_max then
-        ram.set.chip_window_count(15);
+        ram.set.chip_window_size(15);
     elseif fun_flags.chip_selection_one then
-        ram.set.chip_window_count(1);
+        ram.set.chip_window_size( 1);
     end
     
     if fun_flags.no_encounters then

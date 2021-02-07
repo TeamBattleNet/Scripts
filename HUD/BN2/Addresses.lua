@@ -98,7 +98,9 @@ addresses.battles_cust          = 0x02003A6C; -- 4 bytes
 addresses.battles_team          = 0x02003A70; -- 4 bytes
 addresses.battles_shld          = 0x02003A74; -- 4 bytes
 
-addresses.custom_gauge_battle   = 0x02004F0C; -- 2 bytes, counts up to 0x4000
+addresses.chip_window_size_next = 0x02004EEE; -- 1 byte, number of chips available in the custom menu on next open
+
+addresses.battle_custom_gauge   = 0x02004F0C; -- 2 bytes, counts up to 0x4000
 
 addresses.enemy[1].ID           = 0x02004F3C; -- 1 byte
 addresses.enemy[2].ID           = 0x02004F3D; -- 1 byte
@@ -116,18 +118,21 @@ addresses.your_Y2               = 0x02000000; -- 2 bytes
 --addresses.                    = 0x0200EEF1; -- 1 byte, custom menu state: 0x04 chip select 0x0C OK 0x10 ADD
 --addresses.                    = 0x0200EEF4; -- 1 byte, battle data
 addresses.custom_hover_slot     = 0x0200EEF5; -- 1 byte
+addresses.chip_window_size      = 0x0200EEF9; -- 1 byte, number of chips available in the custom menu currently
 addresses.custom_hover_slot     = 0x0200EF38; -- 1 byte each, select visual state: 0x00 normal 0x01 selected 0x02 black out
 addresses.custom_folder_slot    = 0x0200EF42; -- 1 byte each, the selected folder slots (in order)
 addresses.custom_select_slot    = 0x0200EF47; -- 1 byte each, the selected  chip  slots (in order)
 addresses.custom_select_code    = 0x0200EF51; -- 1 byte each, the selected  chip  codes (in order)
 addresses.custom_gauge_fill     = 0x0200EF91; -- 1 byte, counts up to 0x80
-addresses.custom_gauge_visual   = 0x0200EF91; -- 1 byte, loops
+addresses.custom_gauge_visual   = 0x0200EF92; -- 1 byte, loops
 addresses.battle_visual_state   = 0x0200EFA5; -- 1 byte, normal, BATTLE START!, PAUSE
-addresses.battle_timer          = 0x0200EFBA; -- 2 bytes, frame counter for current battle (doesn't pause?)
+addresses.battle_timer          = 0x0200EFBA; -- 2 bytes, frame counter from load in to load out
 
 addresses.enemy[1].HP_text      = 0x0200EFD2; -- 2 bytes, which_enemy * 0x08, for counting down HP over time
 addresses.enemy[2].HP_text      = 0x0200EFDA; -- 2 bytes, which_enemy * 0x08, for counting down HP over time
 addresses.enemy[3].HP_text      = 0x0200EFE2; -- 2 bytes, which_enemy * 0x08, for counting down HP over time
+
+addresses.delete_timer          = 0x02004F1C; -- 2 bytes, frame counter for current battle
 
 addresses.menu_mode             = 0x02007EA0; -- 1 byte
 addresses.menu_state            = 0x02007EA1; -- 1 byte

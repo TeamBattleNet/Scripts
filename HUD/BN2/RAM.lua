@@ -16,9 +16,6 @@ ram.set.battle_paused = function(battle_paused) memory.write_u8(ram.addr.battle_
 ram.get.bug_frags = function() return memory.read_u8(ram.addr.bug_frags); end;
 ram.set.bug_frags = function(bug_frags) memory.write_u8(ram.addr.bug_frags, bug_frags); end;
 
-ram.get.chip_window_count = function() return memory.read_u8(ram.addr.chip_window_count); end;
-ram.set.chip_window_count = function(chip_window_count) memory.write_u8(ram.addr.chip_window_count, chip_window_count); end;
-
 ram.get.draw_slot = function(which_slot) return memory.read_u8(ram.addr.battle_draw_slots+which_slot); end;
 ram.set.draw_slot = function(which_slot, battle_draw_slot) memory.write_u8(ram.addr.battle_draw_slots+which_slot, battle_draw_slot); end;
 
@@ -120,9 +117,9 @@ local function use_fun_flags(fun_flags)
     end
     
     if fun_flags.chip_selection_max then
-        ram.set.chip_window_count(15);
+        ram.set.chip_window_size(10);
     elseif fun_flags.chip_selection_one then
-        ram.set.chip_window_count(1);
+        ram.set.chip_window_size( 1);
     end
     
     if fun_flags.no_encounters then
