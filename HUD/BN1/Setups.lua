@@ -13,7 +13,7 @@ setups.add_sequence("Open & Close Menu", function()
     setups.press_buttons(30, "Menu", {});
 end);
 
-setups.add_sequence("GutsMan", function()
+setups.add_sequence("359: GutsMan", function()
     setups.soft_reset(); -- RNG Index: 354-364 (359)
     setups.press_buttons(  40, "Area Loading..", {});
     setups.press_buttons(   1, "Talk to Dex"   , {A=true});
@@ -32,7 +32,7 @@ setups.add_sequence("GutsMan", function()
     setups.press_buttons(   1, "Start fight!"  , {A=true});
 end);
 
-setups.add_sequence("SkullMan (2nd Talk)", function()
+setups.add_sequence("359: SkullMan (2nd Talk)", function()
     setups.soft_reset(); -- RNG Index: 354-364 (359)
     setups.press_buttons(  40, "Area Loading..", {});
     setups.press_buttons(   1, "Talk to Miyu"  , {A=true});
@@ -49,6 +49,15 @@ setups.add_sequence("SkullMan (2nd Talk)", function()
     setups.press_buttons(   1, "Textbox"       , {A=true});
     setups.press_buttons(93-6, "Wait on RNG...", {});
     setups.press_buttons(   1, "Start fight!"  , {A=true});
+end);
+
+setups.add_sequence("740: ColorMan", function()
+    setups.soft_reset(); -- RNG Index: 735-746 (740)
+    setups.press_buttons( 40, "Loading..."    , {});
+    setups.press_buttons(279, "Wait on RNG..."     , {});
+    setups.press_buttons(  1, "Jack in to the bus", {R=true});
+    setups.press_buttons(400, "Wait on animation...", {});
+    setups.press_buttons(120, "Skip Cutscene..."     , {Start=true});
 end);
 
 setups.add_folder_edit("Folder 0: Remove All Chips", function()

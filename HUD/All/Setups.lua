@@ -19,7 +19,7 @@ setups.input_override_BN_HUD_reference = event.onframestart(input_override_BN_HU
 function setups.setup_wrapper(some_setup)
     setups.override_inputs = true;
     some_setup();
-    setups.these_buttons = {};
+    setups.these_buttons = {}; -- one frame with no inputs to prevent looping
     emu.frameadvance();
     setups.override_inputs = false;
 end

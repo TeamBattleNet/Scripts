@@ -311,7 +311,7 @@ function hud.update()
 end
 
 function hud.initialize()
-    print(string.format("\nInitializing HUD for MMBN %i...", hud.game.number));
+    print("\nInitializing MMBN HUD...");
     controls.initialize(hud.game.number);
     hud.set_default_text(current_font, current_color);
     hud.game.initialize({maximum_RNG_index = 10 * 60 * 60;}); -- 10 minutes of frames
