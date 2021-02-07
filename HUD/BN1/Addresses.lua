@@ -35,11 +35,16 @@ addresses.enemy[1] = {};
 addresses.enemy[2] = {};
 addresses.enemy[3] = {};
 
+addresses.folder    = {};
+addresses.folder[1] = {};
+addresses.folder[2] = {};
+addresses.folder[3] = {};
+
 ---------------------------------------- WRAM 02000000-0203FFFF ----------------------------------------
 
 addresses.title_star_byte       = 0x02000000; -- 0x04 1 bit for 1 star :)
 addresses.flags_0000            = 0x02000000; -- 00000 star 00
-addresses.flags_0001            = 0x02000001; -- 000 try_access_internet_2 0000 | internet_2_access?
+addresses.flags_0001            = 0x02000001; -- 000 try_access_internet_2 0000
 addresses.flags_0002            = 0x02000002; -- 00000000
 addresses.flags_0003            = 0x02000003; -- 00000000
 addresses.flags_0004            = 0x02000004; -- 00000000
@@ -77,6 +82,12 @@ addresses.fire_flags            = 0x02000070; -- 4 bytes, 32 fire bit flags
 
 addresses.folder_ID             = 0x020001C0; -- every other byte, chip  ID  of folder slot 1, ends at 1FA
 addresses.folder_code           = 0x020001C1; -- every other byte, chip code of folder slot 1, ends at 1FB
+addresses.folder[1].ID          = 0x020001C0; -- for use with common RAM
+addresses.folder[1].code        = 0x020001C1; -- for use with common RAM
+addresses.folder[2].ID          = 0x020001C0; -- there is no folder 2
+addresses.folder[2].code        = 0x020001C1; -- there is no folder 2
+addresses.folder[3].ID          = 0x020001C0; -- there is no folder 3
+addresses.folder[3].code        = 0x020001C1; -- there is no folder 3
 
 -- 1FC-203 ??? 1FF changes a lot
 
@@ -322,6 +333,7 @@ addresses.battle_data           = 0x080852B0; -- plus offset from TBD?
 
 local version_byte = memory.read_u8(addresses.version_byte);
 
+-- A0 A1 A2 A3 A4 A5 A6 A7 A8 A9 AA AB AC AD AE AF - ROM Address
 -- 52 4F 43 4B 4D 41 4E 5F 45 58 45 00 41 52 45 4A - ROCKMAN_EXE AREJ - JP
 -- 4D 45 47 41 4D 41 4E 5F 42 4E 00 00 41 52 45 45 - MEGAMAN_BN  AREE - US
 -- 4D 45 47 41 4D 41 4E 45 58 45 42 4E 41 52 45 50 - MEGAMANEXEBNAREP - PAL
