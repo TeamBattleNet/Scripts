@@ -40,6 +40,12 @@ end
 
 ---------------------------------------- Game State ----------------------------------------
 
+local previous_menu_mode = 0;
+
+function game.did_menu_mode_change()
+    return game.ram.get.menu_mode() ~= previous_menu_mode;
+end
+
 game.elements = {"Elec", "Heat", "Aqua", "Wood"};
 game.element_names = {};
 game.element_names[0x01] = "Elec";
@@ -160,58 +166,6 @@ function game.battle_unpause()
         game.ram.set.battle_paused(0x00);
         --ram.set.battle_paused_also(0x00);
     end
-end
-
-game.menu_mode = {};
-game.menu_mode[0x00] = "FolderSelect";
-game.menu_mode[0x04] = "Subchips";
-game.menu_mode[0x08] = "Library";
-game.menu_mode[0x0C] = "MegaMan";
-game.menu_mode[0x10] = "Mail";
-game.menu_mode[0x14] = "KeyItems";
-game.menu_mode[0x18] = "Network";
-game.menu_mode[0x1C] = "Save";
-game.menu_mode[0x20] = "FolderEdit";
-local previous_menu_mode = 0;
-
-function game.in_menu_folder_select()
-    return game.ram.get.menu_mode() == 0x00;
-end
-
-function game.in_menu_subchips()
-    return game.ram.get.menu_mode() == 0x04;
-end
-
-function game.in_menu_library()
-    return game.ram.get.menu_mode() == 0x08;
-end
-
-function game.in_menu_megaman()
-    return game.ram.get.menu_mode() == 0x0C;
-end
-
-function game.in_menu_mail()
-    return game.ram.get.menu_mode() == 0x10;
-end
-
-function game.in_menu_keyitems()
-    return game.ram.get.menu_mode() == 0x14;
-end
-
-function game.in_menu_network()
-    return game.ram.get.menu_mode() == 0x18;
-end
-
-function game.in_menu_save()
-    return game.ram.get.menu_mode() == 0x1C;
-end
-
-function game.in_menu_folder_edit()
-    return game.ram.get.menu_mode() == 0x20;
-end
-
-function game.in_menu_folder() -- For All/HUD
-    return game.in_menu_folder_edit();
 end
 
 game.folder_state_names = {};

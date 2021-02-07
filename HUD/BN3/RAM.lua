@@ -148,7 +148,7 @@ local battle_HP_max     = 0x02037296; -- 1 byte
 
 -- Addresses -> 08000000-09FFFFFF - Game Pak ROM/FlashROM (max 32MB)
 
-local version           = 0x080000AA; -- 1 byte
+local version           = 0x080000AC; -- 1 byte
 
 local style_elements = {}; -- FWEG but Elec is first, 1 indexed
 style_elements[0x00] = "None";
@@ -183,13 +183,26 @@ game_state_names[0x30] = "credits";
 
 -- Functions -> Game State
 
+-- 52 4F 43 4B 4D 41 4E 5F 45 58 45 33 41 36 42 4A - ROCKMAN_EXE3A6BJ - JP exe3
+-- 52 4F 43 4B 5F 45 58 45 33 5F 42 4B 41 33 58 4A - ROCK_EXE3_BKA3XJ - JP black
+-- 4D 45 47 41 5F 45 58 45 33 5F 42 4C 41 33 58 45 - MEGA_EXE3_BLA3XE - US blue / vc
+-- 4D 45 47 41 5F 45 58 45 33 5F 57 48 41 36 42 45 - MEGA_EXE3_WHA6BE - US white / vc
+-- 4D 45 47 41 5F 45 58 45 33 5F 57 48 41 36 42 50 - MEGA_EXE3_WHA6BP - PAL
+-- 4D 45 47 41 5F 45 58 45 33 5F 42 4C 41 33 58 50 - MEGA_EXE3_BLA3XP - PAL
+
 function ram.get_version()
-    if memory.read_u8(version) == 0x42 then
-        return "Blue/Black";
-    elseif memory.read_u8(version) == 0x45 then
-        return "EXE";
-    elseif memory.read_u8(version) == 0x57 then
-        return "White";
+    if     memory.read_u32_le(version) == 0x4A423641 then
+        return "JP White";
+    elseif memory.read_u32_le(version) == 0x4A583341 then
+        return "JP Black";
+    elseif memory.read_u32_le(version) == 0x45583341 then
+        return "US White";
+    elseif memory.read_u32_le(version) == 0x45423641 then
+        return "US Blue";
+    elseif memory.read_u32_le(version) == 0x50423641 then
+        return "PAL White";
+    elseif memory.read_u32_le(version) == 0x50583341 then
+        return "PAL Blue";
     end
     return "???"; -- 1.0 or 1.1 differences?
 end

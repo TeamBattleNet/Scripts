@@ -52,6 +52,59 @@ function game.set_progress_safe(new_progress)
     end
 end
 
+-- Mode & State
+
+game.menu_mode_names = {};
+game.menu_mode_names[0x00] = "Folder Select";
+game.menu_mode_names[0x04] = "Sub Chips";
+game.menu_mode_names[0x08] = "Library";
+game.menu_mode_names[0x0C] = "MegaMan";
+game.menu_mode_names[0x10] = "E-Mail";
+game.menu_mode_names[0x14] = "Key Items";
+game.menu_mode_names[0x18] = "Network";
+game.menu_mode_names[0x1C] = "Save";
+game.menu_mode_names[0x20] = "Folder Edit";
+
+function game.get_menu_mode_name()
+    return game.menu_mode_names[game.ram.get.menu_mode()] or "Unknown Menu Mode";
+end
+
+function game.in_menu_folder_select()
+    return game.ram.get.menu_mode() == 0x00;
+end
+
+function game.in_menu_subchips()
+    return game.ram.get.menu_mode() == 0x04;
+end
+
+function game.in_menu_library()
+    return game.ram.get.menu_mode() == 0x08;
+end
+
+function game.in_menu_megaman()
+    return game.ram.get.menu_mode() == 0x0C;
+end
+
+function game.in_menu_email()
+    return game.ram.get.menu_mode() == 0x10;
+end
+
+function game.in_menu_keyitems()
+    return game.ram.get.menu_mode() == 0x14;
+end
+
+function game.in_menu_network()
+    return game.ram.get.menu_mode() == 0x18;
+end
+
+function game.in_menu_save()
+    return game.ram.get.menu_mode() == 0x1C;
+end
+
+function game.in_menu_folder_edit()
+    return game.ram.get.menu_mode() == 0x20;
+end
+
 ----------------------------------------Battle Information ----------------------------------------
 
 function game.get_battle_pointer()

@@ -50,7 +50,7 @@ function controls.set_command_mode(new_command_mode)
 end
 
 local function record_menu_buttons()
-    if hud.game.in_menu() and hud.game.in_menu_folder() then
+    if hud.game.in_menu() and hud.game.in_menu_folder_edit() then
         if buttons_down.Up then
             buttons_string = buttons_string .. " ^"; -- ↑ ▲
         end
@@ -328,7 +328,7 @@ function hud.initialize()
     hud.set_default_text(current_font, current_color);
     hud.game.initialize({maximum_RNG_index = 10 * 60 * 60;}); -- 10 minutes of frames
     process_inputs_BN_HUD_reference = event.onframestart(process_inputs_BN_HUD, "process_inputs_BN_HUD");
-    print(string.format("\nInitialized HUD %s for MMBN %s %s!", hud.version, hud.game.number, hud.game.get_version_name()));
+    print(string.format("\nInitialized HUD %s for MMBN %s - %s!", hud.version, hud.game.number, hud.game.get_version_name()));
 end
 
 return hud;

@@ -151,6 +151,10 @@ function game.in_menu_folder()
     return game.ram.get.menu_mode() == 0x00;
 end
 
+function game.in_menu_folder_edit()
+    return game.in_menu_folder(); -- BN 1 doesn't have Folder Selection menu mode
+end
+
 function game.in_menu_library()
     return game.ram.get.menu_mode() == 0x04;
 end
