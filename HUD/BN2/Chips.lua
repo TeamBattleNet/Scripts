@@ -383,7 +383,7 @@ function chips.get_random_ID_standard()
     return get_valid(  1, 193);
 end
 
-function chips.get_random_ID_navi()
+function chips.get_random_ID_mega()
     return get_valid(194, 250);
 end
 

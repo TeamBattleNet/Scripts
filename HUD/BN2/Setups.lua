@@ -1,147 +1,98 @@
 -- Specific Sequences of Inputs for MMBN 2 scripting, enjoy.
 
-local setups = {};
+local setups = require("All/Setups");
 
-local function next_frame(message, ...)
-    message = message or "";
-    gui.pixelText(0, 0, string.format(message, ...));
-    emu.frameadvance();
-end
+setups.add_sequence("Open & Close Menu", function()
+    setups.press_buttons( 2, "Menu", {Start=true});
+    setups.press_buttons(20, "Menu", {});
+    setups.press_buttons( 2, "Menu", {A=true});
+    setups.press_buttons(40, "Menu", {});
+    setups.press_buttons( 2, "Menu", {B=true});
+    setups.press_buttons(60, "Menu", {});
+    setups.press_buttons( 2, "Menu", {B=true});
+    setups.press_buttons(30, "Menu", {});
+end);
 
-local function wait_for(what, frames, buttons)
-    buttons = buttons or {};
-    for i=1,frames do
-        joypad.set(buttons);
-        next_frame("Waiting for %s: %4i", what, frames-i);
-    end
-end
+setups.add_sequence("359: GutsMan", function()
+    setups.soft_reset(); -- RNG Index: 354-364 (359)
+    setups.press_buttons(  40, "Area Loading..", {});
+    setups.press_buttons(   1, "Talk to Dex"   , {A=true});
+    setups.press_buttons(  20, "Wait on text..", {});
+    setups.press_buttons(   1, "Textbox"       , {A=true});
+    setups.press_buttons(  10, "Wait on text..", {});
+    setups.press_buttons(   1, "Textbox"       , {A=true});
+    setups.press_buttons(  15, "Wait on text..", {});
+    setups.press_buttons(   1, "Textbox"       , {A=true});
+    setups.press_buttons(  20, "Wait on text..", {});
+    setups.press_buttons(   2, "Move to Yes"   , {Left=true});
+    setups.press_buttons(   1, "Select Yes"    , {A=true});
+    setups.press_buttons(  15, "Wait on text..", {});
+    setups.press_buttons(   1, "Textbox"       , {A=true});
+    setups.press_buttons(87+6, "Wait on RNG...", {});
+    setups.press_buttons(   1, "Start fight!"  , {A=true});
+end);
 
-local function soft_reset()
-    joypad.set({A=true, B=true, Start=true, Select=true});
-    next_frame();
-    
-    wait_for("START", 65+5);
-    
-    joypad.set({Start=true});
-    next_frame();
-    
-    joypad.set({A=true});
-    next_frame();
-end
-
-local setup_teleport = {description = "Open & Close Menu"};
-function setup_teleport.doit()
-    joypad.set({Start=true});
-    next_frame();
-    joypad.set({Start=true});
-    next_frame();
-    wait_for("Menu", 20);
-    
-    joypad.set({A=true});
-    next_frame();
-    joypad.set({A=true});
-    next_frame();
-    wait_for("Menu", 40);
-    
-    joypad.set({B=true});
-    next_frame();
-    joypad.set({B=true});
-    next_frame();
-    wait_for("Menu", 60);
-    
-    joypad.set({B=true});
-    next_frame();
-    joypad.set({B=true});
-    next_frame();
-    wait_for("Menu", 30);
-end
-table.insert(setups, setup_teleport);
-
-local setup_gutsman = {description = "GutsMan"};
-function setup_gutsman.doit()
-    soft_reset();
-    
-    wait_for("Area Load", 40);
-    
-    joypad.set({A=true});
-    next_frame();
-    wait_for("Text", 20);
-    
-    joypad.set({A=true});
-    next_frame();
-    wait_for("Text", 10);
-    
-    joypad.set({A=true});
-    next_frame();
-    wait_for("Text", 15);
-    
-    joypad.set({A=true});
-    next_frame();
-    wait_for("Text", 20);
-    
-    joypad.set({Left=true});
-    next_frame();
-    joypad.set({Left=true});
-    next_frame();
-    joypad.set({A=true});
-    next_frame();
-    wait_for("Text", 15);
-    
-    joypad.set({A=true});
-    next_frame();
-    
-    wait_for("RNG", 87+6);
-    
-    joypad.set({A=true}); -- RNG Index: 354-364 (359)
-    next_frame();
-end
-table.insert(setups, setup_gutsman);
-
-local function folder_edit_button(button)
-    -- Up, Down, L, and R require 2 frames to fire
-    next_frame();
-    joypad.set(button);
-    next_frame();
-    joypad.set(button);
-    next_frame();
-    if button.Right or button.Left then
-        wait_for("Folder Transition", 15);
-    end
-end
-
-local function folder_edit_buttons(buttons)
-    for i,button in pairs(buttons) do
-        folder_edit_button(button);
-    end
-end
-
-local setup_folder_empty = {description = "Folder 0: Remove All Chips"};
-function setup_folder_empty.doit()
+setups.add_folder_edit("Folder 0: Remove All Chips", function()
     for i=1,30 do
-        folder_edit_buttons({
+        setups.folder_edit_buttons({
             {A=true};
             {A=true};
             {Down=true};
         });
     end
-end
-table.insert(setups, setup_folder_empty);
+end);
 
-local setup_folder_template = {description = "Folder #: Name"};
-function setup_folder_template.doit()
-    folder_edit_buttons({
+setups.add_folder_edit("Folder 1: Tutorial", function()
+    setups.folder_edit_buttons({
         {A=true};
-        {B=true};
+        {R=true};
+        {R=true};
+        {Down=true};
+        {Down=true};
+        {A=true};
         {L=true};
+        {Up=true};
+        {A=true};
+        {L=true};
+        {Down=true};
+        {A=true};
+        {A=true};
+        {Up=true};
+        {A=true};
+        {A=true};
+        {R=true};
+        {R=true};
         {R=true};
         {Up=true};
+        {Up=true};
+        {Up=true};
+        {A=true};
         {Down=true};
-        {Left=true};
-        {Right=true};
-        {Start=true};
+        {A=true};
+        {Up=true};
+        {Up=true};
+        {A=true};
+        {L=true};
+        {A=true};
+        {Down=true};
+        {A=true};
+        {L=true};
+        {Down=true};
+        {A=true};
+        {R=true};
+        {Down=true};
+        {Down=true};
+        {A=true};
+        {A=true};
+        {R=true};
+        {A=true};
+        {R=true};
+        {Down=true};
+        {A=true};
+        {L=true};
+        {A=true};
     });
-end
---table.insert(setups, setup_folder_template);
+end);
 
-return setups;
+return { sequences=setups.sequences; folder_edits= setups.folder_edits};
 

@@ -79,7 +79,7 @@ local function display_game_info()
     hud.to_screen("HUD  Version: " .. hud.version);
 end
 
----------------------------------------- HUD Functions ----------------------------------------
+---------------------------------------- HUD Modes ----------------------------------------
 
 local function HUD_speedrun()
     hud.to_screen(string.format("Progress: 0x%02X %s", hud.game.get_progress(), hud.game.get_current_progress_name()));
@@ -213,8 +213,8 @@ table.insert(hud.HUDs, HUD_speedrun);
 ---------------------------------------- Module Controls ----------------------------------------
 
 function hud.B()
-    print("\n" .. hud.hud.game.get_draw_slots_text_multi_line());
-    print("\n" .. hud.hud.game.get_draw_slots_text_one_line());
+    print("\n" .. hud.game.get_draw_slots_text_multi_line());
+    print("\n" .. hud.game.get_draw_slots_text_one_line());
 end
 
 return hud;

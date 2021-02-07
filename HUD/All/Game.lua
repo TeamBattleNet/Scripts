@@ -180,6 +180,14 @@ function game.get_Y()
     return game.ram.get.your_Y();
 end
 
+function game.get_sneak()
+    return game.ram.get.sneak();
+end
+
+function game.reset_sneak()
+    game.ram.set.sneak(6000);
+end
+
 function game.get_steps()
     return game.ram.get.steps();
 end

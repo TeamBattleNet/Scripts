@@ -1,76 +1,10 @@
 -- Commands for MMBN 2 scripting, enjoy.
 
-local controls = {};
+local commands = {};
 
 local game = require("BN2/Game");
-local setups = require("BN2/Setups");
 
-local commands = {};
-local command_index = 1;
 
-local function show_text(message)
-    print(message);
-end
-
-function controls.next()
-    command_index = (command_index % table.getn(commands)) + 1;
-    local command = commands[command_index];
-    show_text("\nCommand Change: " .. command.description());
-end
-
-function controls.previous()
-    command_index = command_index - 1;
-    if command_index == 0 then
-        command_index = table.getn(commands);
-    end
-    local command = commands[command_index];
-    show_text("\nCommand Change: " .. command.description());
-end
-
-function controls.option_down()
-    local command = commands[command_index];
-    command.selection = (command.selection % table.getn(command.options)) + 1;
-    local option = command.options[command.selection];
-    show_text("Option Change: " .. option.text);
-end
-
-function controls.option_up()
-    local command = commands[command_index];
-    command.selection = command.selection - 1;
-    if command.selection == 0 then
-        command.selection = table.getn(command.options);
-    end
-    local option = command.options[command.selection];
-    show_text("Option Change: " .. option.text);
-end
-
-function controls.doit(set_command_mode)
-    local command = commands[command_index];
-    local option = command.options[command.selection];
-    show_text("\nExecuting: " .. command.description());
-    show_text("With Option: " .. option.text);
-    if command.enable_inputs then
-        set_command_mode(false);
-    end
-    command.doit(option.value);
-end
-
-function controls.display_options()
-    local command = commands[command_index];
-    local options = command.options;
-    local lines = {string.format("       %-33s", command.description())};
-    
-    for i=1,table.getn(options) do
-        if i == command.selection then
-            table.insert(lines, string.format("-> %2i: %-33s", i, options[i].text));
-        else
-            table.insert(lines, string.format("   %2i: %-33s", i, options[i].text));
-        end
-    end
-    return lines;
-end
-
-------------------------------------------------------------------------------------------------------------------------
 
 local command_blank = {};
 command_blank.options = {
@@ -99,12 +33,14 @@ command_fun_flags.selection = 1;
 function command_fun_flags.update_options(option_value)
     command_fun_flags.options = {};
     command_fun_flags.description = function() return "These Fun Flags Are:"; end;
-    table.insert( command_fun_flags.options, fun_flag_helper("modulate_steps"   , "Step Modulation") );
-    table.insert( command_fun_flags.options, fun_flag_helper("always_fullcust"  , "Always Fullcust") );
-    --table.insert( command_fun_flags.options, fun_flag_helper("no_chip_cooldown" , "No Chip Cooldown") );
-    table.insert( command_fun_flags.options, fun_flag_helper("delete_time_zero" , "Set Delete Time to 0") );
-    table.insert( command_fun_flags.options, fun_flag_helper("no_encounters"    , "Lock RNG to No  Encounters") );
-    table.insert( command_fun_flags.options, fun_flag_helper("yes_encounters"   , "Lock RNG to Yes Encounters") );
+    table.insert( command_fun_flags.options, fun_flag_helper("modulate_steps"     , "Step Modulation") );
+    table.insert( command_fun_flags.options, fun_flag_helper("always_fullcust"    , "Always Fullcust") );
+    table.insert( command_fun_flags.options, fun_flag_helper("no_chip_cooldown"   , "No Chip Cooldown") );
+    table.insert( command_fun_flags.options, fun_flag_helper("delete_time_zero"   , "Set Delete Time to 0") );
+    table.insert( command_fun_flags.options, fun_flag_helper("chip_selection_one" , "Always Choose  1 Chip") );
+    table.insert( command_fun_flags.options, fun_flag_helper("chip_selection_max" , "Always Choose 15 Chips") );
+    table.insert( command_fun_flags.options, fun_flag_helper("no_encounters"      , "Lock RNG to No  Encounters") );
+    table.insert( command_fun_flags.options, fun_flag_helper("yes_encounters"     , "Lock RNG to Yes Encounters") );
 end
 command_fun_flags.update_options();
 function command_fun_flags.doit(value)
@@ -221,7 +157,6 @@ command_combat.options = {
     { value = function() game.kill_enemy(3);     end; text = "Delete Enemy 3";       };
     { value = function() game.draw_only_slot(0); end; text = "All Draws Are Slot 1"; };
     { value = game.draw_in_order;                     text = "Draw In Order";        };
-    { value = game.max_chip_window_count;             text = "10 Selectable Chips";  };
 };
 command_combat.doit = function(value) value(); end;
 table.insert(commands, command_combat);
@@ -254,14 +189,14 @@ function command_routing.update_options(option_value)
             command_routing.FUNction = function(value) game.ram.adjust_RNG(value); end;
         elseif option_value == 2 then
             command_routing.description = function() return string.format("Modify Steps: %5s", game.get_steps()); end;
-            table.insert( command_routing.options, { value =  9999; text = "Increase by 9999"; } );
+            table.insert( command_routing.options, { value =  1024; text = "Increase by 1024"; } );
             table.insert( command_routing.options, { value =    64; text = "Increase by   64"; } );
             table.insert( command_routing.options, { value =     2; text = "Increase by    2"; } );
             table.insert( command_routing.options, { value =     1; text = "Increase by    1"; } );
             table.insert( command_routing.options, { value =    -1; text = "Decrease by    1"; } );
             table.insert( command_routing.options, { value =    -2; text = "Decrease by    2"; } );
             table.insert( command_routing.options, { value =   -64; text = "Decrease by   64"; } );
-            table.insert( command_routing.options, { value = -9999; text = "Decrease by 9999"; } );
+            table.insert( command_routing.options, { value = -1024; text = "Decrease by 1024"; } );
             command_routing.FUNction = function(value) game.add_steps(value); end;
         elseif option_value == 3 then
             command_routing.description = function() return "Bits, Nibbles, Bytes, and Words."; end;
@@ -293,18 +228,19 @@ function command_progress.update_options(option_value)
     if not option_value then
         command_progress.description = function() return "Select a Progress scenario:"; end;
         table.insert( command_progress.options, { value = 0x00; text = "0x00 Scenario 1";  } );
-        table.insert( command_progress.options, { value = 0x00; text = "0x00 Scenario 2";  } );
-        table.insert( command_progress.options, { value = 0x00; text = "0x00 Scenario 3";  } );
-        table.insert( command_progress.options, { value = 0x00; text = "0x00 Scenario 4";  } );
-        table.insert( command_progress.options, { value = 0x00; text = "0x00 Scenario 5";  } );
-        table.insert( command_progress.options, { value = 0x00; text = "0x00 Scenario 6";  } );
-        table.insert( command_progress.options, { value = 0x00; text = "0x00 Scenario 7";  } );
+        table.insert( command_progress.options, { value = 0x10; text = "0x10 Scenario 2";  } );
+        table.insert( command_progress.options, { value = 0x20; text = "0x20 Scenario 3";  } );
+        table.insert( command_progress.options, { value = 0x30; text = "0x30 Scenario 4";  } );
+        table.insert( command_progress.options, { value = 0x40; text = "0x40 Scenario 5";  } );
+        table.insert( command_progress.options, { value = 0x50; text = "0x50 Scenario 6";  } );
+        table.insert( command_progress.options, { value = 0x60; text = "0x60 Scenario 7";  } );
+        table.insert( command_progress.options, { value = 0x70; text = "0x70 Scenario 7";  } );
     else
         command_progress.description = function() return "Select a Progress value:"; end;
         command_progress.scenario = option_value;
         table.insert( command_progress.options, { value = nil; text = "Previous Menu"; } );
         for i=option_value,option_value+0xF do
-            if game.get_progress_name(i) then
+            if game.is_progress_valid(i) then
                 table.insert( command_progress.options, { value = i; text = string.format("0x%02X: %s", i, game.get_progress_name(i)); } );
             end
         end
@@ -391,14 +327,44 @@ table.insert(commands, teleport_digital_world);
 
 
 local command_setups = {};
-command_setups.options = {};
-command_setups.selection = 1;
-command_setups.enable_inputs = true;
-command_setups.description = function() return "Automated Button Pressing:"; end;
-for i,setup in pairs(setups) do
-    table.insert( command_setups.options, { value = setup.doit; text = setup.description; } );
+function command_setups.update_options(option_value)
+    command_setups.options = {};
+    command_setups.selection = 1;
+    command_setups.FUNction = nil;
+    command_setups.enable_inputs = false;
+    
+    if not option_value then
+        command_setups.description = function() return "What Kind Of Button Pressing?"; end;
+        table.insert( command_setups.options, { value = 1; text = "Regular Kind" ; } );
+        table.insert( command_setups.options, { value = 2; text = "Folder Edits" ; } );
+    else
+        command_setups.enable_inputs = true;
+        table.insert( command_setups.options, { value = nil; text = "Previous Menu"; } );
+        if option_value == 1 then
+            command_setups.description = function() return "Automated Button Pressing:"; end;
+            for i,setup in pairs(require("BN2/Setups").sequences) do
+                table.insert( command_setups.options, { value = setup.doit; text = setup.description; } );
+            end
+            command_setups.FUNction = function(value) value(); end;
+        elseif option_value == 2 then
+            command_setups.description = function() return "Automated Folder Edits:"; end;
+            for i,setup in pairs(require("BN2/Setups").folder_edits) do
+                table.insert( command_setups.options, { value = setup.doit; text = setup.description; } );
+            end
+            command_setups.FUNction = function(value) value(); end;
+        else
+            command_setups.description = function() return "Bzzt! (something broke)"; end;
+        end
+    end
 end
-command_setups.doit = function(value) value(); end;
+command_setups.update_options();
+function command_setups.doit(value)
+    if command_setups.FUNction and value then
+        command_setups.FUNction(value);
+    else
+        command_setups.update_options(value);
+    end
+end
 table.insert(commands, command_setups);
 
 

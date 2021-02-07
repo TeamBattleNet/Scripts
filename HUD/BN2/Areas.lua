@@ -31,7 +31,7 @@ areas.names[0x01][0x02] = "Lobby";
 areas.names[0x01][0x03] = "License Office";
 areas.names[0x01][0x04] = "Test Room";
 areas.names[0x01][0x05] = "Dad's Lab";
---areas.names[0x01][0x06] = "Fake message (crash)";
+--areas.names[0x01][0x06] = "Fake Message (crash)";
 areas.names[0x01][0x07] = "Mother Computer Room";
 
 areas.names[0x02] = {};
