@@ -60,7 +60,7 @@ game.style_names[0x05] = "????";
 game.style_names[0x06] = "????";
 game.style_names[0x07] = "Hub?";
 
-game.game_state_names = {};
+game.game_state_names = {}; -- TODO: Rename to game_mode per 0x02000DC0
 game.game_state_names[0x00] = "title";         -- or BIOS
 game.game_state_names[0x04] = "world";         -- real and digital
 game.game_state_names[0x08] = "battle";
@@ -174,7 +174,7 @@ game.menu_mode[0x1C] = "Save";
 game.menu_mode[0x20] = "FolderEdit";
 local previous_menu_mode = 0;
 
-function game.in_menu_folder()
+function game.in_menu_folder_select()
     return game.ram.get.menu_mode() == 0x00;
 end
 
@@ -206,6 +206,14 @@ function game.in_menu_save()
     return game.ram.get.menu_mode() == 0x1C;
 end
 
+function game.in_menu_folder_edit()
+    return game.ram.get.menu_mode() == 0x20;
+end
+
+function game.in_menu_folder() -- For All/HUD
+    return game.in_menu_folder_edit();
+end
+
 game.folder_state_names = {};
 game.folder_state_names[0x04] = "editing_folder";
 game.folder_state_names[0x08] = "editing_pack";
@@ -231,11 +239,11 @@ function game.did_folder_state_change()
 end
 
 function game.in_folder()
-    return game.ram.get.folder_to_pack() == 0x20;
+    return game.in_menu_folder_edit() and (game.ram.get.menu_state() == 0x04 or game.ram.get.menu_state() == 0x18);
 end
 
 function game.in_pack()
-    return game.ram.get.folder_to_pack() == 0x02;
+    return game.in_menu_folder_edit() and (game.ram.get.menu_state() == 0x08 or game.ram.get.menu_state() == 0x1C);
 end
 
 ----------------------------------------Battle Information ----------------------------------------

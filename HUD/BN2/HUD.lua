@@ -51,13 +51,13 @@ local function display_draws(how_many, start_at)
 end
 
 local function display_edit_slots()
-    if hud.game.in_pack() then
-        for i=1,8 do
-            gui.pixelText(129, 11+16*i, string.format("%3i", hud.game.get_cursor_offset_pack()+i));
-        end
-    else
+    if hud.game.in_folder() then
         for i=1,8 do
             gui.pixelText( 91, 11+16*i, string.format("%2i", hud.game.get_cursor_offset_folder()+i));
+        end
+    elseif hud.game.in_pack() then
+        for i=1,8 do
+            gui.pixelText(129, 11+16*i, string.format("%3i", hud.game.get_cursor_offset_pack()+i));
         end
     end
 end
@@ -74,7 +74,7 @@ local function display_player_info()
 end
 
 local function display_game_info()
-    hud.to_screen(string.format("Progress: 0x%02X %s", hud.game.get_progress(), hud.game.get_current_progress_name()));
+    hud.to_screen(string.format("Progress: 0x%02X %s", hud.game.get_progress(), hud.game.get_progress_name_current()));
     hud.to_screen("Game Version: " .. hud.game.get_version_name());
     hud.to_screen("HUD  Version: " .. hud.version);
 end
@@ -82,7 +82,7 @@ end
 ---------------------------------------- HUD Modes ----------------------------------------
 
 local function HUD_speedrun()
-    hud.to_screen(string.format("Progress: 0x%02X %s", hud.game.get_progress(), hud.game.get_current_progress_name()));
+    hud.to_screen(string.format("Progress: 0x%02X %s", hud.game.get_progress(), hud.game.get_progress_name_current()));
     if hud.game.in_battle() or hud.game.in_game_over() then
         display_draws(10);
         hud.x=6;
@@ -135,7 +135,7 @@ local function HUD_speedrun()
             end
         end
         hud.y=0;
-        hud.to_bottom_right(hud.game.get_current_area_name());
+        hud.to_bottom_right(hud.game.get_area_name_current());
     end
 end
 
@@ -174,12 +174,12 @@ local function HUD_auto()
         hud.to_screen("");
         display_player_info();
         hud.y=0;
-        hud.to_bottom_right(hud.game.get_current_area_name());
+        hud.to_bottom_right(hud.game.get_area_name_current());
     elseif hud.game.in_world() then
         display_RNG();
         display_steps();
         hud.y=0;
-        hud.to_bottom_right(hud.game.get_current_area_name());
+        hud.to_bottom_right(hud.game.get_area_name_current());
     elseif hud.game.in_battle() or hud.game.in_game_over() then
         display_draws(10);
         hud.x=7;
@@ -192,7 +192,11 @@ local function HUD_auto()
     elseif hud.game.in_transition() then
         hud.to_screen("HUD Version: " .. hud.version);
     elseif hud.game.in_menu() then
-        display_edit_slots();
+        if hud.game.in_menu_folder_edit() then
+            display_edit_slots();
+        else
+            display_RNG();
+        end
     elseif hud.game.in_shop() then
         display_player_info();
     elseif hud.game.in_chip_trader() then
