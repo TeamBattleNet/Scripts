@@ -279,23 +279,6 @@ end
 
 ---------------------------------------- Inventory ----------------------------------------
 
-function game.get_PowerUPs()
-    return game.ram.get.PowerUP();
-end
-
-function game.set_PowerUPs(new_PowerUPs)
-    if new_PowerUPs < 0 then
-        new_PowerUPs = 0
-    elseif new_PowerUPs > 50 then
-        new_PowerUPs = 50;
-    end
-    game.ram.set.PowerUP(new_PowerUPs);
-end
-
-function game.add_PowerUPs(some_PowerUPs)
-    game.set_PowerUPs(game.get_PowerUPs() + some_PowerUPs);
-end
-
 function game.get_IceBlocks()
     return game.ram.get.IceBlock();
 end
@@ -311,6 +294,23 @@ end
 
 function game.add_IceBlocks(some_IceBlocks)
     game.set_IceBlocks(game.get_IceBlocks() + some_IceBlocks);
+end
+
+function game.get_PowerUPs()
+    return game.ram.get.PowerUP();
+end
+
+function game.set_PowerUPs(new_PowerUPs)
+    if new_PowerUPs < 0 then
+        new_PowerUPs = 0
+    elseif new_PowerUPs > 50 then
+        new_PowerUPs = 50;
+    end
+    game.ram.set.PowerUP(new_PowerUPs);
+end
+
+function game.add_PowerUPs(some_PowerUPs)
+    game.set_PowerUPs(game.get_PowerUPs() + some_PowerUPs);
 end
 
 ---------------------------------------- Flags ----------------------------------------

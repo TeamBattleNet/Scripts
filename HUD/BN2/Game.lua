@@ -248,40 +248,6 @@ end
 
 ----------------------------------------Battle Information ----------------------------------------
 
-function game.get_battle_pointer()
-    return game.ram.get.battle_pointer();
-end
-
-function game.get_enemy_ID(which_enemy)
-    return game.ram.get.enemy_ID(which_enemy-1);
-end
-
-function game.get_enemy_name(which_enemy)
-    return game.enemies.names[game.get_enemy_ID(which_enemy)] or "Unknown Enemy";
-end
-
-function game.get_enemy_HP(which_enemy)
-    return game.ram.get.enemy_HP(which_enemy-1);
-end
-
-function game.set_enemy_HP(which_enemy, new_HP)
-    game.ram.set.enemy_HP(which_enemy-1, new_HP);
-end
-
-function game.kill_enemy(which_enemy)
-    if which_enemy == 0 then
-        game.set_enemy_HP(1, 0);
-        game.set_enemy_HP(2, 0);
-        game.set_enemy_HP(3, 0);
-    else
-        game.set_enemy_HP(which_enemy, 0);
-    end
-end
-
-function game.max_chip_window_count()
-    game.ram.set.chip_window_count(10);
-end
-
 function game.get_draw_slot(which_slot)
     if 1 <= which_slot and which_slot <= 30 then
         return game.ram.get.draw_slot(which_slot-1) + 1; -- convert from 1 to 0 index, then back
@@ -317,12 +283,20 @@ function game.get_draw_slots_text_multi_line()
     return slots_text;
 end
 
-function game.shuffle_folder()
-    -- TODO: Literally shuffle your folder
+function game.shuffle_folder_simulate_from_value(starting_RNG_value)
+    return game.ram.shuffle_folder_simulate_from_value(starting_RNG_value);
 end
 
-function game.shuffle_folder_simulate(battle_RNG_index)
-    return game.ram.shuffle_folder_simulate(battle_RNG_index);
+function game.shuffle_folder_simulate_from_index(starting_RNG_index)
+    return game.ram.shuffle_folder_simulate_from_index(starting_RNG_index);
+end
+
+function game.shuffle_folder_simulate_from_battle()
+    return game.ram.shuffle_folder_simulate_from_battle(game.get_RNG_index()-120+1);
+end
+
+function game.get_folder_shuffle_nearby(offset)
+    return game.ram.shuffle_folder_simulate_from_battle(game.get_RNG_index()-120+1+offset);
 end
 
 function game.draw_in_order()
@@ -337,58 +311,28 @@ function game.draw_only_slot(which_slot)
     end
 end
 
-function game.draw_slot_check(chip_ID, draw_depth)
-    for i=0,draw_depth-1 do
-        if game.ram.get.folder_ID(game.ram.get.draw_slot(i)) == chip_ID then
-            return true;
-        end
-    end
-    return false;
-end
-
 function game.find_first(chip_ID)
     for i=0,29 do
         if game.ram.get.folder_ID(game.ram.get.draw_slot(i)) == chip_ID then
             return i;
         end
     end
-    return -1;
+    return 0xFF;
+end
+
+function game.draw_slot_check(chip_ID, draw_depth)
+    return game.find_first(chip_ID) <= draw_depth;
 end
 
 ---------------------------------------- Inventory ----------------------------------------
-
-function game.get_zenny()
-    return game.ram.get.zenny();
-end
-
-function game.set_zenny(new_zenny)
-    if new_zenny < 0 then
-        new_zenny = 0
-    elseif new_zenny > 999999 then
-        new_zenny = 999999;
-    end
-    game.ram.set.zenny(new_zenny);
-end
-
-function game.add_zenny(some_zenny)
-    game.set_zenny(game.get_zenny() + some_zenny);
-end
-
-function game.get_bug_frags()
-    return game.ram.get.bug_frags();
-end
 
 function game.set_bug_frags(new_bug_frags)
     if new_bug_frags < 0 then
         new_bug_frags = 0
     elseif new_bug_frags > 32 then
-        new_bug_frags = 32; -- TBD
+        new_bug_frags = 32; -- TBD Override
     end
     game.ram.set.bug_frags(new_bug_frags);
-end
-
-function game.add_bug_frags(some_bug_frags)
-    game.set_bug_frags(game.get_bug_frags() + some_bug_frags);
 end
 
 function game.get_PowerUPs()
@@ -420,14 +364,6 @@ end
 
 ---------------------------------------- Battlechips ----------------------------------------
 
-function game.get_chip_name(ID)
-    return game.chips.names[ID] or "Unknown Chip ID";
-end
-
-function game.get_chip_code(code)
-    return game.chips.codes[code] or "Unknown Chip Code";
-end
-
 function game.count_library()
     local count = 0;
     for i=0,0x20 do -- 33 total bytes?
@@ -441,49 +377,41 @@ function game.count_library()
     return count;
 end
 
-function game.get_battlechip_count()
-    -- TODO
+--[[ TODO
+function game.is_chip_selected()
+    return game.ram.get.chip_selected_flag() ~= 0x00;
 end
 
-function game.set_all_folder_to_ID(chip_ID)
-    for i=0,29 do
-        game.ram.set.folder_ID(i, chip_ID);
+function game.get_selected_chip_location_name()
+    local selected_flag = game.ram.get.chip_selected_flag();
+    if selected_flag == 0x01 then
+        return "Folder";
+    elseif selected_flag == 0x02 then
+        return "Pack";
     end
+    return "None";
 end
 
-function game.randomize_folder_IDs()
-    for i=0,29 do
-        game.ram.set.folder_ID(i, game.chips.get_random_ID_standard());
+function game.get_selected_ID()
+    local selected_chip_location = game.get_selected_chip_location_name();
+    if selected_chip_location == "Folder" then
+        return game.ram.get.folder_ID(game.get_cursor_offset_selected()+game.get_cursor_position_selected());
+    elseif selected_chip_location == "Pack" then
+        return game.ram.get.pack_ID(game.get_cursor_offset_selected()+game.get_cursor_position_selected());
     end
+    return -1;
 end
 
-function game.set_all_folder_to_code(chip_code)
-    for i=0,29 do
-        game.ram.set.folder_code(i, chip_code);
+function game.get_selected_code()
+    local selected_chip_location = game.get_selected_chip_location_name();
+    if selected_chip_location == "Folder" then
+        return game.ram.get.folder_code(game.get_cursor_offset_selected()+game.get_cursor_position_selected());
+    elseif selected_chip_location == "Pack" then
+        return game.ram.get.pack_code(game.get_cursor_offset_selected()+game.get_cursor_position_selected());
     end
+    return -1;
 end
-
-function game.randomize_folder_codes()
-    for i=0,29 do
-        game.ram.set.folder_code(i, game.chips.get_random_code());
-    end
-end
-
-function game.get_cursor_offset_folder()
-    return game.ram.get.offset_folder();
-end
-
-function game.get_cursor_position_folder()
-    return game.ram.get.cursor_folder();
-end
-
-function game.get_cursor_offset_pack()
-    return game.ram.get.offset_pack();
-end
-
-function game.get_cursor_position_pack()
-    return game.ram.get.cursor_pack();
-end
+--]]
 
 ----------------------------------------Mega Modifications ----------------------------------------
 
