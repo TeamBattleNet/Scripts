@@ -127,7 +127,6 @@ ram.set.game_state = function(game_state) memory.write_u8(ram.addr.game_state, g
 
 ram.get.menu_mode = function() return memory.read_u8(ram.addr.menu_mode); end;
 ram.set.menu_mode = function(menu_mode) memory.write_u8(ram.addr.menu_mode, menu_mode); end;
-
 ram.get.menu_state = function() return memory.read_u8(ram.addr.menu_state); end;
 ram.set.menu_state = function(menu_state) memory.write_u8(ram.addr.menu_state, menu_state); end;
 
@@ -194,38 +193,161 @@ function ram.create_RNG_table(seed, max_index)
     new_RNG_table.value[1] = seed;
     new_RNG_table.index[seed] = 1;
     
-    new_RNG_table.current_RNG_index = 1;
-    new_RNG_table.maximum_RNG_index = max_index;
+    new_RNG_table.current_index = 1;
+    new_RNG_table.maximum_index = max_index;
     
     return new_RNG_table;
 end
 
 function ram.expand_RNG_table(RNG_table)
-    if RNG_table.current_RNG_index < RNG_table.maximum_RNG_index then
-        for i=1,math.min((RNG_table.maximum_RNG_index-RNG_table.current_RNG_index),ram.calculations_per_frame) do
-            local RNG_next = ram.simulate_RNG(RNG_table.value[RNG_table.current_RNG_index]);
+    if RNG_table.current_index < RNG_table.maximum_index then
+        for i=1,math.min((RNG_table.maximum_index-RNG_table.current_index),ram.calculations_per_frame) do
+            local RNG_next = ram.simulate_RNG(RNG_table.value[RNG_table.current_index]);
             
-            RNG_table.current_RNG_index = RNG_table.current_RNG_index + 1;
+            RNG_table.current_index = RNG_table.current_index + 1;
             
-            RNG_table.value[RNG_table.current_RNG_index] = RNG_next;
-            RNG_table.index[RNG_next] = RNG_table.current_RNG_index;
+            RNG_table.value[RNG_table.current_index] = RNG_next;
+            RNG_table.index[RNG_next] = RNG_table.current_index;
         end
-        if RNG_table.current_RNG_index >= RNG_table.maximum_RNG_index then
-            print(string.format("\n%u: Created RNG Table for seed 0x%08X with final index of %i", emu.framecount(), RNG_table.value[1], RNG_table.current_RNG_index));
+        if RNG_table.current_index >= RNG_table.maximum_index then
+            print(string.format("\n%u: Created RNG Table for seed 0x%08X with final index of %i", emu.framecount(), RNG_table.value[1], RNG_table.current_index));
         end
     end
+end
+
+---------------------------------------- RNG Index Tables----------------------------------------
+
+-- Main RNG
+
+ram.main_RNG_table = {};
+
+function ram.get.main_RNG_value()
+    return memory.read_u32_le(ram.addr.main_RNG);
+end
+
+function ram.get.main_RNG_value_at(new_main_RNG_index)
+    return ram.main_RNG_table.value[new_main_RNG_index];
+end
+
+function ram.set.main_RNG_value(new_main_RNG_value)
+    memory.write_u32_le(ram.addr.main_RNG, new_main_RNG_value);
+end
+
+function ram.get.main_RNG_index_of(new_main_RNG_value)
+    return ram.main_RNG_table.index[new_main_RNG_value]; -- could be nil
+end
+
+function ram.get.main_RNG_index()
+    return ram.get.main_RNG_index_of(ram.get.main_RNG_value());
+end
+
+function ram.set.main_RNG_index(new_main_RNG_index)
+    new_main_RNG_value = ram.get.main_RNG_value_at(new_main_RNG_index);
+    if new_main_RNG_value then
+        ram.set.main_RNG_value(new_main_RNG_value);
+    end
+end
+
+function ram.adjust_main_RNG(steps)
+    local main_RNG_index = ram.get.main_RNG_index();
+    
+    if not main_RNG_index then
+        return;
+    end
+    
+    local new_index = main_RNG_index + steps;
+    
+    if new_index < 1 then -- steps could be negative
+        new_index = 1;
+    end
+    
+    if new_index > ram.main_RNG_table.current_index then
+        new_index = ram.main_RNG_table.current_index;
+    end
+    
+    ram.set.main_RNG_index(new_index);
+end
+
+ram.previous_main_RNG_value = 0;
+
+function ram.get.main_RNG_delta()
+    return ram.calculate_RNG_delta(ram.previous_main_RNG_value, ram.get.main_RNG_value());
+end
+
+-- Lazy RNG
+
+ram.lazy_RNG_table = {};
+
+function ram.get.lazy_RNG_value()
+    return memory.read_u32_le(ram.addr.lazy_RNG);
+end
+
+function ram.get.lazy_RNG_value_at(new_lazy_RNG_index)
+    return ram.lazy_RNG_table.value[new_lazy_RNG_index];
+end
+
+function ram.set.lazy_RNG_value(new_lazy_RNG_value)
+    memory.write_u32_le(ram.addr.lazy_RNG, new_lazy_RNG_value);
+end
+
+function ram.get.lazy_RNG_index_of(new_lazy_RNG_value)
+    return ram.lazy_RNG_table.index[new_lazy_RNG_value]; -- could be nil
+end
+
+function ram.get.lazy_RNG_index()
+    return ram.get.lazy_RNG_index_of(ram.get.lazy_RNG_value());
+end
+
+function ram.set.lazy_RNG_index(new_lazy_RNG_index)
+    new_lazy_RNG_value = ram.get.lazy_RNG_value_at(new_lazy_RNG_index);
+    if new_lazy_RNG_value then
+        ram.set.lazy_RNG_value(new_lazy_RNG_value);
+    end
+end
+
+function ram.adjust_lazy_RNG(steps)
+    local lazy_RNG_index = ram.get.lazy_RNG_index();
+    
+    if not lazy_RNG_index then
+        return;
+    end
+    
+    local new_index = lazy_RNG_index + steps;
+    
+    if new_index < 1 then -- steps could be negative
+        new_index = 1;
+    end
+    
+    if new_index > ram.lazy_RNG_table.current_index then
+        new_index = ram.lazy_RNG_table.current_index;
+    end
+    
+    ram.set.lazy_RNG_index(new_index);
+end
+
+local previous_lazy_RNG_value = 0;
+
+function ram.get.lazy_RNG_delta()
+    return ram.calculate_RNG_delta(previous_lazy_RNG_value, ram.get.lazy_RNG_value());
 end
 
 ---------------------------------------- Folder Shuffling ----------------------------------------
 
 ram.draw_slots = {};
 
-function ram.shuffle_folder_simulate_from_value(RNG_value)
+for i=1,30 do
+    ram.draw_slots[i] = i; -- initialize
+end
+
+ram.get.draw_slot = function(which_slot) return ram.draw_slots[which_slot]; end;
+ram.set.draw_slot = function(which_slot, folder_slot) ram.draw_slots[which_slot] = folder_slot; end;
+
+function ram.shuffle_folder_simulate_from_value(RNG_value, swaps)
     RNG_value = RNG_value or 0x873CA9E5;
     for i=1,30 do
         ram.draw_slots[i] = i;
     end
-    for i=1,60 do
+    for i=1,swaps do -- 60 in BN1, 30 in the rest
         local slot_a = (ram.to_int(bit.rshift(RNG_value,1)) % 30) + 1;
         RNG_value = ram.get.RNG_value_at(RNG_value);
         local slot_b = (ram.to_int(bit.rshift(RNG_value,1)) % 30) + 1;
@@ -235,8 +357,12 @@ function ram.shuffle_folder_simulate_from_value(RNG_value)
     return ram.draw_slots;
 end
 
-function ram.shuffle_folder_simulate_from_index(RNG_index)
-    return ram.shuffle_folder_simulate(ram.get.RNG_value_at(RNG_index));
+function ram.shuffle_folder_simulate_from_main_index(index)
+    return ram.shuffle_folder_simulate(ram.get.main_RNG_value_at(index));
+end
+
+function ram.shuffle_folder_simulate_from_lazy_index(index)
+    return ram.shuffle_folder_simulate(ram.get.lazy_RNG_value_at(index));
 end
 
 ---------------------------------------- Module Controls ----------------------------------------

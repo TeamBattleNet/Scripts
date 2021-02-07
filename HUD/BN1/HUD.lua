@@ -12,10 +12,10 @@ hud.game = require("BN1/Game");
 
 local function display_RNG(and_value)
     if and_value then
-        hud.to_screen(string.format("RNG: %08X", hud.game.get_RNG_value()));
+        hud.to_screen(string.format("RNG: %08X", hud.game.get_main_RNG_value()));
     end
-    hud.to_screen(string.format("Index: %5s", (hud.game.get_RNG_index() or "?????")));
-    hud.to_screen(string.format("Delta: %5s", (hud.game.get_RNG_delta() or     "?")));
+    hud.to_screen(string.format("Index: %5s", (hud.game.get_main_RNG_index() or "?????")));
+    hud.to_screen(string.format("Delta: %5s", (hud.game.get_main_RNG_delta() or     "?")));
 end
 
 local function display_steps()
@@ -100,8 +100,8 @@ local function HUD_speedrun()
         hud.y=1;
         hud.to_screen(string.format(" Escape:   %2i", hud.game.find_first(82)));
         hud.to_screen(string.format(" Quake3:   %2i", hud.game.find_first(24)));
-        hud.to_screen(string.format(" Index: %5s", (hud.game.get_RNG_index() or "?????")));
-        hud.to_screen(string.format(" Delta: %2s", (hud.game.get_RNG_delta() or     "?")));
+        hud.to_screen(string.format(" Index: %5s", (hud.game.get_main_RNG_index() or "?????")));
+        hud.to_screen(string.format(" Delta: %2s", (hud.game.get_main_RNG_delta() or     "?")));
         hud.to_screen(string.format(" Check: %2u", hud.game.get_encounter_checks()));
         display_enemies();
     elseif hud.game.in_credits() then
@@ -136,13 +136,13 @@ local function HUD_speedrun()
                 hud.to_screen(string.format("Y: %4i", hud.game.get_Y()));
                 hud.x=11;
                 hud.y=1;
-                hud.to_screen(string.format(" Index: %5s", (hud.game.get_RNG_index() or "?????")));
-                hud.to_screen(string.format(" Delta: %2s", (hud.game.get_RNG_delta() or     "?")));
+                hud.to_screen(string.format(" Index: %5s", (hud.game.get_main_RNG_index() or "?????")));
+                hud.to_screen(string.format(" Delta: %2s", (hud.game.get_main_RNG_delta() or     "?")));
                 hud.to_screen(string.format(" Chips: %2u", hud.game.count_library()));
                 hud.to_screen(string.format(" Level: %2u", hud.game.calculate_mega_level()));
             else
-                hud.to_screen(string.format("Index: %5s", (hud.game.get_RNG_index() or "?????")));
-                hud.to_screen(string.format("Delta: %2s", (hud.game.get_RNG_delta() or     "?")));
+                hud.to_screen(string.format("Index: %5s", (hud.game.get_main_RNG_index() or "?????")));
+                hud.to_screen(string.format("Delta: %2s", (hud.game.get_main_RNG_delta() or     "?")));
                 hud.to_screen(string.format("Chips: %2u", hud.game.count_library()));
                 hud.to_screen(string.format("Level: %2u", hud.game.calculate_mega_level()));
                 hud.to_screen(string.format("X: %4i", hud.game.get_X()));

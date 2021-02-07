@@ -14,28 +14,28 @@ game.fun_flags = {}; -- set in Commands, used in RAM
 
 ---------------------------------------- RNG Wrapper ----------------------------------------
 
-function game.get_RNG_value()
-    return game.ram.get.RNG_value();
+function game.get_main_RNG_value()
+    return game.ram.get.main_RNG_value();
 end
 
-function game.set_RNG_value(new_rng)
-    game.ram.set.RNG_value(new_rng);
+function game.set_main_RNG_value(new_value)
+    game.ram.set.main_RNG_value(new_value);
 end
 
-function game.get_RNG_index()
-    return game.ram.get.RNG_index();
+function game.get_main_RNG_index()
+    return game.ram.get.main_RNG_index();
 end
 
-function game.set_RNG_index(new_index)
-    game.ram.set.RNG_index(new_index)
+function game.set_main_RNG_index(new_index)
+    game.ram.set.main_RNG_index(new_index)
 end
 
-function game.get_RNG_delta()
-    return game.ram.get.RNG_delta();
+function game.get_main_RNG_delta()
+    return game.ram.get.main_RNG_delta();
 end
 
-function game.adjust_RNG(steps)
-    game.ram.adjust_RNG(steps);
+function game.adjust_main_RNG(steps)
+    game.ram.adjust_main_RNG(steps);
 end
 
 ---------------------------------------- Game State ----------------------------------------
@@ -299,11 +299,11 @@ end
 ---------------------------------------- Draw Slots ----------------------------------------
 
 function game.shuffle_folder_simulate_from_battle()
-    return game.ram.shuffle_folder_simulate_from_battle(game.get_RNG_index()-120+1);
+    return game.ram.shuffle_folder_simulate_from_main_index(game.get_main_RNG_index()-120+1);
 end
 
-function game.get_folder_shuffle_nearby(offset)
-    return game.ram.shuffle_folder_simulate_from_battle(game.get_RNG_index()-120+1+offset);
+function game.shuffle_folder_simulate_from_battle_nearby(offset)
+    return game.ram.shuffle_folder_simulate_from_main_index(game.get_main_RNG_index()-120+1+offset);
 end
 
 ---------------------------------------- Battlechips ----------------------------------------
@@ -437,7 +437,7 @@ function game.get_encounter_chance()
 end
 
 function game.would_get_encounter()
-    return game.get_encounter_threshold() > (game.get_RNG_value() % 0x20);
+    return game.get_encounter_threshold() > (game.get_main_RNG_value() % 0x20);
 end
 
 ---------------------------------------- Miscellaneous ----------------------------------------

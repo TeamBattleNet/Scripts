@@ -187,7 +187,7 @@ function command_routing.update_options(option_value)
     else
         table.insert( command_routing.options, { value = nil; text = "Previous Menu"; } );
         if option_value == 1 then
-            command_routing.description = function() return string.format("RNG Index: %5s", (game.ram.get.RNG_index() or "?????")); end;
+            command_routing.description = function() return string.format("RNG Index: %5s", (game.ram.get.main_RNG_index() or "?????")); end;
             table.insert( command_routing.options, { value =  1000; text = "Increase by 1000"; } );
             table.insert( command_routing.options, { value =   100; text = "Increase by  100"; } );
             table.insert( command_routing.options, { value =    10; text = "Increase by   10"; } );
@@ -196,7 +196,7 @@ function command_routing.update_options(option_value)
             table.insert( command_routing.options, { value =   -10; text = "Decrease by   10"; } );
             table.insert( command_routing.options, { value =  -100; text = "Decrease by  100"; } );
             table.insert( command_routing.options, { value = -1000; text = "Decrease by 1000"; } );
-            command_routing.FUNction = function(value) game.ram.adjust_RNG(value); end;
+            command_routing.FUNction = function(value) game.ram.adjust_main_RNG(value); end;
         elseif option_value == 2 then
             command_routing.description = function() return string.format("Modify Steps: %5s", game.get_steps()); end;
             table.insert( command_routing.options, { value =  1024; text = "Increase by 1024"; } );
@@ -217,7 +217,7 @@ function command_routing.update_options(option_value)
             table.insert( command_routing.options, { value = game.extinguish_oven_fires; text = "Extinguish Oven Fires"; } );
             table.insert( command_routing.options, { value = game.ignite_WWW_fires;      text = "Ignite WWW Fires";      } );
             table.insert( command_routing.options, { value = game.extinguish_WWW_fires;  text = "Extinguish WWW Fires";  } );
-            table.insert( command_routing.options, { value = function() game.set_RNG_index(1) end;  text = "Restart RNG";  } );
+            table.insert( command_routing.options, { value = function() game.set_main_RNG_index(1) end;  text = "Restart RNG";  } );
             command_routing.FUNction = function(value) value(); end;
         else
             command_routing.description = function() return "Bzzt! (something broke)"; end;

@@ -195,8 +195,8 @@ end
 
 function game.get_draw_slots_text_one_line()
     local slots = game.get_draw_slots();
-    local RNG_index = game.get_RNG_index() or "????";
-    local slots_text = string.format("%s:", RNG_index);
+    local main_RNG_index = game.get_main_RNG_index() or "????";
+    local slots_text = string.format("%s:", main_RNG_index);
     for i=1,30 do
         slots_text = string.format("%s %02u", slots_text, slots[i]);
     end
@@ -205,20 +205,20 @@ end
 
 function game.get_draw_slots_text_multi_line()
     local slots = game.get_draw_slots();
-    local RNG_index = game.get_RNG_index() or "????";
-    local slots_text = string.format("%s:", RNG_index);
+    local main_RNG_index = game.get_main_RNG_index() or "????";
+    local slots_text = string.format("%s:", main_RNG_index);
     for i=1,30 do
         slots_text = string.format("%s\n%02u: %02u", slots_text, i, slots[i]);
     end
     return slots_text;
 end
 
-function game.shuffle_folder_simulate_from_value(starting_RNG_value)
-    return game.ram.shuffle_folder_simulate_from_value(starting_RNG_value);
+function game.shuffle_folder_simulate_from_value(starting_main_RNG_value)
+    return game.ram.shuffle_folder_simulate_from_value(starting_main_RNG_value);
 end
 
-function game.shuffle_folder_simulate_from_index(starting_RNG_index)
-    return game.ram.shuffle_folder_simulate_from_index(starting_RNG_index);
+function game.shuffle_folder_simulate_from_index(starting_main_RNG_index)
+    return game.ram.shuffle_folder_simulate_from_index(starting_main_RNG_index);
 end
 
 function game.draw_in_order()

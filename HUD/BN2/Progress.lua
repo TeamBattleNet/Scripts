@@ -16,7 +16,8 @@ progress[0x08] = "Gone to bed";
 
 progress[0x10] = "TBD";
 
-progress[0x72] = "Final State";
+progress[0x72] = "Final State?";
+progress[0x75] = "Post Game?";
 
 progress[0xFF] = "No Save Data";
 

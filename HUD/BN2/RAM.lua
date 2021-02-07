@@ -3,6 +3,7 @@
 local ram = require("All/RAM");
 
 ram.addr = require("BN2/Addresses");
+
 ram.version_name = ram.addr.version_name;
 
 ------------------------------ Getters & Setters ------------------------------
@@ -17,7 +18,7 @@ ram.get.bug_frags = function() return memory.read_u8(ram.addr.bug_frags); end;
 ram.set.bug_frags = function(bug_frags) memory.write_u8(ram.addr.bug_frags, bug_frags); end;
 
 ram.get.draw_slot = function(which_slot) return memory.read_u8(ram.addr.battle_draw_slots+which_slot); end;
-ram.set.draw_slot = function(which_slot, battle_draw_slot) memory.write_u8(ram.addr.battle_draw_slots+which_slot, battle_draw_slot); end;
+ram.set.draw_slot = function(which_slot, folder_slot) memory.write_u8(ram.addr.battle_draw_slots+which_slot, folder_slot); end;
 
 ram.get.folder_count = function() return memory.read_u8(ram.addr.folder_count); end;
 ram.set.folder_count = function(folder_count) memory.write_u8(ram.addr.folder_count, folder_count); end;
@@ -44,63 +45,6 @@ ram.set.PowerUP = function(PowerUP) memory.write_u8(ram.addr.PowerUP, PowerUP); 
 ram.get.title_star_byte = function() return memory.read_u8(ram.addr.title_star_byte); end;
 ram.set.title_star_byte = function(title_star_byte) memory.write_u8(ram.addr.title_star_byte, title_star_byte); end;
 
----------------------------------------- RNG Functions ----------------------------------------
-
-local rng_table = nil;
-
-function ram.get.RNG_value()
-    return memory.read_u32_le(ram.addr.RNG);
-end
-
-function ram.get.RNG_value_at(new_RNG_index)
-    return rng_table.value[new_RNG_index];
-end
-
-function ram.set.RNG_value(new_RNG_value)
-    memory.write_u32_le(ram.addr.RNG, new_RNG_value);
-end
-
-function ram.get.RNG_index_of(new_RNG_value)
-    return rng_table.index[new_RNG_value];
-end
-
-function ram.get.RNG_index()
-    return ram.get.RNG_index_of(ram.get.RNG_value());
-end
-
-function ram.set.RNG_index(new_RNG_index)
-    new_RNG_value = ram.get.RNG_value_at(new_RNG_index);
-    if new_RNG_value then
-        ram.set.RNG_value(new_RNG_value);
-    end
-end
-
-local previous_RNG_value = 0;
-
-function ram.get.RNG_delta()
-    return ram.calculate_RNG_delta(previous_RNG_value, ram.get.RNG_value());
-end
-
-function ram.adjust_RNG(steps)
-    local RNG_index = ram.get.RNG_index();
-    
-    if not RNG_index then
-        return;
-    end
-    
-    local new_index = RNG_index + steps;
-    
-    if new_index < 1 then -- steps could be negative
-        new_index = 1;
-    end
-    
-    if new_index > rng_table.current_RNG_index then
-        new_index = rng_table.current_RNG_index;
-    end
-    
-    ram.set.RNG_index(new_index);
-end
-
 ---------------------------------------- RAMsacking ----------------------------------------
 
 local function use_fun_flags(fun_flags)
@@ -123,9 +67,9 @@ local function use_fun_flags(fun_flags)
     end
     
     if fun_flags.no_encounters then
-        ram.set.RNG_value(0xBC61AB0C);
+        ram.set.main_RNG_value(0xBC61AB0C);
     elseif fun_flags.yes_encounters then
-        ram.set.RNG_value(0x439E54F2);
+        ram.set.main_RNG_value(0x439E54F2);
     end
     
     if fun_flags.modulate_steps then
@@ -139,17 +83,17 @@ end
 ---------------------------------------- Module Controls ----------------------------------------
 
 function ram.initialize(options)
-    rng_table = ram.create_RNG_table(0xC14CE145, options.maximum_RNG_index);
+    ram.main_RNG_table = ram.create_RNG_table(0xC14CE145, options.maximum_RNG_index);
     print("\nCalculating RNG with max calculations per frame of: " .. ram.calculations_per_frame);
 end
 
 function ram.update_pre(options)
     use_fun_flags(options.fun_flags);
-    ram.expand_RNG_table(rng_table);
+    ram.expand_RNG_table(ram.main_RNG_table);
 end
 
 function ram.update_post(options)
-    previous_RNG_value = ram.get.RNG_value();
+    ram.previous_main_RNG_value = ram.get.main_RNG_value();
 end
 
 return ram;
