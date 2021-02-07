@@ -368,7 +368,7 @@ chips.names[302] = "2xHero";
 chips.names[303] = "Darkness";
 
 function chips.get_random_code()
-    return math.random(0,25);
+    return math.random(0,26);
 end
 
 local function get_valid(first_ID, last_ID)
