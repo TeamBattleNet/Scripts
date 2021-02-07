@@ -66,24 +66,24 @@ game.style_names[0x05] = "????";
 game.style_names[0x06] = "????";
 game.style_names[0x07] = "Hub?";
 
-game.game_mode_names = {}; -- TODO: Rename to game_mode per 0x02000DC0
-game.game_mode_names[0x00] = "title";         -- or BIOS
-game.game_mode_names[0x04] = "world";         -- real and digital
-game.game_mode_names[0x08] = "battle";
-game.game_mode_names[0x0C] = "player_change"; -- jack-in / out
-game.game_mode_names[0x10] = "demo_end";      -- what is this?
-game.game_mode_names[0x14] = "capcom_logo";
-game.game_mode_names[0x18] = "menu";
-game.game_mode_names[0x1C] = "shop";
-game.game_mode_names[0x20] = "game_over";
-game.game_mode_names[0x24] = "trader";
-game.game_mode_names[0x28] = "request_board"; -- new
-game.game_mode_names[0x2C] = "credits";
-game.game_mode_names[0x34] = "ubisoft_logo";  -- PAL only
+game.game_state_names = {};
+game.game_state_names[0x00] = "title";         -- or BIOS
+game.game_state_names[0x04] = "world";         -- real and digital
+game.game_state_names[0x08] = "battle";
+game.game_state_names[0x0C] = "player_change"; -- jack-in / out
+game.game_state_names[0x10] = "demo_end";      -- what is this?
+game.game_state_names[0x14] = "capcom_logo";
+game.game_state_names[0x18] = "menu";
+game.game_state_names[0x1C] = "shop";
+game.game_state_names[0x20] = "game_over";
+game.game_state_names[0x24] = "trader";
+game.game_state_names[0x28] = "request_board"; -- new
+game.game_state_names[0x2C] = "credits";
+game.game_state_names[0x34] = "ubisoft_logo";  -- PAL only
 local previous_game_state = 0;
 
 function game.get_game_state_name()
-    return game.game_mode_names[game.ram.get.game_state()] or "unknown_game_state";
+    return game.game_state_names[game.ram.get.game_state()] or "unknown_game_state";
 end
 
 function game.did_game_state_change()

@@ -52,7 +52,7 @@ function game.set_progress_safe(new_progress)
     end
 end
 
--- Mode & State
+-- Menu Mode
 
 game.menu_mode_names = {};
 game.menu_mode_names[0x00] = "Folder Select";

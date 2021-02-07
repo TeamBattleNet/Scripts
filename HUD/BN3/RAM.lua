@@ -167,19 +167,19 @@ style_names[0x05] = "Grnd";
 style_names[0x06] = "Shdw";
 style_names[0x07] = "Bug";
 
-local game_mode_names = {}; -- TODO: Rename to game_mode per 0x02000DC0
-game_mode_names[0x00] = "title";         -- or BIOS
-game_mode_names[0x04] = "world";         -- real and digital
-game_mode_names[0x08] = "battle";
-game_mode_names[0x0C] = "player_change"; -- jack-in / out
-game_mode_names[0x10] = "demo_end";      -- what is this?
-game_mode_names[0x14] = "capcom_logo";
-game_mode_names[0x18] = "menu";
-game_mode_names[0x1C] = "shop";
-game_mode_names[0x20] = "game_over";
-game_mode_names[0x24] = "trader";
-game_mode_names[0x28] = "request_board";
-game_mode_names[0x30] = "credits";
+local game_state_names = {}; -- TODO: Rename to game_state per 0x02000DC0
+game_state_names[0x00] = "title";         -- or BIOS
+game_state_names[0x04] = "world";         -- real and digital
+game_state_names[0x08] = "battle";
+game_state_names[0x0C] = "player_change"; -- jack-in / out
+game_state_names[0x10] = "demo_end";      -- what is this?
+game_state_names[0x14] = "capcom_logo";
+game_state_names[0x18] = "menu";
+game_state_names[0x1C] = "shop";
+game_state_names[0x20] = "game_over";
+game_state_names[0x24] = "trader";
+game_state_names[0x28] = "request_board";
+game_state_names[0x30] = "credits";
 local previous_game_state = 0;
 
 ------------------------------------------------------------------------------------------------------------------------
