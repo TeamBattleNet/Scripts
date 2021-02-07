@@ -1,12 +1,35 @@
--- HUD Script for all Mega Man Battle Network games, enjoy.
+-- HUD Script for the Mega Man Battle Network series, enjoy.
 
--- To use: Hold L and R, then press:
--- Start to turn HUD on/off
--- Select to Command Mode on/off
--- Left/Right/Up/Down to navigate Commands
--- B to activate the Command Option
+-- In HUD Mode  - Hold L and R then press:
+-- Start        - to toggle HUD on/off
+-- Select       - to turn Command Mode on
+-- Left / Right - to change display mode
+-- Up / Down    - to change display font
+-- A            - to print inputs from the last folder edit
+-- B            - to print game specific information
+
+-- Command Mode - On Controller Press:
+-- Select       - to turn Command Mode off
+-- Left / Right - to change Command
+-- Up / Down    - to change Options
+-- B            - to change display font
+-- A            - to activate the Command Option
+
+-- Command Mode - On Keyboard Press:
+-- KeypadPeriod - to toggle Command Mode off
+-- Left / Right - to change Command
+-- Up / Down    - to change Options
+-- Tab          - to change display font
+-- Keypad0      - to activate the Command Option
 
 -- Special thanks to Prof9, NMarkro, Risch, TL_Plexa, Mountebank, Tterraj42, TREZ, and TeamBN
+
+-- https://drive.google.com/drive/folders/1NjYy8mXjc-B06gpng1D2WzWJT4waQAFV "The Notes"
+
+console.clear();
+
+print("ROM Hash: " .. gameinfo.getromhash());
+print("ROM Name: " .. gameinfo.getromname());
 
 function load_HUD()
     local code = bit.band(memory.read_u32_le(0x080000AC), 0xFFFFFF);
@@ -23,19 +46,13 @@ function load_HUD()
     elseif (code == 0x355242 or code == 0x365242) then
         return require("BN6/HUD");
     end
+    return nil;
 end
 
 local hud = load_HUD();
 
-console.clear();
-
-print("ROM Hash: " .. gameinfo.getromhash());
-print("ROM Name: " .. gameinfo.getromname());
-
 if hud then
-    local options = {};
-    options.major_version = "0.3";
-    hud.initialize(options);
+    hud.initialize({major_version = "0.3"});
     while true do
         hud.update();
         emu.frameadvance();
