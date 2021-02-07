@@ -40,23 +40,23 @@ end
 
 ---------------------------------------- Game State ----------------------------------------
 
-game.game_state_names = {};
-game.game_state_names[0x00] = "title";         -- or BIOS
-game.game_state_names[0x04] = "world";         -- real and digital
-game.game_state_names[0x08] = "battle";
-game.game_state_names[0x0C] = "player_change"; -- jack-in / out
-game.game_state_names[0x10] = "demo_end";      -- what is this?
-game.game_state_names[0x14] = "capcom_logo";
-game.game_state_names[0x18] = "menu";
-game.game_state_names[0x1C] = "shop";
-game.game_state_names[0x20] = "game_over";
-game.game_state_names[0x24] = "trader";
-game.game_state_names[0x28] = "credits";
-game.game_state_names[0x2C] = "ubisoft_logo";  -- PAL only
+game.game_mode_names = {}; -- TODO: Rename to game_mode per 0x020062E0
+game.game_mode_names[0x00] = "title";         -- or BIOS
+game.game_mode_names[0x04] = "world";         -- real and digital
+game.game_mode_names[0x08] = "battle";
+game.game_mode_names[0x0C] = "player_change"; -- jack-in / out
+game.game_mode_names[0x10] = "demo_end";      -- what is this?
+game.game_mode_names[0x14] = "capcom_logo";
+game.game_mode_names[0x18] = "menu";
+game.game_mode_names[0x1C] = "shop";
+game.game_mode_names[0x20] = "game_over";
+game.game_mode_names[0x24] = "trader";
+game.game_mode_names[0x28] = "credits";
+game.game_mode_names[0x2C] = "ubisoft_logo";  -- PAL only
 local previous_game_state = 0;
 
 function game.get_game_state_name()
-    return game.game_state_names[game.ram.get.game_state()] or "unknown_game_state";
+    return game.game_mode_names[game.ram.get.game_state()] or "unknown_game_state";
 end
 
 function game.did_game_state_change()
@@ -137,46 +137,58 @@ function game.battle_unpause()
     end
 end
 
-game.menu_mode = {};
-game.menu_mode[0x00] = "Folder";
-game.menu_mode[0x04] = "Library";
-game.menu_mode[0x08] = "MegaMan";
-game.menu_mode[0x0C] = "Email";
-game.menu_mode[0x10] = "Items";
-game.menu_mode[0x14] = "Network";
-game.menu_mode[0x18] = "Save";
+game.menu_mode_names = {};
+game.menu_mode_names[0x00] = "Folder";
+game.menu_mode_names[0x04] = "Library";
+game.menu_mode_names[0x08] = "MegaMan";
+game.menu_mode_names[0x0C] = "E-Mail";
+game.menu_mode_names[0x10] = "Key Items";
+game.menu_mode_names[0x14] = "Network";
+game.menu_mode_names[0x18] = "Save";
 local previous_menu_mode = 0;
 
-function game.in_menu_folder()
-    return game.ram.get.menu_mode() == 0x00;
+function game.did_menu_mode_change()
+    return game.ram.get.menu_mode() ~= previous_menu_mode;
 end
 
-function game.in_menu_folder_edit()
-    return game.in_menu_folder(); -- BN 1 doesn't have Folder Selection menu mode
+function game.get_menu_mode_name()
+    return game.menu_mode_names[game.ram.get.menu_mode()] or "Unknown Menu Mode";
 end
 
-function game.in_menu_library()
+function game.in_menu_folder_select()
+    return game.ram.get.menu_mode() == 0x00; -- BN 1 doesn't have folder selection
+end
+
+function game.in_menu_subchips()
     return game.ram.get.menu_mode() == 0x04;
 end
 
-function game.in_menu_megaman()
+function game.in_menu_library()
     return game.ram.get.menu_mode() == 0x08;
 end
 
-function game.in_menu_email()
+function game.in_menu_megaman()
     return game.ram.get.menu_mode() == 0x0C;
 end
 
-function game.in_menu_items()
+function game.in_menu_email()
     return game.ram.get.menu_mode() == 0x10;
 end
 
-function game.in_menu_network()
+function game.in_menu_keyitems()
     return game.ram.get.menu_mode() == 0x14;
 end
 
-function game.in_menu_save()
+function game.in_menu_network()
     return game.ram.get.menu_mode() == 0x18;
+end
+
+function game.in_menu_save()
+    return game.ram.get.menu_mode() == 0x1C;
+end
+
+function game.in_menu_folder_edit()
+    return game.ram.get.menu_mode() == 0x00; -- BN 1 doesn't have folder selection
 end
 
 game.folder_state_names = {};
@@ -551,6 +563,7 @@ end
 function game.update_post(options)
     previous_game_state = game.ram.get.game_state();
     previous_battle_state = game.ram.get.battle_state();
+    previous_menu_mode = game.ram.get.menu_mode();
     previous_menu_state = game.ram.get.menu_state();
     game.ram.update_post(options);
 end
