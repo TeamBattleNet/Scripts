@@ -204,24 +204,29 @@ addresses.version_byte          = 0x080000AF;
 
 ---------------------------------------- Verion Dependent ----------------------------------------
 
-local version_byte = memory.read_u8(addresses.version_byte); -- TODO: Fix copy paste from BN 1
+local version_byte = memory.read_u8(addresses.version_byte);
 
-if     version_byte == 0x45 then -- E
-    addresses.version_name      = "English";
-    addresses.encounter_odds    = 0x08009934;
-    addresses.encounter_curve   = 0x080099BC;
-elseif version_byte == 0x4A then -- J
+-- A0 A1 A2 A3 A4 A5 A6 A7 A8 A9 AA AB AC AD AE AF - ROM Address
+-- 52 4F 43 4B 4D 41 4E 5F 45 58 45 32 41 45 32 4A - ROCKMAN_EXE2AE2J
+-- 4D 45 47 41 4D 41 4E 5F 45 58 45 32 41 45 32 45 - MEGAMAN_EXE2AE2E
+-- 4D 45 47 41 4D 41 4E 42 4E 32 00 00 41 4D 32 50 - MEGAMANBN2  AM2P
+
+if     version_byte == 0x4A then -- J
     addresses.version_name      = "Japanese";
     addresses.encounter_odds    = 0x08009900;
     addresses.encounter_curve   = 0x08009988;
+elseif version_byte == 0x45 then -- E
+    addresses.version_name      = "English";
+    addresses.encounter_odds    = 0x08009934;
+    addresses.encounter_curve   = 0x080099BC;
 elseif version_byte == 0x50 then -- P
     addresses.version_name      = "PAL";
     addresses.encounter_odds    = 0x08009940;
     addresses.encounter_curve   = 0x080099C8;
 else
-    addresses.version_name      = "Unknown";
+    addresses.version_name      = "Unknown"; -- TODO: Update values copied from BN 1
     addresses.encounter_odds    = 0x08009900;
-    addresses.encounter_curve   = 0x08009900;
+    addresses.encounter_curve   = 0x08009988;
     print("\nRAM: Warning! Unrecognized game version! Unable to set certain addresses!");
 end
 
