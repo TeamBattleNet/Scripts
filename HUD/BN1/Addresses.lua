@@ -312,7 +312,7 @@ addresses.RNG                   = 0x02006CC0; -- 4 bytes, resets and pauses on t
 
 addresses.number_door_code      = 0x02009A90; -- 1 byte, only set when entering a number
 
--- Each pack slot covers 32 bytes or 0x20 addresses
+-- Each pack slot covers 32 bytes or 0x20 addresses starting at 19000
 addresses.pack_ID               = 0x02019018; -- 1 byte each, 0x20 offset
 addresses.pack_code             = 0x0201900A; -- 1 byte each, 0x20 offset
 addresses.pack_quantity         = 0x02019016; -- 1 byte each, number of copies

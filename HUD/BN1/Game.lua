@@ -40,23 +40,26 @@ end
 
 ---------------------------------------- Game State ----------------------------------------
 
-game.game_state_names = {};
-game.game_state_names[0x00] = "title";         -- or BIOS
-game.game_state_names[0x04] = "world";         -- real and digital
-game.game_state_names[0x08] = "battle";
-game.game_state_names[0x0C] = "player_change"; -- jack-in / out
-game.game_state_names[0x10] = "demo_end";      -- what is this?
-game.game_state_names[0x14] = "capcom_logo";
-game.game_state_names[0x18] = "menu";
-game.game_state_names[0x1C] = "shop";
-game.game_state_names[0x20] = "game_over";
-game.game_state_names[0x24] = "trader";
-game.game_state_names[0x28] = "credits";
-game.game_state_names[0x2C] = "ubisoft_logo";  -- PAL only
-local previous_game_state = 0;
+-- Game State
+
+game.game_state_names = {};                    -- skip 2 bits, add 1
+game.game_state_names[0x00] = "Title";         -- or BIOS
+game.game_state_names[0x04] = "World";         -- real and digital
+game.game_state_names[0x08] = "Battle";
+game.game_state_names[0x0C] = "Player Change"; -- jack-in / out
+game.game_state_names[0x10] = "Demo End";      -- what is this?
+game.game_state_names[0x14] = "Capcom Logo";
+game.game_state_names[0x18] = "Menu";
+game.game_state_names[0x1C] = "Shop";
+game.game_state_names[0x20] = "GAME OVER";
+game.game_state_names[0x24] = "Chip Trader";
+game.game_state_names[0x28] = "Credits";
+game.game_state_names[0x2C] = "Ubisoft Logo";  -- PAL only
+game.game_state_names[0x30] = "Unused?";
+game.game_state_names[0x34] = "Unused?";
 
 function game.get_game_state_name()
-    return game.game_state_names[game.ram.get.game_state()] or "unknown_game_state";
+    return game.game_state_names[game.ram.get.game_state()] or "Unknown Game State";
 end
 
 function game.did_game_state_change()
@@ -95,49 +98,27 @@ function game.in_game_over()
     return game.ram.get.game_state() == 0x20;
 end
 
-function game.in_chip_trader()
-    return game.ram.get.game_state() == 0x24; -- TBD
+function game.in_credits()
+    return game.ram.get.game_state() == 0x28;
 end
 
-function game.in_credits()
-    return game.ram.get.game_state() == 0x28; -- TBD
-end
+-- Battle State
 
 game.battle_state_names = {};
-game.battle_state_names[0x00] = "loading";
-game.battle_state_names[0x04] = "busy";
-game.battle_state_names[0x08] = "transition";
-game.battle_state_names[0x0C] = "combat";
+game.battle_state_names[0x00] = "Loading";
+game.battle_state_names[0x04] = "Busy";
+game.battle_state_names[0x08] = "Transition";
+game.battle_state_names[0x0C] = "Combat";
 game.battle_state_names[0x10] = "PAUSE";
-game.battle_state_names[0x14] = "time_stop";
-game.battle_state_names[0x18] = "opening_custom";
-local previous_battle_state = 0;
+game.battle_state_names[0x14] = "Time Stop";
+game.battle_state_names[0x18] = "Opening Custom";
 
 function game.get_battle_state_name()
-    return game.battle_state_names[game.ram.get.battle_state()] or "unknown_battle_state";
+    return game.battle_state_names[game.ram.get.battle_state()] or "Unknown Battle State";
 end
 
-function game.did_battle_state_change()
-    return game.ram.get.battle_state() ~= previous_battle_state;
-end
+-- Menu Mode Overrides (unique due to lack of subchips or multiple folders)
 
-function game.battle_pause()
-    if game.ram.get.battle_state() == 0x0C then
-        --ram.set.battle_state(0x10);
-        game.ram.set.battle_paused(0x01);
-        --ram.set.battle_paused_also(0x08);
-    end
-end
-
-function game.battle_unpause()
-    if game.ram.get.battle_state() == 0x0C then
-        --ram.set.battle_state(0x0C);
-        game.ram.set.battle_paused(0x00);
-        --ram.set.battle_paused_also(0x00);
-    end
-end
-
-game.menu_mode_names = {};
 game.menu_mode_names[0x00] = "Folder";
 game.menu_mode_names[0x04] = "Library";
 game.menu_mode_names[0x08] = "MegaMan";
@@ -145,14 +126,10 @@ game.menu_mode_names[0x0C] = "E-Mail";
 game.menu_mode_names[0x10] = "Key Items";
 game.menu_mode_names[0x14] = "Network";
 game.menu_mode_names[0x18] = "Save";
-local previous_menu_mode = 0;
+game.menu_mode_names[0x20] = "Unused";
 
-function game.did_menu_mode_change()
-    return game.ram.get.menu_mode() ~= previous_menu_mode;
-end
-
-function game.get_menu_mode_name()
-    return game.menu_mode_names[game.ram.get.menu_mode()] or "Unknown Menu Mode";
+function game.in_menu_folder()
+    return game.ram.get.menu_mode() == 0x00; -- BN 1 doesn't have folder selection
 end
 
 function game.in_menu_folder_select()
@@ -160,51 +137,48 @@ function game.in_menu_folder_select()
 end
 
 function game.in_menu_subchips()
-    return game.ram.get.menu_mode() == 0x04;
+    return false; -- BN 1 doesn't have subchips
 end
 
 function game.in_menu_library()
-    return game.ram.get.menu_mode() == 0x08;
+    return game.ram.get.menu_mode() == 0x04;
 end
 
 function game.in_menu_megaman()
-    return game.ram.get.menu_mode() == 0x0C;
+    return game.ram.get.menu_mode() == 0x08;
 end
 
 function game.in_menu_email()
-    return game.ram.get.menu_mode() == 0x10;
+    return game.ram.get.menu_mode() == 0x0C;
 end
 
 function game.in_menu_keyitems()
-    return game.ram.get.menu_mode() == 0x14;
+    return game.ram.get.menu_mode() == 0x10;
 end
 
 function game.in_menu_network()
-    return game.ram.get.menu_mode() == 0x18;
+    return game.ram.get.menu_mode() == 0x14;
 end
 
 function game.in_menu_save()
-    return game.ram.get.menu_mode() == 0x1C;
+    return game.ram.get.menu_mode() == 0x18;
 end
 
 function game.in_menu_folder_edit()
     return game.ram.get.menu_mode() == 0x00; -- BN 1 doesn't have folder selection
 end
 
+-- Menu State
+
 game.folder_state_names = {};
-game.folder_state_names[0x04] = "editing";
-game.folder_state_names[0x14] = "sorting";
-game.folder_state_names[0x10] = "to_pack";
-game.folder_state_names[0x0C] = "to_folder";
-game.folder_state_names[0x08] = "exited";
-local previous_menu_state = 0;
+game.folder_state_names[0x04] = "Editing";
+game.folder_state_names[0x14] = "Sorting";
+game.folder_state_names[0x10] = "To Pack";
+game.folder_state_names[0x0C] = "To Folder";
+game.folder_state_names[0x08] = "Exiting";
 
 function game.get_folder_state_name()
-    return game.game.folder_state_names[game.ram.get.menu_state()] or "unknown_folder_state";
-end
-
-function game.did_folder_state_change()
-    return game.ram.get.menu_state() ~= previous_menu_state;
+    return game.game.folder_state_names[game.ram.get.menu_state()] or "Unknown Folder State";
 end
 
 function game.in_folder()
@@ -215,102 +189,7 @@ function game.in_pack()
     return game.ram.get.folder_to_pack() == 0x02;
 end
 
-----------------------------------------Battle Information ----------------------------------------
-
-function game.get_draw_slot(which_slot)
-    if 1 <= which_slot and which_slot <= 30 then
-        return game.ram.get.draw_slot(which_slot-1) + 1; -- convert from 1 to 0 index, then back
-    end
-    return 0xFF;
-end
-
-function game.get_draw_slots()
-    local slots = {};
-    for i=1,30 do
-        slots[i] = game.get_draw_slot(i);
-    end
-    return slots;
-end
-
-function game.get_draw_slots_text_one_line()
-    local slots = game.get_draw_slots();
-    local RNG_index = game.get_RNG_index() or "????";
-    local slots_text = string.format("%s:", RNG_index);
-    for i=1,30 do
-        slots_text = string.format("%s %02u", slots_text, slots[i]);
-    end
-    return slots_text;
-end
-
-function game.get_draw_slots_text_multi_line()
-    local slots = game.get_draw_slots();
-    local RNG_index = game.get_RNG_index() or "????";
-    local slots_text = string.format("%s:", RNG_index);
-    for i=1,30 do
-        slots_text = string.format("%s\n%02u: %02u", slots_text, i, slots[i]);
-    end
-    return slots_text;
-end
-
-function game.shuffle_folder_simulate_from_value(starting_RNG_value)
-    return game.ram.shuffle_folder_simulate_from_value(starting_RNG_value);
-end
-
-function game.shuffle_folder_simulate_from_index(starting_RNG_index)
-    return game.ram.shuffle_folder_simulate_from_index(starting_RNG_index);
-end
-
-function game.shuffle_folder_simulate_from_battle()
-    return game.ram.shuffle_folder_simulate_from_battle(game.get_RNG_index()-120+1);
-end
-
-function game.get_folder_shuffle_nearby(offset)
-    return game.ram.shuffle_folder_simulate_from_battle(game.get_RNG_index()-120+1+offset);
-end
-
-function game.draw_in_order()
-    for i=0,29 do
-        game.ram.set.draw_slot(i, i);
-    end
-end
-
-function game.draw_only_slot(which_slot)
-    for i=0,29 do
-        game.ram.set.draw_slot(i, which_slot%30);
-    end
-end
-
-function game.find_first(chip_ID)
-    for i=0,29 do
-        if game.ram.get.folder_ID(game.ram.get.draw_slot(i)) == chip_ID then
-            return i;
-        end
-    end
-    return 0xFF;
-end
-
-function game.draw_slot_check(chip_ID, draw_depth)
-    return game.find_first(chip_ID) <= draw_depth;
-end
-
 ---------------------------------------- Inventory ----------------------------------------
-
-function game.get_IceBlocks()
-    return game.ram.get.IceBlock();
-end
-
-function game.set_IceBlocks(new_IceBlocks)
-    if new_IceBlocks < 0 then
-        new_IceBlocks = 0
-    elseif new_IceBlocks > 53 then
-        new_IceBlocks = 53;
-    end
-    game.ram.set.IceBlock(new_IceBlocks);
-end
-
-function game.add_IceBlocks(some_IceBlocks)
-    game.set_IceBlocks(game.get_IceBlocks() + some_IceBlocks);
-end
 
 function game.get_PowerUPs()
     return game.ram.get.PowerUP();
@@ -327,6 +206,23 @@ end
 
 function game.add_PowerUPs(some_PowerUPs)
     game.set_PowerUPs(game.get_PowerUPs() + some_PowerUPs);
+end
+
+function game.get_IceBlocks()
+    return game.ram.get.IceBlock();
+end
+
+function game.set_IceBlocks(new_IceBlocks)
+    if new_IceBlocks < 0 then
+        new_IceBlocks = 0
+    elseif new_IceBlocks > 53 then
+        new_IceBlocks = 53;
+    end
+    game.ram.set.IceBlock(new_IceBlocks);
+end
+
+function game.add_IceBlocks(some_IceBlocks)
+    game.set_IceBlocks(game.get_IceBlocks() + some_IceBlocks);
 end
 
 ---------------------------------------- Flags ----------------------------------------
@@ -398,6 +294,16 @@ end
 function game.go_mode()
     game.set_progress(0x54);
     game.set_magic_byte(0x10);
+end
+
+---------------------------------------- Draw Slots ----------------------------------------
+
+function game.shuffle_folder_simulate_from_battle()
+    return game.ram.shuffle_folder_simulate_from_battle(game.get_RNG_index()-120+1);
+end
+
+function game.get_folder_shuffle_nearby(offset)
+    return game.ram.shuffle_folder_simulate_from_battle(game.get_RNG_index()-120+1+offset);
 end
 
 ---------------------------------------- Battlechips ----------------------------------------
@@ -561,10 +467,7 @@ function game.update_pre(options)
 end
 
 function game.update_post(options)
-    previous_game_state = game.ram.get.game_state();
-    previous_battle_state = game.ram.get.battle_state();
-    previous_menu_mode = game.ram.get.menu_mode();
-    previous_menu_state = game.ram.get.menu_state();
+    game.update_state();
     game.ram.update_post(options);
 end
 

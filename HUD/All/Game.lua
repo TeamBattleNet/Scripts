@@ -105,6 +105,28 @@ function game.in_menu_folder_edit()
     return game.ram.get.menu_mode() == 0x20;
 end
 
+-- State Tracking
+
+local previous_game_state = 0;
+function game.did_game_state_change()
+    return game.ram.get.game_state() ~= previous_game_state;
+end
+
+local previous_battle_state = 0;
+function game.did_battle_state_change()
+    return game.ram.get.battle_state() ~= previous_battle_state;
+end
+
+local previous_menu_mode = 0;
+function game.did_menu_mode_change()
+    return game.ram.get.menu_mode() ~= previous_menu_mode;
+end
+
+local previous_menu_state = 0;
+function game.did_menu_state_change()
+    return game.ram.get.menu_state() ~= previous_menu_state;
+end
+
 ----------------------------------------Battle Information ----------------------------------------
 
 function game.get_battle_pointer()
@@ -152,6 +174,76 @@ end
 
 function game.fill_custom_gauge()
     game.set_custom_gauge(0x4000);
+end
+
+---------------------------------------- Draw Slots ----------------------------------------
+
+function game.get_draw_slot(which_slot)
+    if 1 <= which_slot and which_slot <= 30 then
+        return game.ram.get.draw_slot(which_slot-1) + 1; -- convert from 1 to 0 index, then back
+    end
+    return 0xFF;
+end
+
+function game.get_draw_slots()
+    local slots = {};
+    for i=1,30 do
+        slots[i] = game.get_draw_slot(i);
+    end
+    return slots;
+end
+
+function game.get_draw_slots_text_one_line()
+    local slots = game.get_draw_slots();
+    local RNG_index = game.get_RNG_index() or "????";
+    local slots_text = string.format("%s:", RNG_index);
+    for i=1,30 do
+        slots_text = string.format("%s %02u", slots_text, slots[i]);
+    end
+    return slots_text;
+end
+
+function game.get_draw_slots_text_multi_line()
+    local slots = game.get_draw_slots();
+    local RNG_index = game.get_RNG_index() or "????";
+    local slots_text = string.format("%s:", RNG_index);
+    for i=1,30 do
+        slots_text = string.format("%s\n%02u: %02u", slots_text, i, slots[i]);
+    end
+    return slots_text;
+end
+
+function game.shuffle_folder_simulate_from_value(starting_RNG_value)
+    return game.ram.shuffle_folder_simulate_from_value(starting_RNG_value);
+end
+
+function game.shuffle_folder_simulate_from_index(starting_RNG_index)
+    return game.ram.shuffle_folder_simulate_from_index(starting_RNG_index);
+end
+
+function game.draw_in_order()
+    for i=0,29 do
+        game.ram.set.draw_slot(i, i);
+    end
+end
+
+function game.draw_only_slot(which_slot)
+    for i=0,29 do
+        game.ram.set.draw_slot(i, which_slot%30);
+    end
+end
+
+function game.find_first(chip_ID)
+    for i=0,29 do
+        if game.ram.get.folder_ID(game.ram.get.draw_slot(i)) == chip_ID then
+            return i;
+        end
+    end
+    return 0xFF;
+end
+
+function game.draw_slot_check(chip_ID, draw_depth)
+    return game.find_first(chip_ID) <= draw_depth;
 end
 
 ---------------------------------------- Location ----------------------------------------
@@ -431,6 +523,13 @@ function game.get_string_hex(address, bytes, with_spaces)
 end
 
 ---------------------------------------- Module Controls ----------------------------------------
+
+function game.update_state()
+    previous_game_state   = game.ram.get.game_state();
+    previous_battle_state = game.ram.get.battle_state();
+    previous_menu_mode    = game.ram.get.menu_mode();
+    previous_menu_state   = game.ram.get.menu_state();
+end
 
 return game;
 

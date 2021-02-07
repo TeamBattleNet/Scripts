@@ -113,7 +113,7 @@ local function HUD_speedrun()
             hud.to_screen(string.format("Chips: %2u", hud.game.count_library()));
             hud.to_screen(string.format("Level: %2u", hud.game.calculate_mega_level()));
         elseif hud.game.in_menu() then
-            if hud.game.in_menu_folder() then
+            if hud.game.in_menu_folder_edit() then
                 display_edit_slots();
                 display_selected_chip();
             else
@@ -216,7 +216,7 @@ local function HUD_auto()
     elseif hud.game.in_transition() then
         hud.to_screen("HUD Version: " .. hud.version);
     elseif hud.game.in_menu() then
-        if hud.game.in_menu_folder() then
+        if hud.game.in_menu_folder_edit() then
             display_edit_slots();
             display_selected_chip();
         else

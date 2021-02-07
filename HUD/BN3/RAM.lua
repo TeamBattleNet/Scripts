@@ -179,6 +179,7 @@ game_state_names[0x1C] = "shop";
 game_state_names[0x20] = "game_over";
 game_state_names[0x24] = "trader";
 game_state_names[0x28] = "request_board";
+game_state_names[0x2C] = "unused?";
 game_state_names[0x30] = "credits";
 local previous_game_state = 0;
 

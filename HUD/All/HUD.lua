@@ -315,7 +315,7 @@ function hud.update()
         end
     end
     
-    if hud.game.did_game_state_change() and hud.game.in_menu() and hud.game.in_menu_folder() then
+    if hud.game.did_game_state_change() and hud.game.in_menu() and hud.game.in_menu_folder_edit() then
         buttons_string = "";
     end
     
