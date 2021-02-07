@@ -31,20 +31,17 @@ ram.set.chip_window_count = function(chip_window_count) memory.write_u8(ram.addr
 ram.get.check = function() return memory.read_u32_le(ram.addr.check); end;
 ram.set.check = function(check) memory.write_u32_le(ram.addr.check, check); end;
 
+ram.get.cursor_ID = function() return memory.read_u8(ram.addr.cursor_ID); end;
+ram.set.cursor_ID = function(cursor_ID) memory.write_u8(ram.addr.cursor_ID, cursor_ID); end;
+ram.get.cursor_code = function() return memory.read_u8(ram.addr.cursor_code); end;
+ram.set.cursor_code = function(cursor_code) memory.write_u8(ram.addr.cursor_code, cursor_code); end;
+
 ram.get.door_code = function() return memory.read_u8(ram.addr.number_door_code); end;
 ram.set.door_code = function(number_door_code) memory.write_u8(ram.addr.number_door_code, number_door_code); end;
-
-ram.get.delete_timer = function() return memory.read_u16_le(ram.addr.battle_timer); end;
-ram.set.delete_timer = function(battle_timer) memory.write_u16_le(ram.addr.battle_timer, battle_timer); end;
 
 ram.get.draw_slot = function(which_slot) return memory.read_u8(ram.addr.battle_draw_slots+which_slot); end;
 ram.set.draw_slot = function(which_slot, battle_draw_slot) memory.write_u8(ram.addr.battle_draw_slots+which_slot, battle_draw_slot); end;
 
-ram.get.folder = {};
-ram.set.folder = {};
-
-ram.get.folder[1] = {};
-ram.set.folder[1] = {};
 ram.get.folder[1].ID = function(which_slot) return memory.read_u8(ram.addr.folder_ID+(2*which_slot)); end;
 ram.set.folder[1].ID = function(which_slot, chip_ID) memory.write_u8(ram.addr.folder_ID+(2*which_slot), chip_ID); end;
 ram.get.folder[1].code = function(which_slot) return memory.read_u8(ram.addr.folder_code+(2*which_slot)); end;
@@ -73,9 +70,6 @@ ram.set.library = function(offset, bit_flags) memory.write_u8(ram.addr.library+o
 
 ram.get.magic_byte = function() return memory.read_u8(ram.addr.magic_byte); end;
 ram.set.magic_byte = function(magic_byte) memory.write_u8(ram.addr.magic_byte, magic_byte); end;
-
-ram.get.menu_mode = function() return memory.read_u8(ram.addr.menu_mode); end;
-ram.set.menu_mode = function(menu_mode) memory.write_u8(ram.addr.menu_mode, menu_mode); end;
 
 ram.get.pack_ID = function(which_slot) return memory.read_u8(ram.addr.pack_ID+(0x20*which_slot)); end;
 ram.set.pack_ID = function(which_slot, chip_ID) memory.write_u8(ram.addr.pack_ID+(0x20*which_slot), chip_ID); end;

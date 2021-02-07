@@ -14,9 +14,9 @@ progress[0x06] = "Ventilator Cleared";
 progress[0x07] = "AirMan Deleted";
 progress[0x08] = "Gone to bed";
 
-progress[0x10] = "";
+progress[0x10] = "TBD";
 
-progress[0xFE] = "Final State";
+progress[0x72] = "Final State";
 
 progress[0xFF] = "No Save Data";
 

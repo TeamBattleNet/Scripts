@@ -45,10 +45,10 @@ ram.set.check = function(check) memory.write_u32_le(ram.addr.check, check); end;
 ram.get.chip_cooldown = function() return memory.read_u8(ram.addr.chip_cooldown); end;
 ram.set.chip_cooldown = function(chip_cooldown) memory.write_u8(ram.addr.chip_cooldown, chip_cooldown); end;
 
-ram.get.cursor_ID = function() return memory.read_u8(ram.addr.cursor_ID); end;
-ram.set.cursor_ID = function(cursor_ID) memory.write_u8(ram.addr.cursor_ID, cursor_ID); end;
-ram.get.cursor_code = function() return memory.read_u8(ram.addr.cursor_code); end;
-ram.set.cursor_code = function(cursor_code) memory.write_u8(ram.addr.cursor_code, cursor_code); end;
+ram.get.cursor_ID = function() return memory.read_u16_le(ram.addr.cursor_ID); end;
+ram.set.cursor_ID = function(cursor_ID) memory.write_u16_le(ram.addr.cursor_ID, cursor_ID); end;
+ram.get.cursor_code = function() return memory.read_u16_le(ram.addr.cursor_code); end;
+ram.set.cursor_code = function(cursor_code) memory.write_u16_le(ram.addr.cursor_code, cursor_code); end;
 
 ram.get.cursor_folder = function() return memory.read_u16_le(ram.addr.cursor_folder); end;
 ram.set.cursor_folder = function(cursor_folder) memory.write_u16_le(ram.addr.cursor_folder, cursor_folder); end;
@@ -67,6 +67,9 @@ ram.set.offset_selected = function(offset_selected) memory.write_u16_le(ram.addr
 
 ram.get.custom_gauge = function() return memory.read_u16_le(ram.addr.battle_custom_gauge); end;
 ram.set.custom_gauge = function(custom_gauge_fill) memory.write_u16_le(ram.addr.battle_custom_gauge, custom_gauge_fill); end;
+
+ram.get.delete_timer = function() return memory.read_u16_le(ram.addr.battle_timer); end;
+ram.set.delete_timer = function(battle_timer) memory.write_u16_le(ram.addr.battle_timer, battle_timer); end;
 
 ram.get.enemy = {}
 ram.set.enemy = {}
@@ -92,8 +95,35 @@ ram.set.enemy[3].ID = function(enemy_ID) memory.write_u8(ram.addr.enemy[3].ID, e
 ram.get.enemy[3].HP = function() return memory.read_u16_le(ram.addr.enemy[3].HP); end;
 ram.set.enemy[3].HP = function(enemy_HP) memory.write_u16_le(ram.addr.enemy[3].HP, enemy_HP); end;
 
+ram.get.folder = {};
+ram.set.folder = {};
+
+ram.get.folder[1] = {};
+ram.set.folder[1] = {};
+ram.get.folder[1].ID = function(which_slot) return memory.read_u16_le(ram.addr.folder[1].ID+(4*which_slot)); end;
+ram.set.folder[1].ID = function(which_slot, chip_ID) memory.write_u16_le(ram.addr.folder[1].ID+(4*which_slot), chip_ID); end;
+ram.get.folder[1].code = function(which_slot) return memory.read_u16_le(ram.addr.folder[1].code+(4*which_slot)); end;
+ram.set.folder[1].code = function(which_slot, chip_code) memory.write_u16_le(ram.addr.folder[1].code+(4*which_slot), chip_code); end;
+
+ram.get.folder[2] = {};
+ram.set.folder[2] = {};
+ram.get.folder[2].ID = function(which_slot) return memory.read_u16_le(ram.addr.folder[2].ID+(4*which_slot)); end;
+ram.set.folder[2].ID = function(which_slot, chip_ID) memory.write_u16_le(ram.addr.folder[2].ID+(4*which_slot), chip_ID); end;
+ram.get.folder[2].code = function(which_slot) return memory.read_u16_le(ram.addr.folder[2].code+(4*which_slot)); end;
+ram.set.folder[2].code = function(which_slot, chip_code) memory.write_u16_le(ram.addr.folder[2].code+(4*which_slot), chip_code); end;
+
+ram.get.folder[3] = {};
+ram.set.folder[3] = {};
+ram.get.folder[3].ID = function(which_slot) return memory.read_u16_le(ram.addr.folder[3].ID+(4*which_slot)); end;
+ram.set.folder[3].ID = function(which_slot, chip_ID) memory.write_u16_le(ram.addr.folder[3].ID+(4*which_slot), chip_ID); end;
+ram.get.folder[3].code = function(which_slot) return memory.read_u16_le(ram.addr.folder[3].code+(4*which_slot)); end;
+ram.set.folder[3].code = function(which_slot, chip_code) memory.write_u16_le(ram.addr.folder[3].code+(4*which_slot), chip_code); end;
+
 ram.get.game_state = function() return memory.read_u8(ram.addr.game_state); end;
 ram.set.game_state = function(game_state) memory.write_u8(ram.addr.game_state, game_state); end;
+
+ram.get.menu_mode = function() return memory.read_u8(ram.addr.menu_mode); end;
+ram.set.menu_mode = function(menu_mode) memory.write_u8(ram.addr.menu_mode, menu_mode); end;
 
 ram.get.menu_state = function() return memory.read_u8(ram.addr.menu_state); end;
 ram.set.menu_state = function(menu_state) memory.write_u8(ram.addr.menu_state, menu_state); end;
@@ -103,6 +133,9 @@ ram.set.play_time = function(play_time_frames) memory.write_u32_le(ram.addr.play
 
 ram.get.progress = function() return memory.read_u8(ram.addr.progress); end;
 ram.set.progress = function(progress) memory.write_u8(ram.addr.progress, progress); end;
+
+ram.get.sneak = function() return memory.read_u32_le(ram.addr.sneak); end;
+ram.set.sneak = function(sneak) memory.write_u32_le(ram.addr.sneak, sneak); end;
 
 ram.get.steps = function() return memory.read_u32_le(ram.addr.steps); end;
 ram.set.steps = function(steps) memory.write_u32_le(ram.addr.steps, steps); end;
