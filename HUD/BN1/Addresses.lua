@@ -283,22 +283,14 @@ addresses.pack_quantity         = 0x02019016; -- 1 byte each, number of copies
 -- 0x0203FFFF end of WRAM?
 -- 0x02047FFF end of WRAM?
 
----------------------------------------- ROM  08000000-09FFFFFF ----------------------------------------
-
-addresses.version_byte          = 0x080000AF;
-
-addresses.battle_data           = 0x080852B0; -- plus offset from TBD?
-
--- https://forums.therockmanexezone.com/mmbn1-mystery-data-t5326.html
-
 ---------------------------------------- Verion Dependent ----------------------------------------
-
-local version_byte = memory.read_u8(addresses.version_byte);
 
 -- A0 A1 A2 A3 A4 A5 A6 A7 A8 A9 AA AB AC AD AE AF - ROM Address
 -- 52 4F 43 4B 4D 41 4E 5F 45 58 45 00 41 52 45 4A - ROCKMAN_EXE AREJ - JP
 -- 4D 45 47 41 4D 41 4E 5F 42 4E 00 00 41 52 45 45 - MEGAMAN_BN  AREE - US
 -- 4D 45 47 41 4D 41 4E 45 58 45 42 4E 41 52 45 50 - MEGAMANEXEBNAREP - PAL
+
+local version_byte = memory.read_u8(addresses.version_byte);
 
 if     version_byte == 0x4A then -- J
     addresses.version_name      = "Japanese";

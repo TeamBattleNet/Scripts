@@ -4,6 +4,9 @@ local addresses = require("All/Addresses");
 
 ---------------------------------------- WRAM 02000000-0203FFFF ----------------------------------------
 
+addresses.bug_frags             = 0x02000000; -- TODO: 1? byte, caps at 32?
+addresses.GMD_reward            = 0x02000000; -- TODO: 2? bytes, how to decode?
+
 addresses.flags                 = 0x02000000; -- N bytes, to 5F at most
 addresses.star_byte_yellow      = 0x02000000; -- Somewhere in the first row
 addresses.star_byte_green       = 0x02000000; -- Somewhere in the second row
@@ -139,39 +142,17 @@ addresses.pack_code             = 0x0201900A; -- 1 byte each, 0x20 offset
 addresses.pack_quantity         = 0x02019016; -- 1 byte each, number of copies
 -- Ends at 23FFF? 291FF? Many of these values appear to be duplicates, possibly to help with sorting
 
--- TODO: V
-
-addresses.chip_cooldown         = 0x02000000; -- 1 byte ??? wrong
-
-addresses.BMD                   = 0x02000000; -- bit flags
-addresses.bug_frags             = 0x02000000; -- 1 byte, caps at 32?
-addresses.GMD_reward            = 0x02000000; -- 2 bytes, how to decode?
-addresses.button_flags          = 0x02000000; -- many bytes, many flags
-
-addresses.HPMemory              = 0x02000000; -- 1 byte, collected
-addresses.PowerUP               = 0x02000000; -- 1 byte, available
-addresses.buster_attack         = 0x02000000; -- 1 byte, 0 indexed, can't change mid-battle
-addresses.buster_rapid          = 0x02000000; -- 1 byte, 0 indexed, can't change mid-battle
-addresses.buster_charge         = 0x02000000; -- 1 byte, 0 indexed, can't change mid-battle
-
-addresses.battle_pointer        = 0x02000000; -- 2 bytes? ROM offset?
-addresses.battle_state          = 0x02000000; -- 1 byte
-
 -- 0x0203FFFF end of WRAM?
 -- 0x02047FFF end of WRAM?
 
----------------------------------------- ROM  08000000-09FFFFFF ----------------------------------------
-
-addresses.version_byte          = 0x080000AF;
-
 ---------------------------------------- Verion Dependent ----------------------------------------
-
-local version_byte = memory.read_u8(addresses.version_byte);
 
 -- A0 A1 A2 A3 A4 A5 A6 A7 A8 A9 AA AB AC AD AE AF - ROM Address
 -- 52 4F 43 4B 4D 41 4E 5F 45 58 45 32 41 45 32 4A - ROCKMAN_EXE2AE2J - JP
 -- 4D 45 47 41 4D 41 4E 5F 45 58 45 32 41 45 32 45 - MEGAMAN_EXE2AE2E - US
 -- 4D 45 47 41 4D 41 4E 42 4E 32 00 00 41 4D 32 50 - MEGAMANBN2  AM2P - PAL
+
+local version_byte = memory.read_u8(addresses.version_byte);
 
 if     version_byte == 0x4A then -- J
     addresses.version_name      = "Japanese";

@@ -71,6 +71,8 @@ addresses.battle_draw_slots     = 0x02000000;
 addresses.chip_window_size      = 0x02000000;
 addresses.chip_cooldown         = 0x02000000;
 
+addresses.button_flags          = 0x02000000;
+
 addresses.your_X                = 0x02000000;
 addresses.your_Y                = 0x02000000;
 addresses.your_X2               = 0x02000000;
