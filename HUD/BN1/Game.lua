@@ -266,7 +266,7 @@ end
 
 function game.find_first(chip_ID)
     for i=0,29 do
-        if game.ram.get.folder[1].ID(game.ram.get.draw_slot(i)) == chip_ID then
+        if game.ram.get.folder_ID(game.ram.get.draw_slot(i)) == chip_ID then
             return i;
         end
     end
@@ -416,7 +416,7 @@ end
 function game.get_selected_ID()
     local selected_chip_location = game.get_selected_chip_location_name();
     if selected_chip_location == "Folder" then
-        return game.ram.get.folder[1].ID(game.get_cursor_offset_selected()+game.get_cursor_position_selected());
+        return game.ram.get.folder_ID(game.get_cursor_offset_selected()+game.get_cursor_position_selected());
     elseif selected_chip_location == "Pack" then
         return game.ram.get.pack_ID(game.get_cursor_offset_selected()+game.get_cursor_position_selected());
     end
@@ -426,7 +426,7 @@ end
 function game.get_selected_code()
     local selected_chip_location = game.get_selected_chip_location_name();
     if selected_chip_location == "Folder" then
-        return game.ram.get.folder[1].code(game.get_cursor_offset_selected()+game.get_cursor_position_selected());
+        return game.ram.get.folder_code(game.get_cursor_offset_selected()+game.get_cursor_position_selected());
     elseif selected_chip_location == "Pack" then
         return game.ram.get.pack_code(game.get_cursor_offset_selected()+game.get_cursor_position_selected());
     end

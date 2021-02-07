@@ -75,8 +75,8 @@ addresses.fire_flags            = 0x02000070; -- 4 bytes, 32 fire bit flags
 
 -- 170-1BF ??? all 1's
 
-addresses.folder_ID             = 0x020001C0; -- every other byte, chip  ID  of folder slot 1, ends at 0x020001FA
-addresses.folder_code           = 0x020001C1; -- every other byte, chip code of folder slot 1, ends at 0x020001FB
+addresses.folder_ID             = 0x020001C0; -- every other byte, chip  ID  of folder slot 1, ends at 1FA
+addresses.folder_code           = 0x020001C1; -- every other byte, chip code of folder slot 1, ends at 1FB
 
 -- 1FC-203 ??? 1FF changes a lot
 

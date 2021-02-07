@@ -42,10 +42,10 @@ ram.set.door_code = function(number_door_code) memory.write_u8(ram.addr.number_d
 ram.get.draw_slot = function(which_slot) return memory.read_u8(ram.addr.battle_draw_slots+which_slot); end;
 ram.set.draw_slot = function(which_slot, battle_draw_slot) memory.write_u8(ram.addr.battle_draw_slots+which_slot, battle_draw_slot); end;
 
-ram.get.folder[1].ID = function(which_slot) return memory.read_u8(ram.addr.folder_ID+(2*which_slot)); end;
-ram.set.folder[1].ID = function(which_slot, chip_ID) memory.write_u8(ram.addr.folder_ID+(2*which_slot), chip_ID); end;
-ram.get.folder[1].code = function(which_slot) return memory.read_u8(ram.addr.folder_code+(2*which_slot)); end;
-ram.set.folder[1].code = function(which_slot, chip_code) memory.write_u8(ram.addr.folder_code+(2*which_slot), chip_code); end;
+ram.get.folder_ID = function(which_slot) return memory.read_u8(ram.addr.folder_ID+(2*which_slot)); end;
+ram.set.folder_ID = function(which_slot, chip_ID) memory.write_u8(ram.addr.folder_ID+(2*which_slot), chip_ID); end;
+ram.get.folder_code = function(which_slot) return memory.read_u8(ram.addr.folder_code+(2*which_slot)); end;
+ram.set.folder_code = function(which_slot, chip_code) memory.write_u8(ram.addr.folder_code+(2*which_slot), chip_code); end;
 
 ram.get.folder_count = function() return memory.read_u8(ram.addr.folder_count); end;
 ram.set.folder_count = function(folder_count) memory.write_u8(ram.addr.folder_count, folder_count); end;
