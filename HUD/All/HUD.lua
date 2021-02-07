@@ -282,8 +282,8 @@ function hud.update()
             end
             hud.display_commands();
         else
-            if (buttons_held.L and buttons_held.R) or keys_down.KeypadPeriod then
-                if     buttons_down.Select or keys_down.KeypadPeriod then
+            if buttons_held.L and buttons_held.R then
+                if     buttons_down.Select then
                     controls.set_command_mode(true);
                 elseif buttons_down.Up     then
                     hud.Up();
@@ -297,6 +297,18 @@ function hud.update()
                     hud.B();
                 elseif buttons_down.A      then
                     hud.A();
+                end
+            else
+                if     keys_down.KeypadPeriod then
+                    controls.set_command_mode(true);
+                elseif keys_down.Up      then
+                    hud.Up();
+                elseif keys_down.Down    then
+                    hud.Down();
+                elseif keys_down.Left    then
+                    hud.Left();
+                elseif keys_down.Right   then
+                    hud.Right();
                 end
             end
             hud.HUDs[HUD_mode]();
