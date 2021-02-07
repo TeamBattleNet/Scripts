@@ -5,7 +5,7 @@
 local enemies = {};
 
 enemies.names = {};
-enemies.names[0x00] = "Megaman";
+enemies.names[0x00] = "MegaMan";
 enemies.names[0x01] = "Mettaur 1";
 enemies.names[0x02] = "Mettaur 2";
 enemies.names[0x03] = "Mettaur 3";

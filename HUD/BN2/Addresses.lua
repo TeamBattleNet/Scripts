@@ -207,9 +207,9 @@ addresses.version_byte          = 0x080000AF;
 local version_byte = memory.read_u8(addresses.version_byte);
 
 -- A0 A1 A2 A3 A4 A5 A6 A7 A8 A9 AA AB AC AD AE AF - ROM Address
--- 52 4F 43 4B 4D 41 4E 5F 45 58 45 32 41 45 32 4A - ROCKMAN_EXE2AE2J
--- 4D 45 47 41 4D 41 4E 5F 45 58 45 32 41 45 32 45 - MEGAMAN_EXE2AE2E
--- 4D 45 47 41 4D 41 4E 42 4E 32 00 00 41 4D 32 50 - MEGAMANBN2  AM2P
+-- 52 4F 43 4B 4D 41 4E 5F 45 58 45 32 41 45 32 4A - ROCKMAN_EXE2AE2J - JP
+-- 4D 45 47 41 4D 41 4E 5F 45 58 45 32 41 45 32 45 - MEGAMAN_EXE2AE2E - US
+-- 4D 45 47 41 4D 41 4E 42 4E 32 00 00 41 4D 32 50 - MEGAMANBN2  AM2P - PAL
 
 if     version_byte == 0x4A then -- J
     addresses.version_name      = "Japanese";
