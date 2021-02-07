@@ -322,14 +322,18 @@ addresses.battle_data           = 0x080852B0; -- plus offset from TBD?
 
 local version_byte = memory.read_u8(addresses.version_byte);
 
-if     version_byte == 0x45 then -- E
-    addresses.version_name      = "English";
-    addresses.encounter_odds    = 0x08009934;
-    addresses.encounter_curve   = 0x080099BC;
-elseif version_byte == 0x4A then -- J
+-- 52 4F 43 4B 4D 41 4E 5F 45 58 45 00 41 52 45 4A - ROCKMAN_EXE AREJ - JP
+-- 4D 45 47 41 4D 41 4E 5F 42 4E 00 00 41 52 45 45 - MEGAMAN_BN  AREE - US
+-- 4D 45 47 41 4D 41 4E 45 58 45 42 4E 41 52 45 50 - MEGAMANEXEBNAREP - PAL
+
+if     version_byte == 0x4A then -- J
     addresses.version_name      = "Japanese";
     addresses.encounter_odds    = 0x08009900;
     addresses.encounter_curve   = 0x08009988;
+elseif version_byte == 0x45 then -- E
+    addresses.version_name      = "English";
+    addresses.encounter_odds    = 0x08009934;
+    addresses.encounter_curve   = 0x080099BC;
 elseif version_byte == 0x50 then -- P
     addresses.version_name      = "PAL";
     addresses.encounter_odds    = 0x08009940;
@@ -337,7 +341,7 @@ elseif version_byte == 0x50 then -- P
 else
     addresses.version_name      = "Unknown";
     addresses.encounter_odds    = 0x08009900;
-    addresses.encounter_curve   = 0x08009900;
+    addresses.encounter_curve   = 0x08009988;
     print("\nRAM: Warning! Unrecognized game version! Unable to set certain addresses!");
 end
 
