@@ -135,8 +135,12 @@ local version_byte = memory.read_u32_le(0x080000AC);
 
 if     version_byte == 0x4A423641 then
     addresses.version_name = "JP White";
+    addresses.encounter_odds    = 0x0800D1E8;
+    addresses.encounter_curve   = 0x0800D270;
 elseif version_byte == 0x4A583341 then
     addresses.version_name = "JP Black";
+    addresses.encounter_odds    = 0x0800D1E8;
+    addresses.encounter_curve   = 0x0800D270;
 elseif version_byte == 0x45583341 then
     addresses.version_name      = "US White";
     addresses.encounter_odds    = 0x0800D26C;
@@ -147,8 +151,12 @@ elseif version_byte == 0x45423641 then
     addresses.encounter_curve   = 0x0800D2F4;
 elseif version_byte == 0x50423641 then
     addresses.version_name = "PAL White";
+    addresses.encounter_odds    = 0x0800D26C;
+    addresses.encounter_curve   = 0x0800D2F4;
 elseif version_byte == 0x50583341 then
     addresses.version_name = "PAL Blue";
+    addresses.encounter_odds    = 0x0800D26C;
+    addresses.encounter_curve   = 0x0800D2F4;
 else
     addresses.version_name = "Unknown";
     print("\nRAM: Warning! Unrecognized game version! Unable to set certain addresses!");
