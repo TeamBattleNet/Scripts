@@ -125,6 +125,9 @@ ram.set.folder[3].code = function(which_slot, chip_code) memory.write_u16_le(ram
 ram.get.game_state = function() return memory.read_u8(ram.addr.game_state); end;
 ram.set.game_state = function(game_state) memory.write_u8(ram.addr.game_state, game_state); end;
 
+ram.get.library = function(offset) return memory.read_u8(ram.addr.library+offset); end;
+ram.set.library = function(offset, bit_flags) memory.write_u8(ram.addr.library+offset, bit_flags); end;
+
 ram.get.menu_mode = function() return memory.read_u8(ram.addr.menu_mode); end;
 ram.set.menu_mode = function(menu_mode) memory.write_u8(ram.addr.menu_mode, menu_mode); end;
 ram.get.menu_state = function() return memory.read_u8(ram.addr.menu_state); end;
@@ -132,6 +135,9 @@ ram.set.menu_state = function(menu_state) memory.write_u8(ram.addr.menu_state, m
 
 ram.get.play_time = function() return memory.read_u32_le(ram.addr.play_time_frames); end;
 ram.set.play_time = function(play_time_frames) memory.write_u32_le(ram.addr.play_time_frames, play_time_frames); end;
+
+ram.get.PowerUP = function() return memory.read_u8(ram.addr.PowerUP); end;
+ram.set.PowerUP = function(PowerUP) memory.write_u8(ram.addr.PowerUP, PowerUP); end;
 
 ram.get.progress = function() return memory.read_u8(ram.addr.progress); end;
 ram.set.progress = function(progress) memory.write_u8(ram.addr.progress, progress); end;

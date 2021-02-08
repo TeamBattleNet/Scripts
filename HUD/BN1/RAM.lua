@@ -67,9 +67,6 @@ ram.set.HPMemory = function(HPMemory) memory.write_u8(ram.addr.HPMemory, HPMemor
 ram.get.IceBlock = function() return memory.read_u8(ram.addr.key_IceBlock_count); end;
 ram.set.IceBlock = function(key_IceBlock_count) memory.write_u8(ram.addr.key_IceBlock_count, key_IceBlock_count); end;
 
-ram.get.library = function(offset) return memory.read_u8(ram.addr.library+offset); end;
-ram.set.library = function(offset, bit_flags) memory.write_u8(ram.addr.library+offset, bit_flags); end;
-
 ram.get.magic_byte = function() return memory.read_u8(ram.addr.magic_byte); end;
 ram.set.magic_byte = function(magic_byte) memory.write_u8(ram.addr.magic_byte, magic_byte); end;
 
@@ -79,9 +76,6 @@ ram.get.pack_code = function(which_slot) return memory.read_u8(ram.addr.pack_cod
 ram.set.pack_code = function(which_slot, chip_code) memory.write_u8(ram.addr.pack_code+(0x20*which_slot), chip_code); end;
 ram.get.pack_quantity = function(which_slot) return memory.read_u8(ram.addr.pack_quantity+(0x20*which_slot)); end;
 ram.set.pack_quantity = function(which_slot, chip_quantity) memory.write_u8(ram.addr.pack_quantity+(0x20*which_slot), chip_quantity); end;
-
-ram.get.PowerUP = function() return memory.read_u8(ram.addr.PowerUP); end;
-ram.set.PowerUP = function(PowerUP) memory.write_u8(ram.addr.PowerUP, PowerUP); end;
 
 ram.get.title_star_byte = function() return memory.read_u8(ram.addr.title_star_byte); end;
 ram.set.title_star_byte = function(title_star_byte) memory.write_u8(ram.addr.title_star_byte, title_star_byte); end;
