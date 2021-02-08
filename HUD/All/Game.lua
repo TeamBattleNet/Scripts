@@ -105,28 +105,6 @@ function game.in_menu_folder_edit()
     return game.ram.get.menu_mode() == 0x20;
 end
 
--- State Tracking
-
-local previous_game_state = 0;
-function game.did_game_state_change()
-    return game.ram.get.game_state() ~= previous_game_state;
-end
-
-local previous_battle_state = 0;
-function game.did_battle_state_change()
-    return game.ram.get.battle_state() ~= previous_battle_state;
-end
-
-local previous_menu_mode = 0;
-function game.did_menu_mode_change()
-    return game.ram.get.menu_mode() ~= previous_menu_mode;
-end
-
-local previous_menu_state = 0;
-function game.did_menu_state_change()
-    return game.ram.get.menu_state() ~= previous_menu_state;
-end
-
 ----------------------------------------Battle Information ----------------------------------------
 
 function game.get_battle_pointer()
@@ -524,11 +502,16 @@ end
 
 ---------------------------------------- Encounter Tracker ----------------------------------------
 
-local total_odds = 1;
+local area_odds = 1;
+local current_odds = 1;
 local last_encounter_check = 0;
 
-function game.what_are_the_odds()
-    return total_odds * 100;
+function game.get_area_percent()
+    return area_odds * 100;
+end
+
+function game.get_current_percent()
+    return current_odds * 100;
 end
 
 function game.get_encounter_checks()
@@ -539,11 +522,15 @@ local function track_encounter_checks()
     if game.in_world() then
         if game.get_check() < last_encounter_check then
             last_encounter_check = 0;
-            total_odds = 1;
+            area_odds = area_odds * (1-current_odds);
+            current_odds = 1;
         elseif game.get_check() > last_encounter_check then
             last_encounter_check = game.get_check();
-            total_odds = total_odds * (1-game.get_encounter_chance());
+            current_odds = current_odds * (1-game.get_encounter_chance());
         end
+    end
+    if game.did_area_change() then
+        area_odds = 1;
     end
 end
 
@@ -568,6 +555,42 @@ function game.would_get_encounter()
     return game.get_encounter_threshold() > (game.get_main_RNG_value() % 0x20);
 end
 
+---------------------------------------- State Tracking ----------------------------------------
+
+local previous_game_state = 0x00;
+function game.did_game_state_change()
+    return game.ram.get.game_state() ~= previous_game_state;
+end
+
+local previous_battle_state = 0x00;
+function game.did_battle_state_change()
+    return game.ram.get.battle_state() ~= previous_battle_state;
+end
+
+local previous_menu_mode = 0x00;
+function game.did_menu_mode_change()
+    return game.ram.get.menu_mode() ~= previous_menu_mode;
+end
+
+local previous_menu_state = 0x00;
+function game.did_menu_state_change()
+    return game.ram.get.menu_state() ~= previous_menu_state;
+end
+
+local previous_main_area = 0x00;
+function game.did_main_area_change()
+    return game.ram.get.main_area() ~= previous_main_area;
+end
+
+local previous_sub_area = 0x00;
+function game.did_sub_area_change()
+    return game.ram.get.sub_area() ~= previous_sub_area;
+end
+
+function game.did_area_change()
+    return game.did_main_area_change() or game.did_sub_area_change();
+end
+
 ---------------------------------------- Module Controls ----------------------------------------
 
 function game.track_game_state()
@@ -576,6 +599,8 @@ function game.track_game_state()
     previous_battle_state = game.ram.get.battle_state();
     previous_menu_mode    = game.ram.get.menu_mode();
     previous_menu_state   = game.ram.get.menu_state();
+    previous_main_area    = game.ram.get.main_area();
+    previous_sub_area     = game.ram.get.sub_area();
 end
 
 return game;

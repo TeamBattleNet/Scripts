@@ -124,10 +124,10 @@ addresses.battle_HP_max         = 0x02037296; -- 1 byte
 ---------------------------------------- Verion Dependent ----------------------------------------
 
 -- A0 A1 A2 A3 A4 A5 A6 A7 A8 A9 AA AB AC AD AE AF - ROM Address
--- 52 4F 43 4B 4D 41 4E 5F 45 58 45 33 41 36 42 4A - ROCKMAN_EXE3A6BJ - JP exe3
--- 52 4F 43 4B 5F 45 58 45 33 5F 42 4B 41 33 58 4A - ROCK_EXE3_BKA3XJ - JP black
--- 4D 45 47 41 5F 45 58 45 33 5F 42 4C 41 33 58 45 - MEGA_EXE3_BLA3XE - US blue / vc
--- 4D 45 47 41 5F 45 58 45 33 5F 57 48 41 36 42 45 - MEGA_EXE3_WHA6BE - US white / vc
+-- 52 4F 43 4B 4D 41 4E 5F 45 58 45 33 41 36 42 4A - ROCKMAN_EXE3A6BJ - JP White
+-- 52 4F 43 4B 5F 45 58 45 33 5F 42 4B 41 33 58 4A - ROCK_EXE3_BKA3XJ - JP Black
+-- 4D 45 47 41 5F 45 58 45 33 5F 57 48 41 36 42 45 - MEGA_EXE3_WHA6BE - US White
+-- 4D 45 47 41 5F 45 58 45 33 5F 42 4C 41 33 58 45 - MEGA_EXE3_BLA3XE - US Blue
 -- 4D 45 47 41 5F 45 58 45 33 5F 57 48 41 36 42 50 - MEGA_EXE3_WHA6BP - PAL
 -- 4D 45 47 41 5F 45 58 45 33 5F 42 4C 41 33 58 50 - MEGA_EXE3_BLA3XP - PAL
 
@@ -158,7 +158,6 @@ elseif version_byte == 0x50583341 then
     addresses.encounter_odds    = 0x0800D26C;
     addresses.encounter_curve   = 0x0800D2F4;
 else
-    addresses.version_name = "Unknown";
     print("\nRAM: Warning! Unrecognized game version! Unable to set certain addresses!");
 end
 

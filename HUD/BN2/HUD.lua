@@ -23,7 +23,9 @@ local function display_steps()
         hud.to_screen(string.format("Steps: %4u" , hud.game.get_steps()));
         hud.to_screen(string.format("Check: %4u" , hud.game.get_check()));
         hud.to_screen(string.format("Checks: %3u", hud.game.get_encounter_checks()));
-        --hud.to_screen(string.format("%%: %7.3f%%", hud.game.get_encounter_percent()));
+        hud.to_screen(string.format("A%%:%7.3f%%", hud.game.get_area_percent()));
+        hud.to_screen(string.format("C%%:%7.3f%%", hud.game.get_current_percent()));
+        hud.to_screen(string.format("N%%:%7.3f%%", hud.game.get_encounter_percent()));
         hud.to_screen(string.format("Next: %2i"  , hud.game.get_next_check()));
     end
     hud.to_screen(string.format("X: %5i", hud.game.get_X()));
@@ -188,6 +190,7 @@ local function HUD_auto()
         hud.to_screen(string.format("Fight: 0x%4X", hud.game.get_battle_pointer()));
         display_RNG(true);
         hud.to_screen(string.format("Checks: %2u", hud.game.get_encounter_checks()));
+        hud.to_screen(string.format("%%: %7.3f%%", 100-hud.game.get_current_percent()));
         display_enemies();
     elseif hud.game.in_transition() then
         hud.to_screen("HUD Version: " .. hud.version);
