@@ -82,7 +82,7 @@ ram.set.title_star_byte = function(title_star_byte) memory.write_u8(ram.addr.tit
 
 ---------------------------------------- RAMsacking ----------------------------------------
 
-local function use_fun_flags(fun_flags)
+function ram.use_fun_flags(fun_flags)
     if fun_flags.always_fullcust then
         ram.set.custom_gauge(0x4000);
     end
@@ -100,19 +100,6 @@ local function use_fun_flags(fun_flags)
     elseif fun_flags.chip_selection_one then
         ram.set.chip_window_size( 1);
     end
-    
-    if fun_flags.no_encounters then
-        ram.set.main_RNG_value(0xBC61AB0C);
-    elseif fun_flags.yes_encounters then
-        ram.set.main_RNG_value(0x439E54F2);
-    end
-    
-    if fun_flags.modulate_steps then
-        if ram.get.steps() > 64 then
-            ram.set.steps(ram.get.steps() % 64);
-            ram.set.check(ram.get.check() % 64);
-        end
-    end
 end
 
 ---------------------------------------- Module Controls ----------------------------------------
@@ -123,7 +110,8 @@ function ram.initialize(options)
 end
 
 function ram.update_pre(options)
-    use_fun_flags(options.fun_flags);
+    ram.use_fun_flags(options.fun_flags);
+    ram.use_fun_flags_common(options.fun_flags);
     ram.expand_RNG_table(ram.main_RNG_table);
 end
 

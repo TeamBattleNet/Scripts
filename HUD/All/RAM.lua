@@ -376,6 +376,23 @@ function ram.shuffle_folder_simulate_from_lazy_index(index)
     return ram.shuffle_folder_simulate(ram.get.lazy_RNG_value_at(index));
 end
 
+---------------------------------------- RAMsacking ----------------------------------------
+
+function ram.use_fun_flags_common(fun_flags)
+    if fun_flags.no_encounters then
+        ram.set.main_RNG_value(0xBC61AB0C);
+    elseif fun_flags.yes_encounters then
+        ram.set.main_RNG_value(0x439E54F2);
+    end
+    
+    if fun_flags.modulate_steps then
+        if ram.get.steps() > 64 then
+            ram.set.steps(ram.get.steps() % 64);
+            ram.set.check(ram.get.check() % 64);
+        end
+    end
+end
+
 ---------------------------------------- Module Controls ----------------------------------------
 
 function ram.print_details()
