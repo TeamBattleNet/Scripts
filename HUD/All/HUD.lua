@@ -329,6 +329,7 @@ function hud.initialize()
     hud.game.initialize({maximum_RNG_index = 10 * 60 * 60;}); -- 10 minutes of frames
     process_inputs_BN_HUD_reference = event.onframestart(process_inputs_BN_HUD, "process_inputs_BN_HUD");
     print(string.format("\nInitialized HUD %s for MMBN %s - %s!", hud.version, hud.game.number, hud.game.get_version_name()));
+    --require("Test/Tests").test_this(hud);
 end
 
 return hud;
