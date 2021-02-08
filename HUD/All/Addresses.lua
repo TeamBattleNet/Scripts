@@ -50,6 +50,7 @@ addresses.power_on_frames       = 0x02000000;
 addresses.main_area             = 0x02000000;
 addresses.sub_area              = 0x02000000;
 addresses.check                 = 0x02000000;
+addresses.sneak                 = 0x02000000;
 addresses.steps                 = 0x02000000;
 addresses.steps_total           = 0x02000000;
 

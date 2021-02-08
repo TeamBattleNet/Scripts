@@ -135,6 +135,8 @@ ram.set.play_time = function(play_time_frames) memory.write_u32_le(ram.addr.play
 
 ram.get.progress = function() return memory.read_u8(ram.addr.progress); end;
 ram.set.progress = function(progress) memory.write_u8(ram.addr.progress, progress); end;
+ram.get.music_progress = function() return memory.read_u8(ram.addr.music_progress); end;
+ram.set.music_progress = function(music_progress) memory.write_u8(ram.addr.music_progress, music_progress); end;
 
 ram.get.sneak = function() return memory.read_u32_le(ram.addr.sneak); end;
 ram.set.sneak = function(sneak) memory.write_u32_le(ram.addr.sneak, sneak); end;
