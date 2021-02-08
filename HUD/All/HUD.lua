@@ -157,11 +157,15 @@ end
 
 ---------------------------------------- Display Functions ----------------------------------------
 
+hud.use_gui_text = false;
+
 hud.x = 0;
 hud.y = 0;
 
 local xs = 0;
 local ys = 0;
+
+local ws = 1; -- window size
 
 local current_font = "fceux";
 local current_color = 0x77000000;
@@ -192,15 +196,39 @@ function hud.position_top_left()
     hud.y = 0;
 end
 
-function hud.to_screen(text)
+function hud.to_screen_gui(text)
+    gui.text(hud.x*ws, hud.y*ws, text); hud.y = hud.y + 1; -- Screen is 240x160 * ws
+end
+
+function hud.to_screen_pixel(text)
     gui.pixelText(hud.x*xs, hud.y*ys, text); hud.y = hud.y + 1; -- GBA is 240x160
 end
 
-function hud.to_bottom_right(text)
+function hud.to_screen(text)
+    if hud.use_gui_text then
+        hud.to_screen_gui(text);
+    else
+        hud.to_screen_pixel(text);
+    end
+end
+
+function hud.to_bottom_right_gui(text)
+    gui.text(hud.x*ws, hud.y*ws, text, 0xFFFFFFFF, "bottomright"); hud.y = hud.y + 1;
+end
+
+function hud.to_bottom_right_pixel(text)
     local x = 239 - ( xs * string.len(text) );
     local y = 160 - ( ys * (hud.y+1) );
     gui.pixelText(x, y, text);
     hud.y = hud.y + 1;
+end
+
+function hud.to_bottom_right(text)
+    if hud.use_gui_text then
+        hud.to_bottom_right_gui(text);
+    else
+        hud.to_bottom_right_pixel(text);
+    end
 end
 
 function hud.display_commands()
@@ -264,6 +292,7 @@ function hud.update()
     
     if show_HUD then
         hud.position_top_left();
+        ws = client.getwindowsize() * 5;
         if command_mode then
             if     buttons_down.Select or keys_down.KeypadPeriod then
                 controls.set_command_mode(false);
