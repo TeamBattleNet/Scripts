@@ -1,6 +1,6 @@
 -- RAM addresses for MMBN scripting, enjoy.
 
-local addresses = {}; -- to prevent passing nil to memory.write()
+local addresses = {}; -- mostly to prevent passing nil to memory.write()
 
 ---------------------------------------- WRAM 02000000-0203FFFF ----------------------------------------
 

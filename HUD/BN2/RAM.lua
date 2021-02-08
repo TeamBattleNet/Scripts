@@ -77,8 +77,8 @@ end
 ---------------------------------------- Module Controls ----------------------------------------
 
 function ram.initialize(options)
+    ram.print_details();
     ram.main_RNG_table = ram.create_RNG_table(0xC14CE145, options.maximum_RNG_index);
-    print("\nCalculating RNG with max calculations per frame of: " .. ram.calculations_per_frame);
 end
 
 function ram.update_pre(options)

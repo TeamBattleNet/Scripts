@@ -1,10 +1,13 @@
--- Common RAM Functions for MMBN scripting, enjoy.
+-- RAM Functions for MMBN scripting, enjoy.
 
 local ram  = {};
 
 ram.addr = {}; -- overridden later
 
-ram.calculations_per_frame = 200; -- careful tweaking this
+-- careful tweaking these
+ram.index_calculations_per_frame = 100;
+ram.delta_calculations_per_frame = 300;
+ram.loop_calculations_per_frame = 1000;
 
 ---------------------------------------- Getters & Setters ----------------------------------------
 
@@ -171,14 +174,14 @@ end
 
 function ram.iterate_RNG(seed, iterations)
     iterations = iterations or 1;
-    for i=1,math.min(iterations,ram.calculations_per_frame) do
+    for i=1,math.min(iterations,ram.loop_calculations_per_frame) do
         seed = ram.simulate_RNG(seed);
     end
     return seed;
 end
 
 function ram.calculate_RNG_delta(temp, goal)
-    for delta=0,ram.calculations_per_frame do
+    for delta=0,ram.delta_calculations_per_frame do
         if temp == goal then
             return delta;
         end
@@ -188,7 +191,7 @@ function ram.calculate_RNG_delta(temp, goal)
 end
 
 function ram.create_RNG_table(seed, max_index)
-    print(string.format("\nCreating RNG Table with seed 0x%08X and max index of %u", seed, max_index));
+    print(string.format("Creating RNG Table with seed 0x%08X and max index of %u", seed, max_index));
     
     new_RNG_table = {};
     
@@ -209,7 +212,7 @@ end
 
 function ram.expand_RNG_table(RNG_table)
     if RNG_table.current_index < RNG_table.maximum_index then
-        for i=1,math.min((RNG_table.maximum_index-RNG_table.current_index),ram.calculations_per_frame) do
+        for i=1,math.min((RNG_table.maximum_index-RNG_table.current_index),ram.index_calculations_per_frame) do
             local RNG_next = ram.simulate_RNG(RNG_table.value[RNG_table.current_index]);
             
             RNG_table.current_index = RNG_table.current_index + 1;
@@ -374,6 +377,13 @@ function ram.shuffle_folder_simulate_from_lazy_index(index)
 end
 
 ---------------------------------------- Module Controls ----------------------------------------
+
+function ram.print_details()
+    print("\nInitializing RNG...");
+    print("Max index calculations per frame of: " .. ram.index_calculations_per_frame);
+    print("Max delta calculations per frame of: " .. ram.delta_calculations_per_frame);
+    print("Max loop calculations per frame of: " .. ram.loop_calculations_per_frame);
+end
 
 return ram;
 
