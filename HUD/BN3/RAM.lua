@@ -1,578 +1,81 @@
--- RAM Addresses & Functions for MMBN 3 Scripting, enjoy.
+-- RAM Functions for MMBN 3 scripting, enjoy.
 
-local ram = {};
+local ram = require("All/RAM");
 
-ram.rng = require("BN3/RNG");
-ram.areas = require("BN3/Areas");
-ram.chips = require("BN3/Chips");
-ram.enemies = require("BN3/Enemies");
---ram.progress_names = require("BN3/Progress");
+ram.addr = require("BN3/Addresses");
 
---[[
-General Internal Memory
-    00000000-00003FFF   BIOS - System ROM         (16 KBytes)
-    00004000-01FFFFFF   Not used
-    02000000-0203FFFF   WRAM - On-board Work RAM  (256 KBytes) 2 Wait
-    02040000-02FFFFFF   Not used
-    03000000-03007FFF   WRAM - On-chip Work RAM   (32 KBytes)
-    03008000-03FFFFFF   Not used
-    04000000-040003FE   I/O Registers
-    04000400-04FFFFFF   Not used
-Internal Display Memory
-    05000000-050003FF   BG/OBJ Palette RAM        (1 Kbyte)
-    05000400-05FFFFFF   Not used
-    06000000-06017FFF   VRAM - Video RAM          (96 KBytes)
-    06018000-06FFFFFF   Not used
-    07000000-070003FF   OAM - OBJ Attributes      (1 Kbyte)
-    07000400-07FFFFFF   Not used
-External Memory (Game Pak)
-    08000000-09FFFFFF   Game Pak ROM/FlashROM (max 32MB) - Wait State 0
-    0A000000-0BFFFFFF   Game Pak ROM/FlashROM (max 32MB) - Wait State 1
-    0C000000-0DFFFFFF   Game Pak ROM/FlashROM (max 32MB) - Wait State 2
-    0E000000-0E00FFFF   Game Pak SRAM    (max 64 KBytes) - 8bit Bus width
-    0E010000-0FFFFFFF   Not used
-Unused Memory Area
-    10000000-FFFFFFFF   Not used (upper 4bits of address bus unused)
-https://problemkaputt.de/gbatek.htm#gbamemorymap
---]]
+ram.version_name = ram.addr.version_name;
 
--- GMD_value and number_code use the same address
--- Pressing LButton during CopyMan skip could be an exploit
--- Flags to find: Beta Navis, Key Items, MDs, Jobs, Trades, Vines, Fires, Animals, Jack-Out Lock Out
+------------------------------ Getters & Setters ------------------------------
 
--- Addresses -> 02000000-0203FFFF - On-board Work RAM (WRAM) (256 KBytes)
+-- ram.get = {}; -- defined in All/RAM
+-- ram.set = {}; -- defined in All/RAM
 
-local folder_state      = 0x02000040; -- 1 byte
-local HP_memory_value   = 0x02000150; -- 1 byte ???
+ram.get.draw_slot = function(which_slot) return memory.read_u8(ram.addr.battle_draw_slots+which_slot); end;
+ram.set.draw_slot = function(which_slot, folder_slot) memory.write_u8(ram.addr.battle_draw_slots+which_slot, folder_slot); end;
 
-local library_flags     = 0x02000330; -- 1 bit per chip, runs for ~44 bytes
+ram.get.fire_flags = function() return memory.read_u32_le(ram.addr.fire_flags); end;
+ram.set.fire_flags = function(fire_flags) memory.write_u32_le(ram.addr.fire_flags, fire_flags); end;
 
-local battles_guts      = 0x02000E60; -- 1 byte
-local battles_cust      = 0x02000E61; -- 1 byte
-local battles_team      = 0x02000E62; -- 1 byte
-local battles_shld      = 0x02000E63; -- 1 byte
-local battles_grnd      = 0x02000E64; -- 1 byte
-local battles_shdw      = 0x02000E65; -- 1 byte
-local battles_bug       = 0x02000E66; -- 1 byte
---local                 = 0x02000E67; -- 1 byte TBD
-local GMD_RNG           = 0x02000E68; -- 4 bytes, drop table index
+ram.get.pack_ID = function(which_slot) return memory.read_u8(ram.addr.pack_ID+(0x20*which_slot)); end;
+ram.set.pack_ID = function(which_slot, chip_ID) memory.write_u8(ram.addr.pack_ID+(0x20*which_slot), chip_ID); end;
+ram.get.pack_code = function(which_slot) return memory.read_u8(ram.addr.pack_code+(0x20*which_slot)); end;
+ram.set.pack_code = function(which_slot, chip_code) memory.write_u8(ram.addr.pack_code+(0x20*which_slot), chip_code); end;
+ram.get.pack_quantity = function(which_slot) return memory.read_u8(ram.addr.pack_quantity+(0x20*which_slot)); end;
+ram.set.pack_quantity = function(which_slot, chip_quantity) memory.write_u8(ram.addr.pack_quantity+(0x20*which_slot), chip_quantity); end;
 
-local folder_1_ID       = 0x02001410; -- 2 bytes, chip  ID  of folder 1 slot 1, ends 0x02001484
-local folder_1_code     = 0x02001412; -- 2 bytes, chip Code of folder 1 slot 1, ends 0x02001486
-local folder_2_ID       = 0x02001500; -- 2 bytes, chip  ID  of folder 1 slot 1, ends 0x02001574
-local folder_2_code     = 0x02001502; -- 2 bytes, chip Code of folder 1 slot 1, ends 0x02001576
-local folder_3_ID       = 0x02001488; -- 2 bytes, chip  ID  of folder 1 slot 1, ends 0x020014FC
-local folder_3_code     = 0x0200148A; -- 2 bytes, chip Code of folder 1 slot 1, ends 0x020014FE
+---------------------------------------- RAMsacking ----------------------------------------
 
-local control_flags     = 0x02001880; -- 1 byte ???
-local style_active      = 0x02001881; -- 1 byte
---local                 = 0x02001882; -- 1 byte TBD
---local                 = 0x02001883; -- 1 byte TBD
-local     area          = 0x02001884; -- 1 byte
-local sub_area          = 0x02001885; -- 1 byte
-local progress          = 0x02001886; -- 1 byte
---local                 = 0x02001887; -- 1 byte TBD music???
---local                 = 0x02001888; -- 1 byte TBD
-local battle_paused     = 0x02001889; -- 1 byte, paused or custom menu in battle
-local style_stored      = 0x02001894; -- 1 byte
-local world_HP_current  = 0x020018A0; -- 2 bytes
-local world_HP_max      = 0x020018A2; -- 2 bytes
-local zenny             = 0x020018F4; -- 4 bytes, 999999 "max"
-local bug_frags         = 0x020018F8; -- 4 bytes,   9999 "max"
-
-local next_element      = 0x02001DBB; -- 1 byte, next element
-local battle_count      = 0x02001DCA; -- 1 byte, number of battles since last style change
-local steps             = 0x02001DDC; -- 4 bytes
-local check             = 0x02001DE0; -- 4 bytes, steps at the last encounter check
-local sneak             = 0x02001DEC; -- 4 bytes, starts at 6000
-
-local battle_escape_lvl = 0x02001A20; -- 1 byte ???
-
-local pack_chip_counts  = 0x02001f60; -- 18*312 bytes, first 6 of every 18 bytes are used, ends 0x02003550?
-
-local credits_cutscene  = 0x020050A8; -- 1 byte ???
-
-local buster1           = 0x02005778; -- 1 byte ???
-local buster2           = 0x02005779; -- 1 byte ???
-local buster3           = 0x0200577A; -- 1 byte ???
-local max_HP_over_five  = 0x0200579C; -- 1 byte, Maximum HP Check for HP Memory (Max HP/5)
-
-local battle_enemy_ID   = 0x02006D00; -- 1 byte per enemy, up to 3
-
-local cursor_ID         = 0x02007D14; -- 2 bytes? chip ID of cursor
-local cursor_code       = 0x02007D18; -- 2 bytes? chip Code of cursor
-local folder_or_pack    = 0x02007DD3; -- 1 byte, 26 == folder, 8 == pack
-
-local your_X            = 0x02008F54; -- 2 bytes freezing doesn't prevent movement???
-local your_Y            = 0x02008F56; -- 2 bytes freezing doesn't prevent movement???
-local map_offset_x      = 0x02008F58; -- 2 bytes % 256 to scroll screen
-local map_offset_y      = 0x02008F5A; -- 2 bytes % 256 to scroll screen
-
-local folder_cursor     = 0x020093E2; -- 2 bytes?, cursor value in the folder
-local folder_offset     = 0x020093E6; -- 2 bytes?, offset value in the folder
-local pack_cursor       = 0x020093EC; -- 2 bytes?, cursor value in the pack
-local pack_offset       = 0x020093F0; -- 2 bytes?, offset value in the pack
-local folder_count      = 0x020093DA; -- 1 byte, number of chips in folder being edited
-
-local selected_offset_folder = 0x02009420; -- 2 bytes?, offset value of selected chip in folder
-local selected_cursor_folder = 0x02009422; -- 2 bytes?, cursor value of selected chip in folder
-local selected_offset_pack   = 0x02009428; -- 2 bytes?, offset value of selected chip in pack
-local selected_cursor_pack   = 0x0200942A; -- 2 bytes?, cursor value of selected chip in pack
-
-local is_interacting    = 0x02009480; -- 1 byte ???
-local interact_with     = 0x02009481; -- 1 byte ???
-local interact_offset   = 0x020094AC; -- 4 bytes ???
-local GMD_value         = 0x020094B8; -- 2 bytes, how to decode?
-local number_code       = 0x020094B8; -- 1 byte per 8 digits
-local lazy_RNG          = 0x02009730; -- 4 bytes, controls encounter ID and chip draws
-local bbs_jobs_new      = 0x020097A5; -- 1 byte ???
-local bbs_jobs_total    = 0x020097BA; -- 1 byte ???
-local game_state        = 0x020097F8; -- 1 byte
-local main_RNG          = 0x02009800; -- 4 bytes, controls everything else
-local gamble_pick       = 0x02009DB1; -- 1 byte, current value
-local gamble_win        = 0x02009DB2; -- 1 byte, winning value
-
-local title_star_flags  = 0x0200A30A; -- 1 bit per star 0xFE
-
---local battle_         = 0x0200F332; -- 2 bytes, something battle related
-local battle_reward     = 0x0200F332; -- 2 bytes, how to decode? (mask 0x40 means zenny)
---local battle_         = 0x0200F334; -- 2 bytes, stats? S+?
-local battle_field      = 0x0200F47E; -- 8*3 bytes, current battlefield
-
-local pack_ID           = 0x0201881C; -- 2 bytes, chip ID of pack
-local pack_code         = 0x0201880A; -- 2 bytes, chip code of pack
-
-local battle_draw_slots = 0x02034040; -- 1 byte each, in battle chip draws, ends at 0x0203405D
-local battle_HP_current = 0x02037294; -- 1 byte
-local battle_HP_max     = 0x02037296; -- 1 byte
-
--- Addresses -> 08000000-09FFFFFF - Game Pak ROM/FlashROM (max 32MB)
-
-local version           = 0x080000AC; -- 1 byte
-
-local style_elements = {}; -- FWEG but Elec is first, 1 indexed
-style_elements[0x00] = "None";
-style_elements[0x01] = "Elec";
-style_elements[0x02] = "Heat";
-style_elements[0x03] = "Aqua";
-style_elements[0x04] = "Wood";
-
-local style_names = {};
-style_names[0x00] = "Norm";
-style_names[0x01] = "Guts";
-style_names[0x02] = "Cust";
-style_names[0x03] = "Team";
-style_names[0x04] = "Shld";
-style_names[0x05] = "Grnd";
-style_names[0x06] = "Shdw";
-style_names[0x07] = "Bug";
-
-local game_state_names = {}; -- TODO: Rename to game_state per 0x02000DC0
-game_state_names[0x00] = "title";         -- or BIOS
-game_state_names[0x04] = "world";         -- real and digital
-game_state_names[0x08] = "battle";
-game_state_names[0x0C] = "player_change"; -- jack-in / out
-game_state_names[0x10] = "demo_end";      -- what is this?
-game_state_names[0x14] = "capcom_logo";
-game_state_names[0x18] = "menu";
-game_state_names[0x1C] = "shop";
-game_state_names[0x20] = "game_over";
-game_state_names[0x24] = "trader";
-game_state_names[0x28] = "request_board";
-game_state_names[0x2C] = "unused?";
-game_state_names[0x30] = "credits";
-local previous_game_state = 0;
-
-------------------------------------------------------------------------------------------------------------------------
-
--- Functions -> Game State
-
--- 52 4F 43 4B 4D 41 4E 5F 45 58 45 33 41 36 42 4A - ROCKMAN_EXE3A6BJ - JP exe3
--- 52 4F 43 4B 5F 45 58 45 33 5F 42 4B 41 33 58 4A - ROCK_EXE3_BKA3XJ - JP black
--- 4D 45 47 41 5F 45 58 45 33 5F 42 4C 41 33 58 45 - MEGA_EXE3_BLA3XE - US blue / vc
--- 4D 45 47 41 5F 45 58 45 33 5F 57 48 41 36 42 45 - MEGA_EXE3_WHA6BE - US white / vc
--- 4D 45 47 41 5F 45 58 45 33 5F 57 48 41 36 42 50 - MEGA_EXE3_WHA6BP - PAL
--- 4D 45 47 41 5F 45 58 45 33 5F 42 4C 41 33 58 50 - MEGA_EXE3_BLA3XP - PAL
-
-function ram.get_version()
-    if     memory.read_u32_le(version) == 0x4A423641 then
-        return "JP White";
-    elseif memory.read_u32_le(version) == 0x4A583341 then
-        return "JP Black";
-    elseif memory.read_u32_le(version) == 0x45583341 then
-        return "US White";
-    elseif memory.read_u32_le(version) == 0x45423641 then
-        return "US Blue";
-    elseif memory.read_u32_le(version) == 0x50423641 then
-        return "PAL White";
-    elseif memory.read_u32_le(version) == 0x50583341 then
-        return "PAL Blue";
+local function use_fun_flags(fun_flags)
+    if fun_flags.always_fullcust then
+        ram.set.custom_gauge(0x4000);
     end
-    return "???"; -- 1.0 or 1.1 differences?
-end
-
-function ram.get_progress()
-    return memory.read_u8(progress);
-end
-
-function ram.get_game_state()
-    return memory.read_u8(game_state);
-end
-
-function ram.get_game_state_name()
-    return game_state_names[ram.get_game_state()] or "unknown";
-end
-
-function ram.in_title()
-    return ram.get_game_state() == 0x00;
-end
-
-function ram.in_world()
-    return ram.get_game_state() == 0x04;
-end
-
-function ram.in_battle()
-    return ram.get_game_state() == 0x08;
-end
-
-function ram.in_transition()
-    return ram.get_game_state() == 0x0C;
-end
-
-function ram.in_splash()
-    return ram.get_game_state() == 0x14;
-end
-
-function ram.in_menu()
-    return ram.get_game_state() == 0x18;
-end
-
-function ram.in_credits()
-    return ram.get_game_state() == 0x30;
-end
-
-function ram.get_stars()
-    return memory.read_u8(title_star_flags);
-end
-
--- Functions -> Position 
-
-function ram.get_area()
-    return memory.read_u8(area);
-end
-
-function ram.set_area(new_area)
-    return memory.write_u8(area, new_area);
-end
-
-function ram.get_sub_area()
-    return memory.read_u8(sub_area);
-end
-
-function ram.set_sub_area(new_sub_area)
-    return memory.write_u8(sub_area, new_sub_area);
-end
-
-function ram.get_area_name()
-    if ram.areas.names[ram.get_area()] then
-        if ram.areas.names[ram.get_area()][ram.get_sub_area()] then
-            return ram.areas.names[ram.get_area()][ram.get_sub_area()];
-        end
-        return "Unknown Sub Area";
+    
+    if fun_flags.no_chip_cooldown then
+        ram.set.chip_cooldown(0);
     end
-    return "Unknown Area";
-end
-
-function ram.does_area_exist(main_area, sub_area)
-    return ram.areas.names[main_area] and ram.areas.names[main_area][sub_area];
-end
-
-function ram.in_real_world()
-    if ram.get_area() < 0x80 then
-        return true;
+    
+    if fun_flags.delete_time_zero then
+        ram.set.delete_timer(0);
     end
-    return false;
-end
-
-function ram.in_digital_world()
-    return not ram.in_real_world();
-end
-
-function ram.get_x()
-    return memory.read_s16_le(your_X);
-end
-
-function ram.get_y()
-    return memory.read_s16_le(your_Y);
-end
-
-function ram.get_steps()
-    return memory.read_u32_le(steps);
-end
-
-function ram.set_steps(new_steps)
-    if new_steps < 0 then
-        new_steps = 0
+    
+    if fun_flags.chip_selection_max then
+        ram.set.chip_window_size(10);
+    elseif fun_flags.chip_selection_one then
+        ram.set.chip_window_size( 1);
     end
-    memory.write_u32_le(steps, new_steps);
-end
-
-function ram.add_steps(some_steps)
-    ram.set_steps(ram.get_steps() + some_steps);
-end
-
-function ram.get_check()
-    return memory.read_u32_le(check);
-end
-
-function ram.set_check(new_check)
-    if new_check < 0 then
-        new_check = 0
+    
+    if fun_flags.no_encounters then
+        ram.set.main_RNG_value(0xBC61AB0C);
+    elseif fun_flags.yes_encounters then
+        ram.set.main_RNG_value(0x439E54F2);
     end
-    memory.write_u32_le(check, new_check);
-end
-
-function ram.add_check(some_check)
-    ram.set_check(ram.get_check() + some_check);
-end
-
-function ram.get_sneak()
-    return memory.read_u32_le(sneak);
-end
-
-function ram.reset_sneak(new_sneak)
-    memory.write_u32_le(sneak, 6000);
-end
-
--- Functions -> Inventory
-
-function ram.get_zenny()
-    return memory.read_u32_le(zenny);
-end
-
-function ram.set_zenny(new_zenny)
-    if new_zenny < 0 then
-        new_zenny = 0;
-    elseif new_zenny > 999999 then
-        new_zenny = 999999;
-    end
-    return memory.write_u32_le(zenny, new_zenny);
-end
-
-function ram.add_zenny(some_zenny)
-    return ram.set_zenny(ram.get_zenny() + some_zenny)
-end
-
-function ram.get_bug_frags()
-    return memory.read_u32_le(bug_frags);
-end
-
-function ram.set_bug_frags(new_bug_frags)
-    if new_bug_frags < 0 then
-        new_bug_frags = 0;
-    elseif new_bug_frags > 9999 then
-        new_bug_frags = 9999;
-    end
-    return memory.write_u32_le(bug_frags, new_bug_frags);
-end
-
-function ram.add_bug_frags(some_bug_frags)
-    return ram.set_bug_frags(ram.get_bug_frags() + some_bug_frags);
-end
-
--- Functions -> Battlechips
-
-function ram.get_chip_name(ID)
-    return ram.chips.names[ID];
-end
-
-function ram.get_chip_code(code)
-    return ram.chips.codes[code];
-end
-
--- Functions -> Mega Man
-
-function ram.get_max_HP()
-    return memory.read_u16_le(world_HP_max);
-end
-
-function ram.get_style_type()
-    return bit.rshift(bit.band(memory.read_u8(style_stored), 0x38), 3);
-end
-
-function ram.get_style_type_name()
-    return style_names[ram.get_style_type()] or "????";
-end
-
-function ram.get_current_element()
-    return bit.band(memory.read_u8(style_stored), 0x07);
-end
-
-function ram.get_current_element_name()
-    return style_elements[ram.get_current_element()] or "????";
-end
-
-function ram.get_style_name()
-    return ram.get_current_element_name() .. ram.get_style_type_name();
-end
-
-function ram.get_next_element()
-    return memory.read_u8(next_element);
-end
-
-function ram.get_next_element_name()
-    return style_elements[ram.get_next_element()] or "????";
-end
-
-function ram.set_next_element(new_next_element)
-    return memory.write_u8(next_element, bit.band(new_next_element, 0x07));
-end
-
-function ram.get_battle_count()
-    return memory.read_u8(battle_count);
-end
-
-function ram.set_battle_count(new_battle_count)
-    return memory.write_u8(battleCount, new_battle_count);
-end
-
-function ram.add_battle_count(some_battles)
-    return ram.set_battle_count(ram.get_battle_count() + some_battles);
-end
-
--- Functions -> Battle Information
-
-function ram.get_enemy_ID(enemy_number) -- convert from 1 to 0 index
-    return memory.read_u8(battle_enemy_ID + enemy_number - 1);
-end
-
-function ram.get_enemy_name(enemy_number)
-    return ram.enemies.names[ram.get_enemy_ID(enemy_number)] or "Unknown ID";
-end
-
-function ram.get_draw_slot(which_slot) -- convert from 1 to 0 index, then back
-    if 1 <= which_slot and which_slot <= 30 then
-        return memory.read_u8(battle_draw_slots + which_slot - 1) + 1;
-    end
-    return -1;
-end
-
-function ram.get_draw_slots()
-    slots = {};
-    for i=1,30 do
-        slots[i] = ram.get_draw_slot(i);
-    end
-    return slots;
-end
-
--- Functions -> Misc.
-
-function ram.get_GMD_RNG()
-    return memory.read_u32_le(GMD_RNG);
-end
-
-function ram.set_GMD_RNG(new_GMD_RNG)
-    return memory.write_u32_le(GMD_RNG, new_GMD_RNG);
-end
-
-function ram.randomize_GMD_RNG()
-    return ram.set_GMD_RNG(rng.get_main_RNG_value());
-end
-
-function ram.get_GMD_value()
-    return memory.read_u32_le(GMD_value);
-end
-
-function ram.get_gamble_pick()
-    return memory.read_u8(gamble_pick);
-end
-
-function ram.get_gamble_win()
-    return memory.read_u8(gamble_win);
-end
-
-function ram.is_gambling()
-    if ram.get_area() == 0x8C then -- Sub Comps
-        if ram.get_sub_area() == 0x02 or ram.get_sub_area() == 0x08 or ram.get_sub_area() == 0x0C then
-            return true; -- Vending Comp (SciLab) or TV Board Comp or Vending Comp (Hospital)
-        end
-    end
-    return false;
-end
-
-function ram.in_Secret_3()
-    if ram.get_area() == 0x95 and ram.get_sub_area() == 0x02 then
-        return true; -- Bug Frag Trader
-    end
-    return false;
-end
-
-------------------------------------------------------------------------------------------------------------------------
-
---[[
-//encounter check every 64 steps
-//table of encounterRate table at 0800D2F4
-encounterRate = readByte(0800D2F4 + (area * 16) + subarea)
-if sneakrun is bugged encounterRate = 0
-encounterCheckNumber = steps / 64 //(capped out at 16)
-//encounterCheckValue table at 0800D26C
-encounterCheckValue = readByte(0800D26C + (encounterCheckNumber * 16) + encounterRate)
-//rng1 is the one at 02009800
-randomNum = rng1_get_uint() & 0x1F
-if randomNum is >= encounterCheckValue there is no encounter
-if locenemy is on
-    if rng1_get_int() & 1 == 0
-        do locenemybattle
-Gets list of battles filtered by your navi cust (oil body, battery ect)
-if that list is empty gets unfiltered list
-//rng2 is the one at 02009730
-randomNum = (rng2_get_int() >> 0x10) % sumBattleProbabilities
-loops through list of battle list subtracting the probability of that battle from the random number
-when that number if finally < 0 that battle is selected
-if sneakrun is not active ends encounter routine
-if hp is greater than battles threshold no encounter
---]]
-
--- Encounter Tracking and Avoidance
-
-local last_encounter_check = 0; -- the previous value of check
-
-function ram.get_encounter_checks()
-    return math.floor(last_encounter_check / 64); -- approximate
-end
-
-ram.skip_encounters = false;
-
-local function encounter_check()
-    if ram.in_world() then
-        if ram.get_check() < last_encounter_check then
-            last_encounter_check = 0; -- dodged encounter or area (re)load or state load
-        elseif ram.get_check() > last_encounter_check then
-            last_encounter_check = ram.get_check();
-        end
-        
-        if ram.skip_encounters then
-            if ram.get_steps() > 64 then
-                ram.set_steps(ram.get_steps() % 64);
-                ram.set_check(ram.get_check() % 64);
-            end
+    
+    if fun_flags.modulate_steps then
+        if ram.get.steps() > 64 then
+            ram.set.steps(ram.get.steps() % 64);
+            ram.set.check(ram.get.check() % 64);
         end
     end
 end
 
--- Controls
+---------------------------------------- Module Controls ----------------------------------------
 
 function ram.initialize(options)
-    ram.rng.initialize(options.max_RNG_index);
+    ram.main_RNG_table = ram.create_RNG_table(0xA338244F, options.maximum_RNG_index);
+    ram.lazy_RNG_table = ram.create_RNG_table(0x873CA9E4, options.maximum_RNG_index);
+    print("\nCalculating RNG with max calculations per frame of: " .. ram.calculations_per_frame);
 end
 
-function ram.update_pre()
-    encounter_check();
-    ram.rng.update_pre();
+function ram.update_pre(options)
+    use_fun_flags(options.fun_flags);
+    ram.expand_RNG_table(ram.main_RNG_table);
+    ram.expand_RNG_table(ram.lazy_RNG_table);
 end
 
-function ram.update_post()
-    ram.rng.update_post();
+function ram.update_post(options)
+    ram.previous_main_RNG_value = ram.get.main_RNG_value();
+    ram.previous_lazy_RNG_value = ram.get.lazy_RNG_value();
 end
 
 return ram;

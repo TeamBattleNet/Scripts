@@ -1,4 +1,6 @@
--- Battlechip values for MMBN 3 scripting, enjoy.
+-- Battlechip names for MMBN 3 scripting, enjoy.
+
+-- https://docs.google.com/spreadsheets/d/18qUmXQP_w6g7Guy_fpzaCCWph17cxSetR29n5WOxXKI/pubhtml
 
 local chips = {};
 
@@ -421,6 +423,42 @@ chips.rng[ 10] = 0; --"ShotGun";
 chips.rng[ 11] = 0; --"V-Gun";
 chips.rng[ 12] = 0; --"SideGun";
 chips.rng[ 13] = 0; --"Spreader";
+
+function chips.get_random_code()
+    return math.random(0,26);
+end
+
+local function get_valid(first_ID, last_ID)
+    local ID = nil;
+    while not chips.names[ID] do
+        ID = math.random(first_ID,last_ID);
+    end
+    return ID;
+end
+
+function chips.get_random_ID_standard()
+    return get_valid(  1, 200);
+end
+
+function chips.get_random_ID_mega()
+    return get_valid(201, 301);
+end
+
+function chips.get_random_ID_giga()
+    return get_valid(302, 312);
+end
+
+function chips.get_random_ID_all_chips()
+    return get_valid(  1, 312);
+end
+
+function chips.get_random_ID_PA()
+    return get_valid(320, 351);
+end
+
+function chips.get_random_ID_all()
+    return get_valid(  1, 351);
+end
 
 return chips;
 
