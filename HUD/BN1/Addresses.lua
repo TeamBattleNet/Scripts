@@ -288,6 +288,11 @@ addresses.pack_quantity         = 0x02019016; -- 1 byte each, number of copies
 -- 0x0203FFFF end of WRAM?
 -- 0x02047FFF end of WRAM?
 
+---------------------------------------- ROM  08000000-09FFFFFF ----------------------------------------
+
+addresses.player_data_offset_US = 0x080004E4; -- 1 byte, 03D0 in US, 4211 in JP
+addresses.player_data_offset_JP = 0x080004D4; -- 1 byte, 03D0 in JP, 65D0 in US
+
 ---------------------------------------- Verion Dependent ----------------------------------------
 
 -- A0 A1 A2 A3 A4 A5 A6 A7 A8 A9 AA AB AC AD AE AF - ROM Address
