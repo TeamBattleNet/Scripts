@@ -224,5 +224,9 @@ function hud.B()
     print("\n" .. hud.game.get_draw_slots_text_one_line());
 end
 
+function hud.update_local_state()
+    -- for tracking game specific HUD values over time
+end
+
 return hud;
 

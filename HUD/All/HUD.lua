@@ -349,6 +349,8 @@ function hud.update()
     end
     
     hud.game.update_post(options);
+    
+    hud.update_local_state();
 end
 
 function hud.initialize()
