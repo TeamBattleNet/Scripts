@@ -23,7 +23,7 @@ local function display_steps()
         hud.to_screen(string.format("Steps: %4u" , hud.game.get_steps()));
         hud.to_screen(string.format("Check: %4u" , hud.game.get_check()));
         hud.to_screen(string.format("Checks: %3u", hud.game.get_encounter_checks()));
-        --hud.to_screen(string.format("%%: %7.3f%%", hud.game.get_encounter_chance()));
+        --hud.to_screen(string.format("%%: %7.3f%%", hud.game.get_encounter_percent()));
         hud.to_screen(string.format("Next: %2i"  , hud.game.get_next_check()));
     end
     hud.to_screen(string.format("X: %5i", hud.game.get_X()));
@@ -112,7 +112,7 @@ local function HUD_speedrun()
                 hud.to_screen(string.format("Steps: %4u" , hud.game.get_steps()));
                 hud.to_screen(string.format("Check: %4u" , hud.game.get_check()));
                 hud.to_screen(string.format("Checks: %3u", hud.game.get_encounter_checks()));
-                --hud.to_screen(string.format("%%: %7.3f%%", hud.game.get_encounter_chance()));
+                --hud.to_screen(string.format("%%: %7.3f%%", hud.game.get_encounter_percent()));
                 hud.to_screen(string.format("Next:  %2i"  , hud.game.get_next_check()));
                 hud.to_screen(string.format("X: %4i", hud.game.get_X()));
                 hud.to_screen(string.format("Y: %4i", hud.game.get_Y()));

@@ -522,9 +522,56 @@ function game.get_string_hex(address, bytes, with_spaces)
     end
 end
 
+---------------------------------------- Encounter Tracker ----------------------------------------
+
+local total_odds = 1;
+local last_encounter_check = 0;
+
+function game.what_are_the_odds()
+    return total_odds * 100;
+end
+
+function game.get_encounter_checks()
+    return math.floor(last_encounter_check / 64); -- approximate
+end
+
+local function track_encounter_checks()
+    if game.in_world() then
+        if game.get_check() < last_encounter_check then
+            last_encounter_check = 0;
+            total_odds = 1;
+        elseif game.get_check() > last_encounter_check then
+            last_encounter_check = game.get_check();
+            total_odds = total_odds * (1-game.get_encounter_chance());
+        end
+    end
+end
+
+function game.get_encounter_threshold()
+    local curve_addr = game.ram.addr.encounter_curve;
+    local curve_offset = (game.get_main_area() - 0x80) * 0x10 + game.get_sub_area();
+    curve = memory.read_u8(curve_addr + curve_offset);
+    local odds_addr = game.ram.addr.encounter_odds;
+    local test_level = math.min(math.floor(game.get_steps() / 64), 16);
+    return memory.read_u8(odds_addr + test_level * 8 + curve);
+end
+
+function game.get_encounter_chance()
+    return game.get_encounter_threshold() / 32;
+end
+
+function game.get_encounter_percent()
+    return game.get_encounter_chance() * 100;
+end
+
+function game.would_get_encounter()
+    return game.get_encounter_threshold() > (game.get_main_RNG_value() % 0x20);
+end
+
 ---------------------------------------- Module Controls ----------------------------------------
 
-function game.update_state()
+function game.track_game_state()
+    track_encounter_checks();
     previous_game_state   = game.ram.get.game_state();
     previous_battle_state = game.ram.get.battle_state();
     previous_menu_mode    = game.ram.get.menu_mode();

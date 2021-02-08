@@ -284,40 +284,6 @@ end
 function game.calculate_max_HP()
     return 100 + (20 * game.get_HPMemory_count());
 end
----------------------------------------- Encounter Tracker ----------------------------------------
-
-local last_encounter_check = 0;
-
-function game.get_encounter_checks()
-    return math.floor(last_encounter_check / 64); -- approximate
-end
-
-local function track_encounter_checks()
-    if game.in_world() then
-        if game.get_check() < last_encounter_check then
-            last_encounter_check = 0;
-        elseif game.get_check() > last_encounter_check then
-            last_encounter_check = game.get_check();
-        end
-    end
-end
-
-function game.get_encounter_threshold()
-    local curve_addr = game.ram.addr.encounter_curve;
-    local curve_offset = (game.get_main_area() - 0x80) * 0x10 + game.get_sub_area();
-    curve = memory.read_u8(curve_addr + curve_offset);
-    local odds_addr = game.ram.addr.encounter_odds;
-    local test_level = math.min(math.floor(game.get_steps() / 64), 16);
-    return memory.read_u8(odds_addr + test_level * 8 + curve);
-end
-
-function game.get_encounter_chance()
-    return (game.get_encounter_threshold() / 32) * 100;
-end
-
-function game.would_get_encounter()
-    return game.get_encounter_threshold() > (game.get_main_RNG_value() % 0x20);
-end
 
 ---------------------------------------- Miscellaneous ----------------------------------------
 
@@ -418,13 +384,12 @@ function game.initialize(options)
 end
 
 function game.update_pre(options)
-    track_encounter_checks();
     options.fun_flags = game.fun_flags;
     game.ram.update_pre(options);
 end
 
 function game.update_post(options)
-    game.update_state();
+    game.track_game_state();
     game.ram.update_post(options);
 end
 
