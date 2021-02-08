@@ -88,8 +88,8 @@ end
 
 local function display_game_info()
     hud.to_screen(string.format("Progress: 0x%02X %s", hud.game.get_progress(), hud.game.get_progress_name_current()));
-    hud.to_screen("Game Version: " .. hud.game.get_version_name());
     hud.to_screen("HUD  Version: " .. hud.version);
+    hud.to_screen("Game Version: " .. hud.game.get_version_name());
 end
 
 ---------------------------------------- HUD Modes ----------------------------------------

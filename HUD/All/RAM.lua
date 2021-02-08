@@ -139,6 +139,9 @@ ram.set.menu_state = function(menu_state) memory.write_u8(ram.addr.menu_state, m
 ram.get.play_time = function() return memory.read_u32_le(ram.addr.play_time_frames); end;
 ram.set.play_time = function(play_time_frames) memory.write_u32_le(ram.addr.play_time_frames, play_time_frames); end;
 
+ram.get.power_on_frames = function() return memory.read_u16_le(ram.addr.power_on_frames); end;
+ram.set.power_on_frames = function(power_on_frames) memory.write_u16_le(ram.addr.power_on_frames, power_on_frames); end;
+
 ram.get.PowerUP = function() return memory.read_u8(ram.addr.PowerUP); end;
 ram.set.PowerUP = function(PowerUP) memory.write_u8(ram.addr.PowerUP, PowerUP); end;
 

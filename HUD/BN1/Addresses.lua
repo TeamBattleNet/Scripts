@@ -157,6 +157,8 @@ addresses.armor_wood            = 0x02000316; -- 1 byte
 
 -- 370-3CF divider
 
+addresses.player_data           = 0x020003D0; -- many bytes
+
 addresses.steps_total           = 0x020003E0; -- 3 bytes, since new game
 addresses.play_time_frames      = 0x020003E8; -- 4 bytes, check for skipped frames
 addresses.battle_timer          = 0x020003EC; -- 4? bytes, frame counter from load in to load out
@@ -253,6 +255,9 @@ addresses.cursor_sort_copy      = 0x0200631E; -- 2 bytes, copy
 addresses.GMD_reward            = 0x02006380; -- 2 bytes, how to decode?
 
 addresses.power_on_frames       = 0x020064A0; -- 2 bytes, session counter
+
+addresses.text_box_state        = 0x02006350; -- multiple bytes, TBD
+addresses.number_door_display   = 0x02006353; -- bit flag, 0x20
 
 addresses.button_flags          = 0x020065F0; -- many bytes, many flags
 

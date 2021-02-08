@@ -24,6 +24,14 @@ function game.set_play_time(new_play_time)
     game.ram.set.play_time(new_play_time);
 end
 
+function game.get_power_on_frames()
+    return game.ram.get.power_on_frames();
+end
+
+function game.set_power_on_frames(new_power_on_frames)
+    return game.ram.set.power_on_frames(new_power_on_frames);
+end
+
 -- Progress
 
 function game.get_progress()
