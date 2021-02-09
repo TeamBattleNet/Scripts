@@ -13,7 +13,7 @@ end
 
 function controls.previous_command()
     command_index = command_index - 1;
-    if command_index == 0 then
+    if command_index <= 0 then
         command_index = table.getn(commands);
     end
     local command = commands[command_index];
@@ -30,7 +30,7 @@ end
 function controls.previous_option()
     local command = commands[command_index];
     command.selection = command.selection - 1;
-    if command.selection == 0 then
+    if command.selection <= 0 then
         command.selection = table.getn(command.options);
     end
     local option = command.options[command.selection];
