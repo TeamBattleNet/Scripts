@@ -157,6 +157,7 @@ end
 
 ---------------------------------------- Display Functions ----------------------------------------
 
+hud.text_mode = 1;
 hud.use_gui_text = false;
 
 hud.x = 0;
@@ -170,51 +171,51 @@ local ws = 1; -- window size
 local current_font = "fceux";
 local current_color = 0x77000000;
 
-function hud.set_default_text(font, color)
-    if font == "gens" then
-        xs = 4;
-        ys = 7;
-    elseif font == "fceux" then
-        xs = 6;
-        ys = 9;
+function hud.toggle_text_mode()
+    hud.text_mode = (hud.text_mode%3) + 1;
+    if hud.text_mode = 1 then
+    if hud.use_gui_text then
+        xs = 10;
+        ys = 16;
+        hud.show_text = gui.text;
+    else
+        if     font == "gens" then
+            xs = 4;
+            ys = 7;
+        elseif font == "fceux" then
+            xs = 6;
+            ys = 9;
+        end
+        hud.show_text = gui.pixelText;
     end
-    gui.defaultPixelFont(font);
-    gui.defaultTextBackground(color);
 end
 
-function hud.toggle_default_text()
+function hud.toggle_pixel_text()
     if current_font == "gens" then
         current_font = "fceux";
     else
         current_font = "gens";
     end
-    hud.set_default_text(current_font, current_color);
+    gui.defaultPixelFont(current_font);
+    gui.defaultTextBackground(current_color);
 end
 
-function hud.position_top_left()
-    hud.x = 0;
-    hud.y = 0;
-end
-
-function hud.to_screen_gui(text)
-    gui.text(hud.x, hud.y, text); -- Screen is 240x160 * ws
-    hud.y = hud.y + 16; --- gui.text characters are 10 x 13
-end
-
-function hud.to_screen_pixel(text)
-    gui.pixelText(hud.x*xs, hud.y*ys, text); hud.y = hud.y + 1; -- GBA is 240x160
-end
-
-function hud.to_screen(text)
+function hud.set_position(x, y)
+    hud.x = x or 0;
+    hud.y = y or 0;
     if hud.use_gui_text then
-        hud.to_screen_gui(text);
-    else
-        hud.to_screen_pixel(text);
+        hud.x = hud.x * ws;
+        hud.y = hud.y * ws;
     end
 end
 
+function hud.to_screen(text)
+     -- GBA is 240x160; Screen is 240x160 * ws
+    hud.show_text(hud.x*xs, hud.y*ys, text); hud.y = hud.y + 1;
+end
+
 function hud.to_bottom_right_gui(text)
-    gui.text(hud.x, hud.y, text, 0xFFFFFFFF, "bottomright"); hud.y = hud.y + 16;
+    gui.text(hud.x*xs, hud.y*ys, text, 0xFFFFFFFF, "bottomright"); hud.y = hud.y + 1;
 end
 
 function hud.to_bottom_right_pixel(text)
@@ -251,11 +252,11 @@ end
 ---------------------------------------- HUD Controls ----------------------------------------
 
 function hud.Up()
-    hud.toggle_default_text();
+    hud.toggle_pixel_text();
 end
 
 function hud.Down()
-    hud.toggle_default_text();
+    hud.toggle_pixel_text();
 end
 
 function hud.Left()
@@ -306,7 +307,7 @@ function hud.update()
             elseif buttons_down.Right  or keys_down.Right   then
                 controls.next_command();
             elseif buttons_down.B      or keys_down.Tab     then
-                hud.toggle_default_text();
+                hud.toggle_pixel_text();
             elseif buttons_down.A      or keys_down.Keypad0 then
                 controls.doit();
             end

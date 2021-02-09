@@ -2,9 +2,14 @@
 
 local setups = require("All/Setups");
 
-local group_RNG = setups.create_group("RNG Manipulation");
+local group_misc = setups.create_group("Miscellaneous");
 
-setups.add_setup(group_RNG, "Open & Close Menu", function()
+setups.add_setup(group_misc, "PRESS START", function()
+    setups.press_buttons( 2, "PRESS START", {Start=true});
+    setups.press_buttons( 2, "CONTINUE", {A=true});
+end);
+
+setups.add_setup(group_misc, "Open & Close Menu", function()
     setups.press_buttons( 2, "Menu", {Start=true});
     setups.press_buttons(20, "Menu", {});
     setups.press_buttons( 2, "Menu", {A=true});
@@ -14,6 +19,8 @@ setups.add_setup(group_RNG, "Open & Close Menu", function()
     setups.press_buttons( 2, "Menu", {B=true});
     setups.press_buttons(30, "Menu", {});
 end);
+
+local group_RNG = setups.create_group("RNG Manipulation");
 
 setups.add_setup(group_RNG, "359: GutsMan", function()
     setups.soft_reset(); -- RNG Index: 354-364 (359)
