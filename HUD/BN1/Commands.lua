@@ -3,6 +3,7 @@
 local commands = {}; -- Info, Flags, Battle, Items, RNG, Progress, Real, Digital, Setups
 
 local game = require("BN1/Game");
+local setup_groups = require("BN1/Setups");
 
 
 
@@ -340,21 +341,19 @@ function command_setups.update_options(option_value)
     
     if not option_value then
         command_setups.selection = command_setups.sub_selection;
-        command_setups.description = function() return "What Kind Of Button Pressing?"; end;
-        table.insert( command_setups.options, { value = 1; text = "Regular Kind" ; } );
+    command_setups.description = function() return "What Kind Of Button Pressing?"; end;
+        for i,setup_group in pairs(setup_groups) do
+            table.insert( command_setups.options, { value = i; text = setup_group.description; } );
+        end
     else
         command_setups.sub_selection = command_setups.selection;
         command_setups.selection = 1;
         table.insert( command_setups.options, { value = nil; text = "Previous Menu"; } );
-        if option_value == 1 then
-            command_setups.description = function() return "Automated Button Pressing:"; end;
-            for i,setup in pairs(require("BN1/Setups")[1].setups) do
-                table.insert( command_setups.options, { value = setup.doit; text = setup.description; } );
-            end
-            command_setups.FUNction = function(value) value(); end;
-        else
-            command_setups.description = function() return "Bzzt! (something broke)"; end;
+        command_setups.description = function() return setup_groups[option_value].description; end;
+        for i,setup in pairs(setup_groups[option_value].setups) do
+            table.insert( command_setups.options, { value = setup.doit; text = setup.description; } );
         end
+        command_setups.FUNction = function(value) value(); end;
     end
 end
 command_setups.update_options();
