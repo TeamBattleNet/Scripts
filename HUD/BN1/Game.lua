@@ -12,32 +12,6 @@ game.progress = require("BN1/Progress");
 
 game.fun_flags = {}; -- set in Commands, used in RAM
 
----------------------------------------- RNG Wrapper ----------------------------------------
-
-function game.get_main_RNG_value()
-    return game.ram.get.main_RNG_value();
-end
-
-function game.set_main_RNG_value(new_value)
-    game.ram.set.main_RNG_value(new_value);
-end
-
-function game.get_main_RNG_index()
-    return game.ram.get.main_RNG_index();
-end
-
-function game.set_main_RNG_index(new_index)
-    game.ram.set.main_RNG_index(new_index)
-end
-
-function game.get_main_RNG_delta()
-    return game.ram.get.main_RNG_delta();
-end
-
-function game.adjust_main_RNG(steps)
-    game.ram.adjust_main_RNG(steps);
-end
-
 ---------------------------------------- Game State ----------------------------------------
 
 -- Game State
@@ -57,14 +31,6 @@ game.game_state_names[0x28] = "Credits";
 game.game_state_names[0x2C] = "Ubisoft Logo";  -- PAL only
 game.game_state_names[0x30] = "Unused?";
 game.game_state_names[0x34] = "Unused?";
-
-function game.get_game_state_name()
-    return game.game_state_names[game.ram.get.game_state()] or "Unknown Game State";
-end
-
-function game.did_game_state_change()
-    return game.ram.get.game_state() ~= previous_game_state;
-end
 
 function game.in_title()
     return game.ram.get.game_state() == 0x00;
@@ -113,8 +79,21 @@ game.battle_state_names[0x10] = "PAUSE";
 game.battle_state_names[0x14] = "Time Stop";
 game.battle_state_names[0x18] = "Opening Custom";
 
-function game.get_battle_state_name()
-    return game.battle_state_names[game.ram.get.battle_state()] or "Unknown Battle State";
+-- Menu State
+
+game.folder_state_names = {};
+game.folder_state_names[0x04] = "Editing";
+game.folder_state_names[0x14] = "Sorting";
+game.folder_state_names[0x10] = "To Pack";
+game.folder_state_names[0x0C] = "To Folder";
+game.folder_state_names[0x08] = "Exiting";
+
+function game.in_folder()
+    return game.ram.get.folder_to_pack() == 0x20;
+end
+
+function game.in_pack()
+    return game.ram.get.folder_to_pack() == 0x02;
 end
 
 -- Menu Mode Overrides (unique due to lack of subchips or multiple folders)
@@ -166,27 +145,6 @@ end
 
 function game.in_menu_folder_edit()
     return game.ram.get.menu_mode() == 0x00; -- BN 1 doesn't have folder selection
-end
-
--- Menu State
-
-game.folder_state_names = {};
-game.folder_state_names[0x04] = "Editing";
-game.folder_state_names[0x14] = "Sorting";
-game.folder_state_names[0x10] = "To Pack";
-game.folder_state_names[0x0C] = "To Folder";
-game.folder_state_names[0x08] = "Exiting";
-
-function game.get_folder_state_name()
-    return game.game.folder_state_names[game.ram.get.menu_state()] or "Unknown Folder State";
-end
-
-function game.in_folder()
-    return game.ram.get.folder_to_pack() == 0x20;
-end
-
-function game.in_pack()
-    return game.ram.get.folder_to_pack() == 0x02;
 end
 
 ---------------------------------------- Inventory ----------------------------------------
@@ -298,12 +256,12 @@ end
 
 ---------------------------------------- Draw Slots ----------------------------------------
 
-function game.shuffle_folder_simulate_from_battle()
-    return game.ram.shuffle_folder_simulate_from_main_index(game.get_main_RNG_index()-120+1);
-end
-
-function game.shuffle_folder_simulate_from_battle_nearby(offset)
-    return game.ram.shuffle_folder_simulate_from_main_index(game.get_main_RNG_index()-120+1+offset);
+function game.shuffle_folder_simulate_from_battle(offset)
+    local RNG_index = game.get_main_RNG_index();
+    if RNG_index ~= nil then
+        offset = offset or 0;
+        return game.shuffle_folder_simulate_from_main_index(RNG_index-120+1+offset, 60);
+    end
 end
 
 ---------------------------------------- Battlechips ----------------------------------------

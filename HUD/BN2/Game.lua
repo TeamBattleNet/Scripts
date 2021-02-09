@@ -12,32 +12,6 @@ game.progress = require("BN2/Progress");
 
 game.fun_flags = {}; -- set in Commands, used in RAM
 
----------------------------------------- RNG Wrapper ----------------------------------------
-
-function game.get_main_RNG_value()
-    return game.ram.get.main_RNG_value();
-end
-
-function game.set_main_RNG_value(new_value)
-    game.ram.set.main_RNG_value(new_value);
-end
-
-function game.get_main_RNG_index()
-    return game.ram.get.main_RNG_index();
-end
-
-function game.set_main_RNG_index(new_index)
-    game.ram.set.main_RNG_index(new_index)
-end
-
-function game.get_main_RNG_delta()
-    return game.ram.get.main_RNG_delta();
-end
-
-function game.adjust_main_RNG(steps)
-    game.ram.adjust_main_RNG(steps);
-end
-
 ---------------------------------------- Game State ----------------------------------------
 
 -- Game State
@@ -57,10 +31,6 @@ game.game_state_names[0x28] = "Request Board"; -- new
 game.game_state_names[0x2C] = "Credits";
 game.game_state_names[0x30] = "Unused?";
 game.game_state_names[0x34] = "Ubisoft Logo";  -- PAL only
-
-function game.get_game_state_name()
-    return game.game_state_names[game.ram.get.game_state()] or "Unknown Game State";
-end
 
 function game.in_title()
     return game.ram.get.game_state() == 0x00;
@@ -117,10 +87,6 @@ game.battle_state_names[0x10] = "TBD";
 game.battle_state_names[0x14] = "TBD";
 game.battle_state_names[0x18] = "TBD";
 
-function game.get_battle_state_name()
-    return game.battle_state_names[game.ram.get.battle_state()] or "Unknown Battle State";
-end
-
 -- Menu State
 
 game.folder_state_names = {};
@@ -132,10 +98,6 @@ game.folder_state_names[0x14] = "To Pack";
 game.folder_state_names[0x18] = "Sorting Folder";
 game.folder_state_names[0x1C] = "Sorting Pack";
 
-function game.get_folder_state_name()
-    return game.game.folder_state_names[game.ram.get.menu_state()] or "Unknown Folder State";
-end
-
 function game.in_folder()
     return game.in_menu_folder_edit() and (game.ram.get.menu_state() == 0x04 or game.ram.get.menu_state() == 0x18);
 end
@@ -143,28 +105,6 @@ end
 function game.in_pack()
     return game.in_menu_folder_edit() and (game.ram.get.menu_state() == 0x08 or game.ram.get.menu_state() == 0x1C);
 end
-
--- Style Info
-
-game.elements = {"Elec", "Heat", "Aqua", "Wood"};
-game.element_names = {};
-game.element_names[0x01] = "Elec";
-game.element_names[0x02] = "Heat";
-game.element_names[0x03] = "Aqua";
-game.element_names[0x04] = "Wood";
-game.element_names[0x05] = "????";
-game.element_names[0x06] = "????";
-game.element_names[0x07] = "????";
-
-game.styles = {"Guts", "Cust", "Team", "Shld"};
-game.style_names = {};
-game.style_names[0x01] = "Guts";
-game.style_names[0x02] = "Cust";
-game.style_names[0x03] = "Team";
-game.style_names[0x04] = "Shld";
-game.style_names[0x05] = "????";
-game.style_names[0x06] = "????";
-game.style_names[0x07] = "Hub?";
 
 ---------------------------------------- Inventory ----------------------------------------
 
@@ -206,12 +146,12 @@ end
 
 ---------------------------------------- Draw Slots ----------------------------------------
 
-function game.shuffle_folder_simulate_from_battle()
-    return game.ram.shuffle_folder_simulate_from_battle(game.get_main_RNG_index()-60-1);
-end
-
-function game.get_folder_shuffle_nearby(offset)
-    return game.ram.shuffle_folder_simulate_from_battle(game.get_main_RNG_index()-60-1+offset);
+function game.shuffle_folder_simulate_from_battle(offset)
+    local RNG_index = game.get_main_RNG_index();
+    if RNG_index ~= nil then
+        offset = offset or 0;
+        return game.ram.shuffle_folder_simulate_from_main_index(RNG_index-60+1+offset, 30);
+    end
 end
 
 ---------------------------------------- Battlechips ----------------------------------------
@@ -228,42 +168,6 @@ function game.count_library()
     end
     return count;
 end
-
---[[ TODO
-function game.is_chip_selected()
-    return game.ram.get.chip_selected_flag() ~= 0x00;
-end
-
-function game.get_selected_chip_location_name()
-    local selected_flag = game.ram.get.chip_selected_flag();
-    if selected_flag == 0x01 then
-        return "Folder";
-    elseif selected_flag == 0x02 then
-        return "Pack";
-    end
-    return "None";
-end
-
-function game.get_selected_ID()
-    local selected_chip_location = game.get_selected_chip_location_name();
-    if selected_chip_location == "Folder" then
-        return game.ram.get.folder_ID(game.get_cursor_offset_selected()+game.get_cursor_position_selected());
-    elseif selected_chip_location == "Pack" then
-        return game.ram.get.pack_ID(game.get_cursor_offset_selected()+game.get_cursor_position_selected());
-    end
-    return -1;
-end
-
-function game.get_selected_code()
-    local selected_chip_location = game.get_selected_chip_location_name();
-    if selected_chip_location == "Folder" then
-        return game.ram.get.folder_code(game.get_cursor_offset_selected()+game.get_cursor_position_selected());
-    elseif selected_chip_location == "Pack" then
-        return game.ram.get.pack_code(game.get_cursor_offset_selected()+game.get_cursor_position_selected());
-    end
-    return -1;
-end
---]]
 
 ----------------------------------------Mega Modifications ----------------------------------------
 

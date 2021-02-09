@@ -358,6 +358,7 @@ ram.set.draw_slot = function(which_slot, folder_slot) ram.draw_slots[which_slot]
 
 function ram.shuffle_folder_simulate_from_value(RNG_value, swaps)
     RNG_value = RNG_value or 0x873CA9E5;
+    swaps = swaps or 30;
     for i=1,30 do
         ram.draw_slots[i] = i;
     end
@@ -371,12 +372,12 @@ function ram.shuffle_folder_simulate_from_value(RNG_value, swaps)
     return ram.draw_slots;
 end
 
-function ram.shuffle_folder_simulate_from_main_index(index)
-    return ram.shuffle_folder_simulate(ram.get.main_RNG_value_at(index));
+function ram.shuffle_folder_simulate_from_main_index(index, swaps)
+    return ram.shuffle_folder_simulate_from_value(ram.get.main_RNG_value_at(index), swaps);
 end
 
-function ram.shuffle_folder_simulate_from_lazy_index(index)
-    return ram.shuffle_folder_simulate(ram.get.lazy_RNG_value_at(index));
+function ram.shuffle_folder_simulate_from_lazy_index(index, swaps)
+    return ram.shuffle_folder_simulate_from_value(ram.get.lazy_RNG_value_at(index), swaps);
 end
 
 ---------------------------------------- RAMsacking ----------------------------------------

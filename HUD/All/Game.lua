@@ -8,6 +8,60 @@ game.chips    = {}; -- overridden later
 game.enemies  = {}; -- overridden later
 game.progress = {}; -- overridden later
 
+---------------------------------------- RNG Wrapper ----------------------------------------
+
+-- Main RNG
+
+function game.get_main_RNG_value()
+    return game.ram.get.main_RNG_value();
+end
+
+function game.set_main_RNG_value(new_value)
+    game.ram.set.main_RNG_value(new_value);
+end
+
+function game.get_main_RNG_index()
+    return game.ram.get.main_RNG_index();
+end
+
+function game.set_main_RNG_index(new_index)
+    game.ram.set.main_RNG_index(new_index)
+end
+
+function game.get_main_RNG_delta()
+    return game.ram.get.main_RNG_delta();
+end
+
+function game.adjust_main_RNG(steps)
+    game.ram.adjust_main_RNG(steps);
+end
+
+-- Lazy RNG
+
+function game.get_lazy_RNG_value()
+    return game.ram.get.lazy_RNG_value();
+end
+
+function game.set_lazy_RNG_value(new_value)
+    game.ram.set.lazy_RNG_value(new_value);
+end
+
+function game.get_lazy_RNG_index()
+    return game.ram.get.lazy_RNG_index();
+end
+
+function game.set_lazy_RNG_index(new_index)
+    game.ram.set.lazy_RNG_index(new_index)
+end
+
+function game.get_lazy_RNG_delta()
+    return game.ram.get.lazy_RNG_delta();
+end
+
+function game.adjust_lazy_RNG(steps)
+    game.ram.adjust_lazy_RNG(steps);
+end
+
 ---------------------------------------- Game State ----------------------------------------
 
 -- Game Info
@@ -58,6 +112,20 @@ function game.set_progress_safe(new_progress)
     if game.is_progress_valid(new_progress) then
         game.set_progress(new_progress);
     end
+end
+
+-- State Names
+
+function game.get_game_state_name()
+    return game.game_state_names[game.ram.get.game_state()] or "Unknown Game State";
+end
+
+function game.get_battle_state_name()
+    return game.battle_state_names[game.ram.get.battle_state()] or "Unknown Battle State";
+end
+
+function game.get_folder_state_name()
+    return game.game.folder_state_names[game.ram.get.menu_state()] or "Unknown Folder State";
 end
 
 -- Menu Mode
@@ -112,6 +180,30 @@ end
 function game.in_menu_folder_edit()
     return game.ram.get.menu_mode() == 0x20;
 end
+
+-- Style Info
+
+game.elements = {"Elec", "Heat", "Aqua", "Wood"};
+game.element_names = {}; -- FWEG but Elec is first
+game.element_names[0x00] = "None";
+game.element_names[0x01] = "Elec";
+game.element_names[0x02] = "Heat";
+game.element_names[0x03] = "Aqua";
+game.element_names[0x04] = "Wood";
+game.element_names[0x05] = "????";
+game.element_names[0x06] = "????";
+game.element_names[0x07] = "????";
+
+game.styles = {"Guts", "Cust", "Team", "Shld", "Grnd", "Shdw", "Bug"};
+game.style_names = {};
+game.style_names[0x00] = "Norm";
+game.style_names[0x01] = "Guts";
+game.style_names[0x02] = "Cust";
+game.style_names[0x03] = "Team";
+game.style_names[0x04] = "Shld";
+game.style_names[0x05] = "Grnd";
+game.style_names[0x06] = "Shdw";
+game.style_names[0x07] = "Bug";
 
 ----------------------------------------Battle Information ----------------------------------------
 
@@ -199,12 +291,16 @@ function game.get_draw_slots_text_multi_line()
     return slots_text;
 end
 
-function game.shuffle_folder_simulate_from_value(starting_main_RNG_value)
-    return game.ram.shuffle_folder_simulate_from_value(starting_main_RNG_value);
+function game.shuffle_folder_simulate_from_value(starting_RNG_value, swaps)
+    return game.ram.shuffle_folder_simulate_from_value(starting_RNG_value, swaps);
 end
 
-function game.shuffle_folder_simulate_from_index(starting_main_RNG_index)
-    return game.ram.shuffle_folder_simulate_from_index(starting_main_RNG_index);
+function game.shuffle_folder_simulate_from_main_index(index, swaps)
+    return game.ram.shuffle_folder_simulate_from_main_index(index, swaps);
+end
+
+function game.shuffle_folder_simulate_from_lazy_index(index, swaps)
+    return game.ram.shuffle_folder_simulate_from_lazy_index(index, swaps);
 end
 
 function game.draw_in_order()
