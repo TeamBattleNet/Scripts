@@ -1,25 +1,11 @@
 -- Commands for MMBN 1 scripting, enjoy.
 
-local commands = {}; -- Info, Flags, Battle, Items, RNG, Progress, Real, Digital, Setups
+local commands = require("All/Commands"); -- Menu, Flags, Battle, Items, RNG, Progress, Real, Digital, Setups
 
 local game = require("BN1/Game");
 local setup_groups = require("BN1/Setups");
 
-
-
-local command_blank = {};
-command_blank.selection = 1;
-command_blank.description = function() return "Welcome to the Command list!"; end;
-command_blank.options = {
-    { value = nil; text = "Use Up or Down to change Options!"; };
-    { value = nil; text = "Right or Left to change Commands!"; };
-    { value = nil; text = "Use the controller or a keyboard!"; };
-    { value = nil; text = "Use B or Tab to change font size!"; };
-};
-command_blank.doit = function() return; end;
-table.insert(commands, command_blank);
-
-
+---------------------------------------- Flags ----------------------------------------
 
 local function fun_flag_helper(fun_flag, fun_text)
     if game.fun_flags[fun_flag] then
@@ -51,7 +37,7 @@ function command_fun_flags.doit(value)
 end
 table.insert(commands, command_fun_flags);
 
-
+---------------------------------------- Battle ----------------------------------------
 
 local command_battle = {};
 command_battle.selection = 1;
@@ -67,7 +53,7 @@ command_battle.options = {
 command_battle.doit = function(value) value(); end;
 table.insert(commands, command_battle);
 
-
+---------------------------------------- Items ----------------------------------------
 
 local command_items = {};
 command_items.sub_selection = 1;
@@ -149,7 +135,7 @@ function command_items.doit(value)
 end
 table.insert(commands, command_items);
 
-
+---------------------------------------- Routing ----------------------------------------
 
 local command_routing = {};
 command_routing.sub_selection = 1;
@@ -215,7 +201,7 @@ function command_routing.doit(value)
 end
 table.insert(commands, command_routing);
 
-
+---------------------------------------- Progress ----------------------------------------
 
 local command_progress = {};
 command_progress.sub_selection = 1;
@@ -255,7 +241,7 @@ function command_progress.doit(value)
 end
 table.insert(commands, command_progress);
 
-
+---------------------------------------- Real Areas ----------------------------------------
 
 local teleport_real_world = {};
 teleport_real_world.sub_selection = 1;
@@ -293,7 +279,7 @@ function teleport_real_world.doit(value)
 end
 table.insert(commands, teleport_real_world);
 
-
+---------------------------------------- Digital Areas ----------------------------------------
 
 local teleport_digital_world = {};
 teleport_digital_world.sub_selection = 1;
@@ -331,7 +317,7 @@ function teleport_digital_world.doit(value)
 end
 table.insert(commands, teleport_digital_world);
 
-
+---------------------------------------- Setups ----------------------------------------
 
 local command_setups = {};
 command_setups.sub_selection = 1;
@@ -367,7 +353,7 @@ function command_setups.doit(value)
 end
 table.insert(commands, command_setups);
 
-
+---------------------------------------- Module ----------------------------------------
 
 return commands;
 
