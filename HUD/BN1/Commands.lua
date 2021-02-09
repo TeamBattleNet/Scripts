@@ -342,20 +342,13 @@ function command_setups.update_options(option_value)
         command_setups.selection = command_setups.sub_selection;
         command_setups.description = function() return "What Kind Of Button Pressing?"; end;
         table.insert( command_setups.options, { value = 1; text = "Regular Kind" ; } );
-        table.insert( command_setups.options, { value = 2; text = "Folder Edits" ; } );
     else
         command_setups.sub_selection = command_setups.selection;
         command_setups.selection = 1;
         table.insert( command_setups.options, { value = nil; text = "Previous Menu"; } );
         if option_value == 1 then
             command_setups.description = function() return "Automated Button Pressing:"; end;
-            for i,setup in pairs(require("BN1/Setups").sequences) do
-                table.insert( command_setups.options, { value = setup.doit; text = setup.description; } );
-            end
-            command_setups.FUNction = function(value) value(); end;
-        elseif option_value == 2 then
-            command_setups.description = function() return "Automated Folder Edits:"; end;
-            for i,setup in pairs(require("BN1/Setups").folder_edits) do
+            for i,setup in pairs(require("BN1/Setups")[1].setups) do
                 table.insert( command_setups.options, { value = setup.doit; text = setup.description; } );
             end
             command_setups.FUNction = function(value) value(); end;

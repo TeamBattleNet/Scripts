@@ -2,8 +2,7 @@
 
 local setups = {}; -- TODO: Generalize Setups into Groups
 
-setups.sequences = {};
-setups.folder_edits = {};
+setups.groups = {};
 setups.these_buttons = {};
 setups.override_inputs = false;
 
@@ -24,12 +23,16 @@ function setups.setup_wrapper(some_setup)
     setups.override_inputs = false;
 end
 
-function setups.add_sequence(text, some_setup)
-    table.insert(setups.sequences, { description = text; doit = function() setups.setup_wrapper(some_setup); end; });
+function setups.create_group(description)
+    local group = {};
+    group.setups = {};
+    group.description = description;
+    table.insert(setups.groups, group);
+    return group;
 end
 
-function setups.add_folder_edit(text, some_setup)
-    table.insert(setups.folder_edits, { description = text; doit = function() setups.setup_wrapper(some_setup); end; });
+function setups.add_setup(group, text, some_setup)
+    table.insert(group.setups, { description = text; doit = function() setups.setup_wrapper(some_setup); end; });
 end
 
 function setups.press_buttons(frames, text, buttons)
@@ -42,10 +45,10 @@ function setups.press_buttons(frames, text, buttons)
 end
 
 function setups.soft_reset()
-    setups.press_buttons(   1, "Soft Reset", {A=true, B=true, Start=true, Select=true});
-    setups.press_buttons(65+5, "START",      {});
-    setups.press_buttons(   1, "Start",      {Start=true});
-    setups.press_buttons(   1, "PressA",     {A=true});
+    setups.press_buttons( 1, "Soft Reset", {A=true; B=true; Start=true; Select=true});
+    setups.press_buttons(70, "START",      {}          );
+    setups.press_buttons( 1, "Start",      {Start=true});
+    setups.press_buttons( 1, "PressA",     {A=true}    );
 end
 
 function setups.folder_edit_button(button)

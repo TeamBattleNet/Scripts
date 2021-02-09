@@ -2,7 +2,9 @@
 
 local setups = require("All/Setups");
 
-setups.add_sequence("Open & Close Menu", function()
+local group_RNG = setups.create_group("RNG Manipulation");
+
+setups.add_setup(group_RNG, "Open & Close Menu", function()
     setups.press_buttons( 2, "Menu", {Start=true});
     setups.press_buttons(20, "Menu", {});
     setups.press_buttons( 2, "Menu", {A=true});
@@ -13,7 +15,7 @@ setups.add_sequence("Open & Close Menu", function()
     setups.press_buttons(30, "Menu", {});
 end);
 
-setups.add_sequence("359: GutsMan", function()
+setups.add_setup(group_RNG, "359: GutsMan", function()
     setups.soft_reset(); -- RNG Index: 354-364 (359)
     setups.press_buttons(  40, "Area Loading..", {});
     setups.press_buttons(   1, "Talk to Dex"   , {A=true});
@@ -32,7 +34,7 @@ setups.add_sequence("359: GutsMan", function()
     setups.press_buttons(   1, "Start fight!"  , {A=true});
 end);
 
-setups.add_sequence("359: SkullMan (2nd Talk)", function()
+setups.add_setup(group_RNG, "359: SkullMan (2nd Talk)", function()
     setups.soft_reset(); -- RNG Index: 354-364 (359)
     setups.press_buttons(  40, "Area Loading..", {});
     setups.press_buttons(   1, "Talk to Miyu"  , {A=true});
@@ -51,7 +53,7 @@ setups.add_sequence("359: SkullMan (2nd Talk)", function()
     setups.press_buttons(   1, "Start fight!"  , {A=true});
 end);
 
-setups.add_sequence("740: ColorMan", function()
+setups.add_setup(group_RNG, "740: ColorMan", function()
     setups.soft_reset(); -- RNG Index: 735-746 (740)
     setups.press_buttons( 40, "Loading..."    , {});
     setups.press_buttons(279, "Wait on RNG..."     , {});
@@ -60,7 +62,9 @@ setups.add_sequence("740: ColorMan", function()
     setups.press_buttons(120, "Skip Cutscene..."     , {Start=true});
 end);
 
-setups.add_folder_edit("Folder 0: Remove All Chips", function()
+local group_folders = setups.create_group("Folder Edits");
+
+setups.add_setup(group_folders, "Folder 0: Remove All Chips", function()
     for i=1,30 do
         setups.folder_edit_buttons({
             {A=true};
@@ -70,7 +74,7 @@ setups.add_folder_edit("Folder 0: Remove All Chips", function()
     end
 end);
 
-setups.add_folder_edit("Folder 1: Tutorial", function()
+setups.add_setup(group_folders, "Folder 1: Tutorial", function()
     setups.folder_edit_buttons({
         {A=true};
         {R=true};
@@ -122,7 +126,7 @@ setups.add_folder_edit("Folder 1: Tutorial", function()
     });
 end);
 
-setups.add_folder_edit("Folder 2: School", function()
+setups.add_setup(group_folders, "Folder 2: School", function()
     setups.folder_edit_buttons({
         {Down=true};
         {A=true};
@@ -160,7 +164,7 @@ setups.add_folder_edit("Folder 2: School", function()
     });
 end);
 
-setups.add_folder_edit("Folder 3: NumberMan", function()
+setups.add_setup(group_folders, "Folder 3: NumberMan", function()
     setups.folder_edit_buttons({
         {A=true};
         {R=true};
@@ -190,7 +194,7 @@ setups.add_folder_edit("Folder 3: NumberMan", function()
     });
 end);
 
-setups.add_folder_edit("Folder 4: GutsMan", function()
+setups.add_setup(group_folders, "Folder 4: GutsMan", function()
     setups.folder_edit_buttons({
         {R=true};
         {A=true};
@@ -221,7 +225,7 @@ setups.add_folder_edit("Folder 4: GutsMan", function()
     });
 end);
 
-setups.add_folder_edit("Folder 5: StoneMan", function()
+setups.add_setup(group_folders, "Folder 5: StoneMan", function()
     setups.folder_edit_buttons({
         {A=true};
         {A=true};
@@ -267,7 +271,7 @@ setups.add_folder_edit("Folder 5: StoneMan", function()
     });
 end);
 
-setups.add_folder_edit("Folder 6: StoneMan", function()
+setups.add_setup(group_folders, "Folder 6: StoneMan", function()
     setups.folder_edit_buttons({
         {A=true};
         {R=true};
@@ -305,7 +309,7 @@ setups.add_folder_edit("Folder 6: StoneMan", function()
     });
 end);
 
-setups.add_folder_edit("Folder 7: Traffice 3", function()
+setups.add_setup(group_folders, "Folder 7: Traffice 3", function()
     setups.folder_edit_buttons({
         {R=true};
         {Up=true};
@@ -353,7 +357,7 @@ setups.add_folder_edit("Folder 7: Traffice 3", function()
     });
 end);
 
-setups.add_folder_edit("Folder 8: Power 4", function()
+setups.add_setup(group_folders, "Folder 8: Power 4", function()
     setups.folder_edit_buttons({
         {R=true};
         {Down=true};
@@ -389,7 +393,7 @@ setups.add_folder_edit("Folder 8: Power 4", function()
     });
 end);
 
-setups.add_folder_edit("Folder 9: Undernet", function()
+setups.add_setup(group_folders, "Folder 9: Undernet", function()
     setups.folder_edit_buttons({
         {Down=true};
         {Down=true};
@@ -426,7 +430,7 @@ setups.add_folder_edit("Folder 9: Undernet", function()
     });
 end);
 
-setups.add_folder_edit("Folder 10: WWW", function()
+setups.add_setup(group_folders, "Folder 10: WWW", function()
     setups.folder_edit_buttons({
         {R=true};
         {R=true};
@@ -439,5 +443,5 @@ setups.add_folder_edit("Folder 10: WWW", function()
     });
 end);
 
-return { sequences=setups.sequences; folder_edits= setups.folder_edits};
+return setups.groups;
 
