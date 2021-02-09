@@ -42,10 +42,7 @@ function controls.doit()
     local option = command.options[command.selection];
     print("\nExecuting: " .. command.description());
     print("With Option: " .. option.text);
-    if command.enable_inputs and option.value then
-        controls.set_command_mode(false);
-    end
-    command.doit(option.value);
+    controls.set_command_mode(not command.doit(option.value));
 end
 
 function controls.get_options()

@@ -25,7 +25,11 @@ function game.get_main_RNG_index()
 end
 
 function game.set_main_RNG_index(new_index)
-    game.ram.set.main_RNG_index(new_index)
+    game.ram.set.main_RNG_index(new_index);
+end
+
+function game.reset_main_RNG()
+    game.set_main_RNG_index(1);
 end
 
 function game.get_main_RNG_delta()
@@ -51,7 +55,11 @@ function game.get_lazy_RNG_index()
 end
 
 function game.set_lazy_RNG_index(new_index)
-    game.ram.set.lazy_RNG_index(new_index)
+    game.ram.set.lazy_RNG_index(new_index);
+end
+
+function game.reset_lazy_RNG()
+    game.set_lazy_RNG_index(1);
 end
 
 function game.get_lazy_RNG_delta()
@@ -306,6 +314,12 @@ end
 function game.draw_in_order()
     for i=0,29 do
         game.ram.set.draw_slot(i, i);
+    end
+end
+
+function game.draw_in_reverse()
+    for i=0,29 do
+        game.ram.set.draw_slot(i, 29-i);
     end
 end
 

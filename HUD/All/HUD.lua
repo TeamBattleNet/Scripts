@@ -293,7 +293,7 @@ function hud.update()
     
     if show_HUD then
         hud.position_top_left();
-        ws = client.getwindowsize() * 5;
+        ws = client.getwindowsize();
         if command_mode then
             if     buttons_down.Select or keys_down.KeypadPeriod then
                 controls.set_command_mode(false);

@@ -141,6 +141,9 @@ addresses.enemy[2].HP_max       = 0x0203743E; -- 2 bytes, for healing?
 addresses.enemy[3].HP           = 0x02037510; -- 2 bytes, which_enemy * 0xC0
 addresses.enemy[3].HP_max       = 0x02037512; -- 2 bytes, for healing?
 
+--addresses.                    = 0x0203B380; -- 4 bytes, battle timer?
+--addresses.                    = 0x0203B390; -- 4 bytes, 5 copies of button flags?
+
 -- 0x0203FFFF end of WRAM?
 -- 0x02047FFF end of WRAM?
 

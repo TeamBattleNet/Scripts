@@ -1,6 +1,6 @@
 -- Specific Sequences of Inputs for MMBN scripting, enjoy.
 
-local setups = {};
+local setups = {}; -- TODO: Generalize Setups into Groups
 
 setups.sequences = {};
 setups.folder_edits = {};
