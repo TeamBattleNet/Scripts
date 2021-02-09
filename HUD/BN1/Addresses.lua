@@ -34,6 +34,8 @@ addresses.fire_flags            = 0x02000070; -- 4 bytes, 32 fire bit flags
 
 --  70-8B  ??? flags
 
+addresses.pause_menu_flags      = 0x02000080; -- 1 byte, TBD
+
 --  8C-8F  ??? all 1's
 
 -- 110-120 ??? all 1's
@@ -55,6 +57,7 @@ addresses.folder[3].code        = 0x020001C1; -- there is no folder 3
 
 -- 204-213 ??? mostly 1's
 
+addresses.game_loading_flags    = 0x02000210; -- 1 byte, TBD
 addresses.main_area             = 0x02000214; -- 1 byte
 addresses.sub_area              = 0x02000215; -- 1 byte
 addresses.progress              = 0x02000216; -- 1 byte

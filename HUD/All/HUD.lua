@@ -197,7 +197,8 @@ function hud.position_top_left()
 end
 
 function hud.to_screen_gui(text)
-    gui.text(hud.x*ws, hud.y*ws, text); hud.y = hud.y + 1; -- Screen is 240x160 * ws
+    gui.text(hud.x, hud.y, text); -- Screen is 240x160 * ws
+    hud.y = hud.y + 16; --- gui.text characters are 10 x 13
 end
 
 function hud.to_screen_pixel(text)
