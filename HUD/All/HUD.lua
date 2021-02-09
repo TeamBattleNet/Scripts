@@ -155,8 +155,6 @@ local function process_inputs_BN_HUD()
     buttons_previous = buttons_held;
 end
 
-process_inputs_BN_HUD_reference = event.onframestart(process_inputs_BN_HUD, "process_inputs_BN_HUD");
-
 ---------------------------------------- Display Functions ----------------------------------------
 
 hud.use_gui_text = false;
@@ -216,7 +214,7 @@ function hud.to_screen(text)
 end
 
 function hud.to_bottom_right_gui(text)
-    gui.text(hud.x*ws, hud.y*ws, text, 0xFFFFFFFF, "bottomright"); hud.y = hud.y + 1;
+    gui.text(hud.x, hud.y, text, 0xFFFFFFFF, "bottomright"); hud.y = hud.y + 16;
 end
 
 function hud.to_bottom_right_pixel(text)
@@ -358,6 +356,7 @@ end
 
 function hud.initialize()
     print("\nInitializing MMBN HUD...");
+    process_inputs_BN_HUD_reference = event.onframestart(process_inputs_BN_HUD, "process_inputs_BN_HUD");
     controls.initialize(hud.game.number);
     hud.set_default_text(current_font, current_color);
     hud.game.initialize({maximum_RNG_index = 10 * 60 * 60;}); -- 10 minutes of frames
