@@ -60,8 +60,7 @@ function command_items.update_options(option_value)
     if not option_value then
         command_items.description = function() return "What will U buy?"; end;
         table.insert( command_items.options, { value = 1; text = "Zenny"   ; } );
-        table.insert( command_items.options, { value = 2; text = "PowerUP" ; } );
-        table.insert( command_items.options, { value = 3; text = "HPMemory"; } );
+        table.insert( command_items.options, { value = 2; text = "HPMemory"; } );
     else
         table.insert( command_items.options, { value = nil; text = "Previous Menu"; } );
         if option_value == 1 then
@@ -76,13 +75,6 @@ function command_items.update_options(option_value)
             table.insert( command_items.options, { value = -100000; text = "Decrease by 100000"; } );
             command_items.FUNction = function(value) game.add_zenny(value); end;
         elseif option_value == 2 then
-            command_items.description = function() return string.format("PowerUPs: %2u", game.get_PowerUPs()); end;
-            table.insert( command_items.options, { value =  10; text = "Give 10"; } );
-            table.insert( command_items.options, { value =   1; text = "Give  1"; } );
-            table.insert( command_items.options, { value =  -1; text = "Take  1"; } );
-            table.insert( command_items.options, { value = -10; text = "Take 10"; } );
-            command_items.FUNction = function(value) game.add_PowerUPs(value); end;
-        elseif option_value == 3 then
             command_items.description = function() return string.format("HPMemory: %2u", game.get_HPMemory_count()); end;
             table.insert( command_items.options, { value = nil; text = "Apologies... That is sold out..."; } );
             command_items.FUNction = function(value) game.add_zenny(value); end;
@@ -234,7 +226,7 @@ function command_progress.update_options(option_value)
         table.insert( command_progress.options, { value = 0x40; text = "0x40 Scenario 5";  } );
         table.insert( command_progress.options, { value = 0x50; text = "0x50 Scenario 6";  } );
         table.insert( command_progress.options, { value = 0x60; text = "0x60 Scenario 7";  } );
-        table.insert( command_progress.options, { value = 0x70; text = "0x70 Scenario 7";  } );
+        table.insert( command_progress.options, { value = 0x70; text = "0x70 Scenario 8";  } );
     else
         command_progress.description = function() return "Select a Progress value:"; end;
         command_progress.scenario = option_value;

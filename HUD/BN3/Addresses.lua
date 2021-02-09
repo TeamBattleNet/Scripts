@@ -78,7 +78,7 @@ addresses.your_Y                = 0x02008F56; -- 2 bytes freezing doesn't preven
 addresses.map_offset_x          = 0x02008F58; -- 2 bytes % 256 to scroll screen
 addresses.map_offset_y          = 0x02008F5A; -- 2 bytes % 256 to scroll screen
 
-addresses.battle_field_modifier = 0x02008F98; -- weird effects
+addresses.battle_field_modifier = 0x02008F98; -- 1 byte, weird effects
 
 addresses.folder_cursor         = 0x020093E2; -- 2 bytes?, cursor value in the folder
 addresses.folder_offset         = 0x020093E6; -- 2 bytes?, offset value in the folder
@@ -111,12 +111,35 @@ addresses.battle_reward         = 0x0200F332; -- 2 bytes, how to decode? (mask 0
 --addresses.battle_             = 0x0200F334; -- 2 bytes, stats? S+?
 addresses.battle_field          = 0x0200F47E; -- 8*3 bytes, current battlefield
 
+-- F800 battle information
+
+addresses.custom_gauge_animate  = 0x0200F872; -- 1 byte
+addresses.display_chip_name     = 0x0200F873; -- 1 bit
+addresses.battle_state          = 0x0200F886; -- 1 byte?
+addresses.display_PAUSE         = 0x0200F887; -- 1 byte?
+addresses.battle_HP_text        = 0x0200F888; -- 2 bytes, for HP change animation
+addresses.battle_timer          = 0x0200F89C; -- 2 bytes
+
+addresses.enemy[1].HP_text      = 0x0200F8B2; -- 2 bytes, for HP change animation
+addresses.enemy[2].HP_text      = 0x0200F8BA; -- 2 bytes, for HP change animation
+addresses.enemy[3].HP_text      = 0x0200F8C2; -- 2 bytes, for HP change animation
+
 addresses.pack_ID               = 0x0201881C; -- 2 bytes, chip ID of pack
 addresses.pack_code             = 0x0201880A; -- 2 bytes, chip code of pack
 
 addresses.battle_draw_slots     = 0x02034040; -- 1 byte each, in battle chip draws, ends at 0x0203405D
-addresses.battle_HP_current     = 0x02037294; -- 1 byte
-addresses.battle_HP_max         = 0x02037296; -- 1 byte
+
+addresses.battle_HP_current     = 0x02037294; -- 2 bytes
+addresses.battle_HP_max         = 0x02037296; -- 2 bytes
+
+addresses.enemy[1].HP           = 0x02037368; -- 2 bytes, which_enemy * 0xC0
+addresses.enemy[1].HP_max       = 0x0203736A; -- 2 bytes, for healing?
+
+addresses.enemy[2].HP           = 0x0203743C; -- 2 bytes, which_enemy * 0xC0
+addresses.enemy[2].HP_max       = 0x0203743E; -- 2 bytes, for healing?
+
+addresses.enemy[3].HP           = 0x02037510; -- 2 bytes, which_enemy * 0xC0
+addresses.enemy[3].HP_max       = 0x02037512; -- 2 bytes, for healing?
 
 -- 0x0203FFFF end of WRAM?
 -- 0x02047FFF end of WRAM?
