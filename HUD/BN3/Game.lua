@@ -309,17 +309,14 @@ function game.get_gamble_win()
 end
 
 function game.is_gambling()
-    return game.ram.get.main_area() == 0x8C and -- Sub Comps
-          (game.ram.get.sub_area() == 0x02 or   -- Vending Comp (SciLab)
-           game.ram.get.sub_area() == 0x08 or   -- TV Board Comp
-           game.ram.get.sub_area() == 0x0C );   -- Vending Comp (Hospital)
+    return game.get_main_area() == 0x8C and -- Sub Comps
+          (game.get_sub_area() == 0x02 or   -- Vending Comp (SciLab)
+           game.get_sub_area() == 0x08 or   -- TV Board Comp
+           game.get_sub_area() == 0x0C );   -- Vending Comp (Hospital)
 end
 
 function game.in_Secret_3()
-    if game.ram.get.main_area() == 0x95 and game.ram.get.sub_area() == 0x02 then
-        return true; -- Bug Frag Trader
-    end
-    return false;
+    return (game.get_main_area() == 0x95 and game.get_sub_area() == 0x02);
 end
 
 ---------------------------------------- Module Controls ----------------------------------------

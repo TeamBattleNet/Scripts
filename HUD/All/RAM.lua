@@ -342,10 +342,10 @@ function ram.adjust_lazy_RNG(steps)
     ram.set.lazy_RNG_index(new_index);
 end
 
-local previous_lazy_RNG_value = 0;
+ram.previous_lazy_RNG_value = 0;
 
 function ram.get.lazy_RNG_delta()
-    return ram.calculate_RNG_delta(previous_lazy_RNG_value, ram.get.lazy_RNG_value());
+    return ram.calculate_RNG_delta(ram.previous_lazy_RNG_value, ram.get.lazy_RNG_value());
 end
 
 ---------------------------------------- Folder Shuffling ----------------------------------------
