@@ -40,18 +40,30 @@ end
 
 function setups.press_buttons(frames, text, buttons)
     for i=1,frames do
-        gui.text(2,  2, string.format("%-22s", text));
-        gui.text(2, 18, string.format("Frames Remaining: %4i", frames-i));
+        gui.text(2,  2, string.format("%-23s", text));
+        gui.text(2, 18, string.format("Frames Remaining: %5i", frames-i));
         setups.these_buttons = buttons or {};
         emu.frameadvance();
     end
 end
 
-function setups.soft_reset()
-    setups.press_buttons( 1, "Soft Reset", {A=true; B=true; Start=true; Select=true});
-    setups.press_buttons(70, "START",      {}          );
-    setups.press_buttons( 1, "Start",      {Start=true});
-    setups.press_buttons( 1, "PressA",     {A=true}    );
+function setups.PRESS_START(delay)
+    setups.press_buttons(65,        "WAIT FOR IT");
+    setups.press_buttons(delay or 0,   "delaying");
+    setups.press_buttons(1, "START", {Start=true});
+    setups.press_buttons(1, "PressA",    {A=true});
+end
+
+function setups.soft_reset(delay)
+    setups.press_buttons(1, "Soft Reset", {A=true; B=true; Start=true; Select=true});
+    setups.PRESS_START(delay or 0);
+end
+
+function setups.hard_reset(delay)
+    setups.press_buttons(1, "Hard Reset", {Power=true});
+    setups.press_buttons(282, "BIOS");
+    setups.press_buttons( 31, "Capcom", {Start=true});
+    setups.PRESS_START(delay or 0);
 end
 
 function setups.folder_edit_button(button)
