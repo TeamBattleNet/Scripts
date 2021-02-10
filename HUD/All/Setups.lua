@@ -4,10 +4,13 @@ local setups = {};
 
 setups.groups = {};
 setups.these_buttons = {};
-setups.override_inputs = false;
+
+local settings = require("All/Settings");
+
+settings.override_inputs = false;
 
 local function input_override_BN_HUD()
-    if setups.override_inputs then
+    if settings.override_inputs then
         joypad.set({ Up=false; Down=false; Left=false; Right=false; Start=false; Select=false; B=false; A=false; L=false; R=false; });
         joypad.set(setups.these_buttons);
     end
@@ -16,11 +19,11 @@ end
 setups.input_override_BN_HUD_reference = event.onframestart(input_override_BN_HUD, "input_override_BN_HUD");
 
 function setups.setup_wrapper(some_setup)
-    setups.override_inputs = true;
+    settings.override_inputs = true;
     some_setup();
     setups.these_buttons = {}; -- one frame with no inputs to prevent looping
     emu.frameadvance();
-    setups.override_inputs = false;
+    settings.override_inputs = false;
 end
 
 function setups.create_group(description)

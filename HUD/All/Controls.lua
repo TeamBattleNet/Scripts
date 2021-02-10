@@ -5,6 +5,8 @@ local controls = {};
 local commands = {};
 local command_index = 1;
 
+local settings = require("All/Settings");
+
 function controls.next_command()
     command_index = (command_index % table.getn(commands)) + 1;
     local command = commands[command_index];
@@ -42,7 +44,7 @@ function controls.doit()
     local option = command.options[command.selection];
     print("\nExecuting: " .. command.description());
     print("With Option: " .. option.text);
-    controls.set_command_mode(not command.doit(option.value));
+    settings.command_mode = (not command.doit(option.value));
 end
 
 function controls.get_options()

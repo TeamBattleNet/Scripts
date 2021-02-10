@@ -4,7 +4,7 @@
 -- Start        - to toggle HUD on/off
 -- Select       - to turn Command Mode on
 -- Left / Right - to change display mode
--- Up / Down    - to change display font
+-- Up / Down    - to change mode specific values
 -- A            - to print inputs from the last folder edit
 -- B            - to print game specific information
 
@@ -22,13 +22,14 @@
 -- Tab          - to change display font
 -- Keypad0      - to activate the Command Option
 
--- Special thanks to Prof9, NMarkro, Risch, Tterraj42, TL_Plexa, Mountebank, TREZ, and TeamBN
+-- Special thanks to Prof9, GreigaMaster, NMarkro, Risch, Mountebank, TL_Plexa, TREZ, and TeamBN
 
 -- https://drive.google.com/drive/folders/1NjYy8mXjc-B06gpng1D2WzWJT4waQAFV "The Notes"
 
 local hud = { game={}; version="0.4"; };
 
 local controls = require("All/Controls");
+local settings = require("All/Settings");
 
 ---------------------------------------- Input Functions ----------------------------------------
 
@@ -43,11 +44,7 @@ local buttons_down = {};
 local buttons_ignore = {};
 local buttons_string = "";
 
-local command_mode = false;
-
-function controls.set_command_mode(new_command_mode)
-    command_mode = new_command_mode;
-end
+settings.command_mode = false;
 
 local function record_menu_buttons()
     if hud.game.in_menu() and hud.game.in_menu_folder_edit() then
@@ -147,7 +144,7 @@ local function process_inputs_BN_HUD()
     
     record_menu_buttons(); -- for folder edits
     
-    if command_mode then
+    if settings.command_mode then
         disable_buttons_in_command_mode();
     end
     
@@ -157,75 +154,79 @@ end
 
 ---------------------------------------- Display Functions ----------------------------------------
 
-hud.use_gui_text = false;
-
 hud.x = 0;
 hud.y = 0;
+hud.x0 = 0;
+hud.y0 = 0;
 
+local ws = 1;
 local xs = 0;
 local ys = 0;
 
-local ws = 1; -- window size
+settings.use_gui_text = false;
+settings.pixel_background_color = 0x77000000;
 
-local current_font = "fceux";
-local current_color = 0x77000000;
-
-function hud.set_default_text(font, color)
-    if font == "gens" then
+function settings.set_display_text(font)
+    if     font == "gui" then
+        xs = 10;
+        ys = 13+3;
+        hud.show_text = gui.text;
+        settings.use_gui_text = true;
+    elseif font == "gens" then
         xs = 4;
         ys = 7;
+        hud.show_text = gui.pixelText;
+        settings.use_gui_text = false;
+        gui.defaultPixelFont("gens");
+        gui.defaultTextBackground(settings.pixel_background_color);
     elseif font == "fceux" then
         xs = 6;
         ys = 9;
+        hud.show_text = gui.pixelText;
+        settings.use_gui_text = false;
+        gui.defaultPixelFont("fceux");
+        gui.defaultTextBackground(settings.pixel_background_color);
     end
-    gui.defaultPixelFont(font);
-    gui.defaultTextBackground(color);
 end
 
-function hud.toggle_default_text()
-    if current_font == "gens" then
-        current_font = "fceux";
+function hud.set_ws()
+    if settings.use_gui_text then
+        ws = client.getwindowsize(); -- Screen is GBA * ws
     else
-        current_font = "gens";
+        ws = 1; -- gui.pixelText draws before window scaling
     end
-    hud.set_default_text(current_font, current_color);
 end
 
-function hud.position_top_left()
-    hud.x = 0;
-    hud.y = 0;
+function hud.set_position(x, y)
+    hud.x0 = (x or 0) * ws;
+    hud.y0 = (y or 0) * ws;
 end
 
-function hud.to_screen_gui(text)
-    gui.text(hud.x, hud.y, text); -- Screen is 240x160 * ws
-    hud.y = hud.y + 16; --- gui.text characters are 10 x 13
+function hud.set_offset(x, y)
+    hud.x = x or 0;
+    hud.y = y or 0;
 end
 
-function hud.to_screen_pixel(text)
-    gui.pixelText(hud.x*xs, hud.y*ys, text); hud.y = hud.y + 1; -- GBA is 240x160
-end
-
-function hud.to_screen(text)
-    if hud.use_gui_text then
-        hud.to_screen_gui(text);
-    else
-        hud.to_screen_pixel(text);
-    end
+function hud.to_screen(text, x, y)
+    x = (x and x*ws) or (hud.x0 + hud.x*xs);
+    y = (y and y*ws) or (hud.y0 + hud.y*ys);
+    hud.show_text(x, y, text);
+    hud.y = hud.y + 1;
 end
 
 function hud.to_bottom_right_gui(text)
-    gui.text(hud.x, hud.y, text, 0xFFFFFFFF, "bottomright"); hud.y = hud.y + 16;
+    gui.text(0, hud.y*ys, text, 0xFFFFFFFF, "bottomright"); hud.y = hud.y + 1;
 end
 
 function hud.to_bottom_right_pixel(text)
     local x = 239 - ( xs * string.len(text) );
     local y = 160 - ( ys * (hud.y+1) );
-    gui.pixelText(x, y, text);
+    gui.pixelText(x, y, text); -- GBA is 240x160
     hud.y = hud.y + 1;
 end
 
 function hud.to_bottom_right(text)
-    if hud.use_gui_text then
+    if settings.use_gui_text then
         hud.to_bottom_right_gui(text);
     else
         hud.to_bottom_right_pixel(text);
@@ -242,35 +243,30 @@ end
 ---------------------------------------- HUD Modes ----------------------------------------
 
 hud.HUDs = {};
-local HUD_mode =  1;
-
-function hud.HUDs.HUD_auto()
-    hud.to_screen(string.format("HUD Version: %s", hud.version));
-end
+hud.HUD_mode =  1;
+table.insert(hud.HUDs, function() hud.to_screen("HUD Version: " .. hud.version); end);
 
 ---------------------------------------- HUD Controls ----------------------------------------
 
 function hud.Up()
-    hud.toggle_default_text();
 end
 
 function hud.Down()
-    hud.toggle_default_text();
 end
 
 function hud.Left()
-    HUD_mode = HUD_mode - 1;
-    if HUD_mode == 0 then
-        HUD_mode = table.getn(hud.HUDs);
+    hud.HUD_mode = hud.HUD_mode - 1;
+    if hud.HUD_mode == 0 then
+        hud.HUD_mode = table.getn(hud.HUDs);
     end
 end
 
 function hud.Right()
-    HUD_mode = (HUD_mode % table.getn(hud.HUDs)) + 1;
+    hud.HUD_mode = (hud.HUD_mode % table.getn(hud.HUDs)) + 1;
 end
 
 function hud.B()
-    print("TODO: Print Game Specific Information");
+    print("TODO: Print Game Specific Information.");
 end
 
 function hud.A()
@@ -292,11 +288,12 @@ function hud.update()
     end
     
     if show_HUD then
-        hud.position_top_left();
-        ws = client.getwindowsize();
-        if command_mode then
+        hud.set_position();
+        hud.set_offset();
+        hud.set_ws();
+        if settings.command_mode then
             if     buttons_down.Select or keys_down.KeypadPeriod then
-                controls.set_command_mode(false);
+                settings.command_mode = false;
             elseif buttons_down.Up     or keys_down.Up      then
                 controls.previous_option();
             elseif buttons_down.Down   or keys_down.Down    then
@@ -314,7 +311,7 @@ function hud.update()
         else
             if buttons_held.L and buttons_held.R then
                 if     buttons_down.Select then
-                    controls.set_command_mode(true);
+                    settings.command_mode = true;
                 elseif buttons_down.Up     then
                     hud.Up();
                 elseif buttons_down.Down   then
@@ -330,7 +327,7 @@ function hud.update()
                 end
             else
                 if     keys_down.KeypadPeriod then
-                    controls.set_command_mode(true);
+                    settings.command_mode = true;
                 elseif keys_down.Up      then
                     hud.Up();
                 elseif keys_down.Down    then
@@ -341,7 +338,7 @@ function hud.update()
                     hud.Right();
                 end
             end
-            hud.HUDs[HUD_mode]();
+            hud.HUDs[hud.HUD_mode]();
         end
     end
     
@@ -357,9 +354,9 @@ end
 function hud.initialize()
     print("\nInitializing MMBN HUD...");
     process_inputs_BN_HUD_reference = event.onframestart(process_inputs_BN_HUD, "process_inputs_BN_HUD");
+    settings.set_display_text("fceux");
     controls.initialize(hud.game.number);
-    hud.set_default_text(current_font, current_color);
-    hud.game.initialize({maximum_RNG_index = 10 * 60 * 60;}); -- 10 minutes of frames
+    hud.game.initialize({maximum_RNG_index = 10 * 60 * 60}); -- 10 minutes of frames
     print(string.format("\nInitialized HUD %s for MMBN %s - %s!", hud.version, hud.game.number, hud.game.get_version_name()));
     --require("Test/Tests").test_this(hud);
 end

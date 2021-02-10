@@ -187,10 +187,7 @@ local function HUD_battle()
     hud.to_screen(string.format("Fight: 0x%4X", hud.game.get_battle_pointer()));
     display_RNG(true);
     hud.to_screen(string.format("Checks: %2u", hud.game.get_encounter_checks()));
-    hud.y=0;
-    hud.to_bottom_right(hud.game.get_enemy_name(1));
-    hud.to_bottom_right(hud.game.get_enemy_name(2));
-    hud.to_bottom_right(hud.game.get_enemy_name(3));
+    display_enemies();
 end
 
 local function HUD_auto()
