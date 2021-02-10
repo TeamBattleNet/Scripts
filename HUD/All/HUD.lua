@@ -133,6 +133,9 @@ function hud.update()
     end
     
     if show_HUD then
+        hud.set_ws();
+        hud.set_offset();
+        hud.set_position();
         if settings.command_mode then
             if     buttons.down.Select or buttons.keys.down.KeypadPeriod then
                 settings.command_mode = false;
@@ -149,7 +152,10 @@ function hud.update()
             elseif buttons.down.A      or buttons.keys.down.Keypad0 then
                 controls.doit();
             end
-            hud.set_center(40, 2);
+            if hud.ws >= 3 and settings.use_gui_text then
+                hud.HUDs[hud.HUD_mode]();
+            end
+            hud.set_center(40, 3);
             hud.display_strings(controls.get_options());
         else
             if buttons.held.L and buttons.held.R then
