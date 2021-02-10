@@ -4,6 +4,15 @@
 
 local progress = {};
 
+progress.scenarios = {
+    { value = 0x00; description = "ProbablyAVirus"  };
+    { value = 0x10; description = "School Takeover" };
+    { value = 0x20; description = "Complex Complex" };
+    { value = 0x30; description = "City Traffic"    };
+    { value = 0x40; description = "Power Plant"     };
+    { value = 0x50; description = "Get the Memos"   };
+};
+
 progress[0x00] = "New Game";
 progress[0x01] = "Tutorial Start";
 progress[0x02] = "Tutorial Finished";

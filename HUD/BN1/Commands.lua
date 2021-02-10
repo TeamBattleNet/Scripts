@@ -211,13 +211,10 @@ function command_progress.update_options(option_value)
     
     if not option_value then
         command_progress.selection = command_progress.sub_selection;
-        command_progress.description = function() return "Select a Progress scenario:"; end;
-        table.insert( command_progress.options, { value = 0x00; text = "0x00 ProbablyAVirus";  } );
-        table.insert( command_progress.options, { value = 0x10; text = "0x10 School Takeover"; } );
-        table.insert( command_progress.options, { value = 0x20; text = "0x20 Complex Complex"; } );
-        table.insert( command_progress.options, { value = 0x30; text = "0x30 City Traffic";    } );
-        table.insert( command_progress.options, { value = 0x40; text = "0x40 Power Plant";     } );
-        table.insert( command_progress.options, { value = 0x50; text = "0x50 Get the Memos";   } );
+        command_progress.description = function() return "Select a Scenario:"; end;
+        for i,scenario in pairs(game.progress.scenarios) do
+            table.insert( command_progress.options, { value = scenario.value; text = string.format("0x%02X %s", scenario.value, scenario.description); } );
+        end
     else
         command_progress.sub_selection = command_progress.selection;
         command_progress.selection = 1;
