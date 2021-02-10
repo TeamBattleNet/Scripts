@@ -29,70 +29,60 @@ addresses.folder[3]             = {};
 addresses.folder[3].ID          = 0x02000000;
 addresses.folder[3].code        = 0x02000000;
 
+addresses.battle_custom_gauge   = 0x02000000;
+addresses.battle_draw_slots     = 0x02000000;
+addresses.battle_mode           = 0x02000000;
+addresses.battle_pointer        = 0x02000000;
+addresses.battle_state          = 0x02000000;
+addresses.battle_timer          = 0x02000000;
+
+addresses.bug_frags             = 0x02000000;
+addresses.buster_attack         = 0x02000000;
+addresses.buster_charge         = 0x02000000;
+addresses.buster_rapid          = 0x02000000;
+addresses.button_flags          = 0x02000000;
+addresses.check                 = 0x02000000;
+addresses.chip_window_size      = 0x02000000;
+addresses.chip_cooldown         = 0x02000000;
+addresses.cursor_code           = 0x02000000;
+addresses.cursor_folder         = 0x02000000;
+addresses.cursor_ID             = 0x02000000;
+addresses.cursor_pack           = 0x02000000;
+addresses.cursor_selected       = 0x02000000;
+addresses.delete_timer          = 0x02000000;
+addresses.game_state            = 0x02000000;
+addresses.HPMemory              = 0x02000000;
+addresses.library               = 0x02000000;
+addresses.main_area             = 0x02000000;
+addresses.menu_mode             = 0x02000000;
+addresses.menu_state            = 0x02000000;
+addresses.music_progress        = 0x02000000;
+addresses.offset_folder         = 0x02000000;
+addresses.offset_pack           = 0x02000000;
+addresses.offset_selected       = 0x02000000;
 addresses.pack_ID               = 0x02000000;
 addresses.pack_code             = 0x02000000;
 addresses.pack_quantity         = 0x02000000;
-
-addresses.library               = 0x02000000;
-
-addresses.battle_pointer        = 0x02000000;
-addresses.battle_mode           = 0x02000000;
-addresses.battle_state          = 0x02000000;
-addresses.battle_timer          = 0x02000000;
-addresses.delete_timer          = 0x02000000;
-addresses.battle_custom_gauge   = 0x02000000;
-addresses.battle_draw_slots     = 0x02000000;
-addresses.chip_window_size      = 0x02000000;
-addresses.chip_cooldown         = 0x02000000;
-
-addresses.button_flags          = 0x02000000;
-
-addresses.RNG                   = 0x02000000;
-addresses.game_state            = 0x02000000;
-
-addresses.menu_mode             = 0x02000000;
-addresses.menu_state            = 0x02000000;
-
-addresses.progress              = 0x02000000;
-addresses.music_progress        = 0x02000000;
-
 addresses.play_time_frames      = 0x02000000;
+addresses.PowerUP               = 0x02000000;
 addresses.power_on_frames       = 0x02000000;
-
-addresses.main_area             = 0x02000000;
-addresses.sub_area              = 0x02000000;
-addresses.check                 = 0x02000000;
+addresses.progress              = 0x02000000;
+addresses.RNG                   = 0x02000000;
 addresses.sneak                 = 0x02000000;
 addresses.steps                 = 0x02000000;
 addresses.steps_total           = 0x02000000;
-
-addresses.buster_attack         = 0x02000000;
-addresses.buster_rapid          = 0x02000000;
-addresses.buster_charge         = 0x02000000;
-
-addresses.zenny                 = 0x02000000;
-addresses.bug_frags             = 0x02000000;
-addresses.HPMemory              = 0x02000000;
-addresses.PowerUP               = 0x02000000;
-
+addresses.sub_area              = 0x02000000;
 addresses.your_X                = 0x02000000;
 addresses.your_Y                = 0x02000000;
 addresses.your_X2               = 0x02000000;
 addresses.your_Y2               = 0x02000000;
-
-addresses.cursor_ID             = 0x02000000;
-addresses.cursor_code           = 0x02000000;
-addresses.cursor_folder         = 0x02000000;
-addresses.offset_folder         = 0x02000000;
-addresses.cursor_pack           = 0x02000000;
-addresses.offset_pack           = 0x02000000;
-addresses.cursor_selected       = 0x02000000;
-addresses.offset_selected       = 0x02000000;
+addresses.zenny                 = 0x02000000;
 
 ---------------------------------------- ROM  08000000-09FFFFFF ----------------------------------------
 
 addresses.version_name          = "Unknown";
-addresses.version_byte          = 0x080000AF;
+addresses.version_byte          = 0x080000AC;
+addresses.region_byte           = 0x080000AF;
 addresses.encounter_odds        = 0x08000000;
 addresses.encounter_curve       = 0x08000000;
 
