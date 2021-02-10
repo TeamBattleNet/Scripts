@@ -138,6 +138,10 @@ end
 
 -- Menu Mode
 
+function game.in_menu()
+    return false; -- should be overridden per game
+end
+
 game.menu_mode_names = {};
 game.menu_mode_names[0x00] = "Folder Select";
 game.menu_mode_names[0x04] = "Sub Chips";
@@ -710,6 +714,14 @@ function game.did_area_change()
 end
 
 ---------------------------------------- Module Controls ----------------------------------------
+
+function game.update_pre(options)
+    -- should be overridden per game
+end
+
+function game.update_post(options)
+    -- should be overridden per game
+end
 
 function game.track_game_state()
     track_encounter_checks();

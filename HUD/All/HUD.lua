@@ -26,7 +26,7 @@
 
 -- https://drive.google.com/drive/folders/1NjYy8mXjc-B06gpng1D2WzWJT4waQAFV "The Notes"
 
-local hud = { game={}; version="0.4"; };
+local hud = { game={}; version="0.5"; };
 
 local controls = require("All/Controls");
 local settings = require("All/Settings");
@@ -163,8 +163,13 @@ local ws = 1;
 local xs = 0;
 local ys = 0;
 
-settings.use_gui_text = false;
-settings.pixel_background_color = 0x77000000;
+settings.use_gui_text = true;
+settings.pixel_background_color = 0x80000000;
+
+function settings.set_text_background(new_background_color)
+    gui.defaultTextBackground(new_background_color);
+    settings.pixel_background_color = new_background_color;
+end
 
 function settings.set_display_text(font)
     if     font == "gui" then
@@ -215,7 +220,7 @@ function hud.to_screen(text, x, y)
 end
 
 function hud.to_bottom_right_gui(text)
-    gui.text(0, hud.y*ys, text, 0xFFFFFFFF, "bottomright"); hud.y = hud.y + 1;
+    gui.text(2, 3 + hud.y*ys, text, 0xFFFFFFFF, "bottomright"); hud.y = hud.y + 1;
 end
 
 function hud.to_bottom_right_pixel(text)
@@ -249,9 +254,11 @@ table.insert(hud.HUDs, function() hud.to_screen("HUD Version: " .. hud.version);
 ---------------------------------------- HUD Controls ----------------------------------------
 
 function hud.Up()
+    -- should be overridden per game
 end
 
 function hud.Down()
+    -- should be overridden per game
 end
 
 function hud.Left()
@@ -271,6 +278,10 @@ end
 
 function hud.A()
     print(string.format("\n%u Buttons:%s", (string.len(buttons_string)/2), buttons_string));
+end
+
+function hud.update_local_state()
+    -- for tracking game specific HUD values over time
 end
 
 ---------------------------------------- Module Controls ----------------------------------------
@@ -354,7 +365,7 @@ end
 function hud.initialize()
     print("\nInitializing MMBN HUD...");
     process_inputs_BN_HUD_reference = event.onframestart(process_inputs_BN_HUD, "process_inputs_BN_HUD");
-    settings.set_display_text("fceux");
+    settings.set_display_text("gui");
     controls.initialize(hud.game.number);
     hud.game.initialize({maximum_RNG_index = 10 * 60 * 60}); -- 10 minutes of frames
     print(string.format("\nInitialized HUD %s for MMBN %s - %s!", hud.version, hud.game.number, hud.game.get_version_name()));
