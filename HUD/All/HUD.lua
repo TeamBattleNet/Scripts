@@ -247,6 +247,15 @@ function hud.to_bottom_right(text)
 end
 
 function hud.display_commands()
+    if settings.use_gui_text then
+        if ws >= 3 then
+            hud.HUDs[hud.HUD_mode]();
+        end
+        hud.x = 0;
+        hud.y = 0;
+        hud.y0 = 32;
+        hud.x0 = ((240 * ws) - (400)) / 2;
+    end
     local options = controls.get_options();
     for i=1,table.getn(options) do
         hud.to_screen(options[i]);
