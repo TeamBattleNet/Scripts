@@ -160,30 +160,28 @@ addresses.enemy_HP_3          = 0; -- 2 bytes, which_enemy * 0xC0
 
 ---------------------------------------- ROM  08000000-09FFFFFF ----------------------------------------
 
+-- 000000 - 0000FF
+
+addresses.version_byte        = 0x080000AC
+
 -- 020C00 - 020CFF
-addresses.encounter_odds  	  = 0;
-addresses.encounter_curve 	  = 0;
+addresses.encounter_odds  	  = 0x08018960;
+addresses.encounter_curve 	  = 0x080189E8;
 
 ---------------------------------------- Verion Dependent ----------------------------------------
 
-local version_byte = memory.read_u8(addresses.version_byte);
+local version_byte = memory.read_u32_le(addresses.version_byte);
 
-if     version_byte == 0x45 then
-    addresses.version_name    = "English";
-    --addresses.encounter_odds  = 0x08009934;
-    --addresses.encounter_curve = 0x080099BC;
-elseif version_byte == 0x4A then
-    addresses.version_name    = "Japanese";
-	--addresses.encounter_odds  = 0x08009900;
-    --addresses.encounter_curve = 0x08009988;
-elseif version_byte == 0x50 then
-    addresses.version_name    = "PAL";
-    --addresses.encounter_odds  = 0x08009940;
-    --addresses.encounter_curve = 0x080099C8;
+if version_byte == 0x45423442 then
+    addresses.version_name    = "Blue Moon US";
+elseif version_byte == 0x4A423442 then
+    addresses.version_name    = "Blue Moon JP";
+elseif version_byte == 0x45573442 then
+        addresses.version_name    = "Red Sun US";
+elseif version_byte == 0x4A573442 then
+    addresses.version_name    = "Red Sun JP";
 else
     addresses.version_name    = "Unknown";
-    --addresses.encounter_odds  = 0x08000000;
-    --addresses.encounter_curve = 0x08000000;
     print("RAM: Warning! Unrecognized game version! Unable to set certain addresses!");
 end
 

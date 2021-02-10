@@ -117,6 +117,8 @@ addresses.steps               = 0x02001C16; -- 4 bytes
 addresses.check               = 0x02001C18; -- 4 bytes, steps at the last encounter check
 addresses.sneak               = 0x02001C28; -- 4 bytes, starts at 6000
 
+addresses.requestBBSFlags     = 0x02001C88; -- 1 byt
+
 -- 004700 - 0047FF
 
 addresses.reg_slot			  = 0x020047FA; -- 1 byte, Reg Chip. 255 if no reg
@@ -164,30 +166,29 @@ addresses.enemy_HP_3          = 0x0203AC5C; -- 2 bytes, which_enemy * 0xC0
 
 ---------------------------------------- ROM  08000000-09FFFFFF ----------------------------------------
 
+-- 000000 - 0000FF
+
+addresses.version_byte        = 0x080000AC;
+
 -- 020C00 - 020CFF
+
 addresses.encounter_odds  	  = 0x08020C5C;
 addresses.encounter_curve 	  = 0x08020CE4;
 
 ---------------------------------------- Verion Dependent ----------------------------------------
 
-local version_byte = memory.read_u8(addresses.version_byte);
+local version_byte = memory.read_u32_le(addresses.version_byte);
 
-if     version_byte == 0x45 then
-    addresses.version_name    = "English";
-    --addresses.encounter_odds  = 0x08009934;
-    --addresses.encounter_curve = 0x080099BC;
-elseif version_byte == 0x4A then
-    addresses.version_name    = "Japanese";
-	--addresses.encounter_odds  = 0x08009900;
-    --addresses.encounter_curve = 0x08009988;
-elseif version_byte == 0x50 then
-    addresses.version_name    = "PAL";
-    --addresses.encounter_odds  = 0x08009940;
-    --addresses.encounter_curve = 0x080099C8;
+if version_byte == 0x45355242 then
+    addresses.version_name    = "Gregar US";
+elseif version_byte == 0x4A355242 then
+    addresses.version_name    = "Gregar JP";
+elseif version_byte == 0x45365242 then
+    addresses.version_name    = "Falzar US";
+elseif version_byte == 0x4A365242 then
+    addresses.version_name    = "Falzar JP";
 else
     addresses.version_name    = "Unknown";
-    --addresses.encounter_odds  = 0x08000000;
-    --addresses.encounter_curve = 0x08000000;
     print("RAM: Warning! Unrecognized game version! Unable to set certain addresses!");
 end
 
