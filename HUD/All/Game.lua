@@ -612,6 +612,7 @@ end
 
 local function track_encounter_checks()
     if game.did_area_change() then
+        area_odds = area_odds * current_odds;
         print(string.format("\nArea Odds Were: %7.3f%%", game.get_area_percent()));
         print(string.format("Inverted  Odds: %7.3f%%", 100-game.get_area_percent()));
     end
