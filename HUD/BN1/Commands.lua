@@ -62,6 +62,7 @@ command_battle.options = {
     { value = function() commands.game.randomize_folder_IDs_standard(1); end; text = "Folder: Randomize Folder IDs"   ; };
     { value = function() commands.game.custom_folder_dalus_special(   ); end; text = "Folder: The Dalus_EXE Special"  ; };
     { value = function() commands.game.custom_folder_smog_special(    ); end; text = "Folder: The SmogBN Special"     ; };
+    { value = function() commands.game.custom_folder_press_a(         ); end; text = "Folder: Just PressA"            ; };
 };
 command_battle.doit = function(value) value(); end;
 table.insert(commands.commands, command_battle);

@@ -87,11 +87,11 @@ table.insert(hud.HUDs, function() hud.to_screen("HUD Version: " .. hud.version);
 ---------------------------------------- HUD Controls ----------------------------------------
 
 function hud.Up()
-    -- should be overridden per HUD
+    print("TODO: Print HUD Specific Information.");
 end
 
 function hud.Down()
-    -- should be overridden per HUD
+    print("TODO: Print HUD Specific Information.");
 end
 
 function hud.Left()

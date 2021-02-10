@@ -410,6 +410,41 @@ function game.custom_folder_smog_special()
     });
 end
 
+function game.custom_folder_press_a()
+    game.customize_folder_to(1, {
+        { ID=119; code=0 }; -- FstGauge
+        { ID= 76; code=0 }; -- Steal
+        { ID= 76; code=0 }; -- Steal
+        { ID= 76; code=0 }; -- Steal
+        { ID= 76; code=0 }; -- Steal
+        { ID=  9; code=0 }; -- BigBomb
+        { ID=  9; code=0 }; -- BigBomb
+        { ID=  9; code=0 }; -- BigBomb
+        { ID=  9; code=0 }; -- BigBomb
+        { ID=  9; code=0 }; -- BigBomb
+        { ID= 24; code=0 }; -- Quake3
+        { ID= 24; code=0 }; -- Quake3
+        { ID= 24; code=0 }; -- Quake3
+        { ID= 24; code=0 }; -- Quake3
+        { ID= 24; code=0 }; -- Quake3
+        { ID=129; code=0 }; -- Gaia3
+        { ID=129; code=0 }; -- Gaia3
+        { ID=129; code=0 }; -- Gaia3
+        { ID=129; code=0 }; -- Gaia3
+        { ID=129; code=0 }; -- Gaia3
+        { ID=135; code=0 }; -- BigWave
+        { ID=135; code=0 }; -- BigWave
+        { ID=135; code=0 }; -- BigWave
+        { ID=135; code=0 }; -- BigWave
+        { ID=135; code=0 }; -- BigWave
+        { ID=168; code=0 }; -- ProtoMan V3
+        { ID=171; code=0 }; -- WoodMan V3
+        { ID=180; code=0 }; -- StoneMan V3
+        { ID=198; code=0 }; -- ElecMan V3
+        { ID=199; code=0 }; -- Bass
+    });
+end
+
 ---------------------------------------- Mega Modifications ----------------------------------------
 
 function game.set_buster_stats(power_level)
