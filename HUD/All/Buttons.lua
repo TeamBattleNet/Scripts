@@ -4,8 +4,6 @@ local buttons = {};
 
 local settings = require("All/Settings");
 
-settings.command_mode = false;
-
 buttons.keys = {};
 buttons.keys.held = {};
 buttons.keys.previous = {};
@@ -60,6 +58,7 @@ local function process_inputs_BN_HUD()
     buttons.down.A      = (buttons.held.A      and not buttons.previous.A     );
     buttons.down.L      = (buttons.held.L      and not buttons.previous.L     );
     buttons.down.R      = (buttons.held.R      and not buttons.previous.R     );
+    buttons.down.Power  = (buttons.held.Power  and not buttons.previous.Power );
     
     buttons.keys.down.Up           = (buttons.keys.held.Up           and not buttons.keys.previous.Up          );
     buttons.keys.down.Down         = (buttons.keys.held.Down         and not buttons.keys.previous.Down        );
