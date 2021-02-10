@@ -203,8 +203,13 @@ function hud.set_ws()
 end
 
 function hud.set_position(x, y)
-    hud.x0 = (x or 0) * ws;
-    hud.y0 = (y or 0) * ws;
+    if settings.use_gui_text then
+        hud.x0 = (x or 0) * ws;
+        hud.y0 = (y or 0) * ws;
+    else -- pixelText looks best in the corner
+        hud.x0 = 0;
+        hud.y0 = 0;
+    end
 end
 
 function hud.set_offset(x, y)
@@ -220,7 +225,10 @@ function hud.to_screen(text, x, y)
 end
 
 function hud.to_bottom_right_gui(text)
-    gui.text(2, 3 + hud.y*ys, text, 0xFFFFFFFF, "bottomright"); hud.y = hud.y + 1;
+    local x = 3;
+    local y = 3 + hud.y*ys;
+    gui.text(x, y, text, 0xFFFFFFFF, "bottomright");
+    hud.y = hud.y + 1;
 end
 
 function hud.to_bottom_right_pixel(text)

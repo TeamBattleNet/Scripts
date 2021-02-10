@@ -198,6 +198,7 @@ local function HUD_auto()
         hud.y=0;
         hud.to_bottom_right(hud.game.get_area_name_current());
     elseif hud.game.in_world() then
+        hud.set_position(2, 22);
         display_RNG();
         display_steps();
         if hud.game.near_number_doors() then
@@ -206,9 +207,9 @@ local function HUD_auto()
         hud.y=0;
         hud.to_bottom_right(hud.game.get_area_name_current());
     elseif hud.game.in_battle() or hud.game.in_game_over() then
+        hud.set_position(1, 17);
         display_draws(10);
-        hud.x=7;
-        hud.y=0;
+        hud.set_offset(8, 0);
         hud.to_screen(string.format("State: %6s", hud.game.get_battle_state_name()));
         hud.to_screen(string.format("Fight: 0x%4X", hud.game.get_battle_pointer()));
         display_RNG(true);
