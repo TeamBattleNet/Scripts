@@ -232,6 +232,8 @@ end
 
 ---------------------------------------- Miscellaneous ----------------------------------------
 
+--[[
+
 function game.get_max_HP()
     return memory.read_u16_le(world_HP_max);
 end
@@ -280,8 +282,6 @@ function game.add_battle_count(some_battles)
     return ram.set_battle_count(ram.get_battle_count() + some_battles);
 end
 
----------------------------------------- Miscellaneous ----------------------------------------
-
 function game.get_GMD_RNG()
     return memory.read_u32_le(GMD_RNG);
 end
@@ -298,21 +298,21 @@ function game.get_GMD_value()
     return memory.read_u32_le(GMD_value);
 end
 
+--]]
+
 function game.get_gamble_pick()
-    return memory.read_u8(gamble_pick);
+    return game.ram.get.gamble_pick();
 end
 
 function game.get_gamble_win()
-    return memory.read_u8(gamble_win);
+    return game.ram.get.gamble_win();
 end
 
 function game.is_gambling()
-    if game.ram.get.main_area() == 0x8C then -- Sub Comps
-        if game.ram.get.sub_area() == 0x02 or game.ram.get.sub_area() == 0x08 or game.ram.get.sub_area() == 0x0C then
-            return true; -- Vending Comp (SciLab) or TV Board Comp or Vending Comp (Hospital)
-        end
-    end
-    return false;
+    return game.ram.get.main_area() == 0x8C and -- Sub Comps
+          (game.ram.get.sub_area() == 0x02 or   -- Vending Comp (SciLab)
+           game.ram.get.sub_area() == 0x08 or   -- TV Board Comp
+           game.ram.get.sub_area() == 0x0C );   -- Vending Comp (Hospital)
 end
 
 function game.in_Secret_3()

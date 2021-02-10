@@ -14,6 +14,11 @@ ram.set.draw_slot = function(which_slot, folder_slot) memory.write_u8(ram.addr.b
 ram.get.fire_flags = function() return memory.read_u32_le(ram.addr.fire_flags); end;
 ram.set.fire_flags = function(fire_flags) memory.write_u32_le(ram.addr.fire_flags, fire_flags); end;
 
+ram.get.gamble_pick = function() return memory.read_u8(ram.addr.gamble_pick); end;
+ram.set.gamble_pick = function(gamble_pick) memory.write_u8(ram.addr.gamble_pick, gamble_pick); end;
+ram.get.gamble_win = function() return memory.read_u8(ram.addr.gamble_win); end;
+ram.set.gamble_win = function(gamble_win) memory.write_u8(ram.addr.gamble_win, gamble_win); end;
+
 ram.get.pack_ID = function(which_slot) return memory.read_u8(ram.addr.pack_ID+(0x20*which_slot)); end;
 ram.set.pack_ID = function(which_slot, chip_ID) memory.write_u8(ram.addr.pack_ID+(0x20*which_slot), chip_ID); end;
 ram.get.pack_code = function(which_slot) return memory.read_u8(ram.addr.pack_code+(0x20*which_slot)); end;

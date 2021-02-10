@@ -4,7 +4,7 @@
 
 local hud = require("All/HUD");
 
-hud.version = hud.version .. ".0.0";
+hud.version = hud.version .. ".0.1";
 
 hud.game = require("BN3/Game");
 
@@ -25,23 +25,6 @@ local function display_RNG(and_value)
     end
     hud.to_screen(string.format("L Index: %5s", (hud.game.get_lazy_RNG_index() or "?????")));
     hud.to_screen(string.format("L Delta: %5s", (hud.game.get_lazy_RNG_delta() or     "?")));
-end
-
-local function display_steps()
-    if hud.game.get_sneak() > 0 then
-        hud.to_screen(string.format("Sneak: %4u", hud.game.get_sneak()));
-    end
-    if hud.game.in_digital_world() then
-        hud.to_screen(string.format("Steps: %4u" , hud.game.get_steps()));
-        hud.to_screen(string.format("Check: %4u" , hud.game.get_check()));
-        hud.to_screen(string.format("Checks: %3u", hud.game.get_encounter_checks()));
-        hud.to_screen(string.format("A%%:%7.3f%%", hud.game.get_area_percent()));
-        hud.to_screen(string.format("C%%:%7.3f%%", hud.game.get_current_percent()));
-        hud.to_screen(string.format("N%%:%7.3f%%", hud.game.get_encounter_percent()));
-        hud.to_screen(string.format("Next: %2i"  , hud.game.get_next_check()));
-    end
-    hud.to_screen(string.format("X: %5i", hud.game.get_X()));
-    hud.to_screen(string.format("Y: %5i", hud.game.get_Y()));
 end
 
 local function display_enemy(which_enemy)
@@ -110,12 +93,16 @@ local function HUD_auto()
         hud.y = 0;
         hud.to_bottom_right(hud.game.get_area_name_current());
     elseif hud.game.in_world() then
-        display_RNG();
+        hud.display_main_RNG();
         hud.to_screen("");
-        display_steps();
+        hud.display_lazy_RNG();
+        hud.to_screen("");
         if hud.game.is_gambling() then
             hud.to_screen("Gamble  Win: " .. hud.game.get_gamble_win( ));
             hud.to_screen("Gamble Pick: " .. hud.game.get_gamble_pick());
+            hud.to_screen("");
+        else
+            hud.display_steps(true);
         end
         hud.y = 0;
         hud.to_bottom_right(hud.game.get_area_name_current());
