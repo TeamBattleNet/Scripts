@@ -77,6 +77,9 @@ ram.set.pack_code = function(which_slot, chip_code) memory.write_u8(ram.addr.pac
 ram.get.pack_quantity = function(which_slot) return memory.read_u8(ram.addr.pack_quantity+(0x20*which_slot)); end;
 ram.set.pack_quantity = function(which_slot, chip_quantity) memory.write_u8(ram.addr.pack_quantity+(0x20*which_slot), chip_quantity); end;
 
+ram.get.shop_cursor_offset = function() return memory.read_u8(ram.addr.shop_cursor_offset); end;
+ram.set.shop_cursor_offset = function(shop_cursor_offset) memory.write_u8(ram.addr.shop_cursor_offset, shop_cursor_offset); end;
+
 ram.get.title_star_byte = function() return memory.read_u8(ram.addr.title_star_byte); end;
 ram.set.title_star_byte = function(title_star_byte) memory.write_u8(ram.addr.title_star_byte, title_star_byte); end;
 

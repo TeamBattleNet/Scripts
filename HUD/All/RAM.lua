@@ -29,6 +29,9 @@ ram.set.sub_area = function(sub_area) memory.write_u8(ram.addr.sub_area, sub_are
 ram.get.battle_pointer = function() return memory.read_u16_le(ram.addr.battle_pointer); end;
 ram.set.battle_pointer = function(battle_pointer) memory.write_u16_le(ram.addr.battle_pointer, battle_pointer); end;
 
+ram.get.battle_mode = function() return memory.read_u8(ram.addr.battle_mode); end;
+ram.set.battle_mode = function(battle_mode) memory.write_u8(ram.addr.battle_mode, battle_mode); end;
+
 ram.get.battle_state = function() return memory.read_u8(ram.addr.battle_state); end;
 ram.set.battle_state = function(battle_state) memory.write_u8(ram.addr.battle_state, battle_state); end;
 

@@ -179,9 +179,9 @@ addresses.check                 = 0x020003F8; -- 4 bytes, steps at the last enco
 
 -- 1500 repair man
 
---addresses.                    = 0x02003710; -- ? byte TBD
---addresses.                    = 0x02003711; -- ? byte TBD
-addresses.battle_state          = 0x02003712; -- 1 byte 0x04 chip_menu/dead 0x08 transition 0x0C normal 0x10 PAUSE 
+--addresses.                    = 0x02003710; -- ? byte start of battle info
+addresses.battle_mode           = 0x02003711; -- 1 byte
+addresses.battle_state          = 0x02003712; -- 1 byte
 addresses.battle_turns          = 0x0200371C; -- 1 byte, number of custom gauge opens + 1
 addresses.chip_window_size      = 0x02003720; -- 1 byte, number of chips in the custom menu
 addresses.battle_paused_also    = 0x02003724; -- 1 byte, flag 0x08 (no effect on write)
@@ -263,6 +263,11 @@ addresses.text_box_state        = 0x02006350; -- multiple bytes, TBD
 addresses.number_door_display   = 0x02006353; -- bit flag, 0x20
 
 addresses.button_flags          = 0x020065F0; -- many bytes, many flags
+
+-- 6610 shop menu data
+addresses.shop_cursor_index     = 0x02006615; -- position + offset
+addresses.shop_cursor_position  = 0x02006616; -- 0x00 - 0x03
+addresses.shop_cursor_offset    = 0x02006619; -- 1 byte
 
 addresses.chip_cooldown         = 0x02006719; -- 1 byte, BstrBomb HYPE
 

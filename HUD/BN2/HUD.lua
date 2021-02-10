@@ -19,6 +19,9 @@ local function display_RNG(and_value)
 end
 
 local function display_steps()
+    if hud.game.get_sneak() > 0 then
+        hud.to_screen(string.format("Sneak: %5u", hud.game.get_sneak()));
+    end
     if hud.game.in_digital_world() then
         hud.to_screen(string.format("Steps: %4u" , hud.game.get_steps()));
         hud.to_screen(string.format("Check: %4u" , hud.game.get_check()));

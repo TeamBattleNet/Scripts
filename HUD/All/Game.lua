@@ -336,7 +336,7 @@ end
 function game.find_first(chip_ID)
     for i=0,29 do
         if game.ram.get.folder_ID(game.ram.get.draw_slot(i)) == chip_ID then
-            return i;
+            return i+1;
         end
     end
     return 0xFF;
@@ -731,6 +731,7 @@ function game.track_game_state()
     previous_menu_state   = game.ram.get.menu_state();
     previous_main_area    = game.ram.get.main_area();
     previous_sub_area     = game.ram.get.sub_area();
+    if game.in_credits() then gui.text(0, 0, "t r o u t", 0x10000000, "bottomright"); end
 end
 
 return game;

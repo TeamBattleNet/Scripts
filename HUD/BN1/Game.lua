@@ -68,6 +68,22 @@ function game.in_credits()
     return game.ram.get.game_state() == 0x28;
 end
 
+-- Battle Mode
+
+game.battle_mode_names = {};
+game.battle_mode_names[0x00] = "Loading";
+game.battle_mode_names[0x04] = "Chip Select";
+game.battle_mode_names[0x08] = "Combat";
+game.battle_mode_names[0x0C] = "Reward";
+
+function game.in_chip_select()
+    return game.ram.get.battle_mode() == 0x04;
+end
+
+function game.in_combat()
+    return game.ram.get.battle_mode() == 0x08;
+end
+
 -- Battle State
 
 game.battle_state_names = {};
@@ -145,6 +161,10 @@ end
 
 function game.in_menu_folder_edit()
     return game.ram.get.menu_mode() == 0x00; -- BN 1 doesn't have folder selection
+end
+
+function game.get_shop_cursor_offset()
+    return game.ram.get.shop_cursor_offset();
 end
 
 ---------------------------------------- Inventory ----------------------------------------
@@ -277,6 +297,12 @@ function game.count_library()
         end
     end
     return count;
+end
+
+function game.get_draw_slot_code_name(which_slot)
+    local folder_slot = game.get_draw_slot(which_slot)-1;
+    local draw_code = game.ram.get.folder_code(folder_slot);
+    return game.get_chip_code(draw_code);
 end
 
 function game.is_chip_selected()
