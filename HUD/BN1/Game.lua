@@ -339,6 +339,77 @@ function game.get_selected_code()
     return -1;
 end
 
+function game.custom_folder_dalus_special()
+    game.customize_folder_to(1, {
+        { ID= 34; code= 6 };
+        { ID= 34; code= 6 };
+        { ID= 34; code= 6 };
+        { ID= 34; code= 6 };
+        { ID= 34; code= 6 };
+        { ID= 34; code= 6 };
+        { ID= 34; code= 6 };
+        { ID= 34; code= 6 };
+        { ID= 34; code= 6 };
+        { ID= 34; code= 6 };
+        { ID= 31; code= 6 };
+        { ID= 31; code= 6 };
+        { ID= 31; code= 6 };
+        { ID= 31; code= 6 };
+        { ID= 31; code= 6 };
+        { ID= 31; code= 6 };
+        { ID= 31; code= 6 };
+        { ID= 31; code= 6 };
+        { ID= 31; code= 6 };
+        { ID= 31; code= 6 };
+        { ID=165; code= 6 };
+        { ID=165; code= 6 };
+        { ID=165; code= 6 };
+        { ID=165; code= 6 };
+        { ID=165; code= 6 };
+        { ID= 82; code= 5 };
+        { ID= 82; code= 7 };
+        { ID= 82; code= 9 };
+        { ID= 82; code=11 };
+        { ID= 82; code=13 };
+    });
+end
+
+function game.custom_folder_smog_special()
+    game.customize_folder_to(1, {
+        { ID=16; code=2 };
+        { ID=16; code=2 };
+        { ID=16; code=2 };
+        { ID=16; code=2 };
+        { ID=16; code=2 };
+        { ID=16; code=2 };
+        { ID=16; code=2 };
+        { ID=16; code=2 };
+        { ID=16; code=2 };
+        { ID=16; code=2 };
+        { ID=17; code=2 };
+        { ID=17; code=2 };
+        { ID=17; code=2 };
+        { ID=17; code=2 };
+        { ID=17; code=2 };
+        { ID=17; code=2 };
+        { ID=17; code=2 };
+        { ID=17; code=2 };
+        { ID=17; code=2 };
+        { ID=17; code=2 };
+        { ID=17; code=2 };
+        { ID=18; code=2 };
+        { ID=18; code=2 };
+        { ID=18; code=2 };
+        { ID=18; code=2 };
+        { ID=18; code=2 };
+        { ID=18; code=2 };
+        { ID=18; code=2 };
+        { ID=18; code=2 };
+        { ID=18; code=2 };
+        { ID=18; code=2 };
+    });
+end
+
 ---------------------------------------- Mega Modifications ----------------------------------------
 
 function game.set_buster_stats(power_level)

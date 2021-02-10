@@ -152,7 +152,7 @@ function hud.update()
             elseif buttons.down.A      or buttons.keys.down.Keypad0 then
                 controls.doit();
             end
-            if hud.ws >= 3 and settings.use_gui_text then
+            if hud.ws >= 4 and settings.use_gui_text then
                 hud.HUDs[hud.HUD_mode]();
             end
             hud.set_center(40, 3);

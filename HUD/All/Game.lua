@@ -487,45 +487,62 @@ function game.get_chip_code(code)
     return game.chips.codes[code] or "?";
 end
 
+function game.get_folder_text(which_folder)
+    local folder_text = "";
+    for which_slot=0,29 do
+        local ID   = game.ram.get.folder[which_folder].ID  (which_slot);
+        local code = game.ram.get.folder[which_folder].code(which_slot);
+        folder_text = string.format("%s{ ID=%3u; code=%2u }; -- %s %s\n", folder_text, ID, code, game.get_chip_name(ID), game.get_chip_code(code));
+    end
+    return folder_text;
+end
+
+function game.customize_folder_to(which_folder, chips)
+    for which_slot,chip in pairs(chips) do
+        game.ram.set.folder[which_folder].ID  (which_slot-1, chip.ID  );
+        game.ram.set.folder[which_folder].code(which_slot-1, chip.code);
+    end
+end
+
 function game.set_all_folder_ID_to(which_folder, chip_ID)
-    for which_chip=0,29 do
-        game.ram.set.folder[which_folder].ID(which_chip, chip_ID);
+    for which_slot=0,29 do
+        game.ram.set.folder[which_folder].ID(which_slot, chip_ID);
     end
 end
 
 function game.randomize_folder_IDs_standard(which_folder)
-    for which_chip=0,29 do
-        game.ram.set.folder[which_folder].ID(which_chip, game.chips.get_random_ID_standard());
+    for which_slot=0,29 do
+        game.ram.set.folder[which_folder].ID(which_slot, game.chips.get_random_ID_standard());
     end
 end
 
 function game.randomize_folder_IDs_mega(which_folder)
-    for which_chip=0,29 do
-        game.ram.set.folder[which_folder].ID(which_chip, game.chips.get_random_ID_mega());
+    for which_slot=0,29 do
+        game.ram.set.folder[which_folder].ID(which_slot, game.chips.get_random_ID_mega());
     end
 end
 
 function game.randomize_folder_IDs_all_chips(which_folder)
-    for which_chip=0,29 do
-        game.ram.set.folder[which_folder].ID(which_chip, game.chips.get_random_ID_all_chips());
+    for which_slot=0,29 do
+        game.ram.set.folder[which_folder].ID(which_slot, game.chips.get_random_ID_all_chips());
     end
 end
 
 function game.randomize_folder_IDs_anything(which_folder)
-    for which_chip=0,29 do
-        game.ram.set.folder[which_folder].ID(which_chip, game.chips.get_random_ID_all());
+    for which_slot=0,29 do
+        game.ram.set.folder[which_folder].ID(which_slot, game.chips.get_random_ID_all());
     end
 end
 
 function game.set_all_folder_code_to(which_folder, chip_code)
-    for which_chip=0,29 do
-        game.ram.set.folder[which_folder].code(which_chip, chip_code);
+    for which_slot=0,29 do
+        game.ram.set.folder[which_folder].code(which_slot, chip_code);
     end
 end
 
 function game.randomize_folder_codes(which_folder)
-    for which_chip=0,29 do
-        game.ram.set.folder[which_folder].code(which_chip, game.chips.get_random_code());
+    for which_slot=0,29 do
+        game.ram.set.folder[which_folder].code(which_slot, game.chips.get_random_code());
     end
 end
 

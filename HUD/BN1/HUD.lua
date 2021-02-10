@@ -179,6 +179,7 @@ local function HUD_auto()
     elseif hud.game.in_battle() or hud.game.in_game_over() then
         hud.set_position(1, 17);
         if not hud.game.in_combat() then
+            hud.set_position(1, 25);
             hud.display_draws(10);
             if hud.game.in_chip_select() then
                 hud.display_draw_codes();
@@ -219,15 +220,14 @@ table.insert(hud.HUDs, HUD_speedrun);
 ---------------------------------------- Module Controls ----------------------------------------
 
 function hud.Up()
-    -- should be overridden per game
+    print("\n" .. hud.game.get_folder_text(1));
 end
 
 function hud.Down()
-    -- should be overridden per game
+    print("\n" .. hud.game.get_draw_slots_text_multi_line());
 end
 
 function hud.B()
-    print("\n" .. hud.game.get_draw_slots_text_multi_line());
     print("\n" .. hud.game.get_draw_slots_text_one_line());
 end
 

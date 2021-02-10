@@ -55,8 +55,13 @@ command_battle.options = {
     { value = function() commands.game.kill_enemy(1);     end; text = "Delete Enemy 1"   ; };
     { value = function() commands.game.kill_enemy(2);     end; text = "Delete Enemy 2"   ; };
     { value = function() commands.game.kill_enemy(3);     end; text = "Delete Enemy 3"   ; };
-    { value = function() commands.game.draw_only_slot(0); end; text = "Draw Only Slot 1" ; };
-    { value = function() commands.game.draw_in_order();   end; text = "Draw In Order"    ; };
+    { value = function() commands.game.draw_in_order();   end; text = "Draw Slots: In Order" ; };
+    { value = function() commands.game.draw_only_slot(0); end; text = "Draw Slots: Always 1" ; };
+    { value = function() commands.game.set_all_folder_code_to(1,     0); end; text = "Folder: Monocode A Folder"      ; };
+    { value = function() commands.game.randomize_folder_codes(1       ); end; text = "Folder: Randomize Folder Codes" ; };
+    { value = function() commands.game.randomize_folder_IDs_standard(1); end; text = "Folder: Randomize Folder IDs"   ; };
+    { value = function() commands.game.custom_folder_dalus_special(   ); end; text = "Folder: The Dalus_EXE Special"  ; };
+    { value = function() commands.game.custom_folder_smog_special(    ); end; text = "Folder: The SmogBN Special"     ; };
 };
 command_battle.doit = function(value) value(); end;
 table.insert(commands.commands, command_battle);
@@ -77,7 +82,6 @@ function command_items.update_options(option_value)
         table.insert( command_items.options, { value = 3; text = "HPMemory"    ; } );
         table.insert( command_items.options, { value = 4; text = "Equipment"   ; } );
         table.insert( command_items.options, { value = 5; text = "IceBlock"    ; } );
-        table.insert( command_items.options, { value = 6; text = "Chip Folders"; } );
     else
         command_items.sub_selection = command_items.selection;
         command_items.selection = 1;
@@ -119,15 +123,6 @@ function command_items.update_options(option_value)
             table.insert( command_items.options, { value =  -1; text = "Take  1"; } );
             table.insert( command_items.options, { value = -53; text = "Take 53"; } );
             command_items.FUNction = function(value) commands.game.add_IceBlocks(value); end;
-        elseif option_value == 6 then
-            command_items.description = function() return string.format("Customize or Randomize!"); end;
-            table.insert( command_items.options, { value = function() commands.game.set_all_folder_code_to(1,0);      end; text = "Monocode A Folder"     ; } );
-            table.insert( command_items.options, { value = function() commands.game.randomize_folder_codes(1);        end; text = "Randomize Folder Codes"; } );
-            table.insert( command_items.options, { value = function() commands.game.randomize_folder_IDs_standard(1); end; text = "Randomize Folder IDs"  ; } );
-            table.insert( command_items.options, { value = function() commands.game.set_all_folder_ID_to(1,109);      end; text = "Only Draw BstrBomb"    ; } );
-            table.insert( command_items.options, { value = function() commands.game.set_all_folder_ID_to(1,102);      end; text = "Only Draw Invis3"      ; } );
-            table.insert( command_items.options, { value = function() commands.game.set_all_folder_ID_to(1, 33);      end; text = "Only Draw HeroSwrd"    ; } );
-            command_items.FUNction = function(value) value(); end;
         else
             command_items.description = function() return "Bzzt! (something broke)"; end;
         end
