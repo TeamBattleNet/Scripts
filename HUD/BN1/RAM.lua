@@ -8,9 +8,6 @@ ram.version_name = ram.addr.version_name;
 
 ------------------------------ Getters & Setters ------------------------------
 
--- ram.get = {}; -- defined in All/RAM
--- ram.set = {}; -- defined in All/RAM
-
 ram.get.armor_heat = function() return memory.read_u8(ram.addr.armor_heat); end;
 ram.set.armor_heat = function(armor_heat) memory.write_u8(ram.addr.armor_heat, armor_heat); end;
 ram.get.armor_aqua = function() return memory.read_u8(ram.addr.armor_aqua); end;
@@ -112,13 +109,13 @@ function ram.initialize(options)
     ram.main_RNG_table = ram.create_RNG_table(0xA338244F, options.maximum_RNG_index);
 end
 
-function ram.update_pre(options)
+function ram.pre_update(options)
     ram.use_fun_flags(options.fun_flags);
     ram.use_fun_flags_common(options.fun_flags);
     ram.expand_RNG_table(ram.main_RNG_table);
 end
 
-function ram.update_post(options)
+function ram.post_update(options)
     ram.previous_main_RNG_value = ram.get.main_RNG_value();
 end
 

@@ -173,7 +173,6 @@ end);
 
 setups.add_setup(group_folders, "Folder 3: NumberMan", function()
     setups.folder_edit_buttons({
-        {A=true};
         {R=true};
         {Down=true};
         {A=true};
@@ -278,7 +277,7 @@ setups.add_setup(group_folders, "Folder 5: StoneMan", function()
     });
 end);
 
-setups.add_setup(group_folders, "Folder 6: StoneMan", function()
+setups.add_setup(group_folders, "Folder 6: SkullMan", function()
     setups.folder_edit_buttons({
         {A=true};
         {R=true};

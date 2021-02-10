@@ -611,6 +611,10 @@ function game.get_encounter_checks()
 end
 
 local function track_encounter_checks()
+    if game.did_area_change() then
+        print(string.format("\nArea Odds Were: %7.3f%%", game.get_area_percent()));
+        print(string.format("Inverted  Odds: %7.3f%%", 100-game.get_area_percent()));
+    end
     if game.in_world() then
         if game.get_check() < last_encounter_check then
             last_encounter_check = 0;
@@ -685,11 +689,11 @@ end
 
 ---------------------------------------- Module Controls ----------------------------------------
 
-function game.update_pre(options)
+function game.pre_update(options)
     -- should be overridden per game
 end
 
-function game.update_post(options)
+function game.post_update(options)
     -- should be overridden per game
 end
 

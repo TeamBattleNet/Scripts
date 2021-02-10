@@ -19,14 +19,14 @@ end
 
 function hud.display_draw_codes()
     for i=1,math.min(hud.game.ram.get.chip_window_size(), 15) do
-        hud.to_screen(hud.game.get_draw_slot_code_name(i), 13+16*((i-1)%5), 101+(16*math.floor((i-1)/5)));
+        hud.to_pixel(16+16*((i-1)%5), 105+(16*math.floor((i-1)/5)), hud.game.get_draw_slot_code_name(i));
     end
 end
 
 local function display_shop_menu_slots()
     if true or settings.use_gui_text then
         for i=1,4 do
-            hud.to_screen(string.format("%2i", hud.game.get_shop_cursor_offset()+i), 3, 4+16*i);
+            hud.to_pixel(9, 9+16*i, string.format("%2i", hud.game.get_shop_cursor_offset()+i));
         end
     end
 end
@@ -34,11 +34,11 @@ end
 local function display_edit_slots()
     if hud.game.in_folder() then
         for i=1,7 do
-            hud.to_screen(string.format("%2i", hud.game.get_cursor_offset_folder()+i), 107, 21+16*i);
+            hud.to_pixel(110, 24+16*i, string.format("%2i", hud.game.get_cursor_offset_folder()+i));
         end
     elseif hud.game.in_pack() then
         for i=1,7 do
-            hud.to_screen(string.format("%3i", hud.game.get_cursor_offset_pack()+i), 4, 20+16*i);
+            hud.to_pixel(13, 24+16*i, string.format("%3i", hud.game.get_cursor_offset_pack()+i));
         end
     end
 end
@@ -51,9 +51,11 @@ local function display_selected_chip()
         local selected_name = hud.game.get_chip_name(selected_ID);
         local selected_code = hud.game.get_chip_code(hud.game.get_selected_code());
         if hud.game.in_folder() then
-            gui.pixelText(120, 13, string.format("In %6s %3i:\n%3i %8s %s", location, slot, selected_ID, selected_name, selected_code));
+            hud.to_pixel(161, 18, string.format("In %6s %3i:", location, slot));
+            hud.to_pixel(161, 27, string.format("%3i %8s %s", selected_ID, selected_name, selected_code));
         elseif hud.game.in_pack() then
-            gui.pixelText( 24, 13, string.format("In %6s %3i:\n%3i %8s %s", location, slot, selected_ID, selected_name, selected_code));
+            hud.to_pixel(65, 18, string.format("In %6s %3i:", location, slot));
+            hud.to_pixel(65, 27, string.format("%3i %8s %s", selected_ID, selected_name, selected_code));
         end
     end
 end
@@ -125,7 +127,7 @@ local function HUD_speedrun()
 end
 
 local function HUD_routing()
-    hud.set_center(54, 32); -- 52 characters
+    hud.set_center(54, 2);
     hud.to_screen("0000: " .. hud.game.get_string_hex(   0x02000000, 16, true));
     hud.to_screen("0010: " .. hud.game.get_string_hex(   0x02000010, 16, true));
     hud.to_screen("0000: " .. hud.game.get_string_binary(0x02000000,  4, true));
@@ -201,6 +203,7 @@ local function HUD_auto()
         display_player_info();
         display_shop_menu_slots();
     elseif hud.game.in_chip_trader() then
+        hud.set_position(105, 1);
         hud.display_RNG(true);
     else
         hud.to_screen("Unknown Game State!");

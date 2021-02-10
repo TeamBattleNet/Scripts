@@ -8,9 +8,6 @@ ram.version_name = ram.addr.version_name;
 
 ------------------------------ Getters & Setters ------------------------------
 
--- ram.get = {}; -- defined in All/RAM
--- ram.set = {}; -- defined in All/RAM
-
 ram.get.draw_slot = function(which_slot) return memory.read_u8(ram.addr.battle_draw_slots+which_slot); end;
 ram.set.draw_slot = function(which_slot, folder_slot) memory.write_u8(ram.addr.battle_draw_slots+which_slot, folder_slot); end;
 
@@ -54,14 +51,14 @@ function ram.initialize(options)
     ram.lazy_RNG_table = ram.create_RNG_table(0x873CA9E4, options.maximum_RNG_index);
 end
 
-function ram.update_pre(options)
+function ram.pre_update(options)
     ram.use_fun_flags(options.fun_flags);
     ram.use_fun_flags_common(options.fun_flags);
     ram.expand_RNG_table(ram.main_RNG_table);
     ram.expand_RNG_table(ram.lazy_RNG_table);
 end
 
-function ram.update_post(options)
+function ram.post_update(options)
     ram.previous_main_RNG_value = ram.get.main_RNG_value();
     ram.previous_lazy_RNG_value = ram.get.lazy_RNG_value();
 end

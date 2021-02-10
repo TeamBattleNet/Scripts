@@ -4,15 +4,20 @@ local hud = { game={}; version="0.5"; };
 
 local settings = require("All/Settings");
 
-hud.x = 0;
-hud.y = 0;
+-- top left positioning
 hud.x0 = 0;
 hud.y0 = 0;
 
+-- character offset
+hud.x = 0;
+hud.y = 0;
+
+-- scaling multipliers
 hud.ws = 1;
 hud.xs = 0;
 hud.ys = 0;
 
+-- global display settings
 settings.use_gui_text = true;
 settings.pixel_background_color = 0x80000000;
 
@@ -25,20 +30,20 @@ end
 
 function settings.set_display_text(font)
     if     font == "gui" then
-        hud.xs = 10;
-        hud.ys = 13+3;
+        hud.xs = 10; ---- 5 10 15 20 25 xs = 5*ws
+        hud.ys = 13+3; -- 8 16 24 32 40 ys = 8*ws
         hud.show_text = gui.text;
         settings.use_gui_text = true;
     elseif font == "gens" then
-        hud.xs =  4;
-        hud.ys =  7;
+        hud.xs =  4; ---- 4  8 12 16 20
+        hud.ys =  7; ---- 7 14 21 28 35
         hud.show_text = gui.pixelText;
         settings.use_gui_text = false;
         gui.defaultPixelFont("gens");
         gui.defaultTextBackground(settings.pixel_background_color);
     elseif font == "fceux" then
-        hud.xs =  6;
-        hud.ys =  9;
+        hud.xs =  6; ---- 6 12 18 24 30
+        hud.ys =  9; ---- 9 18 27 36 45
         hud.show_text = gui.pixelText;
         settings.use_gui_text = false;
         gui.defaultPixelFont("fceux");
@@ -47,21 +52,12 @@ function settings.set_display_text(font)
 end
 
 function hud.set_ws()
-    if settings.use_gui_text then
-        hud.ws = client.getwindowsize(); -- Screen is GBA * ws
-    else
-        hud.ws = 1; -- gui.pixelText draws before window scaling
-    end
+    hud.ws = client.getwindowsize(); -- screen space is GBA * ws
 end
 
 function hud.set_position(x, y)
-    if settings.use_gui_text then
-        hud.x0 = (x or 2) * hud.ws;
-        hud.y0 = (y or 1) * hud.ws;
-    else -- pixelText looks best in the corner
-        hud.x0 = 0;
-        hud.y0 = 0;
-    end
+    hud.x0 = (x or 2) * hud.ws;
+    hud.y0 = (y or 1) * hud.ws;
 end
 
 function hud.set_offset(x, y)
@@ -69,19 +65,29 @@ function hud.set_offset(x, y)
     hud.y = y or 0;
 end
 
-function hud.set_center(characters, y)
-    hud.x = 0;
-    hud.y = 0;
-    hud.y0 = settings.use_gui_text and y or 0;
-    hud.x0 = ((240 * hud.ws) - (characters*hud.xs)) / 2;
+function hud.set_center(x, y) -- TODO: Also center pixel fonts
+    hud.x  = 0;
+    hud.y  = 0;
+    hud.y0 = y * hud.ys;
+    hud.x0 = ((240 * hud.ws) - (x * hud.xs)) / 2;
 end
 
-function hud.to_screen(text, x, y)
-    x = (x and x*hud.ws) or (hud.x0 + hud.x*hud.xs);
-    y = (y and y*hud.ws) or (hud.y0 + hud.y*hud.ys);
+function hud.to_pixel(x, y, text)
     if settings.use_gui_text then
-        --x = x + 3*(hud.ws-2)*string.len(text);
-        --y = y + 4*(hud.ws-2);
+        x = x * hud.ws;
+        y = y * hud.ws;
+    end
+    x = x - (hud.xs / 2) * string.len(text);
+    y = y - (hud.ys / 2);
+    hud.show_text(x, y, text);
+end
+
+function hud.to_screen(text)
+    local x = hud.x * hud.xs;
+    local y = hud.y * hud.ys;
+    if settings.use_gui_text then
+        x = x + hud.x0;
+        y = y + hud.y0;
     end
     hud.show_text(x, y, text);
     hud.y = hud.y + 1;
@@ -89,14 +95,14 @@ end
 
 function hud.to_bottom_right_gui(text)
     local x = 3;
-    local y = 3 + hud.y*hud.ys;
+    local y = 3 + hud.y * hud.ys;
     gui.text(x, y, text, 0xFFFFFFFF, "bottomright");
     hud.y = hud.y + 1;
 end
 
 function hud.to_bottom_right_pixel(text)
     local x = 239 - ( hud.xs * string.len(text) );
-    local y = 160 - ( hud.ys * (hud.y+1) );
+    local y = 160 - ( hud.ys * (hud.y + 1) );
     gui.pixelText(x, y, text); -- GBA is 240x160
     hud.y = hud.y + 1;
 end
@@ -109,14 +115,9 @@ function hud.to_bottom_right(text)
     end
 end
 
-function hud.display_commands()
-    if settings.use_gui_text and hud.ws >= 3 then
-        hud.HUDs[hud.HUD_mode]();
-    end
-    hud.set_center(40, 32);
-    local options = controls.get_options();
-    for i=1,table.getn(options) do
-        hud.to_screen(options[i]);
+function hud.display_strings(strings)
+    for i,string in pairs(strings) do
+        hud.to_screen(string);
     end
 end
 
@@ -159,7 +160,7 @@ function hud.display_steps(detailed)
         hud.to_screen(string.format("Checks: %4u", hud.game.get_encounter_checks()));
         if detailed then
             hud.to_screen(string.format("A%%: %7.3f%%", hud.game.get_area_percent()));
-            hud.to_screen(string.format("T%%: %7.3f%%", hud.game.get_current_percent()));
+            hud.to_screen(string.format("C%%: %7.3f%%", hud.game.get_current_percent()));
         end
         hud.to_screen(string.format("E%%: %7.3f%%", hud.game.get_encounter_percent()));
         hud.to_screen(string.format("Next: %2i"  , hud.game.get_next_check()));

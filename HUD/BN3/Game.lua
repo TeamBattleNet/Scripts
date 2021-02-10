@@ -328,14 +328,14 @@ function game.initialize(options)
     game.ram.initialize(options);
 end
 
-function game.update_pre(options)
+function game.pre_update(options)
     options.fun_flags = game.fun_flags;
-    game.ram.update_pre(options);
+    game.ram.pre_update(options);
 end
 
-function game.update_post(options)
+function game.post_update(options)
     game.track_game_state();
-    game.ram.update_post(options);
+    game.ram.post_update(options);
 end
 
 return game;

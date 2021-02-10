@@ -40,8 +40,8 @@ end
 
 function setups.press_buttons(frames, text, buttons)
     for i=1,frames do
-        gui.pixelText(0, 0, string.format("%-22s", text));
-        gui.pixelText(0, 9, string.format("Frames Remaining: %4i", frames-i));
+        gui.text(2,  2, string.format("%-22s", text));
+        gui.text(2, 18, string.format("Frames Remaining: %4i", frames-i));
         setups.these_buttons = buttons or {};
         emu.frameadvance();
     end

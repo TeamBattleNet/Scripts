@@ -21,11 +21,6 @@ command_menu.options = {
     { value = function() settings.set_text_background(0x80000000); end; text = "Font Background: Half" ; };
     { value = function() settings.set_text_background(0xC0000000); end; text = "Font Background: Dark" ; };
     { value = function() settings.set_text_background(0xFF000000); end; text = "Font Background: Solid"; };
-    { value = function() client.setwindowsize(1); end; text = "Set Window Size to 1x"; };
-    { value = function() client.setwindowsize(2); end; text = "Set Window Size to 2x"; };
-    { value = function() client.setwindowsize(3); end; text = "Set Window Size to 3x"; };
-    { value = function() client.setwindowsize(4); end; text = "Set Window Size to 4x"; };
-    { value = function() client.setwindowsize(5); end; text = "Set Window Size to 5x"; };
 };
 command_menu.doit = function(value) value(); end;
 table.insert(commands, command_menu);

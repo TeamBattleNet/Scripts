@@ -1,30 +1,28 @@
 -- HUD Script for the Mega Man Battle Network series, enjoy.
 
--- In HUD Mode  - Hold L and R then press:
--- Start        - to toggle HUD on/off
--- Select       - to turn Command Mode on
--- Left / Right - to change display mode
--- Up / Down    - to change mode specific values
--- A            - to print inputs from the last folder edit
--- B            - to print game specific information
+-- In HUD Mode   -  Hold L and R then press:
+-- Start         -  to toggle HUD on/off
+-- Select        -  to turn Command Mode on
+-- Left / Right  -  to change display mode
+-- Up / Down     -  to change mode specific values
+-- A             -  to print inputs from the last folder edit
+-- B             -  to print game specific information
 
--- Command Mode - On Controller Press:
--- Select       - to turn Command Mode off
--- Left / Right - to change Command
--- Up / Down    - to change Options
--- B            - to activate the Command Option
--- A            - to activate the Command Option
+-- Command Mode  -  On Controller Press:
+-- Select        -  to turn Command Mode off
+-- Left / Right  -  to change Command
+-- Up / Down     -  to change Options
+-- A / B         -  to activate the Command Option
 
--- Command Mode - On Keyboard Press:
--- KeypadPeriod - to toggle Command Mode off
--- Left / Right - to change Command
--- Up / Down    - to change Options
--- Tab          - to activate the Command Option
--- Keypad0      - to activate the Command Option
-
--- Special thanks to Prof9, GreigaMaster, NMarkro, Risch, Mountebank, TL_Plexa, TREZ, and TeamBN
+-- Command Mode  -  On Keyboard Press:
+-- KeypadPeriod  -  to toggle Command Mode off
+-- Left / Right  -  to change Command
+-- Up / Down     -  to change Options
+-- Tab / Keypad0 -  to activate the Command Option
 
 -- https://drive.google.com/drive/folders/1NjYy8mXjc-B06gpng1D2WzWJT4waQAFV "The Notes"
+
+-- Special thanks to Prof9, GreigaMaster, NMarkro, Risch, Mountebank, TL_Plexa, TREZ, and TeamBN
 
 local hud = require("All/Display");
 
@@ -89,11 +87,11 @@ table.insert(hud.HUDs, function() hud.to_screen("HUD Version: " .. hud.version);
 ---------------------------------------- HUD Controls ----------------------------------------
 
 function hud.Up()
-    -- should be overridden per game
+    -- should be overridden per HUD
 end
 
 function hud.Down()
-    -- should be overridden per game
+    -- should be overridden per HUD
 end
 
 function hud.Left()
@@ -125,9 +123,8 @@ local show_HUD = true;
 settings.command_mode = false;
 
 function hud.update()
-    local options = {};
-    hud.game.update_pre(options);
     record_menu_buttons();
+    hud.game.pre_update({});
     
     if buttons.held.L and buttons.held.R then
         if buttons.down.Start then
@@ -136,9 +133,6 @@ function hud.update()
     end
     
     if show_HUD then
-        hud.set_ws();
-        hud.set_offset();
-        hud.set_position();
         if settings.command_mode then
             if     buttons.down.Select or buttons.keys.down.KeypadPeriod then
                 settings.command_mode = false;
@@ -155,7 +149,8 @@ function hud.update()
             elseif buttons.down.A      or buttons.keys.down.Keypad0 then
                 controls.doit();
             end
-            hud.display_commands();
+            hud.set_center(40, 2);
+            hud.display_strings(controls.get_options());
         else
             if buttons.held.L and buttons.held.R then
                 if     buttons.down.Select then
@@ -186,6 +181,9 @@ function hud.update()
                     hud.Right();
                 end
             end
+            hud.set_ws();
+            hud.set_offset();
+            hud.set_position();
             hud.HUDs[hud.HUD_mode]();
         end
     end
@@ -194,7 +192,7 @@ function hud.update()
         buttons_string = "";
     end
     
-    hud.game.update_post(options);
+    hud.game.post_update({});
     
     hud.update_local_state();
 end
