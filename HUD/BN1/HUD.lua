@@ -68,8 +68,8 @@ local function HUD_speedrun()
         hud.display_draws(10);
         hud.x=6;
         hud.y=1;
-        hud.to_screen(string.format(" Escape:   %2i", hud.game.find_first(82)));
-        hud.to_screen(string.format(" Quake3:   %2i", hud.game.find_first(24)));
+        hud.to_screen(string.format(" Escape:  %3i", hud.game.find_first(82)));
+        hud.to_screen(string.format(" Quake3:  %3i", hud.game.find_first(24)));
         hud.to_screen(string.format(" Index: %5s", (hud.game.get_main_RNG_index() or "?????")));
         hud.to_screen(string.format(" Delta: %2s", (hud.game.get_main_RNG_delta() or     "?")));
         hud.to_screen(string.format(" Check: %2u", hud.game.get_encounter_checks()));

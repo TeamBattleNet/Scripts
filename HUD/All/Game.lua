@@ -305,7 +305,7 @@ end
 
 function game.find_first(chip_ID)
     for i=0,29 do
-        if game.ram.get.folder_ID(game.ram.get.draw_slot(i)) == chip_ID then
+        if game.ram.get.folder[1].ID(game.ram.get.draw_slot(i)) == chip_ID then
             return i+1;
         end
     end
