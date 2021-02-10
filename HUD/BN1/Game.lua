@@ -14,9 +14,8 @@ game.fun_flags = {}; -- set in Commands, used in RAM
 
 ---------------------------------------- Game State ----------------------------------------
 
--- Game State
+-- Game Mode
 
-game.game_state_names = {};                    -- skip 2 bits, add 1
 game.game_state_names[0x00] = "Title";         -- or BIOS
 game.game_state_names[0x04] = "World";         -- real and digital
 game.game_state_names[0x08] = "Battle";
@@ -70,7 +69,6 @@ end
 
 -- Battle Mode
 
-game.battle_mode_names = {};
 game.battle_mode_names[0x00] = "Loading";
 game.battle_mode_names[0x04] = "Chip Select";
 game.battle_mode_names[0x08] = "Combat";
@@ -86,7 +84,6 @@ end
 
 -- Battle State
 
-game.battle_state_names = {};
 game.battle_state_names[0x00] = "Loading";
 game.battle_state_names[0x04] = "Busy";
 game.battle_state_names[0x08] = "Transition";
@@ -95,24 +92,7 @@ game.battle_state_names[0x10] = "PAUSE";
 game.battle_state_names[0x14] = "Time Stop";
 game.battle_state_names[0x18] = "Opening Custom";
 
--- Menu State
-
-game.folder_state_names = {};
-game.folder_state_names[0x04] = "Editing";
-game.folder_state_names[0x14] = "Sorting";
-game.folder_state_names[0x10] = "To Pack";
-game.folder_state_names[0x0C] = "To Folder";
-game.folder_state_names[0x08] = "Exiting";
-
-function game.in_folder()
-    return game.ram.get.folder_to_pack() == 0x20;
-end
-
-function game.in_pack()
-    return game.ram.get.folder_to_pack() == 0x02;
-end
-
--- Menu Mode Overrides (unique due to lack of subchips or multiple folders)
+-- Menu Mode
 
 game.menu_mode_names[0x00] = "Folder";
 game.menu_mode_names[0x04] = "Library";
@@ -124,15 +104,19 @@ game.menu_mode_names[0x18] = "Save";
 game.menu_mode_names[0x20] = "Unused";
 
 function game.in_menu_folder()
-    return game.ram.get.menu_mode() == 0x00; -- BN 1 doesn't have folder selection
+    return game.ram.get.menu_mode() == 0x00;
 end
 
 function game.in_menu_folder_select()
-    return game.ram.get.menu_mode() == 0x00; -- BN 1 doesn't have folder selection
+    return game.ram.get.menu_mode() == 0x00;
+end
+
+function game.in_menu_folder_edit()
+    return game.ram.get.menu_mode() == 0x00;
 end
 
 function game.in_menu_subchips()
-    return false; -- BN 1 doesn't have subchips
+    return false; -- Only BN 1 doesn't have subchips
 end
 
 function game.in_menu_library()
@@ -159,12 +143,24 @@ function game.in_menu_save()
     return game.ram.get.menu_mode() == 0x18;
 end
 
-function game.in_menu_folder_edit()
-    return game.ram.get.menu_mode() == 0x00; -- BN 1 doesn't have folder selection
-end
-
 function game.get_shop_cursor_offset()
     return game.ram.get.shop_cursor_offset();
+end
+
+-- Menu State
+
+game.menu_state_names[0x04] = "Editing";
+game.menu_state_names[0x14] = "Sorting";
+game.menu_state_names[0x10] = "To Pack";
+game.menu_state_names[0x0C] = "To Folder";
+game.menu_state_names[0x08] = "Exiting";
+
+function game.in_folder()
+    return game.ram.get.folder_to_pack() == 0x20;
+end
+
+function game.in_pack()
+    return game.ram.get.folder_to_pack() == 0x02;
 end
 
 ---------------------------------------- Inventory ----------------------------------------
@@ -400,7 +396,8 @@ function game.set_door_code(new_door_code)
 end
 
 function game.near_number_doors() -- NumberMan Scenario or WWW Comp 2
-    return (0x12 <= game.get_progress() and game.get_progress() <= 0x15) or (game.get_main_area() == 0x85 and game.get_sub_area() == 0x01);
+    return (0x12 <=  game.get_progress() and game.get_progress() <= 0x15)
+        or (game.get_main_area() == 0x85 and game.get_sub_area() == 0x01);
 end
 
 ---------------------------------------- Module Controls ----------------------------------------
