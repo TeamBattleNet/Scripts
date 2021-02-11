@@ -386,8 +386,15 @@ end
 ---------------------------------------- RAMsacking ----------------------------------------
 
 function ram.bit_blast(addr, value)
-    print(string.format("Writing 0x%02X to 0x%08X!", value, addr));
+    print(string.format("Changing 0x%08X from 0x%02X to 0x%02X!", addr, memory.read_u8(addr), value));
     memory.write_u8(addr, value);
+end
+
+function ram.bit_adder(addr, some_value)
+    some_value = some_value or 1;
+    local value = memory.read_u8(addr);
+    print(string.format("Changing 0x%08X from 0x%02X to 0x%02X!", addr, value, value+some_value));
+    memory.write_u8(addr, value+some_value);
 end
 
 function ram.bit_blaster(addr_range, offset)

@@ -10,8 +10,6 @@ game.chips    = require("BN1/Chips"   );
 game.enemies  = require("BN1/Enemies" );
 game.progress = require("BN1/Progress");
 
-local settings = require("All/Settings");
-
 game.fun_flags = {}; -- set in Commands, used in RAM
 
 ---------------------------------------- Game State ----------------------------------------
@@ -519,6 +517,8 @@ function game.title_screen_A()
 end
 
 ---------------------------------------- Module Controls ----------------------------------------
+
+local settings = require("All/Settings");
 
 function game.initialize(options)
     settings.set_display_text("gui"); -- TODO: Remove when gui.text fully supported
