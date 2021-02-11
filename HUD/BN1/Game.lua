@@ -339,8 +339,8 @@ function game.get_selected_code()
     return -1;
 end
 
-function game.custom_folder_dalus_special()
-    game.customize_folder_to(1, {
+function game.overwrite_folder_dalus_special()
+    game.overwrite_folder_to(1, {
         { ID= 34; code= 6 };
         { ID= 34; code= 6 };
         { ID= 34; code= 6 };
@@ -374,8 +374,8 @@ function game.custom_folder_dalus_special()
     });
 end
 
-function game.custom_folder_smog_special()
-    game.customize_folder_to(1, {
+function game.overwrite_folder_smog_special()
+    game.overwrite_folder_to(1, {
         { ID=16; code=2 };
         { ID=16; code=2 };
         { ID=16; code=2 };
@@ -410,8 +410,8 @@ function game.custom_folder_smog_special()
     });
 end
 
-function game.custom_folder_press_a()
-    game.customize_folder_to(1, {
+function game.overwrite_folder_press_a()
+    game.overwrite_folder_to(1, {
         { ID=119; code=0 }; -- FstGauge
         { ID= 76; code=0 }; -- Steal
         { ID= 76; code=0 }; -- Steal

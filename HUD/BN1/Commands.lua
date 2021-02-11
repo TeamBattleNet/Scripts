@@ -57,12 +57,12 @@ command_battle.options = {
     { value = function() commands.game.kill_enemy(3);     end; text = "Delete Enemy 3"   ; };
     { value = function() commands.game.draw_in_order();   end; text = "Draw Slots: In Order" ; };
     { value = function() commands.game.draw_only_slot(0); end; text = "Draw Slots: Always 1" ; };
-    { value = function() commands.game.set_all_folder_code_to(1,     0); end; text = "Folder: Monocode A Folder"      ; };
-    { value = function() commands.game.randomize_folder_codes(1       ); end; text = "Folder: Randomize Folder Codes" ; };
-    { value = function() commands.game.randomize_folder_IDs_standard(1); end; text = "Folder: Randomize Folder IDs"   ; };
-    { value = function() commands.game.custom_folder_dalus_special(   ); end; text = "Folder: The Dalus_EXE Special"  ; };
-    { value = function() commands.game.custom_folder_smog_special(    ); end; text = "Folder: The SmogBN Special"     ; };
-    { value = function() commands.game.custom_folder_press_a(         ); end; text = "Folder: Just PressA"            ; };
+    { value = function() commands.game.set_all_folder_code_to(       1, 0); end; text = "Folder: Monocode A Folder"      ; };
+    { value = function() commands.game.randomize_folder_codes(       1   ); end; text = "Folder: Randomize Folder Codes" ; };
+    { value = function() commands.game.randomize_folder_IDs_standard(1   ); end; text = "Folder: Randomize Folder IDs"   ; };
+    { value = function() commands.game.overwrite_folder_dalus_special(   ); end; text = "Folder: The Dalus_EXE Special"  ; };
+    { value = function() commands.game.overwrite_folder_smog_special(    ); end; text = "Folder: The SmogBN Special"     ; };
+    { value = function() commands.game.overwrite_folder_press_a(         ); end; text = "Folder: Just PressA"            ; };
 };
 command_battle.doit = function(value) value(); end;
 table.insert(commands.commands, command_battle);

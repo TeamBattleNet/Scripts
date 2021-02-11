@@ -82,6 +82,22 @@ ram.set.title_star_byte = function(title_star_byte) memory.write_u8(ram.addr.tit
 
 ---------------------------------------- RAMsacking ----------------------------------------
 
+function ram.bit_blaster_WRAM_2AC()
+    ram.bit_blaster_WRAM(0x02AC);
+end
+
+function ram.bit_blaster_WRAM_FFFF()
+    ram.bit_blaster_WRAM(0xFFFF);
+end
+
+function ram.bit_blaster_library()
+    ram.bit_blaster_WRAM(0x20, 0x20);
+end
+
+function ram.bit_blaster_folder()
+    ram.bit_blaster_WRAM(0x3B, 0x1C0);
+end
+
 function ram.use_fun_flags(fun_flags)
     if fun_flags.always_fullcust then
         ram.set.custom_gauge(0x4000);

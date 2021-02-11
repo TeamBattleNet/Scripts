@@ -94,7 +94,7 @@ addresses.HP_max_2              = 0x0200022E; -- 2 bytes, max is 0x03E8
 
 addresses.zenny                 = 0x02000284; -- 4 bytes, 999999 "max"
 
--- 2AC-2CF
+-- 2AC-2CF divider
 
 -- Key Items are 1 byte each, some are counters
 addresses.key_PET               = 0x020002D0; -- 1 byte

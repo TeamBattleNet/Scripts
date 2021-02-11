@@ -385,12 +385,27 @@ end
 
 ---------------------------------------- RAMsacking ----------------------------------------
 
-function ram.bit_blaster()
-    local offset = bit.band(ram.get.main_RNG_value(), 0x00FFFFFF) % 0x048000;
-    local addr  = 0x02000000 + offset; -- WRAM
-    local value = bit.rshift(bit.band(ram.get.main_RNG_value(), 0xFF000000), 24);
+function ram.bit_blast(addr, value)
     print(string.format("Writing 0x%02X to 0x%08X!", value, addr));
     memory.write_u8(addr, value);
+end
+
+function ram.bit_blaster(addr_range, offset)
+    local addr = (math.random(0x00, 0xFFFFFF) % addr_range) + offset;
+    local value = math.random(0x00, 0xFF);
+    ram.bit_blast(addr, value);
+end
+
+function ram.bit_blaster_WRAM(addr_range, offset)
+    addr_range = addr_range or 0x048000;
+    offset = 0x02000000 + (offset or 0);
+    ram.bit_blaster(addr_range, offset);
+end
+
+function ram.bit_blaster_ROM(start_at, upper_bound)
+    addr_range = addr_range or 0x7BCFFF;
+    offset = 0x08000000 + (offset or 0);
+    ram.bit_blaster(addr_range, offset);
 end
 
 function ram.use_fun_flags_common(fun_flags)

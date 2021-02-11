@@ -497,7 +497,7 @@ function game.get_folder_text(which_folder)
     return folder_text;
 end
 
-function game.customize_folder_to(which_folder, chips)
+function game.overwrite_folder_to(which_folder, chips)
     for which_slot,chip in pairs(chips) do
         game.ram.set.folder[which_folder].ID  (which_slot-1, chip.ID  );
         game.ram.set.folder[which_folder].code(which_slot-1, chip.code);
@@ -525,6 +525,12 @@ end
 function game.randomize_folder_IDs_all_chips(which_folder)
     for which_slot=0,29 do
         game.ram.set.folder[which_folder].ID(which_slot, game.chips.get_random_ID_all_chips());
+    end
+end
+
+function game.randomize_folder_IDs_PAs(which_folder)
+    for which_slot=0,29 do
+        game.ram.set.folder[which_folder].ID(which_slot, game.chips.get_random_ID_PA());
     end
 end
 
