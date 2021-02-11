@@ -636,8 +636,10 @@ end
 local function track_encounter_checks()
     if game.did_area_change() then
         area_odds = area_odds * current_odds;
-        print(string.format("\nArea Odds Were: %7.3f%%", game.get_area_percent()));
-        print(string.format("Inverted  Odds: %7.3f%%", 100-game.get_area_percent()));
+        if area_odds < 1 then
+            print(string.format("\nArea Odds Were: %7.3f%%", game.get_area_percent()));
+            print(string.format("Inverted  Odds: %7.3f%%", 100-game.get_area_percent()));
+        end
     end
     if game.in_world() then
         if game.get_check() < last_encounter_check then

@@ -87,6 +87,11 @@ local function HUD_speedrun()
         if hud.game.in_title() or hud.game.in_splash() or hud.game.in_transition() then
             hud.to_screen("HUD : " .. hud.version);
             hud.to_screen("Game: " .. hud.game.get_version_name());
+            hud.to_screen("");
+            hud.to_screen(string.format("Top 5 Escape: %u", top_five_escapes));
+            hud.to_screen(string.format("Total Fights: %u", total_fights));
+            hud.to_screen(string.format("Ratio: %7.3f%%", 100 * (top_five_escapes / total_fights)));
+            hud.to_screen("");
         elseif hud.game.in_menu() then
             if hud.game.in_menu_folder_edit() then
                 display_edit_slots();
@@ -147,10 +152,6 @@ local function HUD_auto()
         hud.display_game_info();
         hud.to_screen("");
         display_player_info();
-        hud.to_screen("");
-        hud.to_screen(string.format("Top 5 Escape: %u", top_five_escapes));
-        hud.to_screen(string.format("Total Fights: %u", total_fights));
-        hud.to_screen(string.format("Ratio: %7.3f%%", 100 * (top_five_escapes / total_fights)));
         hud.display_area();
     elseif hud.game.in_world() then
         if hud.game.in_real_world() then
