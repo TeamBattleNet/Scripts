@@ -57,7 +57,10 @@ addresses.folder[3].code        = 0x020001C1; -- there is no folder 3
 
 -- 204-213 ??? mostly 1's
 
-addresses.game_loading_flags    = 0x02000210; -- 1 byte, TBD
+addresses.game_loading_flags    = 0x02000210; -- 1 byte
+--addresses.                    = 0x02000211; -- 1 byte FF
+--addresses.                    = 0x02000212; -- 1 byte FF
+--addresses.                    = 0x02000213; -- 1 byte FF
 addresses.main_area             = 0x02000214; -- 1 byte
 addresses.sub_area              = 0x02000215; -- 1 byte
 addresses.progress              = 0x02000216; -- 1 byte
@@ -78,7 +81,7 @@ addresses.buster_attack         = 0x02000224; -- 1 byte, 0 indexed, can't change
 addresses.buster_rapid          = 0x02000225; -- 1 byte, 0 indexed, can't change mid-battle
 addresses.buster_charge         = 0x02000226; -- 1 byte, 0 indexed, can't change mid-battle
 addresses.armor_equipped        = 0x02000227; -- 1 byte
---addresses.                    = 0x02000228; -- ? byte
+addresses.loading_state         = 0x02000228; -- 1 byte TBD
 --addresses.                    = 0x02000229; -- ? byte
 --addresses.                    = 0x0200022A; -- ? byte
 --addresses.                    = 0x0200022B; -- ? byte
@@ -179,6 +182,9 @@ addresses.check                 = 0x020003F8; -- 4 bytes, steps at the last enco
 
 -- 1500 repair man
 
+-- 3140 Title Screen Continue Audio
+-- 3199 RAMdom address for checking title screen A?
+
 --addresses.                    = 0x02003710; -- ? byte start of battle info
 addresses.battle_mode           = 0x02003711; -- 1 byte
 addresses.battle_state          = 0x02003712; -- 1 byte
@@ -277,7 +283,7 @@ addresses.enemy[3].HP           = 0x02006910; -- 2 bytes, which_enemy * 0xC0
 
 addresses.game_state            = 0x02006CB8; -- 1 byte
 addresses.main_RNG              = 0x02006CC0; -- 4 bytes, resets and pauses on the title screen
-
+-- 6CB0
 -- 7210-74C6 all 1's
 
 -- 74CD sprite animation counter?
@@ -308,17 +314,17 @@ addresses.player_data_offset_JP = 0x080004D4; -- 1 byte, 03D0 in JP, 65D0 in US
 -- 4D 45 47 41 4D 41 4E 5F 42 4E 00 00 41 52 45 45 - MEGAMAN_BN  AREE - US
 -- 4D 45 47 41 4D 41 4E 45 58 45 42 4E 41 52 45 50 - MEGAMANEXEBNAREP - PAL
 
-local version_byte = memory.read_u8(addresses.version_byte);
+local region_byte = memory.read_u8(addresses.region_byte);
 
-if     version_byte == 0x4A then -- J
+if     region_byte == 0x4A then -- J
     addresses.version_name      = "JP";
     addresses.encounter_odds    = 0x08009900;
     addresses.encounter_curve   = 0x08009988;
-elseif version_byte == 0x45 then -- E
+elseif region_byte == 0x45 then -- E
     addresses.version_name      = "US";
     addresses.encounter_odds    = 0x08009934;
     addresses.encounter_curve   = 0x080099BC;
-elseif version_byte == 0x50 then -- P
+elseif region_byte == 0x50 then -- P
     addresses.version_name      = "PAL";
     addresses.encounter_odds    = 0x08009940;
     addresses.encounter_curve   = 0x080099C8;

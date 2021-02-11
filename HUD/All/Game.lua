@@ -682,6 +682,10 @@ function game.did_game_state_change()
     return game.ram.get.game_state() ~= previous_game_state;
 end
 
+function game.did_leave_title_screen()
+    return game.did_game_state_change() and previous_game_state == 0x00;
+end
+
 local previous_battle_state = 0x00;
 function game.did_battle_state_change()
     return game.ram.get.battle_state() ~= previous_battle_state;

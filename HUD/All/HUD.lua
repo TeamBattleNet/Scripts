@@ -183,9 +183,6 @@ function hud.update()
                     hud.Right();
                 end
             end
-            hud.set_ws();
-            hud.set_offset();
-            hud.set_position();
             hud.HUDs[hud.HUD_mode]();
         end
     end

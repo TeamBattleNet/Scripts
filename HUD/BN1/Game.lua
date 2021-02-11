@@ -510,6 +510,12 @@ function game.near_number_doors() -- NumberMan Scenario or WWW Comp 2
         or (game.get_main_area() == 0x85 and game.get_sub_area() == 0x01);
 end
 
+function game.title_screen_A()
+    if game.did_leave_title_screen() then
+        print(string.format("\nPressed A on frame: %u", emu.framecount()-17));
+    end
+end
+
 ---------------------------------------- Module Controls ----------------------------------------
 
 function game.initialize(options)
@@ -517,6 +523,7 @@ function game.initialize(options)
 end
 
 function game.pre_update(options)
+    game.title_screen_A();
     options.fun_flags = game.fun_flags;
     game.ram.pre_update(options);
 end

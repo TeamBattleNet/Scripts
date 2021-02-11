@@ -152,17 +152,17 @@ addresses.pack_quantity         = 0x02019016; -- 1 byte each, number of copies
 -- 4D 45 47 41 4D 41 4E 5F 45 58 45 32 41 45 32 45 - MEGAMAN_EXE2AE2E - US
 -- 4D 45 47 41 4D 41 4E 42 4E 32 00 00 41 4D 32 50 - MEGAMANBN2  AM2P - PAL
 
-local version_byte = memory.read_u8(addresses.version_byte);
+local region_byte = memory.read_u8(addresses.region_byte);
 
-if     version_byte == 0x4A then -- J
+if     region_byte == 0x4A then -- J
     addresses.version_name      = "JP";
     addresses.encounter_odds    = 0x0800A0BC;
     addresses.encounter_curve   = 0x0800A144;
-elseif version_byte == 0x45 then -- E
+elseif region_byte == 0x45 then -- E
     addresses.version_name      = "US";
     addresses.encounter_odds    = 0x0800A1FC;
     addresses.encounter_curve   = 0x0800A284;
-elseif version_byte == 0x50 then -- P
+elseif region_byte == 0x50 then -- P
     addresses.version_name      = "PAL";
     addresses.encounter_odds    = 0x0800A1FC;
     addresses.encounter_curve   = 0x0800A284;

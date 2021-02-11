@@ -64,6 +64,9 @@ ram.set.HPMemory = function(HPMemory) memory.write_u8(ram.addr.HPMemory, HPMemor
 ram.get.IceBlock = function() return memory.read_u8(ram.addr.key_IceBlock_count); end;
 ram.set.IceBlock = function(key_IceBlock_count) memory.write_u8(ram.addr.key_IceBlock_count, key_IceBlock_count); end;
 
+ram.get.loading_state = function() return memory.read_u8(ram.addr.loading_state); end;
+ram.set.loading_state = function(loading_state) memory.write_u8(ram.addr.loading_state, loading_state); end;
+
 ram.get.magic_byte = function() return memory.read_u8(ram.addr.magic_byte); end;
 ram.set.magic_byte = function(magic_byte) memory.write_u8(ram.addr.magic_byte, magic_byte); end;
 
