@@ -127,7 +127,8 @@ local function HUD_speedrun()
 end
 
 local function HUD_routing()
-    hud.set_center(54, 2);
+    hud.set_position(0, 8);
+    hud.set_center_x(54);
     hud.to_screen("0000: " .. hud.game.get_string_hex(   0x02000000, 16, true));
     hud.to_screen("0010: " .. hud.game.get_string_hex(   0x02000010, 16, true));
     hud.to_screen("0000: " .. hud.game.get_string_binary(0x02000000,  4, true));

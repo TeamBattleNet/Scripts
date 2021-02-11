@@ -51,7 +51,7 @@ function controls.get_options()
     local command = commands[command_index];
     local options = command.options;
     local lines = {string.format("       %-33s", command.description())};
-    
+    -- only 40 characters of fceux will fit on screen
     for i=1,table.getn(options) do
         if i == command.selection then
             table.insert(lines, string.format("-> %2i: %-33s", i, options[i].text));

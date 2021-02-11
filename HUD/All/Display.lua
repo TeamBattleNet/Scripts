@@ -55,6 +55,16 @@ function hud.set_ws()
     hud.ws = client.getwindowsize(); -- screen space is GBA * ws
 end
 
+function hud.reset_values()
+    hud.x = 0;
+    hud.y = 0;
+    hud.x0 = 0;
+    hud.y0 = 0;
+    hud.xc = 0;
+    hud.yc = 0;
+    hud.set_ws();
+end
+
 function hud.set_position(x, y)
     hud.x0 = (x or 2) * hud.ws;
     hud.y0 = (y or 1) * hud.ws;
@@ -65,11 +75,14 @@ function hud.set_offset(x, y)
     hud.y = y or 0;
 end
 
-function hud.set_center(x, y) -- TODO: Also center pixel fonts
-    hud.x  = 0;
-    hud.y  = 0;
-    hud.y0 = y * hud.ys;
-    hud.x0 = ((240 * hud.ws) - (x * hud.xs)) / 2;
+function hud.set_center_x(width) -- in characters
+    local screen_width = 240 * (settings.use_gui_text and hud.ws or 1);
+    hud.xc = (screen_width  - (width  * hud.xs)) / 2;
+end
+
+function hud.set_center_y(height) -- in characters
+    local screen_height = 160 * (settings.use_gui_text and hud.ws or 1);
+    hud.yc = (screen_height - (height * hud.ys)) / 2;
 end
 
 function hud.to_pixel(x, y, text)
@@ -83,11 +96,11 @@ function hud.to_pixel(x, y, text)
 end
 
 function hud.to_screen(text)
-    local x = hud.x * hud.xs;
+    local x = hud.x * hud.xs + hud.xc;
     local y = hud.y * hud.ys;
-    if settings.use_gui_text then
+    if settings.use_gui_text then -- don't center y for pixelText
         x = x + hud.x0;
-        y = y + hud.y0;
+        y = y + hud.y0 + hud.yc;
     end
     hud.show_text(x, y, text);
     hud.y = hud.y + 1;
