@@ -75,7 +75,7 @@ local function HUD_speedrun()
             end
             hud.set_offset(8, 0);
         end
-        hud.to_screen(string.format("Fight: 0x%4X", hud.game.get_battle_pointer()));
+        hud.to_screen(string.format("Fight: 0x%04X", hud.game.get_battle_pointer()));
         hud.display_RNG(false);
         hud.to_screen(string.format("Escape: %4i", hud.game.find_first(82)));
         hud.to_screen(string.format("Quake3: %4i", hud.game.find_first(24)));
@@ -136,7 +136,7 @@ local function HUD_battle()
     hud.set_offset(16, 0);
     hud.display_draws(10, 21);
     hud.set_offset(24, 0);
-    hud.to_screen(string.format("Fight: 0x%4X", hud.game.get_battle_pointer()));
+    hud.to_screen(string.format("Fight: 0x%04X", hud.game.get_battle_pointer()));
     hud.display_RNG(true);
     hud.to_screen(string.format("Checks: %4u", hud.game.get_encounter_checks()));
     hud.to_screen(string.format("%%: %8.3f%%", 100-hud.game.get_current_percent()));
@@ -173,18 +173,17 @@ local function HUD_auto()
             end
             hud.set_offset(8, 0);
         end
-        hud.to_screen(string.format("Fight: 0x%4X", hud.game.get_battle_pointer()));
+        hud.to_screen(string.format("Fight: 0x%04X", hud.game.get_battle_pointer()));
         hud.display_RNG(true);
         hud.to_screen(string.format("Escape: %4i", hud.game.find_first(82)));
         hud.to_screen(string.format("Checks: %4u", hud.game.get_encounter_checks()));
         hud.to_screen(string.format("%%: %8.3f%%", 100-hud.game.get_current_percent()));
         hud.display_enemies();
     elseif hud.game.in_menu() then
+        hud.display_RNG();
         if hud.game.in_menu_folder_edit() then
             display_edit_slots();
             display_selected_chip();
-        else
-            hud.display_RNG();
         end
     elseif hud.game.in_shop() then
         hud.set_position(170, 34);
