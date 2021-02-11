@@ -82,6 +82,14 @@ game.battle_mode_names[0x04] = "TBD";
 game.battle_mode_names[0x08] = "TBD";
 game.battle_mode_names[0x0C] = "TBD";
 
+function game.in_chip_select()
+    return game.ram.get.battle_mode() == 0x04;
+end
+
+function game.in_combat()
+    return game.ram.get.battle_mode() == 0x08;
+end
+
 -- Battle State
 
 game.battle_state_names[0x00] = "TBD";
@@ -138,6 +146,10 @@ end
 
 function game.in_menu_folder_edit()
     return game.ram.get.menu_mode() == 0x20;
+end
+
+function game.in_menu_folder()
+    return (game.in_menu_folder_select() or game.in_menu_folder_edit());
 end
 
 -- Menu State
@@ -210,13 +222,8 @@ end
 
 function game.count_library()
     local count = 0;
-    for i=0,0x20 do -- TODO: 33 total bytes?
-        local byte = game.ram.get.library(i);
-        for i=0,7 do
-            if bit.check(byte, i) then
-                count = count + 1;
-            end
-        end
+    for i=0,0x20 do -- 33 bytes? (not all are real chips)
+        count = count + game.bit_counter(game.ram.get.library(i));
     end
     return count;
 end

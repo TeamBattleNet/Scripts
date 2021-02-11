@@ -578,6 +578,16 @@ end
 
 ---------------------------------------- Routing ----------------------------------------
 
+function game.bit_counter(byte)
+    local count = 0;
+    for i=0,7 do
+        if bit.check(byte, i) then
+            count = count + 1;
+        end
+    end
+    return count;
+end
+
 function game.get_string_binary(address, bytes, with_spaces)
     if address and bytes then
         local binary = "";

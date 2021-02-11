@@ -288,13 +288,8 @@ end
 
 function game.count_library()
     local count = 0;
-    for i=0,0x1F do
-        local byte = game.ram.get.library(i);
-        for i=0,7 do
-            if bit.check(byte, i) then
-                count = count + 1;
-            end
-        end
+    for i=0,0x1F do -- 32 bytes (not all are real chips)
+        count = count + game.bit_counter(game.ram.get.library(i));
     end
     return count;
 end
