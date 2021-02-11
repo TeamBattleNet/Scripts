@@ -10,6 +10,8 @@ game.chips    = require("BN1/Chips"   );
 game.enemies  = require("BN1/Enemies" );
 game.progress = require("BN1/Progress");
 
+local settings = require("All/Settings");
+
 game.fun_flags = {}; -- set in Commands, used in RAM
 
 ---------------------------------------- Game State ----------------------------------------
@@ -341,72 +343,72 @@ end
 
 function game.overwrite_folder_dalus_special()
     game.overwrite_folder_to(1, {
-        { ID= 34; code= 6 };
-        { ID= 34; code= 6 };
-        { ID= 34; code= 6 };
-        { ID= 34; code= 6 };
-        { ID= 34; code= 6 };
-        { ID= 34; code= 6 };
-        { ID= 34; code= 6 };
-        { ID= 34; code= 6 };
-        { ID= 34; code= 6 };
-        { ID= 34; code= 6 };
-        { ID= 31; code= 6 };
-        { ID= 31; code= 6 };
-        { ID= 31; code= 6 };
-        { ID= 31; code= 6 };
-        { ID= 31; code= 6 };
-        { ID= 31; code= 6 };
-        { ID= 31; code= 6 };
-        { ID= 31; code= 6 };
-        { ID= 31; code= 6 };
-        { ID= 31; code= 6 };
-        { ID=165; code= 6 };
-        { ID=165; code= 6 };
-        { ID=165; code= 6 };
-        { ID=165; code= 6 };
-        { ID=165; code= 6 };
-        { ID= 82; code= 5 };
-        { ID= 82; code= 7 };
-        { ID= 82; code= 9 };
-        { ID= 82; code=11 };
-        { ID= 82; code=13 };
+        { ID= 34; code= 6 }; -- MetGuard G
+        { ID= 34; code= 6 }; -- MetGuard G
+        { ID= 34; code= 6 }; -- MetGuard G
+        { ID= 34; code= 6 }; -- MetGuard G
+        { ID= 34; code= 6 }; -- MetGuard G
+        { ID= 34; code= 6 }; -- MetGuard G
+        { ID= 34; code= 6 }; -- MetGuard G
+        { ID= 34; code= 6 }; -- MetGuard G
+        { ID= 34; code= 6 }; -- MetGuard G
+        { ID= 34; code= 6 }; -- MetGuard G
+        { ID= 31; code= 6 }; -- Dash G
+        { ID= 31; code= 6 }; -- Dash G
+        { ID= 31; code= 6 }; -- Dash G
+        { ID= 31; code= 6 }; -- Dash G
+        { ID= 31; code= 6 }; -- Dash G
+        { ID= 31; code= 6 }; -- Dash G
+        { ID= 31; code= 6 }; -- Dash G
+        { ID= 31; code= 6 }; -- Dash G
+        { ID= 31; code= 6 }; -- Dash G
+        { ID= 31; code= 6 }; -- Dash G
+        { ID=165; code= 6 }; -- GutsManV3 G
+        { ID=165; code= 6 }; -- GutsManV3 G
+        { ID=165; code= 6 }; -- GutsManV3 G
+        { ID=165; code= 6 }; -- GutsManV3 G
+        { ID=165; code= 6 }; -- GutsManV3 G
+        { ID= 82; code= 5 }; -- Escape
+        { ID= 82; code= 7 }; -- Escape
+        { ID= 82; code= 9 }; -- Escape
+        { ID= 82; code=11 }; -- Escape
+        { ID= 82; code=13 }; -- Escape
     });
 end
 
 function game.overwrite_folder_smog_special()
     game.overwrite_folder_to(1, {
-        { ID=16; code=2 };
-        { ID=16; code=2 };
-        { ID=16; code=2 };
-        { ID=16; code=2 };
-        { ID=16; code=2 };
-        { ID=16; code=2 };
-        { ID=16; code=2 };
-        { ID=16; code=2 };
-        { ID=16; code=2 };
-        { ID=16; code=2 };
-        { ID=17; code=2 };
-        { ID=17; code=2 };
-        { ID=17; code=2 };
-        { ID=17; code=2 };
-        { ID=17; code=2 };
-        { ID=17; code=2 };
-        { ID=17; code=2 };
-        { ID=17; code=2 };
-        { ID=17; code=2 };
-        { ID=17; code=2 };
-        { ID=17; code=2 };
-        { ID=18; code=2 };
-        { ID=18; code=2 };
-        { ID=18; code=2 };
-        { ID=18; code=2 };
-        { ID=18; code=2 };
-        { ID=18; code=2 };
-        { ID=18; code=2 };
-        { ID=18; code=2 };
-        { ID=18; code=2 };
-        { ID=18; code=2 };
+        { ID=16; code=2 }; -- ShokWave C
+        { ID=16; code=2 }; -- ShokWave C
+        { ID=16; code=2 }; -- ShokWave C
+        { ID=16; code=2 }; -- ShokWave C
+        { ID=16; code=2 }; -- ShokWave C
+        { ID=16; code=2 }; -- ShokWave C
+        { ID=16; code=2 }; -- ShokWave C
+        { ID=16; code=2 }; -- ShokWave C
+        { ID=16; code=2 }; -- ShokWave C
+        { ID=16; code=2 }; -- ShokWave C
+        { ID=17; code=2 }; -- SonicWav C
+        { ID=17; code=2 }; -- SonicWav C
+        { ID=17; code=2 }; -- SonicWav C
+        { ID=17; code=2 }; -- SonicWav C
+        { ID=17; code=2 }; -- SonicWav C
+        { ID=17; code=2 }; -- SonicWav C
+        { ID=17; code=2 }; -- SonicWav C
+        { ID=17; code=2 }; -- SonicWav C
+        { ID=17; code=2 }; -- SonicWav C
+        { ID=17; code=2 }; -- SonicWav C
+        { ID=17; code=2 }; -- SonicWav C
+        { ID=18; code=2 }; -- DynaWave C
+        { ID=18; code=2 }; -- DynaWave C
+        { ID=18; code=2 }; -- DynaWave C
+        { ID=18; code=2 }; -- DynaWave C
+        { ID=18; code=2 }; -- DynaWave C
+        { ID=18; code=2 }; -- DynaWave C
+        { ID=18; code=2 }; -- DynaWave C
+        { ID=18; code=2 }; -- DynaWave C
+        { ID=18; code=2 }; -- DynaWave C
+        { ID=18; code=2 }; -- DynaWave C
     });
 end
 
@@ -519,6 +521,7 @@ end
 ---------------------------------------- Module Controls ----------------------------------------
 
 function game.initialize(options)
+    settings.set_display_text("gui"); -- TODO: Remove when gui.text fully supported
     game.ram.initialize(options);
 end
 

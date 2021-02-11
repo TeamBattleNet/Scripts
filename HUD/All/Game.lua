@@ -683,12 +683,17 @@ function game.did_game_state_change()
 end
 
 function game.did_leave_title_screen()
-    return game.did_game_state_change() and previous_game_state == 0x00;
+    return (game.did_game_state_change() and previous_game_state == 0x00);
 end
 
 local previous_battle_state = 0x00;
 function game.did_battle_state_change()
     return game.ram.get.battle_state() ~= previous_battle_state;
+end
+
+local previous_battle_pointer = 0x00;
+function game.did_load_new_battle()
+    return (game.ram.get.battle_pointer() ~= previous_battle_pointer and game.ram.get.battle_pointer() ~= 0x00);
 end
 
 local previous_menu_mode = 0x00;
@@ -712,7 +717,7 @@ function game.did_sub_area_change()
 end
 
 function game.did_area_change()
-    return game.did_main_area_change() or game.did_sub_area_change();
+    return (game.did_main_area_change() or game.did_sub_area_change());
 end
 
 ---------------------------------------- Module Controls ----------------------------------------
@@ -727,12 +732,13 @@ end
 
 function game.track_game_state()
     track_encounter_checks();
-    previous_game_state   = game.ram.get.game_state();
-    previous_battle_state = game.ram.get.battle_state();
-    previous_menu_mode    = game.ram.get.menu_mode();
-    previous_menu_state   = game.ram.get.menu_state();
-    previous_main_area    = game.ram.get.main_area();
-    previous_sub_area     = game.ram.get.sub_area();
+    previous_game_state     = game.ram.get.game_state();
+    previous_battle_state   = game.ram.get.battle_state();
+    previous_battle_pointer = game.ram.get.battle_pointer();
+    previous_menu_mode      = game.ram.get.menu_mode();
+    previous_menu_state     = game.ram.get.menu_state();
+    previous_main_area      = game.ram.get.main_area();
+    previous_sub_area       = game.ram.get.sub_area();
     if game.in_credits() then gui.text(0, 0, "t r o u t", 0x10000000, "bottomright"); end
 end
 

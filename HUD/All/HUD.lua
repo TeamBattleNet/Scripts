@@ -125,6 +125,7 @@ settings.command_mode = false;
 function hud.update()
     record_menu_buttons();
     hud.game.pre_update({});
+    hud.update_local_state();
     
     if buttons.held.L and buttons.held.R then
         if buttons.down.Start then
@@ -192,8 +193,6 @@ function hud.update()
     end
     
     hud.game.post_update({});
-    
-    hud.update_local_state();
 end
 
 function hud.initialize()
