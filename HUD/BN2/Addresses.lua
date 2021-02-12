@@ -14,7 +14,7 @@ addresses.library               = 0x02000060; -- ? bytes, bit flags, ends on 80?
 
 -- 91-9F PAs in here somewhere...
 
--- A0+ don't write to these bytes!
+-- A0+     don't write to these bytes!
 -- 100-10F don't write to these bytes!
 -- 10A Pause state?
 -- 10B Don't write to this byte...
@@ -28,12 +28,21 @@ addresses.folder[3].code        = 0x02000BA2; -- every other 2 bytes, chip codes
 
 -- DC0 start of important things?
 
-addresses.game_state_also       = 0x02000DC0; -- 1 byte?
+addresses.game_mode             = 0x02000DC0; -- 1 byte, maybe?
+--addresses.                    = 0x02000DC1; -- 1 byte TBD
+--addresses.                    = 0x02000DC2; -- 1 byte TBD
+--addresses.                    = 0x02000DC3; -- 1 byte TBD
 addresses.main_area             = 0x02000DC4; -- 1 byte
 addresses.sub_area              = 0x02000DC5; -- 1 byte
+addresses.progress              = 0x02000DC6; -- 1 byte
+addresses.music_progress        = 0x02000DC7; -- 1 byte
+--addresses.                    = 0x02000DC8; -- 1 byte TBD
 addresses.battle_paused         = 0x02000DC9; -- 1 byte, flag 0x01
-addresses.progress              = 0x02000DCA; -- 1 byte
-addresses.music_progress        = 0x02000DCB; -- 1 byte
+--addresses.                    = 0x02000DCA; -- 1 byte TBD
+--addresses.                    = 0x02000DCB; -- 1 byte TBD
+addresses.main_area_previous    = 0x02000DCC; -- 1 byte
+addresses.sub_area_previous     = 0x02000DCD; -- 1 byte
+
 addresses.is_talking            = 0x02000DDA; -- 1 byte, with NPC/MD, flag 0x01
 addresses.is_interacting        = 0x02000DDA; -- 1 byte, toggle check, flag 0x01
 
@@ -64,6 +73,9 @@ addresses.battles_team          = 0x02003A70; -- 4 bytes
 addresses.battles_shld          = 0x02003A74; -- 4 bytes
 
 addresses.chip_window_size_next = 0x02004EEE; -- 1 byte, number of chips available in the custom menu on next open
+
+addresses.battle_mode           = 0x02000000; -- TODO
+addresses.battle_state          = 0x02000000; -- TODO
 
 addresses.battle_custom_gauge   = 0x02004F0C; -- 2 bytes, counts up to 0x4000
 

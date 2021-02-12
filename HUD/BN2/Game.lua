@@ -228,6 +228,76 @@ function game.count_library()
     return count;
 end
 
+function game.overwrite_folder_dalus_special()
+    game.overwrite_folder_to(1, {
+        { ID=111; code=26 }; -- Guard G
+        { ID=111; code=26 }; -- Guard G
+        { ID=111; code=26 }; -- Guard G
+        { ID=111; code=26 }; -- Guard G
+        { ID=111; code=26 }; -- Guard G
+        { ID= 50; code= 6 }; -- DashAtk G
+        { ID= 50; code= 6 }; -- DashAtk G
+        { ID= 50; code= 6 }; -- DashAtk G
+        { ID= 50; code= 6 }; -- DashAtk G
+        { ID= 50; code= 6 }; -- DashAtk G
+        { ID=199; code= 6 }; -- GutsManV3 G
+        { ID=199; code= 6 }; -- GutsManV3 G
+        { ID=199; code= 6 }; -- GutsManV3 G
+        { ID=199; code= 6 }; -- GutsManV3 G
+        { ID=199; code= 6 }; -- GutsManV3 G
+        { ID=152; code=26 }; -- FullCust *
+        { ID=152; code=26 }; -- FullCust *
+        { ID=152; code=26 }; -- FullCust *
+        { ID=152; code=26 }; -- FullCust *
+        { ID=152; code=26 }; -- FullCust *
+        { ID=188; code=26 }; -- Atk+10 *
+        { ID=188; code=26 }; -- Atk+10 *
+        { ID=188; code=26 }; -- Atk+10 *
+        { ID=188; code=26 }; -- Atk+10 *
+        { ID=188; code=26 }; -- Atk+10 *
+        { ID=138; code= 5 }; -- Escape
+        { ID=138; code= 7 }; -- Escape
+        { ID=138; code= 9 }; -- Escape
+        { ID=138; code=11 }; -- Escape
+        { ID=138; code=13 }; -- Escape
+    });
+end
+
+function game.overwrite_folder_press_a()
+    game.overwrite_folder_to(1, {
+        { ID= 19; code=0 }; -- BigBomb
+        { ID= 19; code=0 }; -- BigBomb
+        { ID= 19; code=0 }; -- BigBomb
+        { ID= 19; code=0 }; -- BigBomb
+        { ID= 19; code=0 }; -- BigBomb
+        { ID= 44; code=0 }; -- Quake3
+        { ID= 44; code=0 }; -- Quake3
+        { ID= 44; code=0 }; -- Quake3
+        { ID= 44; code=0 }; -- Quake3
+        { ID= 44; code=0 }; -- Quake3
+        { ID= 59; code=0 }; -- Ratton3
+        { ID= 59; code=0 }; -- Ratton3
+        { ID= 59; code=0 }; -- Ratton3
+        { ID= 59; code=0 }; -- Ratton3
+        { ID= 59; code=0 }; -- Ratton3
+        { ID= 73; code=0 }; -- Satelit3
+        { ID= 73; code=0 }; -- Satelit3
+        { ID= 73; code=0 }; -- Satelit3
+        { ID= 73; code=0 }; -- Satelit3
+        { ID= 73; code=0 }; -- Satelit3
+        { ID=152; code=0 }; -- FullCust
+        { ID=152; code=0 }; -- FullCust
+        { ID=152; code=0 }; -- FullCust
+        { ID=152; code=0 }; -- FullCust
+        { ID=152; code=0 }; -- FullCust
+        { ID=202; code=0 }; -- Protoman V3
+        { ID=202; code=0 }; -- Protoman V3
+        { ID=202; code=0 }; -- Protoman V3
+        { ID=202; code=0 }; -- Protoman V3
+        { ID=202; code=0 }; -- Protoman V3
+    });
+end
+
 ----------------------------------------Mega Modifications ----------------------------------------
 
 function game.set_buster_stats(power_level)
@@ -272,15 +342,23 @@ end
 
 ---------------------------------------- Miscellaneous ----------------------------------------
 
--- None ATM
+function game.title_screen_A()
+    if game.did_leave_title_screen() then
+        print(string.format("\nPressed A on frame: %u", emu.framecount()-17));
+    end
+end
 
 ---------------------------------------- Module Controls ----------------------------------------
 
+local settings = require("All/Settings");
+
 function game.initialize(options)
+    settings.set_display_text("gui"); -- TODO: Remove when gui.text fully supported
     game.ram.initialize(options);
 end
 
 function game.pre_update(options)
+    game.title_screen_A();
     options.fun_flags = game.fun_flags;
     game.ram.pre_update(options);
 end
