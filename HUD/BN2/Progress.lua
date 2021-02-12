@@ -22,6 +22,7 @@ progress[0x08] = "Gone to bed";
 progress[0x10] = "TBD";
 
 progress[0x47] = "Final State";
+progress[0x48] = "Credits";
 
 progress[0xFF] = "No Save Data";
 

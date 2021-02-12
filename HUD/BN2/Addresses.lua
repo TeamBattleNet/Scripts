@@ -28,10 +28,12 @@ addresses.folder[3].code        = 0x02000BA2; -- every other 2 bytes, chip codes
 
 -- C1B MDs in current area
 
+-- D52 Stored Style?
+
 -- DC0 start of important things?
 
 addresses.game_mode             = 0x02000DC0; -- 1 byte, maybe?
---addresses.                    = 0x02000DC1; -- 1 byte TBD
+addresses.style_active          = 0x02000DC1; -- 1 byte 0x28 HubStyl 00 000 000b level | style | element
 --addresses.                    = 0x02000DC2; -- 1 byte TBD
 --addresses.                    = 0x02000DC3; -- 1 byte TBD
 addresses.main_area             = 0x02000DC4; -- 1 byte
@@ -50,9 +52,9 @@ addresses.mega_HP_max           = 0x02000DE2; -- 2 bytes
 
 addresses.is_talking            = 0x02000DDA; -- 1 byte, with NPC/MD, flag 0x01
 addresses.is_interacting        = 0x02000DDA; -- 1 byte, toggle check, flag 0x01
-addresses.battle_buster_attack  = 0x02000DD4; -- 1 byte, in battle, 0x04 is max
-addresses.battle_buster_rapid   = 0x02000DD5; -- 1 byte, in battle, 0x04 is max
-addresses.battle_buster_charge  = 0x02000DD6; -- 1 byte, in battle, 0x04 is max
+addresses.battle_buster_attack  = 0x02000DD4; -- 1 byte, in battle, for style modifiers
+addresses.battle_buster_rapid   = 0x02000DD5; -- 1 byte, in battle, for style modifiers
+addresses.battle_buster_charge  = 0x02000DD6; -- 1 byte, in battle, for style modifiers
 
 addresses.zenny                 = 0x02000E34; -- 4 bytes, 999999 "max"
 
@@ -63,10 +65,6 @@ addresses.HPMemory              = 0x02000EE0; -- 1 byte, HPMems collected
 addresses.PowerUP               = 0x02000EE1; -- 1 byte, PowerUPs available
 
 -- E80 - F1F
-
-addresses.style_active          = 0x02000000; -- 1 byte
-addresses.style_stored_1        = 0x02000000; -- 1 byte
-addresses.style_stored_2        = 0x02000000; -- 1 byte
 
 addresses.buster_attack         = 0x02001128; -- 1 byte, 0x04 is max
 addresses.buster_rapid          = 0x02001129; -- 1 byte, 0x04 is max
@@ -80,9 +78,15 @@ addresses.play_time_frames      = 0x02001144; -- 4 bytes, check for skipped fram
 addresses.check                 = 0x02001154; -- 4 bytes, steps at the last encounter check
 addresses.sneak                 = 0x02001178; -- 4? bytes, starts at 6000
 
+--   1198 ROCKMANEXE2 20011016
+
+-- 11A0 Obfuscated data storage?
+
 -- 24C0 Shop inventories
 
 -- 3080 BMDs? 32XX? 33XX? Animation?
+
+-- 3A00 End of SRAM mirror?
 
 -- 3A50 style point area
 addresses.points_guts           = 0x02003A5D; -- 2 bytes
@@ -101,6 +105,7 @@ addresses.battle_mode           = 0x02000000; -- TODO
 addresses.battle_state          = 0x02000000; -- TODO
 
 addresses.battle_custom_gauge   = 0x02004F0C; -- 2 bytes, counts up to 0x4000
+addresses.delete_timer          = 0x02004F1C; -- 2 bytes, frame counter for current battle
 
 addresses.enemy[1].ID           = 0x02004F3C; -- 1 byte
 addresses.enemy[2].ID           = 0x02004F3D; -- 1 byte
@@ -113,7 +118,53 @@ addresses.your_Y                = 0x02006376; -- 2 bytes
 addresses.your_X2               = 0x02000000; -- 2 bytes
 addresses.your_Y2               = 0x02000000; -- 2 bytes
 
+addresses.menu_mode             = 0x02007EA0; -- 1 byte
+addresses.menu_state            = 0x02007EA1; -- 1 byte
+addresses.cursor_ID             = 0x02007EA8; -- 1 byte, chip  ID  of cursor
+addresses.cursor_code           = 0x02007EAA; -- 1 byte, chip code of cursor
+addresses.folder_count          = 0x02007EA5; -- 1 byte, number of chips in folder
+addresses.cursor_pack           = 0x02007EBC; -- 2 bytes, cursor value in the pack
+addresses.cursor_pack_copy      = 0x02007EBE; -- 2 bytes
+addresses.offset_pack           = 0x02007EC0; -- 2 bytes, offset value in the pack
+addresses.offset_pack_copy      = 0x02007EC2; -- 2 bytes
+addresses.offset_selected_pack  = 0x02007EF0; -- 2 bytes, offset value of selected chip
+addresses.cursor_selected_pack  = 0x02007EF2; -- 2 bytes, cursor value of selected chip
+addresses.offset_selected_folder = 0x02007EE8; -- 2 bytes, offset value of selected chip
+addresses.cursor_selected_folder = 0x02007EEA; -- 2 bytes, cursor value of selected chip
+
+addresses.cursor_folder         = 0x02007EB2; -- 2 bytes, cursor value in the folder
+addresses.cursor_folder_copy    = 0x02007EB4; -- 2 bytes
+addresses.offset_folder         = 0x02007EB6; -- 2 bytes, offset value in the folder
+addresses.offset_folder_copy    = 0x02007EB8; -- 2 bytes
+
+addresses.style_stored_1        = 0x02007EF4; -- 1 byte
+addresses.style_stored_2        = 0x02007EF5; -- 1 byte
+
+-- 8000 SRAM Mirror?
+
 addresses.mega_battle_HP        = 0x02008A94; -- 2 bytes
+
+addresses.steps_menu            = 0x02008828; -- 4 bytes? steps since last menu?
+addresses.power_on_frames       = 0x02008880; -- 2 bytes, session counter
+
+addresses.enemy[1].HP           = 0x02008B54; -- 2 bytes, which_enemy * 0xC0
+addresses.enemy[1].HP_max       = 0x02008B56; -- 2 bytes, for healing
+
+addresses.enemy[2].HP           = 0x02008C14; -- 2 bytes, which_enemy * 0xC0
+addresses.enemy[2].HP_max       = 0x02008C16; -- 2 bytes, for healing
+
+addresses.enemy[3].HP           = 0x02008CD4; -- 2 bytes, which_enemy * 0xC0
+addresses.enemy[3].HP_max       = 0x02008CD6; -- 2 bytes, for healing
+
+-- 8A20 SRAM Mirror?
+
+--addresses.                    = 0x02009070; -- 4 bytes, state transition related?
+addresses.game_state            = 0x02009078; -- 1 byte
+addresses.main_RNG              = 0x02009080; -- 4 bytes, restarts on the title screen
+
+addresses.color_palette         = 0x02009090; -- 1024 bytes, ends 948F
+
+-- 9198 ROCKMANEXE2 20011016
 
 --addresses.                    = 0x0200EEF0; -- 1 byte, battle data
 --addresses.                    = 0x0200EEF0; -- 1 byte, battle data
@@ -135,46 +186,8 @@ addresses.enemy[1].HP_text      = 0x0200EFD2; -- 2 bytes, which_enemy * 0x08, fo
 addresses.enemy[2].HP_text      = 0x0200EFDA; -- 2 bytes, which_enemy * 0x08, for counting down HP over time
 addresses.enemy[3].HP_text      = 0x0200EFE2; -- 2 bytes, which_enemy * 0x08, for counting down HP over time
 
-addresses.delete_timer          = 0x02004F1C; -- 2 bytes, frame counter for current battle
-
-addresses.menu_mode             = 0x02007EA0; -- 1 byte
-addresses.menu_state            = 0x02007EA1; -- 1 byte
-addresses.cursor_ID             = 0x02007EA8; -- 1 byte, chip  ID  of cursor
-addresses.cursor_code           = 0x02007EAA; -- 1 byte, chip code of cursor
-addresses.folder_count          = 0x02007EA5; -- 1 byte, number of chips in folder
-addresses.cursor_pack           = 0x02007EBC; -- 2 bytes, cursor value in the pack
-addresses.cursor_pack_copy      = 0x02007EBE; -- 2 bytes
-addresses.offset_pack           = 0x02007EC0; -- 2 bytes, offset value in the pack
-addresses.offset_pack_copy      = 0x02007EC2; -- 2 bytes
-addresses.offset_selected_pack  = 0x02007EF0; -- 2 bytes, offset value of selected chip
-addresses.cursor_selected_pack  = 0x02007EF2; -- 2 bytes, cursor value of selected chip
-addresses.offset_selected_folder = 0x02007EE8; -- 2 bytes, offset value of selected chip
-addresses.cursor_selected_folder = 0x02007EEA; -- 2 bytes, cursor value of selected chip
-
-addresses.cursor_folder         = 0x02007EB2; -- 2 bytes, cursor value in the folder
-addresses.cursor_folder_copy    = 0x02007EB4; -- 2 bytes
-addresses.offset_folder         = 0x02007EB6; -- 2 bytes, offset value in the folder
-addresses.offset_folder_copy    = 0x02007EB8; -- 2 bytes
 addresses.cursor_sort           = 0x0200EC06; -- 2 bytes, sort menu cursor position (both folder and pack)
 addresses.cursor_sort_copy      = 0x0200EC08; -- 2 bytes
-
-addresses.steps_menu            = 0x02008828; -- 4 bytes? steps since last menu?
-addresses.power_on_frames       = 0x02008880; -- 2 bytes, session counter
-
-addresses.enemy[1].HP           = 0x02008B54; -- 2 bytes, which_enemy * 0xC0
-addresses.enemy[1].HP_max       = 0x02008B56; -- 2 bytes, for healing
-
-addresses.enemy[2].HP           = 0x02008C14; -- 2 bytes, which_enemy * 0xC0
-addresses.enemy[2].HP_max       = 0x02008C16; -- 2 bytes, for healing
-
-addresses.enemy[3].HP           = 0x02008CD4; -- 2 bytes, which_enemy * 0xC0
-addresses.enemy[3].HP_max       = 0x02008CD6; -- 2 bytes, for healing
-
---addresses.                    = 0x02009070; -- 4 bytes, state transition related?
-addresses.game_state            = 0x02009078; -- 1 byte
-addresses.main_RNG              = 0x02009080; -- 4 bytes, restarts on the title screen
-
-addresses.color_palette         = 0x02009090; -- 1024 bytes, ends 948F
 
 -- Each pack slot covers 32 bytes or 0x20 addresses
 addresses.pack_ID               = 0x0201901C; -- 2 bytes each, 0x20 offset
@@ -182,8 +195,13 @@ addresses.pack_code             = 0x0201900A; -- 1 byte each, 0x20 offset
 addresses.pack_quantity         = 0x02019016; -- 1 byte each, number of copies
 -- Ends at 23FFF? 291FF? Many of these values appear to be duplicates, possibly to help with sorting
 
--- 0x0203FFFF end of WRAM?
--- 0x02047FFF end of WRAM?
+-- 0x0203FFFF end of WRAM (begins looping previous frames)
+
+-- 0x08030D40 ROCKMANEXE2 20011016 ROM
+-- 0x0A030D40 ROCKMANEXE2 20011016 Bizhawk Copy?
+
+-- 0x0E001190 ROCKMANEXE2 20011016 SRAM
+-- 0x0E091190 ROCKMANEXE2 20011016 Bizhawk Copy?
 
 ---------------------------------------- Verion Dependent ----------------------------------------
 
