@@ -203,6 +203,34 @@ function game.add_IceBlocks(some_IceBlocks)
     game.set_IceBlocks(game.get_IceBlocks() + some_IceBlocks);
 end
 
+---------------------------------------- Mega Modifications ----------------------------------------
+
+function game.hub_buster_stats()
+    game.set_buster_stats(5); -- super armor
+end
+
+function game.op_buster_stats()
+    game.set_buster_stats(7); -- 327 buster shots
+end
+
+function game.give_armor()
+    game.ram.set.armor_heat(1);
+    game.ram.set.armor_aqua(1);
+    game.ram.set.armor_wood(1);
+end
+
+function game.calculate_mega_level()
+    level = 1; -- starting level
+    level = level + 1 * game.get_HPMemory_count();
+    level = level + 3 * game.ram.get.buster_attack();
+    level = level + 3 * game.ram.get.buster_rapid();
+    level = level + 3 * game.ram.get.buster_charge();
+    level = level + 6 * game.ram.get.armor_heat();
+    level = level + 6 * game.ram.get.armor_aqua();
+    level = level + 6 * game.ram.get.armor_wood();
+    return level;
+end
+
 ---------------------------------------- Flags ----------------------------------------
 
 function game.get_fire_flags()
@@ -438,56 +466,6 @@ function game.overwrite_folder_press_a()
         { ID=198; code=0 }; -- ElecMan V3
         { ID=199; code=0 }; -- Bass
     });
-end
-
----------------------------------------- Mega Modifications ----------------------------------------
-
-function game.set_buster_stats(power_level)
-    game.ram.set.buster_attack(power_level);
-    game.ram.set.buster_rapid (power_level);
-    game.ram.set.buster_charge(power_level);
-end
-
-function game.reset_buster_stats()
-    game.set_buster_stats(0); -- 0 indexed
-end
-
-function game.max_buster_stats()
-    game.set_buster_stats(4);
-end
-
-function game.hub_buster_stats()
-    game.set_buster_stats(5); -- super armor
-end
-
-function game.op_buster_stats()
-    game.set_buster_stats(7); -- 327 buster shots
-end
-
-function game.give_armor()
-    game.ram.set.armor_heat(1);
-    game.ram.set.armor_aqua(1);
-    game.ram.set.armor_wood(1);
-end
-
-function game.get_HPMemory_count()
-    return game.ram.get.HPMemory();
-end
-
-function game.calculate_max_HP()
-    return 100 + (20 * game.get_HPMemory_count());
-end
-
-function game.calculate_mega_level()
-    level = 1; -- starting level
-    level = level + 1 * game.get_HPMemory_count();
-    level = level + 3 * game.ram.get.buster_attack();
-    level = level + 3 * game.ram.get.buster_rapid();
-    level = level + 3 * game.ram.get.buster_charge();
-    level = level + 6 * game.ram.get.armor_heat();
-    level = level + 6 * game.ram.get.armor_aqua();
-    level = level + 6 * game.ram.get.armor_wood();
-    return level;
 end
 
 ---------------------------------------- Miscellaneous ----------------------------------------

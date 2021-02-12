@@ -477,6 +477,34 @@ function game.add_bug_frags(some_bug_frags)
     game.set_bug_frags(game.get_bug_frags() + some_bug_frags);
 end
 
+----------------------------------------Mega Modifications ----------------------------------------
+
+function game.set_buster_stats(power_level)
+    game.ram.set.buster_attack(power_level);
+    game.ram.set.buster_rapid (power_level);
+    game.ram.set.buster_charge(power_level);
+end
+
+function game.reset_buster_stats()
+    game.set_buster_stats(0);
+end
+
+function game.max_buster_stats()
+    game.set_buster_stats(4);
+end
+
+function game.get_HPMemory_count()
+    return game.ram.get.HPMemory();
+end
+
+function game.calculate_max_HP()
+    return 100 + (20 * game.get_HPMemory_count());
+end
+
+function game.calculate_mega_level()
+    return 1; -- defined per game
+end
+
 ---------------------------------------- Battlechips ----------------------------------------
 
 function game.get_chip_name(ID)
@@ -753,7 +781,10 @@ function game.track_game_state()
     previous_menu_state     = game.ram.get.menu_state();
     previous_main_area      = game.ram.get.main_area();
     previous_sub_area       = game.ram.get.sub_area();
-    if game.doit_later[emu.framecount()] then game.doit_later[emu.framecount()](); end
+    if  game.doit_later[emu.framecount()] then
+        game.doit_later[emu.framecount()]();
+        game.doit_later[emu.framecount()] = nil;
+    end
     if game.in_credits() then gui.text(0, 0, "t r o u t", 0x10000000, "bottomright"); end
 end
 

@@ -47,7 +47,7 @@ function ram.use_fun_flags(fun_flags)
     end
     
     if fun_flags.no_chip_cooldown then
-        ram.set.chip_cooldown(0);
+        --ram.set.chip_cooldown(0); -- TODO
     end
     
     if fun_flags.delete_time_zero then

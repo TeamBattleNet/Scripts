@@ -55,14 +55,14 @@ command_battle.options = {
     { value = function() commands.game.kill_enemy(1);     end; text = "Delete Enemy 1"   ; };
     { value = function() commands.game.kill_enemy(2);     end; text = "Delete Enemy 2"   ; };
     { value = function() commands.game.kill_enemy(3);     end; text = "Delete Enemy 3"   ; };
-    { value = function() commands.game.draw_in_order();   end; text = "Draw Slots: In Order" ; };
-    { value = function() commands.game.draw_only_slot(0); end; text = "Draw Slots: Always 1" ; };
-    { value = function() commands.game.set_all_folder_code_to(       1, 0); end; text = "Folder: Monocode A Folder"      ; };
-    { value = function() commands.game.randomize_folder_codes(       1   ); end; text = "Folder: Randomize Folder Codes" ; };
-    { value = function() commands.game.randomize_folder_IDs_standard(1   ); end; text = "Folder: Randomize Folder IDs"   ; };
-    { value = function() commands.game.overwrite_folder_dalus_special(   ); end; text = "Folder: The Dalus_EXE Special"  ; };
-    { value = function() commands.game.overwrite_folder_smog_special(    ); end; text = "Folder: The SmogBN Special"     ; };
-    { value = function() commands.game.overwrite_folder_press_a(         ); end; text = "Folder: Just PressA"            ; };
+    { value = function() commands.game.draw_in_order();   end; text = "Draw Slots: In Order"; };
+    { value = function() commands.game.draw_only_slot(0); end; text = "Draw Slots: Always 1"; };
+    { value = function() commands.game.set_all_folder_code_to(       1, 0); end; text = "Folder: Monocode A Folder"     ; };
+    { value = function() commands.game.randomize_folder_codes(       1   ); end; text = "Folder: Randomize Folder Codes"; };
+    { value = function() commands.game.randomize_folder_IDs_standard(1   ); end; text = "Folder: Randomize Folder IDs"  ; };
+    { value = function() commands.game.overwrite_folder_dalus_special(   ); end; text = "Folder: The Dalus_EXE Special" ; };
+    { value = function() commands.game.overwrite_folder_smog_special(    ); end; text = "Folder: The SmogBN Special"    ; };
+    { value = function() commands.game.overwrite_folder_press_a(         ); end; text = "Folder: Just PressA"           ; };
 };
 command_battle.doit = function(value) value(); end;
 table.insert(commands.commands, command_battle);
@@ -78,11 +78,11 @@ function command_items.update_options(option_value)
     if not option_value then
         command_items.selection = command_items.sub_selection;
         command_items.description = function() return "What will U buy?"; end;
-        table.insert( command_items.options, { value = 1; text = "Zenny"       ; } );
-        table.insert( command_items.options, { value = 2; text = "PowerUP"     ; } );
-        table.insert( command_items.options, { value = 3; text = "HPMemory"    ; } );
-        table.insert( command_items.options, { value = 4; text = "Equipment"   ; } );
-        table.insert( command_items.options, { value = 5; text = "IceBlock"    ; } );
+        table.insert( command_items.options, { value = 1; text = "Zenny"    ; } );
+        table.insert( command_items.options, { value = 2; text = "PowerUP"  ; } );
+        table.insert( command_items.options, { value = 3; text = "HPMemory" ; } );
+        table.insert( command_items.options, { value = 4; text = "Equipment"; } );
+        table.insert( command_items.options, { value = 5; text = "IceBlock" ; } );
     else
         command_items.sub_selection = command_items.selection;
         command_items.selection = 1;
@@ -108,7 +108,6 @@ function command_items.update_options(option_value)
         elseif option_value == 3 then
             command_items.description = function() return string.format("HPMemory: %2u", commands.game.get_HPMemory_count()); end;
             table.insert( command_items.options, { value = nil; text = "Apologies... That is sold out..."; } );
-            command_items.FUNction = function(value) commands.game.add_zenny(value); end;
         elseif option_value == 4 then
             command_items.description = function() return string.format("Power Level: %4u", commands.game.calculate_mega_level()); end;
             table.insert( command_items.options, { value = commands.game.reset_buster_stats; text = "Reset Buster Stats"     ; } );

@@ -50,13 +50,17 @@ addresses.mega_HP_max           = 0x02000DE2; -- 2 bytes
 
 addresses.is_talking            = 0x02000DDA; -- 1 byte, with NPC/MD, flag 0x01
 addresses.is_interacting        = 0x02000DDA; -- 1 byte, toggle check, flag 0x01
+addresses.battle_buster_attack  = 0x02000DD4; -- 1 byte, in battle, 0x04 is max
+addresses.battle_buster_rapid   = 0x02000DD5; -- 1 byte, in battle, 0x04 is max
+addresses.battle_buster_charge  = 0x02000DD6; -- 1 byte, in battle, 0x04 is max
 
 addresses.zenny                 = 0x02000E34; -- 4 bytes, 999999 "max"
 
 -- E3B end of important things?
 
-addresses.bug_frags             = 0x02000EC5; -- 1 byte?, 32 "max"?
-addresses.HPMemory              = 0x02000EE0; -- 1 byte?, count of HPMems
+addresses.bug_frags             = 0x02000EC5; -- 1 byte, 32 "max"
+addresses.HPMemory              = 0x02000EE0; -- 1 byte, HPMems collected
+addresses.PowerUP               = 0x02000EE1; -- 1 byte, PowerUPs available
 
 -- E80 - F1F
 
@@ -64,6 +68,9 @@ addresses.style_active          = 0x02000000; -- 1 byte
 addresses.style_stored_1        = 0x02000000; -- 1 byte
 addresses.style_stored_2        = 0x02000000; -- 1 byte
 
+addresses.buster_attack         = 0x02001128; -- 1 byte, 0x04 is max
+addresses.buster_rapid          = 0x02001129; -- 1 byte, 0x04 is max
+addresses.buster_charge         = 0x0200112A; -- 1 byte, 0x04 is max
 addresses.element_next          = 0x0200112B; -- 1 byte, element of next style?
 addresses.steps                 = 0x02001150; -- 4 bytes
 addresses.steps_total           = 0x0200113C; -- 4 bytes? steps since new game?
@@ -73,9 +80,9 @@ addresses.play_time_frames      = 0x02001144; -- 4 bytes, check for skipped fram
 addresses.check                 = 0x02001154; -- 4 bytes, steps at the last encounter check
 addresses.sneak                 = 0x02001178; -- 4? bytes, starts at 6000
 
--- 25E0 Official Square Shop flags
+-- 24C0 Shop inventories
 
--- 3080 BMDs? 32XX? 33XX?
+-- 3080 BMDs? 32XX? 33XX? Animation?
 
 -- 3A50 style point area
 addresses.points_guts           = 0x02003A5D; -- 2 bytes

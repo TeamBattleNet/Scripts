@@ -192,10 +192,22 @@ end
 function game.set_bug_frags(new_bug_frags)
     if new_bug_frags < 0 then
         new_bug_frags = 0
-    elseif new_bug_frags > 32 then
-        new_bug_frags = 32; -- TBD Override
+    elseif new_bug_frags > 255 then
+        new_bug_frags = 255; -- only need 32
     end
     game.ram.set.bug_frags(new_bug_frags);
+end
+
+----------------------------------------Mega Modifications ----------------------------------------
+
+function game.calculate_mega_level()
+    level = 1; -- starting level
+    level = level + 1 * game.get_HPMemory_count();
+    level = level + 4 * game.ram.get.buster_attack();
+    level = level + 4 * game.ram.get.buster_rapid();
+    level = level + 4 * game.ram.get.buster_charge();
+    -- plus 6 from style change
+    return level;
 end
 
 ---------------------------------------- Flags ----------------------------------------
@@ -298,48 +310,6 @@ function game.overwrite_folder_press_a()
     });
 end
 
-----------------------------------------Mega Modifications ----------------------------------------
-
-function game.set_buster_stats(power_level)
-    game.ram.set.buster_attack(power_level);
-    game.ram.set.buster_rapid (power_level);
-    game.ram.set.buster_charge(power_level);
-end
-
-function game.reset_buster_stats()
-    game.set_buster_stats(0); -- 0 indexed
-end
-
-function game.max_buster_stats()
-    game.set_buster_stats(4);
-end
-
-function game.hub_buster_stats()
-    game.set_buster_stats(5); -- super armor
-end
-
-function game.op_buster_stats()
-    game.set_buster_stats(7); -- 327 buster shots
-end
-
-function game.get_HPMemory_count()
-    return game.ram.get.HPMemory();
-end
-
-function game.calculate_max_HP()
-    return 100 + (20 * game.get_HPMemory_count());
-end
-
-function game.calculate_mega_level()
-    level = 1; -- starting level
-    level = level + 1 * game.get_HPMemory_count();
-    level = level + 4 * game.ram.get.buster_attack();
-    level = level + 4 * game.ram.get.buster_rapid();
-    level = level + 4 * game.ram.get.buster_charge();
-    -- plus 6 from style change
-    return level;
-end
-
 ---------------------------------------- Miscellaneous ----------------------------------------
 
 function game.title_screen_A()
@@ -351,6 +321,12 @@ end
 function game.randomize_color_palette()
     for offset=0,0x3FF do
         game.ram.set.color_palette(offset, math.random(0x00, 0xFF));
+    end
+end
+
+function game.use_fun_flags(fun_flags)
+    if fun_flags.randomize_colors then
+        if game.did_game_state_change() or game.did_menu_mode_change() or game.did_area_change() then game.doit_later[emu.framecount()+3] = game.randomize_color_palette; end
     end
 end
 
@@ -367,7 +343,7 @@ function game.pre_update(options)
     game.title_screen_A();
     options.fun_flags = game.fun_flags;
     game.ram.pre_update(options);
-    --if game.did_game_state_change() or game.did_menu_mode_change() or game.did_area_change() then game.doit_later[emu.framecount()+3] = game.randomize_color_palette; end
+    game.use_fun_flags(game.fun_flags);
 end
 
 function game.post_update(options)
