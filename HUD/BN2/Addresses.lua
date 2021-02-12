@@ -167,7 +167,7 @@ addresses.enemy[3].HP_max       = 0x02008CD6; -- 2 bytes, for healing
 addresses.game_state            = 0x02009078; -- 1 byte
 addresses.main_RNG              = 0x02009080; -- 4 bytes, restarts on the title screen
 
-addresses.color_pallet          = 0x02009090; -- 1024 bytes, ends 948F
+addresses.color_palette         = 0x02009090; -- 1024 bytes, ends 948F
 
 -- Each pack slot covers 32 bytes or 0x20 addresses
 addresses.pack_ID               = 0x0201901C; -- 2 bytes each, 0x20 offset
