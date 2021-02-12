@@ -111,6 +111,8 @@ local function HUD_auto()
     elseif hud.game.in_chip_trader() then
         hud.set_position(105, 1);
         hud.display_RNG(true);
+    elseif hud.game.in_credits() then
+        hud.display_game_info();
     else
         hud.to_screen("Unknown Game State!");
     end
