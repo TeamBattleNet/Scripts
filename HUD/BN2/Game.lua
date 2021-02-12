@@ -348,6 +348,12 @@ function game.title_screen_A()
     end
 end
 
+function game.randomize_color_pallet()
+    for offset=0,0x3FF do
+        game.ram.set.color_pallet(offset, math.random(0x00, 0xFF));
+    end
+end
+
 ---------------------------------------- Module Controls ----------------------------------------
 
 local settings = require("All/Settings");
@@ -361,6 +367,7 @@ function game.pre_update(options)
     game.title_screen_A();
     options.fun_flags = game.fun_flags;
     game.ram.pre_update(options);
+    --if game.did_game_state_change() or game.did_menu_mode_change() or game.did_area_change() then game.doit_later[emu.framecount()+3] = game.randomize_color_pallet; end
 end
 
 function game.post_update(options)

@@ -742,6 +742,8 @@ function game.post_update(options)
     -- should be overridden per game
 end
 
+game.doit_later = {};
+
 function game.track_game_state()
     track_encounter_checks();
     previous_game_state     = game.ram.get.game_state();
@@ -751,6 +753,7 @@ function game.track_game_state()
     previous_menu_state     = game.ram.get.menu_state();
     previous_main_area      = game.ram.get.main_area();
     previous_sub_area       = game.ram.get.sub_area();
+    if game.doit_later[emu.framecount()] then game.doit_later[emu.framecount()](); end
     if game.in_credits() then gui.text(0, 0, "t r o u t", 0x10000000, "bottomright"); end
 end
 

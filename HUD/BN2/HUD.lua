@@ -108,7 +108,6 @@ local function HUD_auto()
     elseif hud.game.in_shop() then
         hud.set_position(170, 34);
         display_player_info();
-        display_shop_menu_slots();
     elseif hud.game.in_chip_trader() then
         hud.set_position(105, 1);
         hud.display_RNG(true);

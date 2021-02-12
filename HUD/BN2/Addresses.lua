@@ -4,17 +4,17 @@ local addresses = require("All/Addresses");
 
 ---------------------------------------- WRAM 02000000-0203FFFF ----------------------------------------
 
-addresses.bug_frags             = 0x02000000; -- TODO: 1? byte, caps at 32?
 addresses.GMD_reward            = 0x02000000; -- TODO: 2? bytes, how to decode?
 
 addresses.flags                 = 0x02000000; -- N bytes, to 5F at most
 addresses.star_byte_yellow      = 0x02000000; -- Somewhere in the first row
-addresses.star_byte_green       = 0x02000000; -- Somewhere in the second row
+addresses.star_byte_green       = 0x02000010; -- Somewhere in the second row
 addresses.library               = 0x02000060; -- ? bytes, bit flags, ends on 80?
 
 -- 91-9F PAs in here somewhere...
 
--- A0+     don't write to these bytes!
+addresses.MD_flags              = 0x020000A0; -- ? bytes, bit flags
+
 -- 100-10F don't write to these bytes!
 -- 10A Pause state?
 -- 10B Don't write to this byte...
@@ -25,6 +25,8 @@ addresses.folder[2].ID          = 0x02000B28; -- every other 2 bytes, chip  IDs 
 addresses.folder[2].code        = 0x02000B2A; -- every other 2 bytes, chip codes of folder 2, ends at B9E
 addresses.folder[3].ID          = 0x02000BA0; -- every other 2 bytes, chip  IDs  of folder 3, ends at C14
 addresses.folder[3].code        = 0x02000BA2; -- every other 2 bytes, chip codes of folder 3, ends at C16
+
+-- C1B MDs in current area
 
 -- DC0 start of important things?
 
@@ -43,12 +45,20 @@ addresses.battle_paused         = 0x02000DC9; -- 1 byte, flag 0x01
 addresses.main_area_previous    = 0x02000DCC; -- 1 byte
 addresses.sub_area_previous     = 0x02000DCD; -- 1 byte
 
+addresses.mega_HP_current       = 0x02000DE0; -- 2 bytes
+addresses.mega_HP_max           = 0x02000DE2; -- 2 bytes
+
 addresses.is_talking            = 0x02000DDA; -- 1 byte, with NPC/MD, flag 0x01
 addresses.is_interacting        = 0x02000DDA; -- 1 byte, toggle check, flag 0x01
 
 addresses.zenny                 = 0x02000E34; -- 4 bytes, 999999 "max"
 
 -- E3B end of important things?
+
+addresses.bug_frags             = 0x02000EC5; -- 1 byte?, 32 "max"?
+addresses.HPMemory              = 0x02000EE0; -- 1 byte?, count of HPMems
+
+-- E80 - F1F
 
 addresses.style_active          = 0x02000000; -- 1 byte
 addresses.style_stored_1        = 0x02000000; -- 1 byte
@@ -57,9 +67,15 @@ addresses.style_stored_2        = 0x02000000; -- 1 byte
 addresses.element_next          = 0x0200112B; -- 1 byte, element of next style?
 addresses.steps                 = 0x02001150; -- 4 bytes
 addresses.steps_total           = 0x0200113C; -- 4 bytes? steps since new game?
+addresses.true_HP_current       = 0x02001130; -- 2 bytes
+addresses.true_HP_max           = 0x02001132; -- 2 bytes
 addresses.play_time_frames      = 0x02001144; -- 4 bytes, check for skipped frames
 addresses.check                 = 0x02001154; -- 4 bytes, steps at the last encounter check
 addresses.sneak                 = 0x02001178; -- 4? bytes, starts at 6000
+
+-- 25E0 Official Square Shop flags
+
+-- 3080 BMDs? 32XX? 33XX?
 
 -- 3A50 style point area
 addresses.points_guts           = 0x02003A5D; -- 2 bytes
@@ -90,6 +106,8 @@ addresses.your_Y                = 0x02006376; -- 2 bytes
 addresses.your_X2               = 0x02000000; -- 2 bytes
 addresses.your_Y2               = 0x02000000; -- 2 bytes
 
+addresses.mega_battle_HP        = 0x02008A94; -- 2 bytes
+
 --addresses.                    = 0x0200EEF0; -- 1 byte, battle data
 --addresses.                    = 0x0200EEF0; -- 1 byte, battle data
 --addresses.                    = 0x0200EEF1; -- 1 byte, custom menu state: 0x04 chip select 0x0C OK 0x10 ADD
@@ -103,6 +121,7 @@ addresses.custom_select_code    = 0x0200EF51; -- 1 byte each, the selected  chip
 addresses.custom_gauge_fill     = 0x0200EF91; -- 1 byte, counts up to 0x80
 addresses.custom_gauge_visual   = 0x0200EF92; -- 1 byte, loops
 addresses.battle_visual_state   = 0x0200EFA5; -- 1 byte, normal, BATTLE START!, PAUSE
+addresses.mega_battle_HP_text   = 0x0200EFA6; -- 2 bytes
 addresses.battle_timer          = 0x0200EFBA; -- 2 bytes, frame counter from load in to load out
 
 addresses.enemy[1].HP_text      = 0x0200EFD2; -- 2 bytes, which_enemy * 0x08, for counting down HP over time
@@ -147,6 +166,8 @@ addresses.enemy[3].HP_max       = 0x02008CD6; -- 2 bytes, for healing
 --addresses.                    = 0x02009070; -- 4 bytes, state transition related?
 addresses.game_state            = 0x02009078; -- 1 byte
 addresses.main_RNG              = 0x02009080; -- 4 bytes, restarts on the title screen
+
+addresses.color_pallet          = 0x02009090; -- 1024 bytes, ends 948F
 
 -- Each pack slot covers 32 bytes or 0x20 addresses
 addresses.pack_ID               = 0x0201901C; -- 2 bytes each, 0x20 offset
