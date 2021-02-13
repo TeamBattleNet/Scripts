@@ -28,7 +28,11 @@ addresses.folder[3].code        = 0x02000BA2; -- every other 2 bytes, chip codes
 
 -- C1B MDs in current area
 
+-- C20 - DAF What's all this then?
+
 -- D52 Stored Style?
+
+-- addresses.                   = 0x02000DB0; -- 4 bytes TBD
 
 -- DC0 start of important things?
 
@@ -58,13 +62,44 @@ addresses.battle_buster_charge  = 0x02000DD6; -- 1 byte, in battle, for style mo
 
 addresses.zenny                 = 0x02000E34; -- 4 bytes, 999999 "max"
 
--- E3B end of important things?
+-- E3B end of game state?
+
+-- E80 - EDF Key Items?
 
 addresses.bug_frags             = 0x02000EC5; -- 1 byte, 32 "max"
 addresses.HPMemory              = 0x02000EE0; -- 1 byte, HPMems collected
 addresses.PowerUP               = 0x02000EE1; -- 1 byte, PowerUPs available
 
--- E80 - F1F
+addresses.norm_styl_level       = 0x02000F00; -- 1 byte
+--addresses.none_none_level     = 0x02000F01; -- 1 byte, "You have no styles"
+--addresses.none_none_level     = 0x02000F02; -- 1 byte, "You have no styles"
+--addresses.none_none_level     = 0x02000F03; -- 1 byte, "You have no styles"
+--addresses.none_none_level     = 0x02000F04; -- 1 byte, "You have no styles"
+--addresses.none_none_level     = 0x02000F05; -- 1 byte, "You have no styles"
+addresses.elec_guts_level       = 0x02000F06; -- 1 byte
+addresses.heat_guts_level       = 0x02000F07; -- 1 byte
+addresses.aqua_guts_level       = 0x02000F08; -- 1 byte
+addresses.wood_guts_level       = 0x02000F09; -- 1 byte
+--addresses.none_none_level     = 0x02000F0A; -- 1 byte, "You have no styles"
+addresses.elec_cust_level       = 0x02000F0B; -- 1 byte
+addresses.heat_cust_level       = 0x02000F0C; -- 1 byte
+addresses.aqua_cust_level       = 0x02000F0D; -- 1 byte
+addresses.wood_cust_level       = 0x02000F0E; -- 1 byte
+--addresses.none_none_level     = 0x02000F0F; -- 1 byte, "You have no styles"
+addresses.elec_team_level       = 0x02000F10; -- 1 byte
+addresses.heat_team_level       = 0x02000F11; -- 1 byte
+addresses.aqua_team_level       = 0x02000F12; -- 1 byte
+addresses.wood_team_level       = 0x02000F13; -- 1 byte
+--addresses.none_none_level     = 0x02000F14; -- 1 byte, "You have no styles"
+addresses.elec_shld_level       = 0x02000F15; -- 1 byte
+addresses.heat_shld_level       = 0x02000F16; -- 1 byte
+addresses.aqua_shld_level       = 0x02000F17; -- 1 byte
+addresses.wood_shld_level       = 0x02000F18; -- 1 byte
+addresses.hub_style_level       = 0x02000F19; -- 1 byte
+
+-- only current styles are non-0; offset is index into style_value table at 0x08029A6C; ((style_level - 1) << 6) | style_value
+
+-- F20+ TBD
 
 addresses.buster_attack         = 0x02001128; -- 1 byte, 0x04 is max
 addresses.buster_rapid          = 0x02001129; -- 1 byte, 0x04 is max
@@ -80,13 +115,15 @@ addresses.sneak                 = 0x02001178; -- 4? bytes, starts at 6000
 
 --   1198 ROCKMANEXE2 20011016
 
--- 11A0 Obfuscated data storage?
+-- 11A0 Obfuscated data storage? Compressed Pack chips? Ends at 24BF
 
--- 24C0 Shop inventories
+-- 24C0 Shop inventories; ends at 2D8F?
 
--- 3080 BMDs? 32XX? 33XX? Animation?
+-- 2D90 Graphics? 3080 BMDs? 32XX? 33XX? Animation?
 
--- 3A00 End of SRAM mirror?
+-- 397F End of SRAM mirror?
+
+-- 3980 - 3A4F TBD
 
 -- 3A50 style point area
 addresses.points_guts           = 0x02003A5D; -- 2 bytes
@@ -162,7 +199,7 @@ addresses.enemy[3].HP_max       = 0x02008CD6; -- 2 bytes, for healing
 addresses.game_state            = 0x02009078; -- 1 byte
 addresses.main_RNG              = 0x02009080; -- 4 bytes, restarts on the title screen
 
-addresses.color_palette         = 0x02009090; -- 1024 bytes, ends 948F
+addresses.color_palette         = 0x02009090; -- 1024 bytes, ends at 948F
 
 -- 9198 ROCKMANEXE2 20011016
 
@@ -191,11 +228,14 @@ addresses.cursor_sort_copy      = 0x0200EC08; -- 2 bytes
 
 -- Each pack slot covers 32 bytes or 0x20 addresses
 addresses.pack_ID               = 0x0201901C; -- 2 bytes each, 0x20 offset
-addresses.pack_code             = 0x0201900A; -- 1 byte each, 0x20 offset
-addresses.pack_quantity         = 0x02019016; -- 1 byte each, number of copies
--- Ends at 23FFF? 291FF? Many of these values appear to be duplicates, possibly to help with sorting
+addresses.pack_code             = 0x0201900A; -- 1 byte  each, 0x20 offset
+addresses.pack_quantity         = 0x02019016; -- 1 byte  each, number of copies
+-- Many of these values appear to be duplicates, possibly to help with sorting
+-- Ends at 23FFF? 291FF?
 
 -- 0x0203FFFF end of WRAM (begins looping previous frames)
+
+-- 0x08029A6C Style Values
 
 -- 0x08030D40 ROCKMANEXE2 20011016 ROM
 -- 0x0A030D40 ROCKMANEXE2 20011016 Bizhawk Copy?

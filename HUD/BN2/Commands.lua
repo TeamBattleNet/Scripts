@@ -115,12 +115,18 @@ function command_items.update_options(option_value)
             table.insert( command_items.options, { value = nil; text = "Apologies... That is sold out..."; } );
         elseif option_value == 5 then
             command_items.description = function() return string.format("Power Level: %4u", commands.game.calculate_mega_level()); end;
-            table.insert( command_items.options, { value = commands.game.reset_buster_stats; text = "Reset Buster Stats"; } );
-            table.insert( command_items.options, { value = commands.game.max_buster_stats;   text = "Max   Buster Stats"; } );
-            --table.insert( command_items.options, { value = commands.game.hub_buster_stats;   text = "Hub   Buster Stats"; } );
-            --table.insert( command_items.options, { value = commands.game.op_buster_stats;    text = "OP    Buster Stats"; } );
-            --table.insert( command_items.options, { value = commands.game.set_style;          text = "Become AquaCust!"  ; } );
-            --table.insert( command_items.options, { value = commands.game.set_style;          text = "Become HubStyle!"  ; } );
+            table.insert( command_items.options, { value = commands.game.max_buster_stats;     text = "Max   Buster Stats";       } );
+            table.insert( command_items.options, { value = commands.game.reset_buster_stats;   text = "Reset Buster Stats";       } );
+            table.insert( command_items.options, { value = commands.game.hub_style_level_up;   text = "Level  Up  Hub Style";     } );
+            table.insert( command_items.options, { value = commands.game.hub_style_level_down; text = "Level Down Hub Style";     } );
+            table.insert( command_items.options, { value = commands.game.set_style_guts;       text = "Make Active Style Guts";   } );
+            table.insert( command_items.options, { value = commands.game.set_style_cust;       text = "Make Active Style Cust";   } );
+            table.insert( command_items.options, { value = commands.game.set_style_team;       text = "Make Active Style Team";   } );
+            table.insert( command_items.options, { value = commands.game.set_style_shld;       text = "Make Active Style Shld";   } );
+            table.insert( command_items.options, { value = commands.game.set_style_elec;       text = "Make Active Element Elec"; } );
+            table.insert( command_items.options, { value = commands.game.set_style_heat;       text = "Make Active Element Heat"; } );
+            table.insert( command_items.options, { value = commands.game.set_style_aqua;       text = "Make Active Element Aqua"; } );
+            table.insert( command_items.options, { value = commands.game.set_style_wood;       text = "Make Active Element Wood"; } );
             command_items.FUNction = function(value) value(); end;
         else
             command_items.description = function() return "Bzzt! (something broke)"; end;

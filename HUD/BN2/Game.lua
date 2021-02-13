@@ -210,6 +210,50 @@ function game.calculate_mega_level()
     return level;
 end
 
+function game.reset_styles()
+    game.ram.reset_styles();
+end
+
+function game.hub_style_level_up()
+    game.ram.adjust_hub_style_level(1);
+end
+
+function game.hub_style_level_down()
+    game.ram.adjust_hub_style_level(-1);
+end
+
+function game.set_style_guts()
+    game.ram.change_active_style(1);
+end
+
+function game.set_style_cust()
+    game.ram.change_active_style(2);
+end
+
+function game.set_style_team()
+    game.ram.change_active_style(3);
+end
+
+function game.set_style_shld()
+    game.ram.change_active_style(4);
+end
+
+function game.set_style_elec()
+    game.ram.change_active_element(1);
+end
+
+function game.set_style_heat()
+    game.ram.change_active_element(2);
+end
+
+function game.set_style_aqua()
+    game.ram.change_active_element(3);
+end
+
+function game.set_style_wood()
+    game.ram.change_active_element(4);
+end
+
 ---------------------------------------- Flags ----------------------------------------
 
 function game.get_ice_flags()

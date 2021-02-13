@@ -39,6 +39,53 @@ ram.set.pack_quantity = function(which_slot, chip_quantity) memory.write_u8(ram.
 ram.get.title_star_byte = function() return memory.read_u8(ram.addr.title_star_byte); end;
 ram.set.title_star_byte = function(title_star_byte) memory.write_u8(ram.addr.title_star_byte, title_star_byte); end;
 
+---------------------------------------- Styles ----------------------------------------
+
+function ram.reset_styles()
+    memory.write_u8(ram.addr.norm_styl_level, 1);
+    for i=1,0x1F do
+        memory.write_u8(ram.addr.norm_styl_level+i, 0);
+    end
+end
+
+function ram.adjust_style_level(offset, some_level)
+    local new_level = memory.read_u8(ram.addr.norm_styl_level+offset) + some_level;
+    memory.write_u8(ram.addr.norm_styl_level+offset, new_level);
+end
+
+function ram.adjust_hub_style_level(some_level)
+    ram.adjust_style_level(0x19, some_level);
+end
+
+function ram.set.active_style(level, style, element)
+    local new_style = bit.bor(level, bit.bor(style, element)); -- 00 000 000
+    memory.write_u8(ram.addr.style_active, new_style); -- level style element
+end
+
+function ram.change_active_level(new_level)
+    local current_style = memory.read_u8(ram.addr.style_active);
+    new_level     = bit.lshift(bit.band(new_level, 0x03), 6);
+    local style   = bit.band(current_style, 0x38);
+    local element = bit.band(current_style, 0x07);
+    ram.set.active_style(new_level, style, element);
+end
+
+function ram.change_active_style(new_style)
+    local current_style = memory.read_u8(ram.addr.style_active);
+    local level   = bit.band(current_style, 0xC0);
+    new_style     = bit.lshift(bit.band(new_style, 0x07), 3);
+    local element = bit.band(current_style, 0x07);
+    ram.set.active_style(level, new_style, element);
+end
+
+function ram.change_active_element(new_element)
+    local current_style = memory.read_u8(ram.addr.style_active);
+    local level   = bit.band(current_style, 0xC0);
+    local style   = bit.band(current_style, 0x38);
+    new_element   = bit.band(new_element  , 0x07);
+    ram.set.active_style(level, style, new_element);
+end
+
 ---------------------------------------- RAMsacking ----------------------------------------
 
 function ram.use_fun_flags(fun_flags)
