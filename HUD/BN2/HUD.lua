@@ -4,9 +4,11 @@
 
 local hud = require("All/HUD");
 
-hud.version = hud.version .. ".0.1";
+hud.version = hud.version .. ".0.2";
 
 hud.game = require("BN2/Game");
+
+local total_fights = 0;
 
 ---------------------------------------- Display Functions ----------------------------------------
 
@@ -38,6 +40,7 @@ end
 local function HUD_speedrun()
     hud.to_screen(string.format("Progress: 0x%02X %s", hud.game.get_progress(), hud.game.get_progress_name_current()));
     display_player_info();
+    hud.to_screen(string.format("EnCounter: %4u", total_fights));
     hud.display_RNG();
     hud.display_area();
 end
@@ -145,7 +148,9 @@ function hud.B()
 end
 
 function hud.update_local_state()
-    -- for tracking game specific HUD values over time
+    if hud.game.did_game_state_change() and hud.game.in_battle() then
+        total_fights = total_fights + 1;
+    end
 end
 
 return hud;

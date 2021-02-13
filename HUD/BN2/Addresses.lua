@@ -51,6 +51,11 @@ addresses.battle_paused         = 0x02000DC9; -- 1 byte, flag 0x01
 addresses.main_area_previous    = 0x02000DCC; -- 1 byte
 addresses.sub_area_previous     = 0x02000DCD; -- 1 byte
 
+addresses.reg_slot_current      = 0x02000DDC; -- 1 byte 0xFF if nothing is reg
+addresses.reg_slot_folder_1     = 0x02000DDD; -- 1 byte 0xFF if nothing is reg
+addresses.reg_slot_folder_2     = 0x02000DDE; -- 1 byte 0xFF if nothing is reg
+addresses.reg_slot_folder_3     = 0x02000DDF; -- 1 byte 0xFF if nothing is reg
+
 addresses.mega_HP_current       = 0x02000DE0; -- 2 bytes
 addresses.mega_HP_max           = 0x02000DE2; -- 2 bytes
 
@@ -64,9 +69,15 @@ addresses.zenny                 = 0x02000E34; -- 4 bytes, 999999 "max"
 
 -- E3B end of game state?
 
--- E80 - EDF Key Items?
+addresses.key_items             = 0x02000E80; -- 1 byte per Key Item, ends at EC4
 
 addresses.bug_frags             = 0x02000EC5; -- 1 byte, 32 "max"
+
+-- EC6 - ECF Fake MaylCode
+
+addresses.code_mayl             = 0x02000ED0; -- 1 bit
+addresses.code_dex              = 0x02000ED0; -- 1 bit
+
 addresses.HPMemory              = 0x02000EE0; -- 1 byte, HPMems collected
 addresses.PowerUP               = 0x02000EE1; -- 1 byte, PowerUPs available
 

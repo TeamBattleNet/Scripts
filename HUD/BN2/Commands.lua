@@ -60,7 +60,9 @@ command_battle.options = {
     { value = function() commands.game.set_all_folder_code_to(       1, 0); end; text = "Folder: Monocode A Folder"     ; };
     { value = function() commands.game.randomize_folder_codes(       1   ); end; text = "Folder: Randomize Folder Codes"; };
     { value = function() commands.game.randomize_folder_IDs_standard(1   ); end; text = "Folder: Randomize Folder IDs"  ; };
+    { value = function() commands.game.overwrite_folder_dalus_special(   ); end; text = "Folder: The Dalus_EXE Special" ; };
     { value = function() commands.game.overwrite_folder_press_a(         ); end; text = "Folder: Just PressA"           ; };
+    { value = function() commands.game.overwrite_folder_last_special(    ); end; text = "Folder: TheLast Folder"        ; };
 };
 command_battle.doit = function(value) value(); end;
 table.insert(commands.commands, command_battle);
@@ -98,10 +100,12 @@ function command_items.update_options(option_value)
             command_items.FUNction = function(value) commands.game.add_zenny(value); end;
         elseif option_value == 2 then
             command_items.description = function() return string.format("BugFrags: %3u", commands.game.get_bug_frags()); end;
-            table.insert( command_items.options, { value =  32; text = "Give 32"; } );
-            table.insert( command_items.options, { value =   1; text = "Give  1"; } );
-            table.insert( command_items.options, { value =  -1; text = "Take  1"; } );
-            table.insert( command_items.options, { value = -32; text = "Take 32"; } );
+            table.insert( command_items.options, { value =  255; text = "Give 255"; } );
+            table.insert( command_items.options, { value =   32; text = "Give  32"; } );
+            table.insert( command_items.options, { value =    1; text = "Give   1"; } );
+            table.insert( command_items.options, { value =   -1; text = "Take   1"; } );
+            table.insert( command_items.options, { value =  -32; text = "Take  32"; } );
+            table.insert( command_items.options, { value = -255; text = "Take 255"; } );
             command_items.FUNction = function(value) commands.game.add_bug_frags(value); end;
         elseif option_value == 3 then
             command_items.description = function() return string.format("PowerUPs: %2u", commands.game.get_PowerUPs()); end;

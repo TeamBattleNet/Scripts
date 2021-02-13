@@ -192,25 +192,13 @@ end
 function game.set_bug_frags(new_bug_frags)
     if new_bug_frags < 0 then
         new_bug_frags = 0
-    elseif new_bug_frags > 255 then
-        new_bug_frags = 255; -- only need 32
+    elseif new_bug_frags > 0xFF then
+        new_bug_frags = 0xFF; -- only 1 byte
     end
     game.ram.set.bug_frags(new_bug_frags);
 end
 
 ----------------------------------------Mega Modifications ----------------------------------------
-
-function game.calculate_mega_level()
-    level = 1; -- starting level
-    level = level +     game.ram.get.HPMemory();
-    level = level + 4 * game.ram.get.buster_attack();
-    level = level + 4 * game.ram.get.buster_rapid();
-    level = level + 4 * game.ram.get.buster_charge();
-    if game.ram.has_style() then
-        level = level + 6;
-    end
-    return level;
-end
 
 function game.reset_styles()
     game.ram.reset_styles();
@@ -256,6 +244,18 @@ function game.set_style_wood()
     game.ram.change_active_element(4);
 end
 
+function game.calculate_mega_level()
+    level = 1; -- starting level
+    level = level +     game.ram.get.HPMemory();
+    level = level + 4 * game.ram.get.buster_attack();
+    level = level + 4 * game.ram.get.buster_rapid();
+    level = level + 4 * game.ram.get.buster_charge();
+    if game.ram.has_style() then
+        level = level + 6;
+    end
+    return level;
+end
+
 ---------------------------------------- Flags ----------------------------------------
 
 function game.get_ice_flags()
@@ -272,7 +272,7 @@ function game.shuffle_folder_simulate_from_battle(offset)
     local RNG_index = game.get_main_RNG_index();
     if RNG_index ~= nil then
         offset = offset or 0;
-        return game.ram.shuffle_folder_simulate_from_main_index(RNG_index-60+1+offset, 30);
+        return game.shuffle_folder_simulate_from_main_index(RNG_index-60+1+offset, 30);
     end
 end
 
@@ -288,21 +288,21 @@ end
 
 function game.overwrite_folder_dalus_special()
     game.overwrite_folder_to(1, {
-        { ID=111; code=26 }; -- Guard G
-        { ID=111; code=26 }; -- Guard G
-        { ID=111; code=26 }; -- Guard G
-        { ID=111; code=26 }; -- Guard G
-        { ID=111; code=26 }; -- Guard G
+        { ID=111; code=26 }; -- Guard *
+        { ID=111; code=26 }; -- Guard *
+        { ID=111; code=26 }; -- Guard *
+        { ID=111; code=26 }; -- Guard *
+        { ID=111; code=26 }; -- Guard *
         { ID= 50; code= 6 }; -- DashAtk G
         { ID= 50; code= 6 }; -- DashAtk G
         { ID= 50; code= 6 }; -- DashAtk G
         { ID= 50; code= 6 }; -- DashAtk G
         { ID= 50; code= 6 }; -- DashAtk G
-        { ID=199; code= 6 }; -- GutsManV3 G
-        { ID=199; code= 6 }; -- GutsManV3 G
-        { ID=199; code= 6 }; -- GutsManV3 G
-        { ID=199; code= 6 }; -- GutsManV3 G
-        { ID=199; code= 6 }; -- GutsManV3 G
+        { ID=199; code= 6 }; -- GutsMan V3 G
+        { ID=199; code= 6 }; -- GutsMan V3 G
+        { ID=199; code= 6 }; -- GutsMan V3 G
+        { ID=199; code= 6 }; -- GutsMan V3 G
+        { ID=199; code= 6 }; -- GutsMan V3 G
         { ID=152; code=26 }; -- FullCust *
         { ID=152; code=26 }; -- FullCust *
         { ID=152; code=26 }; -- FullCust *
@@ -313,11 +313,46 @@ function game.overwrite_folder_dalus_special()
         { ID=188; code=26 }; -- Atk+10 *
         { ID=188; code=26 }; -- Atk+10 *
         { ID=188; code=26 }; -- Atk+10 *
-        { ID=138; code= 5 }; -- Escape
-        { ID=138; code= 7 }; -- Escape
-        { ID=138; code= 9 }; -- Escape
-        { ID=138; code=11 }; -- Escape
-        { ID=138; code=13 }; -- Escape
+        { ID=138; code= 5 }; -- Escape F
+        { ID=138; code= 7 }; -- Escape H
+        { ID=138; code= 9 }; -- Escape J
+        { ID=138; code=11 }; -- Escape L
+        { ID=138; code=13 }; -- Escape N
+    });
+end
+
+function game.overwrite_folder_last_special()
+    game.overwrite_folder_to(1, {
+        { ID=151; code= 0 }; -- FstGauge *
+        { ID=177; code=14 }; -- IceStage *
+        { ID=146; code=14 }; -- Guardian *
+        { ID=171; code=25 }; -- LifeAur3 *
+        { ID=117; code=25 }; -- ZeusHamr *
+        { ID= 29; code=26 }; -- FireBlde *
+        { ID= 29; code=26 }; -- FireBlde *
+        { ID= 29; code=26 }; -- FireBlde *
+        { ID= 29; code=26 }; -- FireBlde *
+        { ID= 29; code=26 }; -- FireBlde *
+        { ID= 30; code=26 }; -- AquaBlde *
+        { ID= 30; code=26 }; -- AquaBlde *
+        { ID= 30; code=26 }; -- AquaBlde *
+        { ID= 30; code=26 }; -- AquaBlde *
+        { ID= 30; code=26 }; -- AquaBlde *
+        { ID= 31; code=26 }; -- ElecBlde *
+        { ID= 31; code=26 }; -- ElecBlde *
+        { ID= 31; code=26 }; -- ElecBlde *
+        { ID= 31; code=26 }; -- ElecBlde *
+        { ID= 31; code=26 }; -- ElecBlde *
+        { ID=131; code=26 }; -- AreaGrab *
+        { ID=131; code=26 }; -- AreaGrab *
+        { ID=131; code=26 }; -- AreaGrab *
+        { ID=131; code=26 }; -- AreaGrab *
+        { ID=131; code=26 }; -- AreaGrab *
+        { ID=152; code=26 }; -- FullCust *
+        { ID=152; code=26 }; -- FullCust *
+        { ID=152; code=26 }; -- FullCust *
+        { ID=152; code=26 }; -- FullCust *
+        { ID=152; code=26 }; -- FullCust *
     });
 end
 

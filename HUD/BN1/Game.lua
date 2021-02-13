@@ -67,6 +67,10 @@ function game.in_chip_trader()
     return game.ram.get.game_state() == 0x24;
 end
 
+function game.in_request_board()
+    return false; -- Only BN 1 doesn't have a Request Board
+end
+
 function game.in_credits()
     return game.ram.get.game_state() == 0x28;
 end
@@ -99,6 +103,7 @@ game.battle_state_names[0x18] = "Opening Custom";
 -- Menu Mode
 
 game.menu_mode_names[0x00] = "Folder";
+--game.menu_mode_names[0x04] = "Sub Chips";
 game.menu_mode_names[0x04] = "Library";
 game.menu_mode_names[0x08] = "MegaMan";
 game.menu_mode_names[0x0C] = "E-Mail";
@@ -221,7 +226,7 @@ end
 
 function game.calculate_mega_level()
     level = 1; -- starting level
-    level = level + 1 * game.get_HPMemory_count();
+    level = level +     game.ram.get.HPMemory();
     level = level + 3 * game.ram.get.buster_attack();
     level = level + 3 * game.ram.get.buster_rapid();
     level = level + 3 * game.ram.get.buster_charge();
