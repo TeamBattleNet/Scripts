@@ -775,7 +775,7 @@ end
 ---------------------------------------- Miscellaneous ----------------------------------------
 
 function game.randomize_color_palette()
-    for offset=0,0x3FF do
+    for offset=0,0x3FF do -- 1024 bytes
         game.ram.set.color_palette(offset, math.random(0x00, 0xFF));
     end
 end

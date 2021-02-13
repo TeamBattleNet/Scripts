@@ -214,7 +214,7 @@ addresses.enemy[3].HP_max       = 0x02008CD6; -- 2 bytes, for healing
 addresses.game_state            = 0x02009078; -- 1 byte
 addresses.main_RNG              = 0x02009080; -- 4 bytes, restarts on the title screen
 
-addresses.color_palette         = 0x02009090; -- 1024 bytes, ends at 948F
+addresses.color_palette         = 0x02009090; -- 1024 bytes, 0x3FF bytes, ends at 948F
 
 -- 9198 ROCKMANEXE2 20011016
 

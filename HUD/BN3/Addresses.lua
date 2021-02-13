@@ -118,7 +118,7 @@ addresses.main_RNG              = 0x02009800; -- 4 bytes, controls everything el
 addresses.gamble_pick           = 0x02009DB1; -- 1 byte, current value
 addresses.gamble_win            = 0x02009DB2; -- 1 byte, winning value
 
-addresses.color_palette         = 0x02009810; -- 1024 bytes, ends at 9C0F
+addresses.color_palette         = 0x02009810; -- 1024 bytes, 0x3FF bytes, ends at 9C0F
 
 addresses.title_star_flags      = 0x0200A30A; -- 1 bit per star 0xFE
 

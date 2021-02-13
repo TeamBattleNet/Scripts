@@ -283,8 +283,11 @@ addresses.enemy[3].HP           = 0x02006910; -- 2 bytes, which_enemy * 0xC0
 
 addresses.game_state            = 0x02006CB8; -- 1 byte
 addresses.main_RNG              = 0x02006CC0; -- 4 bytes, resets and pauses on the title screen
--- 6CB0
--- 7210-74C6 all 1's
+
+addresses.color_palette         = 0x02006CD0; -- 512 bytes, 0x1FF bytes, ends at 6ECF
+
+-- 7200-7220 sometimes 1's, sprite related?
+-- 7200-74C7 all 1's
 
 -- 74CD sprite animation counter?
 -- 74D4 sprite animation timer
