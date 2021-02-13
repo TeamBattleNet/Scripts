@@ -6,6 +6,8 @@ local addresses = require("All/Addresses");
 -- Pressing LButton during CopyMan skip could be an exploit
 -- Flags to find: Beta Navis, Key Items, MDs, Jobs, Trades, Vines, Fires, Animals, Jack-Out Lock Out
 
+-- https://github.com/XKirby/MMBN3-Randomizer/blob/master/notes/MMBN3%20Various%20Offsets.txt
+
 ---------------------------------------- WRAM 02000000-0203FFFF ----------------------------------------
 
 addresses.fire_flags            = 0x02000000; -- 1 byte TBD
@@ -13,7 +15,7 @@ addresses.fire_flags            = 0x02000000; -- 1 byte TBD
 addresses.folder_state          = 0x02000040; -- 1 byte
 addresses.HP_memory_value       = 0x02000150; -- 1 byte ???
 
-addresses.library_flags         = 0x02000330; -- 1 bit per chip, runs for ~44 bytes
+addresses.library               = 0x02000330; -- 1 bit per chip, runs for ~44 bytes
 
 addresses.battles_guts          = 0x02000E60; -- 1 byte
 addresses.battles_cust          = 0x02000E61; -- 1 byte
@@ -25,12 +27,12 @@ addresses.battles_bug           = 0x02000E66; -- 1 byte
 --addresses.                    = 0x02000E67; -- 1 byte TBD
 addresses.GMD_RNG               = 0x02000E68; -- 4 bytes, drop table index
 
-addresses.folder[1].ID           = 0x02001410; -- 2 bytes, chip  ID  of folder 1 slot 1, ends 0x02001484
-addresses.folder[1].code         = 0x02001412; -- 2 bytes, chip Code of folder 1 slot 1, ends 0x02001486
-addresses.folder[2].ID           = 0x02001500; -- 2 bytes, chip  ID  of folder 1 slot 1, ends 0x02001574
-addresses.folder[2].code         = 0x02001502; -- 2 bytes, chip Code of folder 1 slot 1, ends 0x02001576
-addresses.folder[3].ID           = 0x02001488; -- 2 bytes, chip  ID  of folder 1 slot 1, ends 0x020014FC
-addresses.folder[3].code         = 0x0200148A; -- 2 bytes, chip Code of folder 1 slot 1, ends 0x020014FE
+addresses.folder[1].ID           = 0x02001410; -- 2 bytes, chip  ID  of folder 1 slot 1, ends 1484
+addresses.folder[1].code         = 0x02001412; -- 2 bytes, chip Code of folder 1 slot 1, ends 1486
+addresses.folder[2].ID           = 0x02001500; -- 2 bytes, chip  ID  of folder 1 slot 1, ends 1574
+addresses.folder[2].code         = 0x02001502; -- 2 bytes, chip Code of folder 1 slot 1, ends 1576
+addresses.folder[3].ID           = 0x02001488; -- 2 bytes, chip  ID  of folder 1 slot 1, ends 14FC
+addresses.folder[3].code         = 0x0200148A; -- 2 bytes, chip Code of folder 1 slot 1, ends 14FE
 
 addresses.control_flags         = 0x02001880; -- 1 byte ???
 addresses.style_active          = 0x02001881; -- 1 byte
@@ -47,6 +49,10 @@ addresses.world_HP_current      = 0x020018A0; -- 2 bytes
 addresses.world_HP_max          = 0x020018A2; -- 2 bytes
 addresses.zenny                 = 0x020018F4; -- 4 bytes, 999999 "max"
 addresses.bug_frags             = 0x020018F8; -- 4 bytes,   9999 "max"
+
+addresses.battle_pointer        = 0x020018AC; -- 2 bytes? ROM offset? TBD
+addresses.battle_pointer_copy   = 0x02006D0C; -- 2 bytes? ROM offset? TBD
+addresses.battle_pointer_fixed  = 0x0200F8C8; -- 2 bytes? ROM offset? TBD
 
 addresses.next_element          = 0x02001DBB; -- 1 byte, next element
 addresses.battle_count          = 0x02001DCA; -- 1 byte, number of battles since last style change
@@ -68,6 +74,10 @@ addresses.max_HP_over_five      = 0x0200579C; -- 1 byte, Maximum HP Check for HP
 addresses.enemy[1].ID           = 0x02006D00; -- 1 byte per enemy, up to 3
 addresses.enemy[2].ID           = 0x02006D01; -- 1 byte per enemy, up to 3
 addresses.enemy[3].ID           = 0x02006D02; -- 1 byte per enemy, up to 3
+
+addresses.battle_custom_check   = 0x02006CAC; -- 1 byte, flag for full custom gauge 0x01
+addresses.chip_window_size      = 0x02006CAE; -- 1 byte, number of chips available in the custom menu
+addresses.battle_custom_gauge   = 0x02006CCC; -- 2 bytes, counts up to 0x4000
 
 addresses.cursor_ID             = 0x02007D14; -- 2 bytes? chip ID of cursor
 addresses.cursor_code           = 0x02007D18; -- 2 bytes? chip Code of cursor
@@ -115,14 +125,16 @@ addresses.battle_field          = 0x0200F47E; -- 8*3 bytes, current battlefield
 
 addresses.custom_gauge_animate  = 0x0200F872; -- 1 byte
 addresses.display_chip_name     = 0x0200F873; -- 1 bit
-addresses.battle_state          = 0x0200F886; -- 1 byte?
-addresses.display_PAUSE         = 0x0200F887; -- 1 byte?
+addresses.battle_mode           = 0x0200F886; -- 1 byte
+addresses.battle_state          = 0x0200F887; -- 1 byte
 addresses.battle_HP_text        = 0x0200F888; -- 2 bytes, for HP change animation
 addresses.battle_timer          = 0x0200F89C; -- 2 bytes
 
 addresses.enemy[1].HP_text      = 0x0200F8B2; -- 2 bytes, for HP change animation
 addresses.enemy[2].HP_text      = 0x0200F8BA; -- 2 bytes, for HP change animation
 addresses.enemy[3].HP_text      = 0x0200F8C2; -- 2 bytes, for HP change animation
+
+-- 0x2001f60 (18*312 Bytes): Battlechip Pack Counts (The first 6 out of 18 Bytes per Chip are used.)
 
 addresses.pack_ID               = 0x0201881C; -- 2 bytes, chip ID of pack
 addresses.pack_code             = 0x0201880A; -- 2 bytes, chip code of pack
@@ -144,8 +156,7 @@ addresses.enemy[3].HP_max       = 0x02037512; -- 2 bytes, for healing?
 --addresses.                    = 0x0203B380; -- 4 bytes, battle timer?
 --addresses.                    = 0x0203B390; -- 4 bytes, 5 copies of button flags?
 
--- 0x0203FFFF end of WRAM?
--- 0x02047FFF end of WRAM?
+-- 0x0203FFFF end of WRAM
 
 ---------------------------------------- Verion Dependent ----------------------------------------
 
@@ -157,7 +168,7 @@ addresses.enemy[3].HP_max       = 0x02037512; -- 2 bytes, for healing?
 -- 4D 45 47 41 5F 45 58 45 33 5F 57 48 41 36 42 50 - MEGA_EXE3_WHA6BP - PAL
 -- 4D 45 47 41 5F 45 58 45 33 5F 42 4C 41 33 58 50 - MEGA_EXE3_BLA3XP - PAL
 
-local version_byte = memory.read_u32_le(0x080000AC);
+local version_byte = memory.read_u32_le(addresses.version_byte);
 
 if     version_byte == 0x4A423641 then
     addresses.version_name = "JP White";

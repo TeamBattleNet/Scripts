@@ -150,6 +150,22 @@ function hud.display_RNG(and_value) -- for BN1 & BN2
     hud.to_screen(string.format("Delta: %5s", (hud.game.get_main_RNG_delta() or     "?")));
 end
 
+function hud.display_both_RNG(with_space, and_value)
+    if and_value then
+        hud.to_screen(string.format("M RNG: %08X", hud.game.get_main_RNG_value()));
+    end
+    hud.to_screen(string.format("M Index: %5s", (hud.game.get_main_RNG_index() or "?????")));
+    hud.to_screen(string.format("M Delta: %5s", (hud.game.get_main_RNG_delta() or     "?")));
+    if with_space then
+        hud.to_screen("");
+    end
+    if and_value then
+        hud.to_screen(string.format("L RNG: %08X", hud.game.get_lazy_RNG_value()));
+    end
+    hud.to_screen(string.format("L Index: %5s", (hud.game.get_lazy_RNG_index() or "?????")));
+    hud.to_screen(string.format("L Delta: %5s", (hud.game.get_lazy_RNG_delta() or     "?")));
+end
+
 function hud.display_main_RNG(and_value)
     if and_value then
         hud.to_screen(string.format("M RNG: %08X", hud.game.get_main_RNG_value()));

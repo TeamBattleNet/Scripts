@@ -26,6 +26,11 @@ ram.set.pack_code = function(which_slot, chip_code) memory.write_u8(ram.addr.pac
 ram.get.pack_quantity = function(which_slot) return memory.read_u8(ram.addr.pack_quantity+(0x20*which_slot)); end;
 ram.set.pack_quantity = function(which_slot, chip_quantity) memory.write_u8(ram.addr.pack_quantity+(0x20*which_slot), chip_quantity); end;
 
+ram.get.GMD_RNG = function() return memory.read_u32_le(ram.addr.GMD_RNG); end;
+ram.set.GMD_RNG = function(GMD_RNG) memory.write_u32_le(ram.addr.GMD_RNG, GMD_RNG); end;
+ram.get.GMD_value = function() return memory.read_u16_le(ram.addr.GMD_value); end;
+ram.set.GMD_value = function(GMD_value) memory.write_u16_le(ram.addr.GMD_value, GMD_value); end;
+
 ---------------------------------------- RAMsacking ----------------------------------------
 
 function ram.use_fun_flags(fun_flags)
@@ -34,11 +39,11 @@ function ram.use_fun_flags(fun_flags)
     end
     
     if fun_flags.no_chip_cooldown then
-        ram.set.chip_cooldown(0);
+        --ram.set.chip_cooldown(0); -- TODO
     end
     
     if fun_flags.delete_time_zero then
-        ram.set.delete_timer(0);
+        --ram.set.delete_timer(0); -- TODO
     end
     
     if fun_flags.chip_selection_max then

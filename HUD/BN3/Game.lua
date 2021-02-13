@@ -77,20 +77,30 @@ end
 
 -- Battle Mode
 
-game.battle_mode_names[0x00] = "TBD";
-game.battle_mode_names[0x04] = "TBD";
-game.battle_mode_names[0x08] = "TBD";
-game.battle_mode_names[0x0C] = "TBD";
+game.battle_mode_names[0x00] = "Loading";
+game.battle_mode_names[0x03] = "Chip Select & Reward";
+game.battle_mode_names[0x12] = "Loading";
+game.battle_mode_names[0x13] = "First Chip Select";
+game.battle_mode_names[0xCF] = "Time Stop";
+game.battle_mode_names[0xEF] = "Combat";
+
+function game.in_chip_select()
+    return (game.ram.get.battle_mode() == 0x03 or game.ram.get.battle_mode() == 0x13);
+end
+
+function game.in_combat()
+    return (game.ram.get.battle_mode() == 0xCF or game.ram.get.battle_mode() == 0xEF);
+end
 
 -- Battle State
 
-game.battle_state_names[0x00] = "TBD";
-game.battle_state_names[0x04] = "TBD";
-game.battle_state_names[0x08] = "TBD";
-game.battle_state_names[0x0C] = "TBD";
-game.battle_state_names[0x10] = "TBD";
-game.battle_state_names[0x14] = "TBD";
-game.battle_state_names[0x18] = "TBD";
+game.battle_state_names[0x00] = "Waiting";
+game.battle_state_names[0x02] = "Time Stop";
+game.battle_state_names[0x03] = "Time Stop Name";
+game.battle_state_names[0x41] = "ENEMY DELETED!";
+game.battle_state_names[0x42] = "Combat";
+game.battle_state_names[0x43] = "BATTLE START!";
+game.battle_state_names[0x4A] = "PAUSE";
 
 -- Menu Mode
 
@@ -145,6 +155,10 @@ function game.in_menu_folder_edit()
     return game.ram.get.menu_mode() == 0x24;
 end
 
+function game.in_menu_folder()
+    return (game.in_menu_folder_select() or game.in_menu_folder_edit());
+end
+
 -- Menu State
 
 game.menu_state_names[0x04] = "Editing Folder";
@@ -163,95 +177,16 @@ function game.in_pack()
     return game.in_menu_folder_edit() and (game.ram.get.menu_state() == 0x08 or game.ram.get.menu_state() == 0x1C);
 end
 
----------------------------------------- Flags ----------------------------------------
-
-function game.get_fire_flags()
-    return game.ram.get.fire_flags();
-end
-
-function game.set_fire_flags(fire_flags)
-    game.ram.set.fire_flags(fire_flags);
-end
-
----------------------------------------- Draw Slots ----------------------------------------
-
-function game.shuffle_folder_simulate_from_battle(offset)
-    local RNG_index = game.get_main_RNG_index();
-    if RNG_index ~= nil then
-        offset = offset or 0;
-        return game.ram.shuffle_folder_simulate_from_main_index(RNG_index-60+1+offset, 30);
-    end
-end
-
----------------------------------------- Battlechips ----------------------------------------
-
-function game.count_library()
-    local count = 0;
-    for i=0,0x20 do -- TODO: 33 total bytes?
-        local byte = game.ram.get.library(i);
-        for i=0,7 do
-            if bit.check(byte, i) then
-                count = count + 1;
-            end
-        end
-    end
-    return count;
-end
-
 ----------------------------------------Mega Modifications ----------------------------------------
 
-function game.set_buster_stats(power_level)
-    game.ram.set.buster_attack(power_level);
-    game.ram.set.buster_rapid (power_level);
-    game.ram.set.buster_charge(power_level);
-end
-
-function game.reset_buster_stats()
-    game.set_buster_stats(0); -- 0 indexed
-end
-
-function game.max_buster_stats()
-    game.set_buster_stats(4);
-end
-
-function game.hub_buster_stats()
-    game.set_buster_stats(5); -- super armor
-end
-
-function game.op_buster_stats()
-    game.set_buster_stats(7); -- 327 buster shots
-end
-
-function game.get_HPMemory_count()
-    return game.ram.get.HPMemory();
-end
-
-function game.calculate_max_HP()
-    return 100 + (20 * game.get_HPMemory_count());
-end
-
----------------------------------------- Miscellaneous ----------------------------------------
-
 --[[
-
-function game.get_max_HP()
-    return memory.read_u16_le(world_HP_max);
-end
 
 function game.get_style_type()
     return bit.rshift(bit.band(memory.read_u8(style_stored), 0x38), 3);
 end
 
-function game.get_style_type_name()
-    return style_names[ram.get_style_type()] or "????";
-end
-
 function game.get_current_element()
     return bit.band(memory.read_u8(style_stored), 0x07);
-end
-
-function game.get_current_element_name()
-    return style_elements[ram.get_current_element()] or "????";
 end
 
 function game.get_style_name()
@@ -282,23 +217,61 @@ function game.add_battle_count(some_battles)
     return ram.set_battle_count(ram.get_battle_count() + some_battles);
 end
 
-function game.get_GMD_RNG()
-    return memory.read_u32_le(GMD_RNG);
+--]]
+
+---------------------------------------- Flags ----------------------------------------
+
+function game.get_fire_flags()
+    return game.ram.get.fire_flags();
 end
 
+function game.set_fire_flags(fire_flags)
+    game.ram.set.fire_flags(fire_flags);
+end
+
+function game.get_magic_byte()
+    return 0x00; -- game.ram.get.magic_byte();
+end
+
+function game.is_go_mode()
+    return false; -- (game.ram.get.progress() == 0x47 and bit.band(game.get_magic_byte(), 0x04) > 0);
+end
+
+---------------------------------------- Draw Slots ----------------------------------------
+
+function game.shuffle_folder_simulate_from_battle(offset)
+    local lazy_RNG_index = game.get_lazy_RNG_index();
+    if lazy_RNG_index ~= nil then
+        offset = offset or 0;
+        return game.shuffle_folder_simulate_from_lazy_index(lazy_RNG_index-60+1+offset, 30);
+    end
+end
+
+---------------------------------------- Battlechips ----------------------------------------
+
+function game.count_library()
+    local count = 0;
+    for i=0,0x1F do -- TODO: determine total bytes
+        count = count + game.bit_counter(game.ram.get.library(i));
+    end
+    return count;
+end
+
+function game.overwrite_folder_press_a()
+    game.overwrite_folder_to(1, {
+        -- TODO
+    });
+end
+
+---------------------------------------- Miscellaneous ----------------------------------------
+
 function game.set_GMD_RNG(new_GMD_RNG)
-    return memory.write_u32_le(GMD_RNG, new_GMD_RNG);
+    game.ram.set.GMD_RNG(new_GMD_RNG);
 end
 
 function game.randomize_GMD_RNG()
-    return game.ram.set.GMD_RNG(game.get_main_RNG_value());
+    game.set_GMD_RNG(game.get_main_RNG_value());
 end
-
-function game.get_GMD_value()
-    return memory.read_u32_le(GMD_value);
-end
-
---]]
 
 function game.get_gamble_pick()
     return game.ram.get.gamble_pick();
@@ -319,15 +292,35 @@ function game.in_Secret_3()
     return (game.get_main_area() == 0x95 and game.get_sub_area() == 0x02);
 end
 
+function game.title_screen_A()
+    if game.did_leave_title_screen() then
+        local RNG_index = game.get_main_RNG_index() or "?????";
+        local message = string.format("\n%u: Pressed A on M RNG Index %s", emu.framecount()-17, RNG_index);
+        print(message);
+        gui.addmessage(message);
+    end
+end
+
+function game.use_fun_flags(fun_flags)
+    if fun_flags.randomize_colors then
+        --if game.did_game_state_change() or game.did_menu_mode_change() or game.did_area_change() then game.doit_later[emu.framecount()+3] = game.randomize_color_palette; end
+    end
+end
+
 ---------------------------------------- Module Controls ----------------------------------------
 
+local settings = require("All/Settings");
+
 function game.initialize(options)
+    settings.set_display_text("gui"); -- TODO: Remove when gui.text fully supported
     game.ram.initialize(options);
 end
 
 function game.pre_update(options)
+    game.title_screen_A();
     options.fun_flags = game.fun_flags;
     game.ram.pre_update(options);
+    game.use_fun_flags(game.fun_flags);
 end
 
 function game.post_update(options)

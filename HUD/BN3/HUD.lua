@@ -4,124 +4,139 @@
 
 local hud = require("All/HUD");
 
-hud.version = hud.version .. ".0.1";
+hud.version = hud.version .. ".0.2";
 
 hud.game = require("BN3/Game");
 
+local total_fights = 0;
+
 ---------------------------------------- Display Functions ----------------------------------------
 
-local function display_RNG()
-end
-
-local function display_RNG(and_value)
-    if and_value then
-        hud.to_screen(string.format("M RNG: %08X", hud.game.get_main_RNG_value()));
-    end
-    hud.to_screen(string.format("M Index: %5s", (hud.game.get_main_RNG_index() or "?????")));
-    hud.to_screen(string.format("M Delta: %5s", (hud.game.get_main_RNG_delta() or     "?")));
-    hud.to_screen("");
-    if and_value then
-        hud.to_screen(string.format("L RNG: %08X", hud.game.get_lazy_RNG_value()));
-    end
-    hud.to_screen(string.format("L Index: %5s", (hud.game.get_lazy_RNG_index() or "?????")));
-    hud.to_screen(string.format("L Delta: %5s", (hud.game.get_lazy_RNG_delta() or     "?")));
-end
-
-local function display_enemy(which_enemy)
-    if hud.game.get_enemy_name(which_enemy) ~= "Unknown" and hud.game.get_enemy_name(which_enemy) ~= "Empty" then
-        hud.to_bottom_right(hud.game.get_enemy_name(which_enemy));
-    end
-end
-
-local function display_enemies()
-    hud.y=0;
-    display_enemy(1);
-    display_enemy(2);
-    display_enemy(3);
-end
-
-local function display_draws(how_many, start_at)
-    start_at = start_at or 1;
-    for i=0,how_many-1 do
-        hud.to_screen(string.format("%2i: %2i", i+start_at, hud.game.get_draw_slot(i+start_at)));
-    end
+local function display_player_info()
+    hud.to_screen(string.format("Zenny  : %6u", hud.game.get_zenny()));
+    hud.to_screen(string.format("BugFrag: %6u", hud.game.get_bug_frags()));
+    hud.to_screen(string.format("Max  HP: %6u", hud.game.calculate_max_HP()));
+    hud.to_screen(string.format("Library: %6u", hud.game.count_library()));
 end
 
 local function display_edit_slots()
     if hud.game.in_folder() then
         for i=1,8 do
-            gui.pixelText( 91, 11+16*i, string.format("%2i", hud.game.get_cursor_offset_folder()+i));
+            hud.to_pixel( 97, 16+16*i, string.format("%2i", hud.game.get_cursor_offset_folder()+i));
         end
     elseif hud.game.in_pack() then
         for i=1,8 do
-            gui.pixelText(129, 11+16*i, string.format("%3i", hud.game.get_cursor_offset_pack()+i));
+            hud.to_pixel(139, 16+16*i, string.format("%3i", hud.game.get_cursor_offset_pack()+i));
         end
     end
 end
 
 local function display_selected_chip()
-    -- TODO
-end
-
-local function display_player_info()
-    hud.to_screen(string.format("Zenny  : %6u", hud.game.get_zenny()));
-    hud.to_screen(string.format("B Frags: %6u", hud.game.get_bug_frags()));
-    hud.to_screen(string.format("Max  HP: %6u", hud.game.calculate_max_HP()));
-    hud.to_screen(string.format("Library: %6u", hud.game.count_library()));
-    hud.to_screen(string.format("Level  : %6u", hud.game.calculate_mega_level()));
-    hud.to_screen("Current Style: " .. hud.game.get_style_name());
-    hud.to_screen("Next Element : " .. hud.game.get_next_element_name());
-end
-
-local function display_game_info()
-    hud.to_screen(string.format("Progress: 0x%02X %s", hud.game.get_progress(), hud.game.get_progress_name_current()));
-    hud.to_screen("Game Version: " .. hud.game.get_version_name());
-    hud.to_screen("HUD  Version: " .. hud.version);
-end
-
-local function display_in_menu()
-    hud.to_screen("TODO: Menu HUD");
+    -- TODO: Selected Chip
 end
 
 ---------------------------------------- HUD Modes ----------------------------------------
 
+local function HUD_speedrun()
+    hud.to_screen(string.format("Progress: 0x%02X %s", hud.game.get_progress(), hud.game.get_progress_name_current()));
+    display_player_info();
+    hud.to_screen(string.format("EnCounter: %4u", total_fights));
+    hud.to_screen("");
+    hud.display_both_RNG(true, false);
+    hud.display_area();
+end
+
+local function HUD_routing()
+    hud.set_position(0, 8);
+    hud.set_center_x(54);
+    hud.to_screen("0000: " .. hud.game.get_string_hex   (0x02000000, 16, true));
+    hud.to_screen("0010: " .. hud.game.get_string_hex   (0x02000010, 16, true));
+    hud.to_screen("0000: " .. hud.game.get_string_binary(0x02000000,  4, true));
+    hud.to_screen("0004: " .. hud.game.get_string_binary(0x02000004,  4, true));
+    hud.to_screen("0008: " .. hud.game.get_string_binary(0x02000008,  4, true));
+    hud.to_screen("000C: " .. hud.game.get_string_binary(0x0200000C,  4, true));
+    --hud.to_screen("0000: " .. hud.game.get_string_binary(0x02000000,  1, true));
+    --hud.set_offset(16, hud.y-1);
+    --hud.to_screen(tostring(hud.game.is_go_mode()));
+end
+
+local function HUD_battle()
+    hud.set_position(1, 17);
+    hud.set_offset( 0, 0);
+    hud.display_draws(10,  1);
+    hud.set_offset( 8, 0);
+    hud.display_draws(10, 11);
+    hud.set_offset(16, 0);
+    hud.display_draws(10, 21);
+    hud.set_offset(24, 0);
+    hud.to_screen(string.format("Fight: 0x%04X", hud.game.get_battle_pointer()));
+    hud.to_screen("");
+    hud.display_both_RNG(true, false);
+    hud.to_screen("");
+    hud.to_screen(string.format("Checks: %4u", hud.game.get_encounter_checks()));
+    hud.to_screen(string.format("%%: %8.3f%%", 100-hud.game.get_current_percent()));
+    --hud.to_screen(string.format("Drawfset: %2u", draw_offset));
+    hud.display_enemies();
+end
+
 local function HUD_auto()
-    if hud.game.in_title() or hud.game.in_splash() then
-        display_game_info();
+    if hud.game.in_title() or hud.game.in_splash() or hud.game.in_transition() then
+        hud.display_game_info();
         hud.to_screen("");
-        display_RNG();
-        hud.y = 0;
-        hud.to_bottom_right(hud.game.get_area_name_current());
+        display_player_info();
+        hud.display_area();
     elseif hud.game.in_world() then
-        hud.display_main_RNG();
-        hud.to_screen("");
-        hud.display_lazy_RNG();
-        hud.to_screen("");
+        if hud.game.in_real_world() then
+            hud.set_position(2, 23);
+        else
+            hud.set_position(2, 17);
+        end
+        hud.display_both_RNG();
+        hud.display_steps(true);
+        if hud.game.get_sneak() > 0 then
+            hud.to_screen(string.format("Sneak: %5u", hud.game.get_sneak()));
+        end
         if hud.game.is_gambling() then
+            hud.to_screen("");
             hud.to_screen("Gamble  Win: " .. hud.game.get_gamble_win( ));
             hud.to_screen("Gamble Pick: " .. hud.game.get_gamble_pick());
-            hud.to_screen("");
-        else
-            hud.display_steps(true);
         end
-        hud.y = 0;
-        hud.to_bottom_right(hud.game.get_area_name_current());
-    elseif hud.game.in_battle() then
-        display_draws(9);
-        hud.x = 9;
-        hud.y = 0;
-        display_RNG();
-        hud.to_screen("");
-        hud.to_screen(string.format("Checks: %2u", hud.game.get_encounter_checks()));
-        hud.to_screen(string.format("%%: %7.3f%%", 100-hud.game.get_current_percent()));
-        display_enemies();
-    elseif hud.game.in_transition() then
-        hud.to_screen("HUD Version: " .. hud.version);
-        gui.text(0, 0, "For the best emotes on Twitch, subscribe to twitch.tv/subs/xKilios!", 0x77000000, "bottomright");
+        hud.display_area();
+    elseif hud.game.in_battle() or hud.game.in_game_over() then
+        if hud.game.in_combat() then
+            hud.set_position(2, 17);
+            hud.to_screen(string.format("Fight:  0x%04X", hud.game.get_battle_pointer()));
+            hud.display_both_RNG();
+        else
+            hud.set_position(2, 25);
+            hud.display_draws(9);
+            hud.set_offset(8, 0);
+            hud.to_screen(string.format("Fight:  0x%04X", hud.game.get_battle_pointer()));
+            hud.display_both_RNG();
+            hud.to_screen(string.format("Escape: %4i", hud.game.find_first(138)));
+            hud.to_screen(string.format("Checks: %4u", hud.game.get_encounter_checks()));
+            hud.to_screen(string.format("%%: %8.3f%%", 100-hud.game.get_current_percent()));
+        end
+        hud.display_enemies();
     elseif hud.game.in_menu() then
-        display_in_menu();
+        hud.to_screen("");
+        hud.display_both_RNG(true, false);
+        hud.to_screen("");
+        if hud.game.in_menu_folder_edit() then
+            display_edit_slots();
+            display_selected_chip();
+        end
+    elseif hud.game.in_shop() then
+        hud.set_position(170, 34);
+        display_player_info();
+    elseif hud.game.in_chip_trader() then
+        hud.set_position(105, 1);
+        hud.to_screen("");
+        hud.display_both_RNG(true, true);
+        hud.to_screen("");
     elseif hud.game.in_credits() then
-        gui.text(0, 0, "t r o u t", 0x10000000, "bottomright");
+        hud.display_game_info();
+        gui.text(0, 0, "!blame SJH1UEKA", 0x80FFFFFF, "bottomleft");
     else
         hud.to_screen("Unknown Game State!");
     end
@@ -129,19 +144,28 @@ end
 
 hud.HUDs = {}; -- in order
 table.insert(hud.HUDs, HUD_auto);
---table.insert(hud.HUDs, HUD_battle);
---table.insert(hud.HUDs, HUD_routing);
---table.insert(hud.HUDs, HUD_speedrun);
+table.insert(hud.HUDs, HUD_battle);
+table.insert(hud.HUDs, HUD_routing);
+table.insert(hud.HUDs, HUD_speedrun);
 
 ---------------------------------------- Module Controls ----------------------------------------
 
-function hud.B()
+function hud.Up()
+    print("\n" .. hud.game.get_folder_text(1));
+end
+
+function hud.Down()
     print("\n" .. hud.game.get_draw_slots_text_multi_line());
+end
+
+function hud.B()
     print("\n" .. hud.game.get_draw_slots_text_one_line());
 end
 
 function hud.update_local_state()
-    -- for tracking game specific HUD values over time
+    if hud.game.did_game_state_change() and hud.game.in_battle() then
+        total_fights = total_fights + 1;
+    end
 end
 
 return hud;

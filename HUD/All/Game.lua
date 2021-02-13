@@ -176,6 +176,10 @@ game.style_names[0x05] = "Grnd"; -- 101b HubStyle in BN 2
 game.style_names[0x06] = "Shdw"; -- 110b looks cursed in BN 2
 game.style_names[0x07] = "Bug";  -- 111b looks cursed in BN 2
 
+function game.get_style_name(style)
+    return game.style_names[style] or "????";
+end
+
 game.elements = {"Elec", "Heat", "Aqua", "Wood"};
 game.element_names = {}; -- FWEG but Elec is first
 game.element_names[0x00] = "None"; -- 000b looks like wood
@@ -186,6 +190,10 @@ game.element_names[0x04] = "Wood"; -- 100b
 game.element_names[0x05] = "Shok"; -- 101b looks like elec, weak to normal, no charge shot
 game.element_names[0x06] = "Haet"; -- 110b looks like heat, weak to normal, charge shot crashes game
 game.element_names[0x07] = "Agua"; -- 111b looks like aqua, takes 62x damage, no charge shot
+
+function game.get_element_name(element)
+    return game.element_names[element] or "????";
+end
 
 ---------------------------------------- Battle Information ----------------------------------------
 

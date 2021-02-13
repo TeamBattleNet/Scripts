@@ -387,7 +387,7 @@ function chips.get_random_ID_mega()
     return get_valid(194, 250);
 end
 
-function chips.get_random_ID_secret()
+function chips.get_random_ID_giga()
     return get_valid(251, 270);
 end
 
