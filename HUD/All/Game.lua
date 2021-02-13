@@ -780,6 +780,11 @@ function game.randomize_color_palette()
     end
 end
 
+function game.broadcast(message)
+    print(message);
+    gui.addmessage(message);
+end
+
 ---------------------------------------- Module Controls ----------------------------------------
 
 function game.pre_update(options)
