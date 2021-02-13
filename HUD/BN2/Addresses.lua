@@ -136,11 +136,12 @@ addresses.battles_cust          = 0x02003A6C; -- 4 bytes
 addresses.battles_team          = 0x02003A70; -- 4 bytes
 addresses.battles_shld          = 0x02003A74; -- 4 bytes
 
+addresses.battle_mode           = 0x02004EE1; -- 1 byte
+addresses.battle_state          = 0x02004EE2; -- 1 byte
+
 addresses.chip_window_size_next = 0x02004EEE; -- 1 byte, number of chips available in the custom menu on next open
 
-addresses.battle_mode           = 0x02000000; -- TODO
-addresses.battle_state          = 0x02000000; -- TODO
-
+addresses.enemies_remaining     = 0x02004F04; -- 2 bytes?
 addresses.battle_custom_gauge   = 0x02004F0C; -- 2 bytes, counts up to 0x4000
 addresses.delete_timer          = 0x02004F1C; -- 2 bytes, frame counter for current battle
 

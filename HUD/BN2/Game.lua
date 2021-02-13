@@ -77,10 +77,10 @@ end
 
 -- Battle Mode
 
-game.battle_mode_names[0x00] = "TBD";
-game.battle_mode_names[0x04] = "TBD";
-game.battle_mode_names[0x08] = "TBD";
-game.battle_mode_names[0x0C] = "TBD";
+game.battle_mode_names[0x00] = "Loading & Reward";
+game.battle_mode_names[0x04] = "Chip Select";
+game.battle_mode_names[0x08] = "Combat";
+game.battle_mode_names[0x0C] = "Unused?";
 
 function game.in_chip_select()
     return game.ram.get.battle_mode() == 0x04;
@@ -92,13 +92,13 @@ end
 
 -- Battle State
 
-game.battle_state_names[0x00] = "TBD";
-game.battle_state_names[0x04] = "TBD";
-game.battle_state_names[0x08] = "TBD";
-game.battle_state_names[0x0C] = "TBD";
-game.battle_state_names[0x10] = "TBD";
-game.battle_state_names[0x14] = "TBD";
-game.battle_state_names[0x18] = "TBD";
+game.battle_state_names[0x00] = "Loading";
+game.battle_state_names[0x04] = "Waiting";
+game.battle_state_names[0x08] = "PAUSE";
+game.battle_state_names[0x0C] = "Reward & Time Stop";
+game.battle_state_names[0x10] = "Unused?";
+game.battle_state_names[0x14] = "Unused?";
+game.battle_state_names[0x18] = "Unused?";
 
 -- Menu Mode
 

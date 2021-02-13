@@ -164,20 +164,23 @@ local function HUD_auto()
         end
         hud.display_area();
     elseif hud.game.in_battle() or hud.game.in_game_over() then
-        hud.set_position(1, 17);
-        if not hud.game.in_combat() then
-            hud.set_position(1, 25);
+        if hud.game.in_combat() then
+            hud.set_position(2, 17);
+            hud.to_screen(string.format("Fight: 0x%04X", hud.game.get_battle_pointer()));
+            hud.display_RNG(true);
+        else
+            hud.set_position(2, 25);
             hud.display_draws(10);
             if hud.game.in_chip_select() then
                 display_draw_codes();
             end
             hud.set_offset(8, 0);
+            hud.to_screen(string.format("Fight: 0x%04X", hud.game.get_battle_pointer()));
+            hud.display_RNG(true);
+            hud.to_screen(string.format("Escape: %4i", hud.game.find_first(82)));
+            hud.to_screen(string.format("Checks: %4u", hud.game.get_encounter_checks()));
+            hud.to_screen(string.format("%%: %8.3f%%", 100-hud.game.get_current_percent()));
         end
-        hud.to_screen(string.format("Fight: 0x%04X", hud.game.get_battle_pointer()));
-        hud.display_RNG(true);
-        hud.to_screen(string.format("Escape: %4i", hud.game.find_first(82)));
-        hud.to_screen(string.format("Checks: %4u", hud.game.get_encounter_checks()));
-        hud.to_screen(string.format("%%: %8.3f%%", 100-hud.game.get_current_percent()));
         hud.display_enemies();
     elseif hud.game.in_menu() then
         hud.display_RNG();
