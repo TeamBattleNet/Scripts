@@ -628,26 +628,31 @@ function game.bit_counter(byte)
     return count;
 end
 
+function game.byte_to_binary(byte, with_spaces)
+    local bit_string = "";
+    for i=0,7 do
+        if bit.check(byte, 7-i) then
+            bit_string = bit_string .. "1";
+        else
+            bit_string = bit_string .. "0";
+        end
+        if i==3 and with_spaces then
+            bit_string = bit_string .. " ";
+        end
+    end
+    if with_spaces then
+        bit_string = bit_string .. " ";
+    end
+    return bit_string;
+end
+
 function game.get_string_binary(address, bytes, with_spaces)
     if address and bytes then
-        local binary = "";
+        local bit_string = "";
         for i=0,bytes-1 do
-            local byte = memory.read_u8(address+i);
-            for i=0,7 do
-                if bit.check(byte, 7-i) then
-                    binary = binary .. "1";
-                else
-                    binary = binary .. "0";
-                end
-                if i==3 and with_spaces then
-                    binary = binary .. " ";
-                end
-            end
-            if with_spaces then
-                binary = binary .. " ";
-            end
+            bit_string = bit_string .. game.byte_to_binary(memory.read_u8(address+i), with_spaces);
         end
-        return binary;
+        return bit_string;
     end
 end
 
@@ -729,6 +734,11 @@ end
 
 ---------------------------------------- State Tracking ----------------------------------------
 
+local previous_progress = 0x00;
+function game.did_progress_change()
+    return game.get_progress() ~= previous_progress;
+end
+
 local previous_game_state = 0x00;
 function game.did_game_state_change()
     return game.ram.get.game_state() ~= previous_game_state;
@@ -774,15 +784,19 @@ end
 
 ---------------------------------------- Miscellaneous ----------------------------------------
 
+function game.broadcast(message)
+    print(message);
+    gui.addmessage(message);
+end
+
 function game.randomize_color_palette()
     for offset=0,0x3FF do -- 1024 bytes
         game.ram.set.color_palette(offset, math.random(0x00, 0xFF));
     end
 end
 
-function game.broadcast(message)
-    print(message);
-    gui.addmessage(message);
+function game.get_progress_change()
+    return string.format("Progress changed from 0x%02X to 0x%02X - %s", previous_progress, game.get_progress(), game.get_progress_name_current());
 end
 
 ---------------------------------------- Module Controls ----------------------------------------
@@ -799,6 +813,7 @@ game.doit_later = {};
 
 function game.track_game_state()
     track_encounter_checks();
+    previous_progress       = game.get_progress();
     previous_game_state     = game.ram.get.game_state();
     previous_battle_state   = game.ram.get.battle_state();
     previous_battle_pointer = game.ram.get.battle_pointer();

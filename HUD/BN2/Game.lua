@@ -419,8 +419,13 @@ function game.use_fun_flags(fun_flags)
         if game.did_game_state_change() or game.did_menu_mode_change() or game.did_area_change() then game.doit_later[emu.framecount()+3] = game.randomize_color_palette; end
     end
     
+    if game.did_progress_change() then
+        game.broadcast(game.get_progress_change());
+    end
+    
     if game.did_magic_byte_change() then
-        game.broadcast(string.format("\nMAGIC BYTE CHANGED FROM 0x%02X to 0x%02X!\n", previous_magic_byte, game.ram.get.magic_byte()));
+        game.broadcast(string.format("\nMAGIC BYTE CHANGED FROM     0x%02X  to     0x%02X !", previous_magic_byte, game.ram.get.magic_byte()));
+        game.broadcast(string.format("MAGIC BYTE CHANGED FROM %sb to %sb!\n", game.byte_to_binary(previous_magic_byte), game.byte_to_binary(game.ram.get.magic_byte())));
     end
 end
 
