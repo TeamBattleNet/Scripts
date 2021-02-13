@@ -772,6 +772,14 @@ function game.did_area_change()
     return (game.did_main_area_change() or game.did_sub_area_change());
 end
 
+---------------------------------------- Miscellaneous ----------------------------------------
+
+function game.randomize_color_palette()
+    for offset=0,0x3FF do
+        game.ram.set.color_palette(offset, math.random(0x00, 0xFF));
+    end
+end
+
 ---------------------------------------- Module Controls ----------------------------------------
 
 function game.pre_update(options)

@@ -76,8 +76,9 @@ addresses.enemy[2].ID           = 0x02006D01; -- 1 byte per enemy, up to 3
 addresses.enemy[3].ID           = 0x02006D02; -- 1 byte per enemy, up to 3
 
 addresses.battle_custom_check   = 0x02006CAC; -- 1 byte, flag for full custom gauge 0x01
-addresses.chip_window_size      = 0x02006CAE; -- 1 byte, number of chips available in the custom menu
+addresses.chip_window_size_next = 0x02006CAE; -- 1 byte, number of chips available in the custom menu next time
 addresses.battle_custom_gauge   = 0x02006CCC; -- 2 bytes, counts up to 0x4000
+addresses.delete_timer          = 0x02006CE0; -- 2 bytes, counts up to 0x4000
 
 addresses.cursor_ID             = 0x02007D14; -- 2 bytes? chip ID of cursor
 addresses.cursor_code           = 0x02007D18; -- 2 bytes? chip Code of cursor
@@ -89,6 +90,9 @@ addresses.map_offset_x          = 0x02008F58; -- 2 bytes % 256 to scroll screen
 addresses.map_offset_y          = 0x02008F5A; -- 2 bytes % 256 to scroll screen
 
 addresses.battle_field_modifier = 0x02008F98; -- 1 byte, weird effects
+
+addresses.menu_mode             = 0x020093D0; -- 1 byte
+addresses.menu_state            = 0x020093D1; -- 1 byte
 
 addresses.folder_cursor         = 0x020093E2; -- 2 bytes?, cursor value in the folder
 addresses.folder_offset         = 0x020093E6; -- 2 bytes?, offset value in the folder
@@ -114,6 +118,8 @@ addresses.main_RNG              = 0x02009800; -- 4 bytes, controls everything el
 addresses.gamble_pick           = 0x02009DB1; -- 1 byte, current value
 addresses.gamble_win            = 0x02009DB2; -- 1 byte, winning value
 
+addresses.color_palette         = 0x02009810; -- 1024 bytes, ends at 9C0F
+
 addresses.title_star_flags      = 0x0200A30A; -- 1 bit per star 0xFE
 
 --addresses.battle_             = 0x0200F332; -- 2 bytes, something battle related
@@ -121,7 +127,9 @@ addresses.battle_reward         = 0x0200F332; -- 2 bytes, how to decode? (mask 0
 --addresses.battle_             = 0x0200F334; -- 2 bytes, stats? S+?
 addresses.battle_field          = 0x0200F47E; -- 8*3 bytes, current battlefield
 
--- F800 battle information
+-- F7F0 battle information
+
+addresses.chip_window_size      = 0x0200F7F9; -- 1 byte, number of chips available in the custom menu
 
 addresses.custom_gauge_animate  = 0x0200F872; -- 1 byte
 addresses.display_chip_name     = 0x0200F873; -- 1 bit

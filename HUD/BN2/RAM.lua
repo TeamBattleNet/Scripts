@@ -14,9 +14,6 @@ ram.set.battle_paused = function(battle_paused) memory.write_u8(ram.addr.battle_
 ram.get.bug_frags = function() return memory.read_u8(ram.addr.bug_frags); end;
 ram.set.bug_frags = function(bug_frags) memory.write_u8(ram.addr.bug_frags, bug_frags); end;
 
-ram.get.color_palette = function(offset) return memory.read_u8(ram.addr.color_palette+offset); end;
-ram.set.color_palette = function(offset, color_palette) memory.write_u8(ram.addr.color_palette+offset, color_palette); end;
-
 ram.get.draw_slot = function(which_slot) return memory.read_u8(ram.addr.battle_draw_slots+which_slot); end;
 ram.set.draw_slot = function(which_slot, folder_slot) memory.write_u8(ram.addr.battle_draw_slots+which_slot, folder_slot); end;
 

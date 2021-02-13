@@ -52,6 +52,9 @@ ram.set.chip_cooldown = function(chip_cooldown) memory.write_u8(ram.addr.chip_co
 ram.get.chip_window_size = function() return memory.read_u8(ram.addr.chip_window_size); end;
 ram.set.chip_window_size = function(chip_window_size) memory.write_u8(ram.addr.chip_window_size, chip_window_size); end;
 
+ram.get.color_palette = function(offset) return memory.read_u8(ram.addr.color_palette+offset); end;
+ram.set.color_palette = function(offset, color_palette) memory.write_u8(ram.addr.color_palette+offset, color_palette); end;
+
 ram.get.cursor_ID = function() return memory.read_u16_le(ram.addr.cursor_ID); end;
 ram.set.cursor_ID = function(cursor_ID) memory.write_u16_le(ram.addr.cursor_ID, cursor_ID); end;
 ram.get.cursor_code = function() return memory.read_u16_le(ram.addr.cursor_code); end;

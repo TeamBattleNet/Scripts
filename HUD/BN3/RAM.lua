@@ -38,12 +38,8 @@ function ram.use_fun_flags(fun_flags)
         ram.set.custom_gauge(0x4000);
     end
     
-    if fun_flags.no_chip_cooldown then
-        --ram.set.chip_cooldown(0); -- TODO
-    end
-    
     if fun_flags.delete_time_zero then
-        --ram.set.delete_timer(0); -- TODO
+        ram.set.delete_timer(0);
     end
     
     if fun_flags.chip_selection_max then

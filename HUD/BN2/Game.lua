@@ -407,12 +407,6 @@ function game.title_screen_A()
     end
 end
 
-function game.randomize_color_palette()
-    for offset=0,0x3FF do
-        game.ram.set.color_palette(offset, math.random(0x00, 0xFF));
-    end
-end
-
 function game.use_fun_flags(fun_flags)
     if fun_flags.randomize_colors then
         if game.did_game_state_change() or game.did_menu_mode_change() or game.did_area_change() then game.doit_later[emu.framecount()+3] = game.randomize_color_palette; end

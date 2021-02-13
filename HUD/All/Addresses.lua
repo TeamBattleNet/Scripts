@@ -44,6 +44,7 @@ addresses.button_flags          = 0x02000000;
 addresses.check                 = 0x02000000;
 addresses.chip_window_size      = 0x02000000;
 addresses.chip_cooldown         = 0x02000000;
+addresses.color_palette         = 0x02000000; -- 1024 bytes
 addresses.cursor_code           = 0x02000000;
 addresses.cursor_folder         = 0x02000000;
 addresses.cursor_ID             = 0x02000000;

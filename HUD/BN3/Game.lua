@@ -344,7 +344,7 @@ end
 
 function game.use_fun_flags(fun_flags)
     if fun_flags.randomize_colors then
-        --if game.did_game_state_change() or game.did_menu_mode_change() or game.did_area_change() then game.doit_later[emu.framecount()+3] = game.randomize_color_palette; end
+        if game.did_game_state_change() or game.did_menu_mode_change() or game.did_area_change() then game.doit_later[emu.framecount()+4] = game.randomize_color_palette; end
     end
 end
 
