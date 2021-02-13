@@ -424,8 +424,10 @@ function game.use_fun_flags(fun_flags)
     end
     
     if game.did_magic_byte_change() then
-        game.broadcast(string.format("\nMAGIC BYTE CHANGED FROM     0x%02X  to     0x%02X !", previous_magic_byte, game.ram.get.magic_byte()));
-        game.broadcast(string.format("MAGIC BYTE CHANGED FROM %sb to %sb!\n", game.byte_to_binary(previous_magic_byte), game.byte_to_binary(game.ram.get.magic_byte())));
+        print("");
+        game.broadcast(string.format("MAGIC BYTE CHANGED FROM     0x%02X  to     0x%02X !", previous_magic_byte, game.ram.get.magic_byte()));
+        game.broadcast(string.format("MAGIC BYTE CHANGED FROM %sb to %sb!", game.byte_to_binary(previous_magic_byte), game.byte_to_binary(game.ram.get.magic_byte())));
+        print("");
     end
 end
 
