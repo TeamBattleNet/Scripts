@@ -266,6 +266,14 @@ function game.set_ice_flags(ice_flags)
     game.ram.set.ice_flags(ice_flags);
 end
 
+function game.get_magic_byte()
+    return game.ram.get.magic_byte();
+end
+
+function game.is_go_mode()
+    return (game.ram.get.progress() == 0x47 and bit.band(game.get_magic_byte(), 0x04) > 0);
+end
+
 ---------------------------------------- Draw Slots ----------------------------------------
 
 function game.shuffle_folder_simulate_from_battle(offset)

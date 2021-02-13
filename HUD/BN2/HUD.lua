@@ -48,13 +48,15 @@ end
 local function HUD_routing()
     hud.set_position(0, 8);
     hud.set_center_x(54);
-    hud.to_screen("0000: " .. hud.game.get_string_hex   (0x02000000, 16, true));
-    hud.to_screen("0010: " .. hud.game.get_string_hex   (0x02000010, 16, true));
-    hud.to_screen("0000: " .. hud.game.get_string_binary(0x02000000,  4, true));
-    hud.to_screen("0004: " .. hud.game.get_string_binary(0x02000004,  4, true));
-    hud.to_screen("0008: " .. hud.game.get_string_binary(0x02000008,  4, true));
-    hud.to_screen("000C: " .. hud.game.get_string_binary(0x0200000C,  4, true));
-    hud.to_screen("01FC: " .. hud.game.get_string_hex   (0x020001FC,  8, true));
+    hud.to_screen("0040: " .. hud.game.get_string_hex   (0x02000040, 16, true));
+    hud.to_screen("0100: " .. hud.game.get_string_hex   (0x02000100, 16, true));
+    hud.to_screen("0040: " .. hud.game.get_string_binary(0x02000040,  4, true));
+    hud.to_screen("0044: " .. hud.game.get_string_binary(0x02000044,  4, true));
+    hud.to_screen("0048: " .. hud.game.get_string_binary(0x02000048,  4, true));
+    hud.to_screen("004C: " .. hud.game.get_string_binary(0x0200004C,  4, true));
+    hud.to_screen("0048: " .. hud.game.get_string_binary(0x02000048,  1, true));
+    hud.set_offset(16, hud.y-1);
+    hud.to_screen(tostring(hud.game.is_go_mode()));
 end
 
 local function HUD_battle()
