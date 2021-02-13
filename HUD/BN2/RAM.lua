@@ -86,6 +86,15 @@ function ram.change_active_element(new_element)
     ram.set.active_style(level, style, new_element);
 end
 
+function ram.has_style()
+    for i=0x06,0x19 do
+        if memory.read_u8(ram.addr.norm_styl_level+i) > 0 then
+            return true;
+        end
+    end
+    return false;
+end
+
 ---------------------------------------- RAMsacking ----------------------------------------
 
 function ram.use_fun_flags(fun_flags)

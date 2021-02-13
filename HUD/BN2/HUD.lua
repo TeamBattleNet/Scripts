@@ -20,23 +20,26 @@ end
 local function display_edit_slots()
     if hud.game.in_folder() then
         for i=1,8 do
-            hud.to_pixel( 91, 11+16*i, string.format("%2i", hud.game.get_cursor_offset_folder()+i));
+            hud.to_pixel( 97, 16+16*i, string.format("%2i", hud.game.get_cursor_offset_folder()+i));
         end
     elseif hud.game.in_pack() then
         for i=1,8 do
-            hud.to_pixel(129, 11+16*i, string.format("%3i", hud.game.get_cursor_offset_pack()+i));
+            hud.to_pixel(139, 16+16*i, string.format("%3i", hud.game.get_cursor_offset_pack()+i));
         end
     end
 end
 
 local function display_selected_chip()
-    hud.to_screen("TODO: Selected Chip");
+    -- TODO: Selected Chip
 end
 
 ---------------------------------------- HUD Modes ----------------------------------------
 
 local function HUD_speedrun()
     hud.to_screen(string.format("Progress: 0x%02X %s", hud.game.get_progress(), hud.game.get_progress_name_current()));
+    display_player_info();
+    hud.display_RNG();
+    hud.display_area();
 end
 
 local function HUD_routing()

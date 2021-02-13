@@ -202,11 +202,13 @@ end
 
 function game.calculate_mega_level()
     level = 1; -- starting level
-    level = level + 1 * game.get_HPMemory_count();
+    level = level +     game.ram.get.HPMemory();
     level = level + 4 * game.ram.get.buster_attack();
     level = level + 4 * game.ram.get.buster_rapid();
     level = level + 4 * game.ram.get.buster_charge();
-    -- plus 6 from style change
+    if game.ram.has_style() then
+        level = level + 6;
+    end
     return level;
 end
 
