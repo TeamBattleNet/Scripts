@@ -393,6 +393,10 @@ function game.in_digital_world()
     return not game.in_real_world();
 end
 
+function game.in_the_internet()
+    return (bit.band(game.get_main_area(), 0x90) == 0x90);
+end
+
 -- Position
 
 function game.get_X()

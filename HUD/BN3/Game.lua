@@ -259,14 +259,55 @@ end
 
 function game.overwrite_folder_press_a()
     game.overwrite_folder_to(1, {
-        -- TODO
+        { ID=211; code=26 }; -- FullCust *
+        { ID=114; code= 0 }; -- Volcano A
+        { ID=114; code= 0 }; -- Volcano A
+        { ID=114; code= 0 }; -- Volcano A
+        { ID=114; code= 0 }; -- Volcano A
+        { ID=160; code=26 }; -- Invis *
+        { ID=160; code=26 }; -- Invis *
+        { ID=160; code=26 }; -- Invis *
+        { ID=160; code=26 }; -- Invis *
+        { ID=125; code=26 }; -- Recov120 *
+        { ID=126; code=15 }; -- Recov150 P
+        { ID=181; code=26 }; -- GrassStg *
+        { ID=181; code=26 }; -- GrassStg *
+        { ID=181; code=26 }; -- GrassStg *
+        { ID=181; code=26 }; -- GrassStg *
+        { ID=195; code=26 }; -- Atk+10 *
+        { ID=195; code=26 }; -- Atk+10 *
+        { ID=195; code=26 }; -- Atk+10 *
+        { ID=195; code=26 }; -- Atk+10 *
+        { ID=199; code=26 }; -- Wood+30 *
+        { ID=199; code=26 }; -- Wood+30 *
+        { ID=199; code=26 }; -- Wood+30 *
+        { ID=199; code=26 }; -- Wood+30 *
+        { ID=200; code=26 }; -- Navi+20 *
+        { ID=208; code=25 }; -- ZeusHamr Z
+        { ID=252; code=15 }; -- PlantMan V1 P
+        { ID=253; code=15 }; -- PlantMan V2 P
+        { ID=254; code=15 }; -- PlantMan V3 P
+        { ID=255; code=15 }; -- PlantMan V4 P
+        { ID=256; code=15 }; -- PlantMan V5 P
     });
 end
 
 ---------------------------------------- Miscellaneous ----------------------------------------
 
+function game.get_GMD_RNG()
+    return game.ram.get.GMD_RNG();
+end
+
+function game.get_GMD_RNG_lower()
+    return bit.band(game.ram.get.GMD_RNG(), 0xFF);
+end
+
 function game.set_GMD_RNG(new_GMD_RNG)
     game.ram.set.GMD_RNG(new_GMD_RNG);
+end
+
+function game.increment_GMD_RNG()
+    game.set_GMD_RNG(game.get_GMD_RNG()+1);
 end
 
 function game.randomize_GMD_RNG()

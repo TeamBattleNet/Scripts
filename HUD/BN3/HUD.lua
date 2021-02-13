@@ -69,9 +69,8 @@ local function HUD_battle()
     hud.set_offset(16, 0);
     hud.display_draws(10, 21);
     hud.set_offset(24, 0);
-    hud.to_screen(string.format("Fight: 0x%04X", hud.game.get_battle_pointer()));
-    hud.to_screen("");
-    hud.display_both_RNG(true, false);
+    hud.to_screen(string.format("Fight:  0x%04X", hud.game.get_battle_pointer()));
+    hud.display_both_RNG(false, true);
     hud.to_screen("");
     hud.to_screen(string.format("Checks: %4u", hud.game.get_encounter_checks()));
     hud.to_screen(string.format("%%: %8.3f%%", 100-hud.game.get_current_percent()));
@@ -92,6 +91,10 @@ local function HUD_auto()
             hud.set_position(2, 17);
         end
         hud.display_both_RNG();
+        if hud.game.in_the_internet() then
+            --hud.to_screen(string.format("GMD:0x%08X", hud.game.get_GMD_RNG()));
+            hud.to_screen(string.format("GMD: 0x%02X %2u", hud.game.get_GMD_RNG_lower(), hud.game.get_GMD_RNG_lower()%32));
+        end
         hud.display_steps(true);
         if hud.game.get_sneak() > 0 then
             hud.to_screen(string.format("Sneak: %5u", hud.game.get_sneak()));
@@ -113,27 +116,24 @@ local function HUD_auto()
             hud.set_offset(8, 0);
             hud.to_screen(string.format("Fight:  0x%04X", hud.game.get_battle_pointer()));
             hud.display_both_RNG();
+            hud.to_screen("");
             hud.to_screen(string.format("Escape: %4i", hud.game.find_first(138)));
             hud.to_screen(string.format("Checks: %4u", hud.game.get_encounter_checks()));
             hud.to_screen(string.format("%%: %8.3f%%", 100-hud.game.get_current_percent()));
         end
         hud.display_enemies();
     elseif hud.game.in_menu() then
-        hud.to_screen("");
-        hud.display_both_RNG(true, false);
-        hud.to_screen("");
+        hud.display_both_RNG();
         if hud.game.in_menu_folder_edit() then
             display_edit_slots();
             display_selected_chip();
         end
     elseif hud.game.in_shop() then
-        hud.set_position(170, 34);
+        hud.set_position(168, 38);
         display_player_info();
     elseif hud.game.in_chip_trader() then
-        hud.set_position(105, 1);
-        hud.to_screen("");
-        hud.display_both_RNG(true, true);
-        hud.to_screen("");
+        hud.set_position(130, 1);
+        hud.display_both_RNG(false, true);
     elseif hud.game.in_credits() then
         hud.display_game_info();
         gui.text(0, 0, "!blame SJH1UEKA", 0x80FFFFFF, "bottomleft");
@@ -156,10 +156,11 @@ end
 
 function hud.Down()
     print("\n" .. hud.game.get_draw_slots_text_multi_line());
+    print("\n" .. hud.game.get_draw_slots_text_one_line());
 end
 
 function hud.B()
-    print("\n" .. hud.game.get_draw_slots_text_one_line());
+    hud.game.randomize_GMD_RNG();
 end
 
 function hud.update_local_state()
