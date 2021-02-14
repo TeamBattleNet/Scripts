@@ -35,6 +35,25 @@ progress[0x11] = "Best ACDC Netbattler";
 progress[0x12] = "Fought With Dex";
 progress[0x13] = "TBD";
 
+progress[0x20] = "TBD";
+
+progress[0x30] = "TBD";
+
+progress[0x40] = "TBD";
+
+progress[0x50] = "TBD";
+
+progress[0x60] = "TBD";
+
+progress[0x70] = "TBD";
+progress[0x71] = "TBD";
+progress[0x72] = "TBD";
+progress[0x73] = "TBD";
+progress[0x74] = "TBD";
+progress[0x75] = "TBD";
+progress[0x76] = "TBD";
+progress[0x77] = "TBD";
+progress[0x78] = "TBD";
 progress[0x79] = "Final State";
 progress[0x7A] = "Credits";
 progress[0xFF] = "No Save Data";
