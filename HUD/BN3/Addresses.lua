@@ -12,10 +12,15 @@ local addresses = require("All/Addresses");
 
 addresses.fire_flags            = 0x02000000; -- 1 byte TBD
 
-addresses.viruses_killereye     = 0x0200003E; -- 1 byte 0x07
+addresses.navi_cust_bugged      = 0x0200003B; -- 1 bit, 0x80, maybe?
+addresses.viruses_captured      = 0x0200003B; -- 1 digit per virus 0x7 ends 3F
 
 addresses.folder_state          = 0x02000040; -- 1 byte
 addresses.HP_memory_value       = 0x02000150; -- 1 byte ???
+
+addresses.viruses_breeder       = 0x02000164; -- 1 bit, must be set before jack-in
+
+addresses.email_read            = 0x02000260; -- 1 bit per email, 1 if unread, 0 if read
 
 addresses.library               = 0x02000330; -- 1 bit per chip, runs for ~44 bytes
 
@@ -29,12 +34,16 @@ addresses.battles_bug           = 0x02000E66; -- 1 byte
 --addresses.                    = 0x02000E67; -- 1 byte TBD
 addresses.GMD_RNG               = 0x02000E68; -- 4 bytes, drop table index
 
-addresses.folder[1].ID           = 0x02001410; -- 2 bytes, chip  ID  of folder 1 slot 1, ends 1484
-addresses.folder[1].code         = 0x02001412; -- 2 bytes, chip Code of folder 1 slot 1, ends 1486
-addresses.folder[2].ID           = 0x02001500; -- 2 bytes, chip  ID  of folder 1 slot 1, ends 1574
-addresses.folder[2].code         = 0x02001502; -- 2 bytes, chip Code of folder 1 slot 1, ends 1576
-addresses.folder[3].ID           = 0x02001488; -- 2 bytes, chip  ID  of folder 1 slot 1, ends 14FC
-addresses.folder[3].code         = 0x0200148A; -- 2 bytes, chip Code of folder 1 slot 1, ends 14FE
+addresses.navi_cust_programs    = 0x02001300; -- 8 bytes per program, ID and location, indexed by 1D90, ends 13C7
+
+-- 13D0 - 140F TBD
+
+addresses.folder[1].ID          = 0x02001410; -- 2 bytes, chip  ID  of folder 1 slot 1, ends 1484
+addresses.folder[1].code        = 0x02001412; -- 2 bytes, chip Code of folder 1 slot 1, ends 1486
+addresses.folder[2].ID          = 0x02001500; -- 2 bytes, chip  ID  of folder 1 slot 1, ends 1574
+addresses.folder[2].code        = 0x02001502; -- 2 bytes, chip Code of folder 1 slot 1, ends 1576
+addresses.folder[3].ID          = 0x02001488; -- 2 bytes, chip  ID  of folder 1 slot 1, ends 14FC
+addresses.folder[3].code        = 0x0200148A; -- 2 bytes, chip Code of folder 1 slot 1, ends 14FE
 
 addresses.control_flags         = 0x02001880; -- 1 byte ???
 addresses.style_active          = 0x02001881; -- 1 byte
@@ -67,9 +76,14 @@ addresses.bug_frags             = 0x020018F8; -- 4 bytes,   9999 "max"
 
 addresses.battle_escape_lvl     = 0x02001A20; -- 1 byte ???
 
+-- 1B66 NaviCust bugged flag?
+
 -- 1B70 - 1D6F @
 
 -- 1D70 - 1DF0 various data
+
+addresses.navi_cust             = 0x02001D90; -- 1 byte per square, value is program index, ends 1DA8?
+addresses.navi_cust_commands    = 0x02001D9A; -- 1 byte per square, value is program index, the 5 command tiles
 
 addresses.next_element          = 0x02001DBB; -- 1 byte, next element
 addresses.battle_count          = 0x02001DCA; -- 1 byte, number of battles since last style change
@@ -93,9 +107,15 @@ addresses.credits_cutscene      = 0x020050A8; -- 1 byte ???
 addresses.buster_attack         = 0x02005778; -- 1 byte
 addresses.buster_rapid          = 0x02005779; -- 1 byte
 addresses.buster_charge         = 0x0200577A; -- 1 byte
+addresses.bug_run               = 0x02005789; -- 1 bit
+addresses.sneak_run             = 0x0200578A; -- 1 bit
 addresses.max_HP_over_five      = 0x0200579C; -- 1 byte, Maximum HP Check for HP Memory (Max HP/5)
 
 -- 5C00 counting?
+
+addresses.sneak_run_also        = 0x02005C49; -- 1 bit, probably not though
+
+-- 6A20 - 6B0F textbox data?
 
 -- 6CA0 - 6D1F battle data?
 
@@ -184,8 +204,16 @@ addresses.enemy[3].HP_text      = 0x0200F8C2; -- 2 bytes, for HP change animatio
 
 -- 0x2001f60 (18*312 Bytes): Battlechip Pack Counts (The first 6 out of 18 Bytes per Chip are used.)
 
+addresses.navi_cust_previous    = 0x02017800; -- 1 byte per square, where to drop the held NCP on B
+addresses.navi_cust_prog_prev   = 0x02017820; -- 8 bytes per program, last placed ID and location, ends at 178E7
+
+addresses.navi_cust_active      = 0x02018800; -- 1 byte per square, the last run configuration (to cancel edit)
+
+addresses.pack                  = 0x02018800; -- top of pack, 0x20 bytes per chip
 addresses.pack_ID               = 0x0201881C; -- 2 bytes, chip ID of pack
 addresses.pack_code             = 0x0201880A; -- 2 bytes, chip code of pack
+
+-- ends by 22FFF
 
 addresses.battle_draw_slots     = 0x02034040; -- 1 byte each, in battle chip draws, ends at 0x0203405D
 
