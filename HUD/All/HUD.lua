@@ -139,6 +139,7 @@ function hud.update()
             hud.set_center_x(40);
             hud.set_center_y(18);
             hud.display_strings(controls.get_options());
+            --hud.display_commands(controls.get_options());
             if     buttons.down.Select or buttons.keys.down.KeypadPeriod then
                 settings.command_mode = false;
             elseif buttons.down.Up     or buttons.keys.down.Up      then

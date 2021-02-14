@@ -134,6 +134,15 @@ function hud.display_strings(strings)
     end
 end
 
+function hud.display_commands(options)
+    for i,option in pairs(options) do
+        local x = hud.x * 6;
+        local y = hud.y * 9;
+        gui.pixelText(x, y, option, 0xFFFFFFFF, 0xC0000000, "fceux");
+        hud.y = hud.y + 1;
+    end
+end
+
 ---------------------------------------- Display Functions ----------------------------------------
 
 function hud.display_game_info()
