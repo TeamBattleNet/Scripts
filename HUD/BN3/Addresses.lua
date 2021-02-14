@@ -12,6 +12,8 @@ local addresses = require("All/Addresses");
 
 addresses.fire_flags            = 0x02000000; -- 1 byte TBD
 
+addresses.viruses_killereye     = 0x0200003E; -- 1 byte 0x07
+
 addresses.folder_state          = 0x02000040; -- 1 byte
 addresses.HP_memory_value       = 0x02000150; -- 1 byte ???
 
@@ -47,42 +49,70 @@ addresses.battle_paused         = 0x02001889; -- 1 byte, paused or custom menu i
 addresses.style_stored          = 0x02001894; -- 1 byte
 addresses.world_HP_current      = 0x020018A0; -- 2 bytes
 addresses.world_HP_max          = 0x020018A2; -- 2 bytes
-addresses.zenny                 = 0x020018F4; -- 4 bytes, 999999 "max"
-addresses.bug_frags             = 0x020018F8; -- 4 bytes,   9999 "max"
 
 addresses.battle_pointer        = 0x020018AC; -- 2 bytes? ROM offset? TBD
 addresses.battle_pointer_copy   = 0x02006D0C; -- 2 bytes? ROM offset? TBD
 addresses.battle_pointer_fixed  = 0x0200F8C8; -- 2 bytes? ROM offset? TBD
 
+--addresses.                    = 0x020018DE; -- 2 bytes TBD
+
+--addresses.                    = 0x020018F0; -- 4 bytes TBD
+addresses.zenny                 = 0x020018F4; -- 4 bytes, 999999 "max"
+addresses.bug_frags             = 0x020018F8; -- 4 bytes,   9999 "max"
+--addresses.                    = 0x020018FC; -- 4 bytes TBD
+
+-- 1990 - 19BF TBD
+
+-- 19C0 - 1B6F Flags?
+
+addresses.battle_escape_lvl     = 0x02001A20; -- 1 byte ???
+
+-- 1B70 - 1D6F @
+
+-- 1D70 - 1DF0 various data
+
 addresses.next_element          = 0x02001DBB; -- 1 byte, next element
 addresses.battle_count          = 0x02001DCA; -- 1 byte, number of battles since last style change
+addresses.play_time_frames      = 0x02001DD0; -- 4 bytes, check for skipped frames
 addresses.steps                 = 0x02001DDC; -- 4 bytes
 addresses.check                 = 0x02001DE0; -- 4 bytes, steps at the last encounter check
 addresses.sneak                 = 0x02001DEC; -- 4 bytes, starts at 6000
 
-addresses.battle_escape_lvl     = 0x02001A20; -- 1 byte ???
+-- 1E00 ROCKMANEXE3 20021002
 
-addresses.pack_chip_counts      = 0x02001f60; -- 18*312 bytes, first 6 of every 18 bytes are used, ends 0x02003550?
+-- 1E14 - 1F5F all 1's
+
+addresses.pack_chip_counts      = 0x02001f60; -- 18*312 bytes, first 6 of every 18 bytes are used, ends at 35D0?
 
 addresses.credits_cutscene      = 0x020050A8; -- 1 byte ???
 
-addresses.buster1               = 0x02005778; -- 1 byte ??? attack?
-addresses.buster2               = 0x02005779; -- 1 byte ??? rapid ?
-addresses.buster3               = 0x0200577A; -- 1 byte ??? charge?
+-- 5220 - 575F all 1's
+
+-- 5760 NaviCust status
+
+addresses.buster_attack         = 0x02005778; -- 1 byte
+addresses.buster_rapid          = 0x02005779; -- 1 byte
+addresses.buster_charge         = 0x0200577A; -- 1 byte
 addresses.max_HP_over_five      = 0x0200579C; -- 1 byte, Maximum HP Check for HP Memory (Max HP/5)
 
-addresses.enemy[1].ID           = 0x02006D00; -- 1 byte per enemy, up to 3
-addresses.enemy[2].ID           = 0x02006D01; -- 1 byte per enemy, up to 3
-addresses.enemy[3].ID           = 0x02006D02; -- 1 byte per enemy, up to 3
+-- 5C00 counting?
+
+-- 6CA0 - 6D1F battle data?
 
 addresses.battle_custom_check   = 0x02006CAC; -- 1 byte, flag for full custom gauge 0x01
 addresses.chip_window_size_next = 0x02006CAE; -- 1 byte, number of chips available in the custom menu next time
 addresses.battle_custom_gauge   = 0x02006CCC; -- 2 bytes, counts up to 0x4000
 addresses.delete_timer          = 0x02006CE0; -- 2 bytes, counts up to 0x4000
 
+addresses.enemy[1].ID           = 0x02006D00; -- 1 byte per enemy, up to 3
+addresses.enemy[2].ID           = 0x02006D01; -- 1 byte per enemy, up to 3
+addresses.enemy[3].ID           = 0x02006D02; -- 1 byte per enemy, up to 3
+
 addresses.cursor_ID             = 0x02007D14; -- 2 bytes? chip ID of cursor
 addresses.cursor_code           = 0x02007D18; -- 2 bytes? chip Code of cursor
 addresses.folder_or_pack        = 0x02007DD3; -- 1 byte, 26 == folder, 8 == pack
+
+-- 8F20 - 8F9F positional graphic values?
 
 addresses.your_X                = 0x02008F54; -- 2 bytes freezing doesn't prevent movement???
 addresses.your_Y                = 0x02008F56; -- 2 bytes freezing doesn't prevent movement???
@@ -90,6 +120,10 @@ addresses.map_offset_x          = 0x02008F58; -- 2 bytes % 256 to scroll screen
 addresses.map_offset_y          = 0x02008F5A; -- 2 bytes % 256 to scroll screen
 
 addresses.battle_field_modifier = 0x02008F98; -- 1 byte, weird effects
+
+-- 8FA0 - 939F graphics?
+
+-- 93A0 - 947F Menu stuff?
 
 addresses.menu_mode             = 0x020093D0; -- 1 byte
 addresses.menu_state            = 0x020093D1; -- 1 byte
@@ -100,19 +134,25 @@ addresses.pack_cursor           = 0x020093EC; -- 2 bytes?, cursor value in the p
 addresses.pack_offset           = 0x020093F0; -- 2 bytes?, offset value in the pack
 addresses.folder_count          = 0x020093DA; -- 1 byte, number of chips in folder being edited
 
-addresses.selected_offset_folder     = 0x02009420; -- 2 bytes?, offset value of selected chip in folder
-addresses.selected_cursor_folder     = 0x02009422; -- 2 bytes?, cursor value of selected chip in folder
-addresses.selected_offset_pack       = 0x02009428; -- 2 bytes?, offset value of selected chip in pack
-addresses.selected_cursor_pack       = 0x0200942A; -- 2 bytes?, cursor value of selected chip in pack
+addresses.selected_offset_folder = 0x02009420; -- 2 bytes?, offset value of selected chip in folder
+addresses.selected_cursor_folder = 0x02009422; -- 2 bytes?, cursor value of selected chip in folder
+addresses.selected_offset_pack   = 0x02009428; -- 2 bytes?, offset value of selected chip in pack
+addresses.selected_cursor_pack   = 0x0200942A; -- 2 bytes?, cursor value of selected chip in pack
+
+-- 9480 - 955F Textbox stuff?
 
 addresses.is_interacting        = 0x02009480; -- 1 byte ???
 addresses.interact_with         = 0x02009481; -- 1 byte ???
 addresses.interact_offset       = 0x020094AC; -- 4 bytes ???
 addresses.GMD_value             = 0x020094B8; -- 2 bytes, how to decode?
 addresses.number_code           = 0x020094B8; -- 1 byte per 8 digits
+
+-- 9560 - 95FF Graphics stuff?
+
+addresses.power_on_frames       = 0x02009604; -- 2 bytes
 addresses.lazy_RNG              = 0x02009730; -- 4 bytes, controls encounter ID and chip draws
-addresses.bbs_jobs_new          = 0x020097A5; -- 1 byte ???
-addresses.bbs_jobs_total        = 0x020097BA; -- 1 byte ???
+addresses.bbs_jobs_new          = 0x020097A5; -- 1 byte TBD
+addresses.bbs_jobs_total        = 0x020097BA; -- 1 byte TBD
 addresses.game_state            = 0x020097F8; -- 1 byte
 addresses.main_RNG              = 0x02009800; -- 4 bytes, controls everything else
 addresses.gamble_pick           = 0x02009DB1; -- 1 byte, current value
