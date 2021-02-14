@@ -338,10 +338,12 @@ end
 function game.title_screen_A()
     if game.did_leave_title_screen() then
         print("");
+        local lazy_RNG_index = game.get_lazy_RNG_index();
         local fade_out_RNG_index = game.get_main_RNG_index();
         local continue_RNG_index = (fade_out_RNG_index and fade_out_RNG_index - 17);
         game.broadcast(string.format("%u: Pressed A on M RNG Index %s", emu.framecount(), continue_RNG_index or "?????"));
         game.broadcast(string.format("%u: Faded out on M RNG Index %s", emu.framecount(), fade_out_RNG_index or "?????"));
+        game.broadcast(string.format("%u: Faded out on L RNG Index %s", emu.framecount(),     lazy_RNG_index or "?????"));
     end
 end
 
