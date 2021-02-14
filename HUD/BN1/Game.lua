@@ -430,6 +430,41 @@ function game.overwrite_folder_smog_special()
     });
 end
 
+function game.overwrite_folder_chaotic_special()
+    game.overwrite_folder_to(1, {
+        { ID=30; code= 5 }; -- FtrSword F
+        { ID=30; code= 5 }; -- FtrSword F
+        { ID=30; code= 5 }; -- FtrSword F
+        { ID=30; code= 5 }; -- FtrSword F
+        { ID=30; code= 5 }; -- FtrSword F
+        { ID=30; code= 5 }; -- FtrSword F
+        { ID=30; code= 5 }; -- FtrSword F
+        { ID=30; code= 5 }; -- FtrSword F
+        { ID=30; code= 5 }; -- FtrSword F
+        { ID=30; code= 5 }; -- FtrSword F
+        { ID=32; code=10 }; -- KngtSwrd K
+        { ID=32; code=10 }; -- KngtSwrd K
+        { ID=32; code=10 }; -- KngtSwrd K
+        { ID=32; code=10 }; -- KngtSwrd K
+        { ID=32; code=10 }; -- KngtSwrd K
+        { ID=32; code=10 }; -- KngtSwrd K
+        { ID=32; code=10 }; -- KngtSwrd K
+        { ID=32; code=10 }; -- KngtSwrd K
+        { ID=32; code=10 }; -- KngtSwrd K
+        { ID=32; code=10 }; -- KngtSwrd K
+        { ID=33; code= 8 }; -- HeroSwrd H
+        { ID=33; code= 8 }; -- HeroSwrd H
+        { ID=33; code= 8 }; -- HeroSwrd H
+        { ID=33; code= 8 }; -- HeroSwrd H
+        { ID=33; code= 8 }; -- HeroSwrd H
+        { ID=33; code= 8 }; -- HeroSwrd H
+        { ID=33; code= 8 }; -- HeroSwrd H
+        { ID=33; code= 8 }; -- HeroSwrd H
+        { ID=33; code= 8 }; -- HeroSwrd H
+        { ID=33; code= 8 }; -- HeroSwrd H
+    });
+end
+
 function game.overwrite_folder_press_a()
     game.overwrite_folder_to(1, {
         { ID=119; code=0 }; -- FstGauge

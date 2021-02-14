@@ -63,6 +63,7 @@ command_battle.options = {
     { value = function() commands.game.randomize_folder_codes(       1   ); end; text = "Folder: Randomize Folder Codes"; };
     { value = function() commands.game.randomize_folder_IDs_standard(1   ); end; text = "Folder: Randomize Folder IDs"  ; };
     { value = function() commands.game.overwrite_folder_dalus_special(   ); end; text = "Folder: The Dalus_EXE Special" ; };
+    { value = function() commands.game.overwrite_folder_chaotic_special( ); end; text = "Folder: The ChaoticMK Special" ; };
     { value = function() commands.game.overwrite_folder_smog_special(    ); end; text = "Folder: The SmogBN Special"    ; };
     { value = function() commands.game.overwrite_folder_press_a(         ); end; text = "Folder: Just PressA"           ; };
 };
