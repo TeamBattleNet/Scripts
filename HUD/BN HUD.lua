@@ -1,26 +1,24 @@
 -- HUD Script for the Mega Man Battle Network series, enjoy.
 
--- In HUD Mode  - Hold L and R then press:
--- Start        - to toggle HUD on/off
--- Select       - to turn Command Mode on
--- Left / Right - to change display mode
--- Up / Down    - to change display font
--- A            - to print inputs from the last folder edit
--- B            - to print game specific information
+-- In HUD Mode   -  Hold L and R then press:
+-- Start         -  to toggle HUD on/off
+-- Select        -  to turn Command Mode on
+-- Left / Right  -  to change display mode
+-- Up / Down     -  to change mode specific values
+-- A             -  to print inputs from the last folder edit
+-- B             -  to print game specific information
 
--- Command Mode - On Controller Press:
--- Select       - to turn Command Mode off
--- Left / Right - to change Command
--- Up / Down    - to change Options
--- B            - to change display font
--- A            - to activate the Command Option
+-- Command Mode  -  On Controller Press:
+-- Select        -  to turn Command Mode off
+-- Left / Right  -  to change Command
+-- Up / Down     -  to change Options
+-- A / B         -  to activate the Command Option
 
--- Command Mode - On Keyboard Press:
--- KeypadPeriod - to toggle Command Mode off
--- Left / Right - to change Command
--- Up / Down    - to change Options
--- Tab          - to change display font
--- Keypad0      - to activate the Command Option
+-- Command Mode  -  On Keyboard Press:
+-- KeypadPeriod  -  to toggle Command Mode off
+-- Left / Right  -  to change Command
+-- Up / Down     -  to change Options
+-- Tab / Keypad0 -  to activate the Command Option
 
 -- Special thanks to Prof9, NMarkro, Risch, TL_Plexa, Mountebank, Tterraj42, TREZ, and TeamBN
 

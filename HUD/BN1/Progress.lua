@@ -34,7 +34,7 @@ progress[0x22] = "StoneMan Deleted";
 progress[0x23] = "Dad's PowerUP";
 progress[0x24] = "School Cancelled";
 progress[0x25] = "SciLab (At Night)";
-progress[0x26] = "ColdBears Deleted";
+progress[0x26] = "What Polar Bears?";
 progress[0x27] = "Found OSG in trunk";
 
 progress[0x30] = "IceMan Deleted";

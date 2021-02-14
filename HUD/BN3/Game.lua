@@ -335,10 +335,11 @@ end
 
 function game.title_screen_A()
     if game.did_leave_title_screen() then
-        local RNG_index = game.get_main_RNG_index() or "?????";
-        local message = string.format("\n%u: Pressed A on M RNG Index %s", emu.framecount()-17, RNG_index);
-        print(message);
-        gui.addmessage(message);
+        print("");
+        local fade_out_RNG_index = game.get_main_RNG_index();
+        local continue_RNG_index = (fade_out_RNG_index and fade_out_RNG_index - 17);
+        game.broadcast(string.format("%u: Continue on M RNG Index %s", emu.framecount(), continue_RNG_index or "?????"));
+        game.broadcast(string.format("%u: Fade out on M RNG Index %s", emu.framecount(), fade_out_RNG_index or "?????"));
     end
 end
 

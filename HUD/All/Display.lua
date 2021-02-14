@@ -55,7 +55,7 @@ function hud.set_ws()
     hud.ws = client.getwindowsize(); -- screen space is GBA * ws
 end
 
-function hud.reset_values()
+function hud.reset_xy()
     hud.x = 0;
     hud.y = 0;
     hud.x0 = 0;

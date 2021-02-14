@@ -2,6 +2,10 @@
 
 local setups = require("All/Setups");
 
+setups.delay_bios   = 282+ 5; -- BN 1 + 3
+setups.delay_capcom =  31+11; -- BN 1 + 3
+setups.delay_title  =  65+16; -- BN 1 + 3
+
 local group_misc = setups.create_group("Miscellaneous");
 
 setups.add_setup(group_misc, "Open & Close Menu", function()
@@ -15,51 +19,52 @@ setups.add_setup(group_misc, "Open & Close Menu", function()
     setups.press_buttons(30, "Menu");
 end);
 
-setups.add_setup(group_misc, "PRESS START", function()
+setups.add_setup(group_misc, "START A", function()
     setups.press_buttons(2, "PRESS START", {Start=true});
-    setups.press_buttons(2, "CONTINUE", {A=true});
+    setups.press_buttons(2, "PRESS A", {A=true});
 end);
 
 setups.add_setup(group_misc, "TEST BUTTONS", function()
-    --setups.soft_reset(0);
-    --setups.hard_reset(0);
-    setups.press_buttons(37, "Loading....");
+    --setups.soft_reset();
+    --setups.hard_reset();
+    --setups.CONTINUE(0);
+    setups.press_buttons(37+8, "Loading...."); -- area loading varies
     setups.press_buttons( 1, "PRESS START", {Start=true});
 end);
 
 local group_RNG = setups.create_group("RNG Manipulation");
 
-setups.add_setup(group_RNG, "BN1: 359: GutsMan", function()
-    setups.soft_reset(); -- RNG Index: 354-364 (359)
-    setups.press_buttons(  40, "Area Loading..");
-    setups.press_buttons(   1, "Talk to Dex"   , {A=true});
-    setups.press_buttons(  20, "Wait on text..");
-    setups.press_buttons(   1, "Textbox"       , {A=true});
-    setups.press_buttons(  10, "Wait on text..");
-    setups.press_buttons(   1, "Textbox"       , {A=true});
-    setups.press_buttons(  15, "Wait on text..");
-    setups.press_buttons(   1, "Textbox"       , {A=true});
-    setups.press_buttons(  20, "Wait on text..");
-    setups.press_buttons(   2, "Move to Yes"   , {Left=true});
-    setups.press_buttons(   1, "Select Yes"    , {A=true});
-    setups.press_buttons(  15, "Wait on text..");
-    setups.press_buttons(   1, "Textbox"       , {A=true});
-    setups.press_buttons(87+6, "Wait on RNG...");
-    setups.press_buttons(   1, "Start fight!"  , {A=true});
-end);
+local function reset_and_wait(hard, pause, delay)
+    if hard then
+        setups.hard_reset();
+    else
+        setups.soft_reset();
+    end
+    if pause then
+        setups.PRESS_START(delay);
+        client.pause();
+    else
+        setups.CONTINUE(delay);
+    end
+end
 
-setups.add_setup(group_RNG, "BN1: 740: ColorMan", function()
-    setups.soft_reset(); -- RNG Index: 735-746 (740)
-    setups.press_buttons( 40, "Loading...");
-    setups.press_buttons(279, "Wait on RNG...");
-    setups.press_buttons(  1, "Jack in to the bus", {R=true});
-    setups.press_buttons(400, "Wait on animation...");
-    setups.press_buttons(120, "Skip Cutscene...", {Start=true});
-end);
+setups.add_setup(group_RNG, " 66 ->  83: First  A",          function() reset_and_wait( true, false,   0); end);
+setups.add_setup(group_RNG, " 66 ->  83: First  A  (Pause)", function() reset_and_wait( true,  true,   0); end);
+setups.add_setup(group_RNG, " 83 -> 100: 100 Load  (Pause)", function() reset_and_wait( true,  true,  17); end);
+setups.add_setup(group_RNG, "100 -> 117: 100 On A  (Pause)", function() reset_and_wait( true,  true,  34); end);
+setups.add_setup(group_RNG, "128 -> 145: CopyMan   (Pause)", function() reset_and_wait( true,  true,  62); end);
+setups.add_setup(group_RNG, "129 -> 146: Wind Star (Pause)", function() reset_and_wait( true,  true,  63); end);
+setups.add_setup(group_RNG, "132 -> 149: CopyMan",           function() reset_and_wait( true, false,  66); end);
+setups.add_setup(group_RNG, "132 -> 149: Wind Star",         function() reset_and_wait( true, false,  66); end);
+setups.add_setup(group_RNG, "135 -> 152: Gamble    (Pause)", function() reset_and_wait(false, false,  69); end);
+setups.add_setup(group_RNG, "137 -> 154: Gamble",            function() reset_and_wait(false, false,  71); end);
+setups.add_setup(group_RNG, "168 -> 185: IceBall   (Pause)", function() reset_and_wait( true, false, 102); end);
+setups.add_setup(group_RNG, "170 -> 187: IceBall    (Hard)", function() reset_and_wait( true, false, 104); end);
+setups.add_setup(group_RNG, "170 -> 187: IceBall    (Soft)", function() reset_and_wait(false, false, 104); end);
 
 local group_folders = setups.create_group("Folder Edits");
 
-setups.add_setup(group_folders, "BN1: Folder  0: Remove All Chips", function()
+setups.add_setup(group_folders, "Folder  0: Remove All Chips", function()
     for i=1,30 do
         setups.folder_edit_buttons({
             {A=true};
@@ -69,7 +74,7 @@ setups.add_setup(group_folders, "BN1: Folder  0: Remove All Chips", function()
     end
 end);
 
-setups.add_setup(group_folders, "BN1: Folder  1: Tutorial", function()
+setups.add_setup(group_folders, "Folder  1: FlashMan", function()
     setups.folder_edit_buttons({
         {A=true};
         {R=true};

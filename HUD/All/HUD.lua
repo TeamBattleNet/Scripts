@@ -134,8 +134,11 @@ function hud.update()
     end
     
     if show_HUD then
-        hud.reset_values();
+        hud.reset_xy();
         if settings.command_mode then
+            hud.set_center_x(40);
+            hud.set_center_y(18);
+            hud.display_strings(controls.get_options());
             if     buttons.down.Select or buttons.keys.down.KeypadPeriod then
                 settings.command_mode = false;
             elseif buttons.down.Up     or buttons.keys.down.Up      then
@@ -151,9 +154,6 @@ function hud.update()
             elseif buttons.down.A      or buttons.keys.down.Keypad0 then
                 controls.doit();
             end
-            hud.set_center_x(40);
-            hud.set_center_y(18);
-            hud.display_strings(controls.get_options());
         else
             if buttons.held.L and buttons.held.R then
                 if     buttons.down.Select then
