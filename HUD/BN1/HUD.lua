@@ -107,6 +107,7 @@ local function HUD_speedrun()
                 hud.to_screen(string.format("Door: %2u", hud.game.get_door_code()));
             end
         end
+        hud.to_screen(string.format("Zen: %5u", hud.game.get_zenny()));
         hud.to_screen(string.format("Lib: %3u", hud.game.count_library()));
         hud.to_screen(string.format("Lvl: %3u", hud.game.calculate_mega_level()));
         hud.display_area();

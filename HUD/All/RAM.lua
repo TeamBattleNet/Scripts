@@ -138,6 +138,9 @@ ram.set.HPMemory = function(HPMemory) memory.write_u8(ram.addr.HPMemory, HPMemor
 ram.get.library = function(offset) return memory.read_u8(ram.addr.library+offset); end;
 ram.set.library = function(offset, bit_flags) memory.write_u8(ram.addr.library+offset, bit_flags); end;
 
+ram.get.magic_byte = function() return memory.read_u8(ram.addr.magic_byte); end;
+ram.set.magic_byte = function(magic_byte) memory.write_u8(ram.addr.magic_byte, magic_byte); end;
+
 ram.get.menu_mode = function() return memory.read_u8(ram.addr.menu_mode); end;
 ram.set.menu_mode = function(menu_mode) memory.write_u8(ram.addr.menu_mode, menu_mode); end;
 ram.get.menu_state = function() return memory.read_u8(ram.addr.menu_state); end;

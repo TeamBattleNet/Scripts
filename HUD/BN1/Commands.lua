@@ -37,6 +37,7 @@ function command_fun_flags.update_options(option_value)
     table.insert( command_fun_flags.options, fun_flag_helper("chip_selection_max" , "Always Choose 15 Chips"    ) );
     table.insert( command_fun_flags.options, fun_flag_helper("no_encounters"      , "Lock RNG to No  Encounters") );
     table.insert( command_fun_flags.options, fun_flag_helper("yes_encounters"     , "Lock RNG to Yes Encounters") );
+    table.insert( command_fun_flags.options, fun_flag_helper("is_routing"         , "Display Routing Messages"  ) );
     table.insert( command_fun_flags.options, fun_flag_helper("randomize_colors"   , "Randomize Color Palette"   ) );
 end
 command_fun_flags.update_options();

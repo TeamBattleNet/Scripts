@@ -333,19 +333,33 @@ function game.in_Secret_3()
     return (game.get_main_area() == 0x95 and game.get_sub_area() == 0x02);
 end
 
+---------------------------------------- Fun Flags  ----------------------------------------
+
 function game.title_screen_A()
     if game.did_leave_title_screen() then
         print("");
         local fade_out_RNG_index = game.get_main_RNG_index();
         local continue_RNG_index = (fade_out_RNG_index and fade_out_RNG_index - 17);
-        game.broadcast(string.format("%u: Continue on M RNG Index %s", emu.framecount(), continue_RNG_index or "?????"));
-        game.broadcast(string.format("%u: Fade out on M RNG Index %s", emu.framecount(), fade_out_RNG_index or "?????"));
+        game.broadcast(string.format("%u: Pressed A on M RNG Index %s", emu.framecount(), continue_RNG_index or "?????"));
+        game.broadcast(string.format("%u: Faded out on M RNG Index %s", emu.framecount(), fade_out_RNG_index or "?????"));
     end
 end
 
-function game.use_fun_flags(fun_flags)
+function game.use_fun_flags(fun_flags) -- TODO: Rename
+    game.title_screen_A();
+    
     if fun_flags.randomize_colors then
-        if game.did_game_state_change() or game.did_menu_mode_change() or game.did_area_change() then game.doit_later[emu.framecount()+4] = game.randomize_color_palette; end
+        if game.did_game_state_change() or game.did_menu_mode_change() or game.did_area_change() then game.doit_later[emu.framecount()+5] = game.randomize_color_palette; end
+    end
+    
+    if fun_flags.is_routing then
+        if game.did_progress_change() then
+            game.broadcast(game.get_progress_change());
+        end
+        
+        if game.did_magic_byte_change() then
+            game.broadcast_magic_byte();
+        end
     end
 end
 
@@ -359,7 +373,6 @@ function game.initialize(options)
 end
 
 function game.pre_update(options)
-    game.title_screen_A();
     options.fun_flags = game.fun_flags;
     game.ram.pre_update(options);
     game.use_fun_flags(game.fun_flags);

@@ -732,11 +732,30 @@ function game.would_get_encounter()
     return game.get_encounter_threshold() > (game.get_main_RNG_value() % 0x20);
 end
 
+---------------------------------------- Flags ----------------------------------------
+
+function game.get_magic_addr()
+    return bit.band(game.ram.addr.magic_byte, 0xFFFFFF);
+end
+
+function game.get_magic_byte()
+    return game.ram.get.magic_byte();
+end
+
+function game.set_magic_byte(new_magic)
+    game.ram.set.magic_byte(new_magic);
+end
+
 ---------------------------------------- State Tracking ----------------------------------------
 
 local previous_progress = 0x00;
 function game.did_progress_change()
     return game.get_progress() ~= previous_progress;
+end
+
+local previous_magic_byte = 0x00;
+function game.did_magic_byte_change()
+    return game.ram.get.magic_byte() ~= previous_magic_byte;
 end
 
 local previous_game_state = 0x00;
@@ -799,6 +818,13 @@ function game.get_progress_change()
     return string.format("Progress changed from 0x%02X to 0x%02X - %s", previous_progress, game.get_progress(), game.get_progress_name_current());
 end
 
+function game.broadcast_magic_byte()
+    print("");
+    game.broadcast(string.format("MAGIC BYTE 0x%02X changed from  0x%02X     to  0x%02X    !", game.get_magic_addr(), previous_magic_byte, game.get_magic_byte()));
+    game.broadcast(string.format("MAGIC BYTE 0x%02X changed from %sb to %sb!", game.get_magic_addr(), game.byte_to_binary(previous_magic_byte), game.byte_to_binary(game.get_magic_byte())));
+    print("");
+end
+
 ---------------------------------------- Module Controls ----------------------------------------
 
 function game.pre_update(options)
@@ -813,7 +839,8 @@ game.doit_later = {};
 
 function game.track_game_state()
     track_encounter_checks();
-    previous_progress       = game.get_progress();
+    previous_progress       = game.ram.get.progress();
+    previous_magic_byte     = game.ram.get.magic_byte();
     previous_game_state     = game.ram.get.game_state();
     previous_battle_state   = game.ram.get.battle_state();
     previous_battle_pointer = game.ram.get.battle_pointer();

@@ -286,20 +286,12 @@ function game.clear_star_flag()
     game.set_star_byte(bit.band(game.get_star_byte(), 0xFB));
 end
 
-function game.get_magic_byte()
-    return game.ram.get.magic_byte();
-end
-
-function game.set_magic_byte(new_magic)
-    game.ram.set.magic_byte(new_magic);
-end
-
 function game.is_magic_bit_set()
     return bit.band(game.get_magic_byte(), 0x18) == 0x10;
 end
 
 function game.is_go_mode()
-    return game.is_magic_bit_set() and (game.get_progress() == 0x54);
+    return (game.is_magic_bit_set() and game.get_progress() == 0x54);
 end
 
 function game.go_mode()
@@ -488,9 +480,11 @@ function game.near_number_doors() -- NumberMan Scenario or WWW Comp 2
         or (game.get_main_area() == 0x85 and game.get_sub_area() == 0x01);
 end
 
+---------------------------------------- Fun Flags  ----------------------------------------
+
 function game.title_screen_A()
     if game.did_leave_title_screen() then
-        print(string.format("\nPressed A on frame: %u", emu.framecount()-17));
+        print(string.format("\nRNG Froze on frame: %u", emu.framecount())); -- 17 frames after A
     end
 end
 
@@ -500,9 +494,21 @@ function game.randomize_color_palette()
     end
 end
 
-function game.use_fun_flags(fun_flags)
+function game.use_fun_flags(fun_flags) -- TODO: Rename
+    game.title_screen_A();
+    
     if fun_flags.randomize_colors then
-        if game.did_game_state_change() or game.did_menu_mode_change() or game.did_area_change() then game.doit_later[emu.framecount()+3] = game.randomize_color_palette; end
+        if game.did_game_state_change() or game.did_menu_mode_change() or game.did_area_change() then game.doit_later[emu.framecount()+5] = game.randomize_color_palette; end
+    end
+    
+    if fun_flags.is_routing then
+        if game.did_progress_change() then
+            game.broadcast(game.get_progress_change());
+        end
+        
+        if game.did_magic_byte_change() then
+            game.broadcast_magic_byte();
+        end
     end
 end
 
@@ -516,7 +522,6 @@ function game.initialize(options)
 end
 
 function game.pre_update(options)
-    game.title_screen_A();
     options.fun_flags = game.fun_flags;
     game.ram.pre_update(options);
     game.use_fun_flags(game.fun_flags);

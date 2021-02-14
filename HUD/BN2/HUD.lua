@@ -79,8 +79,11 @@ end
 local function HUD_auto()
     if hud.game.in_title() or hud.game.in_splash() or hud.game.in_transition() then
         hud.display_game_info();
+        hud.to_screen(string.format("EnCounter: %3u", total_fights));
         hud.to_screen("");
         display_player_info();
+        hud.to_screen("");
+        hud.display_RNG(true);
         hud.display_area();
     elseif hud.game.in_world() then
         if hud.game.in_real_world() then
