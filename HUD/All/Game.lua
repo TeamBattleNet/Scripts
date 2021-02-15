@@ -124,15 +124,55 @@ end
 
 -- Game Mode
 
-function game.in_menu()
-    return false; -- should be overridden per game
+game.state = { title=0x00 }; -- should be overridden per game
+
+function game.in_title()
+    return game.ram.get.game_state() == game.state.title;
 end
 
-function game.in_menu_folder_edit()
-    return false; -- should be overridden per game
+function game.in_world()
+    return game.ram.get.game_state() == game.state.world;
+end
+
+function game.in_battle()
+    return game.ram.get.game_state() == game.state.battle;
+end
+
+function game.in_transition()
+    return game.ram.get.game_state() == game.state.transition;
+end
+
+function game.in_splash()
+    return (game.ram.get.game_state() == game.state.splash or game.ram.get.game_state() == game.state.splash_pal);
+end
+
+function game.in_menu()
+    return game.ram.get.game_state() == game.state.menu;
+end
+
+function game.in_shop()
+    return game.ram.get.game_state() == game.state.shop;
+end
+
+function game.in_game_over()
+    return game.ram.get.game_state() == game.state.game_over;
+end
+
+function game.in_chip_trader()
+    return game.ram.get.game_state() == game.state.chip_trader;
+end
+
+function game.in_request_board()
+    return game.ram.get.game_state() == game.state.request_board;
 end
 
 function game.in_credits()
+    return game.ram.get.game_state() == game.state.credits;
+end
+
+-- Menu Mode
+
+function game.in_menu_folder_edit()
     return false; -- should be overridden per game
 end
 
