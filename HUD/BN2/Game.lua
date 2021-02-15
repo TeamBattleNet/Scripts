@@ -299,6 +299,41 @@ function game.count_library()
     return count;
 end
 
+function game.overwrite_folder_press_a()
+    game.overwrite_folder_to(1, {
+        { ID= 19; code=0 }; -- BigBomb
+        { ID= 19; code=0 }; -- BigBomb
+        { ID= 19; code=0 }; -- BigBomb
+        { ID= 19; code=0 }; -- BigBomb
+        { ID= 19; code=0 }; -- BigBomb
+        { ID= 44; code=0 }; -- Quake3
+        { ID= 44; code=0 }; -- Quake3
+        { ID= 44; code=0 }; -- Quake3
+        { ID= 44; code=0 }; -- Quake3
+        { ID= 44; code=0 }; -- Quake3
+        { ID= 59; code=0 }; -- Ratton3
+        { ID= 59; code=0 }; -- Ratton3
+        { ID= 59; code=0 }; -- Ratton3
+        { ID= 59; code=0 }; -- Ratton3
+        { ID= 59; code=0 }; -- Ratton3
+        { ID= 73; code=0 }; -- Satelit3
+        { ID= 73; code=0 }; -- Satelit3
+        { ID= 73; code=0 }; -- Satelit3
+        { ID= 73; code=0 }; -- Satelit3
+        { ID= 73; code=0 }; -- Satelit3
+        { ID=152; code=0 }; -- FullCust
+        { ID=152; code=0 }; -- FullCust
+        { ID=152; code=0 }; -- FullCust
+        { ID=152; code=0 }; -- FullCust
+        { ID=152; code=0 }; -- FullCust
+        { ID=202; code=0 }; -- Protoman V3
+        { ID=202; code=0 }; -- Protoman V3
+        { ID=202; code=0 }; -- Protoman V3
+        { ID=202; code=0 }; -- Protoman V3
+        { ID=202; code=0 }; -- Protoman V3
+    });
+end
+
 function game.overwrite_folder_dalus_special()
     game.overwrite_folder_to(1, {
         { ID=111; code=26 }; -- Guard *
@@ -331,6 +366,42 @@ function game.overwrite_folder_dalus_special()
         { ID=138; code= 9 }; -- Escape J
         { ID=138; code=11 }; -- Escape L
         { ID=138; code=13 }; -- Escape N
+    });
+end
+
+function game.overwrite_folder_gater()
+    game.overwrite_folder_to(1, {
+        { ID=147; code=26 }; -- Wind *
+        { ID=147; code=26 }; -- Wind *
+        { ID=147; code=26 }; -- Wind *
+        { ID=147; code=26 }; -- Wind *
+        { ID=147; code=26 }; -- Wind *
+        { ID=148; code=26 }; -- Fan *
+        { ID=148; code=26 }; -- Fan *
+        { ID=148; code=26 }; -- Fan *
+        { ID=148; code=26 }; -- Fan *
+        { ID=148; code=26 }; -- Fan *
+        { ID=152; code=26 }; -- FullCust *
+        { ID=152; code=26 }; -- FullCust *
+        { ID=152; code=26 }; -- FullCust *
+        { ID=152; code=26 }; -- FullCust *
+        { ID=152; code=26 }; -- FullCust *
+        { ID=188; code=26 }; -- Atk+10 *
+        { ID=188; code=26 }; -- Atk+10 *
+        { ID=188; code=26 }; -- Atk+10 *
+        { ID=188; code=26 }; -- Atk+10 *
+        { ID=188; code=26 }; -- Atk+10 *
+        { ID=188; code=26 }; -- Atk+10 *
+        { ID= 48; code=26 }; -- Atk+30 *
+        { ID= 48; code=26 }; -- Atk+30 *
+        { ID= 48; code=26 }; -- Atk+30 *
+        { ID= 48; code=26 }; -- Atk+30 *
+        { ID= 48; code=26 }; -- Atk+30 *
+        { ID=238; code= 6 }; -- GateMan V3 G
+        { ID=238; code= 6 }; -- GateMan V3 G
+        { ID=238; code= 6 }; -- GateMan V3 G
+        { ID=238; code= 6 }; -- GateMan V3 G
+        { ID=238; code= 6 }; -- GateMan V3 G
     });
 end
 
@@ -369,41 +440,6 @@ function game.overwrite_folder_last_special()
     });
 end
 
-function game.overwrite_folder_press_a()
-    game.overwrite_folder_to(1, {
-        { ID= 19; code=0 }; -- BigBomb
-        { ID= 19; code=0 }; -- BigBomb
-        { ID= 19; code=0 }; -- BigBomb
-        { ID= 19; code=0 }; -- BigBomb
-        { ID= 19; code=0 }; -- BigBomb
-        { ID= 44; code=0 }; -- Quake3
-        { ID= 44; code=0 }; -- Quake3
-        { ID= 44; code=0 }; -- Quake3
-        { ID= 44; code=0 }; -- Quake3
-        { ID= 44; code=0 }; -- Quake3
-        { ID= 59; code=0 }; -- Ratton3
-        { ID= 59; code=0 }; -- Ratton3
-        { ID= 59; code=0 }; -- Ratton3
-        { ID= 59; code=0 }; -- Ratton3
-        { ID= 59; code=0 }; -- Ratton3
-        { ID= 73; code=0 }; -- Satelit3
-        { ID= 73; code=0 }; -- Satelit3
-        { ID= 73; code=0 }; -- Satelit3
-        { ID= 73; code=0 }; -- Satelit3
-        { ID= 73; code=0 }; -- Satelit3
-        { ID=152; code=0 }; -- FullCust
-        { ID=152; code=0 }; -- FullCust
-        { ID=152; code=0 }; -- FullCust
-        { ID=152; code=0 }; -- FullCust
-        { ID=152; code=0 }; -- FullCust
-        { ID=202; code=0 }; -- Protoman V3
-        { ID=202; code=0 }; -- Protoman V3
-        { ID=202; code=0 }; -- Protoman V3
-        { ID=202; code=0 }; -- Protoman V3
-        { ID=202; code=0 }; -- Protoman V3
-    });
-end
-
 ---------------------------------------- Miscellaneous ----------------------------------------
 
 -- None yet
@@ -416,7 +452,7 @@ function game.title_screen_A()
         local fade_out_RNG_index = game.get_main_RNG_index();
         local continue_RNG_index = (fade_out_RNG_index and fade_out_RNG_index - 17);
         game.broadcast(string.format("%u: Pressed A on M RNG Index %s", emu.framecount(), continue_RNG_index or "?????"));
-        game.broadcast(string.format("%u: Faded out on M RNG Index %s", emu.framecount(), fade_out_RNG_index or "?????"));
+        game.broadcast(string.format("%u: Loaded in on M RNG Index %s", emu.framecount(), fade_out_RNG_index or "?????"));
     end
 end
 
@@ -427,7 +463,7 @@ function game.use_fun_flags(fun_flags) -- TODO: Rename
         if game.did_game_state_change() or game.did_menu_mode_change() or game.did_area_change() then game.doit_later[emu.framecount()+5] = game.randomize_color_palette; end
     end
     
-    if fun_flags.is_routing then
+    if fun_flags.is_routing and not game.in_title() then
         if game.did_progress_change() then
             game.broadcast(game.get_progress_change());
         end
@@ -444,6 +480,9 @@ local settings = require("All/Settings");
 
 function game.initialize(options)
     settings.set_display_text("gui"); -- TODO: Remove when gui.text fully supported
+    --hud.HUD_mode = 4;
+    --game.fun_flags.is_routing = true;
+    --game.fun_flags.randomize_colors = true;
     game.ram.initialize(options);
 end
 
