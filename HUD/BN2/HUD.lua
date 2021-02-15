@@ -8,6 +8,8 @@ hud.version = hud.version .. ".0.2";
 
 hud.game = require("BN2/Game");
 
+local coin_wins = 0;
+local coin_flips = 0;
 local total_fights = 0;
 
 ---------------------------------------- Display Functions ----------------------------------------

@@ -271,7 +271,7 @@ function game.is_magic_bit_set()
 end
 
 function game.is_go_mode()
-    return (game.is_magic_bit_set() and game.get_progress() == 0x47);
+    return (game.is_magic_bit_set() and game.get_progress() >= 0x42);
 end
 
 function game.go_mode()

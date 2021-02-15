@@ -10,7 +10,7 @@ addresses.flags                 = 0x02000000; -- N bytes, to 5F at most
 addresses.star_byte_yellow      = 0x02000000; -- Somewhere in the first row
 addresses.star_byte_green       = 0x02000010; -- Somewhere in the second row
 
-addresses.magic_byte            = 0x02000048; -- 0x04 Progress 0x47
+addresses.magic_byte            = 0x02000048; -- 0x04 Progress >= 0x42
 
 addresses.library               = 0x02000060; -- ? bytes, bit flags, ends on 80?
 
