@@ -36,6 +36,9 @@ ram.set.battle_state = function(battle_state) memory.write_u8(ram.addr.battle_st
 ram.get.bug_frags = function() return memory.read_u32_le(ram.addr.bug_frags); end;
 ram.set.bug_frags = function(bug_frags) memory.write_u32_le(ram.addr.bug_frags, bug_frags); end;
 
+ram.get.bug_run = function() return memory.read_u8(ram.addr.bug_run); end;
+ram.set.bug_run = function(bug_run) memory.write_u8(ram.addr.bug_run, bug_run); end;
+
 ram.get.buster_attack = function() return memory.read_u8(ram.addr.buster_attack); end;
 ram.set.buster_attack = function(buster_attack) memory.write_u8(ram.addr.buster_attack, buster_attack); end;
 ram.get.buster_rapid = function() return memory.read_u8(ram.addr.buster_rapid); end;

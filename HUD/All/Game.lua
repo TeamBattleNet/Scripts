@@ -688,6 +688,10 @@ function game.get_encounter_checks()
     return math.floor(last_encounter_check / 64); -- approximate
 end
 
+function game.is_sneakrun_bugged()
+    return false; -- overridden per game
+end
+
 local function track_encounter_checks()
     if game.did_area_change() then
         area_odds = area_odds * current_odds;
@@ -711,10 +715,15 @@ local function track_encounter_checks()
     end
 end
 
-function game.get_encounter_threshold()
+function game.get_encounter_curve()
     local curve_addr = game.ram.addr.encounter_curve;
     local curve_offset = (game.get_main_area() - 0x80) * 0x10 + game.get_sub_area();
-    curve = memory.read_u8(curve_addr + curve_offset);
+    return memory.read_u8(curve_addr + curve_offset); -- 7 for areas with no viruses
+end
+
+function game.get_encounter_threshold()
+    local curve = game.get_encounter_curve();
+    if curve ~= 7 and game.is_sneakrun_bugged() then curve = 0; end
     local odds_addr = game.ram.addr.encounter_odds;
     local test_level = math.min(math.floor(game.get_steps() / 64), 16);
     return memory.read_u8(odds_addr + test_level * 8 + curve);
@@ -729,8 +738,31 @@ function game.get_encounter_percent()
 end
 
 function game.would_get_encounter()
-    return game.get_encounter_threshold() > (game.get_main_RNG_value() % 0x20);
+    return game.get_encounter_threshold() > (game.get_main_RNG_value() % 0x20); -- (1C is 87.5%)
 end
+
+--[[
+    Example Encounter Curves (BN 3):
+    #: 00 01 02 03 04 05 06 07 - step
+    ---------------------------------
+    0: 00 00 00 00 00 00 00 00 -    0
+    1: 00 00 00 00 00 00 00 00 -   64
+    2: 01 00 00 00 00 00 00 00 -  128
+    3: 02 01 00 00 00 00 00 00 -  192
+    4: 03 02 01 00 00 00 00 00 -  256
+    5: 04 03 02 01 00 00 00 00 -  320
+    6: 05 04 03 02 01 00 00 00 -  384
+    7: 06 05 04 03 02 00 00 00 -  448
+    8: 08 06 05 04 03 01 00 00 -  512
+    9: 0A 08 06 05 04 02 00 00 -  576
+    A: 0C 0A 08 06 05 03 00 00 -  640
+    B: 0E 0C 0A 08 06 04 00 00 -  704
+    C: 10 0E 0C 0A 08 05 00 00 -  768
+    D: 12 10 0E 0C 0A 06 00 00 -  832
+    E: 14 12 10 0E 0C 08 02 00 -  896
+    F: 1A 14 12 10 0E 0A 06 00 -  960
+    G: 1C 1A 14 12 10 0C 0C 00 - 1024
+--]]
 
 ---------------------------------------- Flags ----------------------------------------
 

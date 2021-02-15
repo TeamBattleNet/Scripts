@@ -37,6 +37,7 @@ addresses.battle_state          = 0x02000000;
 addresses.battle_timer          = 0x02000000;
 
 addresses.bug_frags             = 0x02000000;
+addresses.bug_run               = 0x02000000;
 addresses.buster_attack         = 0x02000000;
 addresses.buster_charge         = 0x02000000;
 addresses.buster_rapid          = 0x02000000;

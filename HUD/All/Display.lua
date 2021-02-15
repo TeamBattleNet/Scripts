@@ -193,10 +193,11 @@ end
 
 function hud.display_steps(detailed)
     hud.to_screen(string.format("Steps: %5u" , hud.game.get_steps()));
-    if hud.game.in_digital_world() then
+    if hud.game.in_digital_world() and hud.game.get_encounter_curve() ~= 7 then
         hud.to_screen(string.format("Check: %5u" , hud.game.get_check()));
         hud.to_screen(string.format("Checks: %4u", hud.game.get_encounter_checks()));
         if detailed then
+            hud.to_screen(string.format("A Curve: %3u" , hud.game.get_encounter_curve()));
             hud.to_screen(string.format("A%%: %7.3f%%", hud.game.get_area_percent()));
             hud.to_screen(string.format("C%%: %7.3f%%", hud.game.get_current_percent()));
         end
