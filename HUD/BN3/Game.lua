@@ -358,7 +358,7 @@ function game.use_fun_flags(fun_flags) -- TODO: Rename
         if game.did_game_state_change() or game.did_menu_mode_change() or game.did_area_change() then game.doit_later[emu.framecount()+5] = game.randomize_color_palette; end
     end
     
-    if fun_flags.is_routing then
+    if fun_flags.is_routing and not game.in_title() then
         if game.did_progress_change() then
             game.broadcast(game.get_progress_change());
         end
