@@ -166,6 +166,10 @@ function game.in_request_board()
     return game.ram.get.game_state() == game.state.request_board;
 end
 
+function game.in_loading_navicust()
+    return game.ram.get.game_state() == game.state.load_navicust;
+end
+
 function game.in_credits()
     return game.ram.get.game_state() == game.state.credits;
 end

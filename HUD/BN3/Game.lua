@@ -16,64 +16,34 @@ game.fun_flags = {}; -- set in Commands, used in RAM
 
 -- Game Mode
 
-game.game_state_names[0x00] = "Title";         -- or BIOS
-game.game_state_names[0x04] = "World";         -- real and digital
+game.state.title         = 0x00; -- or BIOS
+game.state.world         = 0x04; -- real and digital
+game.state.battle        = 0x08;
+game.state.transition    = 0x0C; -- jack-in / out
+game.state.demo_end      = 0x10; -- what is this?
+game.state.splash        = 0x14;
+game.state.menu          = 0x18;
+game.state.shop          = 0x1C;
+game.state.game_over     = 0x20;
+game.state.chip_trader   = 0x24;
+game.state.request_board = 0x28;
+game.state.load_navicust = 0x2C; -- new
+game.state.credits       = 0x30;
+
+game.game_state_names[0x00] = "Title";
+game.game_state_names[0x04] = "World";
 game.game_state_names[0x08] = "Battle";
-game.game_state_names[0x0C] = "Player Change"; -- jack-in / out
-game.game_state_names[0x10] = "Demo End";      -- what is this?
+game.game_state_names[0x0C] = "Player Change";
+game.game_state_names[0x10] = "Demo End";
 game.game_state_names[0x14] = "Capcom Logo";
 game.game_state_names[0x18] = "Menu";
 game.game_state_names[0x1C] = "Shop";
 game.game_state_names[0x20] = "GAME OVER";
 game.game_state_names[0x24] = "Chip Trader";
 game.game_state_names[0x28] = "Request Board";
-game.game_state_names[0x2C] = "Loading NaviCust?"; -- new?
+game.game_state_names[0x2C] = "Loading NaviCust?";
 game.game_state_names[0x30] = "Credits";
 game.game_state_names[0x34] = "Unused?";
-
-function game.in_title()
-    return game.ram.get.game_state() == 0x00;
-end
-
-function game.in_world()
-    return game.ram.get.game_state() == 0x04;
-end
-
-function game.in_battle()
-    return game.ram.get.game_state() == 0x08;
-end
-
-function game.in_transition()
-    return game.ram.get.game_state() == 0x0C;
-end
-
-function game.in_splash()
-    return game.ram.get.game_state() == 0x14;
-end
-
-function game.in_menu()
-    return game.ram.get.game_state() == 0x18;
-end
-
-function game.in_shop()
-    return game.ram.get.game_state() == 0x1C;
-end
-
-function game.in_game_over()
-    return game.ram.get.game_state() == 0x20;
-end
-
-function game.in_chip_trader()
-    return game.ram.get.game_state() == 0x24;
-end
-
-function game.in_request_board()
-    return game.ram.get.game_state() == 0x28;
-end
-
-function game.in_credits()
-    return game.ram.get.game_state() == 0x30;
-end
 
 -- Battle Mode
 
