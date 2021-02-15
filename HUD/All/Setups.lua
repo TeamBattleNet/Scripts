@@ -92,5 +92,35 @@ function setups.folder_edit_buttons(buttons)
     end
 end
 
+---------------------------------------- Miscellaneous Group ----------------------------------------
+
+setups.group_misc = setups.create_group("Miscellaneous");
+
+setups.add_setup(setups.group_misc, "Open & Close Menu", function()
+    setups.press_buttons( 2, "Menu", {Start=true});
+    setups.press_buttons(20, "Menu");
+    setups.press_buttons( 2, "Menu", {A=true});
+    setups.press_buttons(40, "Menu");
+    setups.press_buttons( 2, "Menu", {B=true});
+    setups.press_buttons(60, "Menu");
+    setups.press_buttons( 2, "Menu", {B=true});
+    setups.press_buttons(30, "Menu");
+end);
+
+setups.add_setup(setups.group_misc, "START A", function()
+    setups.press_buttons(2, "PRESS START", {Start=true});
+    setups.press_buttons(2, "PRESS A", {A=true});
+end);
+
+setups.add_setup(setups.group_misc, "One Step Up, Pause", function()
+    setups.press_buttons( 2, "Step", {Up=true});
+    setups.press_buttons( 1, "Start", {Start=true});
+end);
+
+setups.add_setup(setups.group_misc, "One Step Down, Pause", function()
+    setups.press_buttons( 2, "Step", {Down=true});
+    setups.press_buttons( 1, "Start", {Start=true});
+end);
+
 return setups;
 

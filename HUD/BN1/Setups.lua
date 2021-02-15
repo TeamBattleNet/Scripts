@@ -6,25 +6,7 @@ setups.delay_bios   = 282; -- BN 1
 setups.delay_capcom =  31; -- BN 1
 setups.delay_title  =  65; -- BN 1
 
-local group_misc = setups.create_group("Miscellaneous");
-
-setups.add_setup(group_misc, "Open & Close Menu", function()
-    setups.press_buttons( 2, "Menu", {Start=true});
-    setups.press_buttons(20, "Menu");
-    setups.press_buttons( 2, "Menu", {A=true});
-    setups.press_buttons(40, "Menu");
-    setups.press_buttons( 2, "Menu", {B=true});
-    setups.press_buttons(60, "Menu");
-    setups.press_buttons( 2, "Menu", {B=true});
-    setups.press_buttons(30, "Menu");
-end);
-
-setups.add_setup(group_misc, "START A", function()
-    setups.press_buttons(2, "PRESS START", {Start=true});
-    setups.press_buttons(2, "PRESS A", {A=true});
-end);
-
-setups.add_setup(group_misc, "TEST BUTTONS", function()
+setups.add_setup(setups.group_misc, "TEST BUTTONS", function()
     --setups.soft_reset();
     --setups.hard_reset();
     --setups.CONTINUE(0);
