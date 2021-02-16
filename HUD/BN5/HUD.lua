@@ -19,6 +19,24 @@ end
 
 ---------------------------------------- HUD Modes ----------------------------------------
 
+local function HUD_simple()
+    hud.display_game_info();
+    
+    hud.to_screen("");
+    
+    display_player_info();
+    
+    hud.to_screen("");
+    
+    hud.display_steps(false);
+    
+    if hud.game.get_sneak() > 0 then
+        hud.to_screen(string.format("Sneak: %5u", hud.game.get_sneak()));
+    end
+    
+    hud.display_area();
+end
+
 local function HUD_auto()
     hud.display_game_info();
     
@@ -45,6 +63,7 @@ local function HUD_auto()
 end
 
 hud.HUDs = {}; -- in order
+table.insert(hud.HUDs, HUD_simple);
 table.insert(hud.HUDs, HUD_auto);
 
 ---------------------------------------- Module Controls ----------------------------------------
