@@ -53,12 +53,12 @@ local command_battle = {};
 command_battle.selection = 1;
 command_battle.description = function() return "Battle Options:"; end;
 command_battle.options = {
-    { value = function() commands.game.kill_enemy(0);     end; text = "Delete Everything"; };
-    { value = function() commands.game.kill_enemy(1);     end; text = "Delete Enemy 1"   ; };
-    { value = function() commands.game.kill_enemy(2);     end; text = "Delete Enemy 2"   ; };
-    { value = function() commands.game.kill_enemy(3);     end; text = "Delete Enemy 3"   ; };
-    { value = function() commands.game.draw_in_order();   end; text = "Draw Slots: In Order"; };
-    { value = function() commands.game.draw_only_slot(0); end; text = "Draw Slots: Always 1"; };
+    { value = function() commands.game.kill_enemy(0);     end; text = "Delete Everything"     ; };
+    { value = function() commands.game.kill_enemy(1);     end; text = "Delete Enemy 1"        ; };
+    { value = function() commands.game.kill_enemy(2);     end; text = "Delete Enemy 2"        ; };
+    { value = function() commands.game.kill_enemy(3);     end; text = "Delete Enemy 3"        ; };
+    { value = function() commands.game.draw_in_order();   end; text = "Draw Slots: In Order"  ; };
+    { value = function() commands.game.draw_only_slot(0); end; text = "Draw Slots: All Slot 1"; };
 };
 command_battle.doit = function(value) value(); end;
 table.insert(commands.commands, command_battle);
