@@ -56,6 +56,7 @@ addresses.progress              = 0x02001886; -- 1 byte
 --addresses.                    = 0x02001888; -- 1 byte TBD
 addresses.battle_paused         = 0x02001889; -- 1 byte, paused or custom menu in battle
 addresses.style_stored          = 0x02001894; -- 1 byte
+addresses.reg_capacity          = 0x02001897; -- 1 byte
 addresses.world_HP_current      = 0x020018A0; -- 2 bytes
 addresses.world_HP_max          = 0x020018A2; -- 2 bytes
 
