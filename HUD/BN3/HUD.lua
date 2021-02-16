@@ -21,12 +21,12 @@ end
 
 local function display_edit_slots()
     if hud.game.in_folder() then
-        for i=1,8 do
-            hud.to_pixel( 97, 16+16*i, string.format("%2i", hud.game.get_cursor_offset_folder()+i));
+        for i=1,7 do
+            hud.to_pixel( 99, 25+16*i, string.format("%2i", hud.game.get_cursor_offset_folder()+i));
         end
     elseif hud.game.in_pack() then
-        for i=1,8 do
-            hud.to_pixel(139, 16+16*i, string.format("%3i", hud.game.get_cursor_offset_pack()+i));
+        for i=1,7 do
+            hud.to_pixel(133, 25+16*i, string.format("%3i", hud.game.get_cursor_offset_pack()+i));
         end
     end
 end

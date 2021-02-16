@@ -148,10 +148,10 @@ addresses.battle_field_modifier = 0x02008F98; -- 1 byte, weird effects
 addresses.menu_mode             = 0x020093D0; -- 1 byte
 addresses.menu_state            = 0x020093D1; -- 1 byte
 
-addresses.folder_cursor         = 0x020093E2; -- 2 bytes?, cursor value in the folder
-addresses.folder_offset         = 0x020093E6; -- 2 bytes?, offset value in the folder
-addresses.pack_cursor           = 0x020093EC; -- 2 bytes?, cursor value in the pack
-addresses.pack_offset           = 0x020093F0; -- 2 bytes?, offset value in the pack
+addresses.cursor_folder         = 0x020093E2; -- 2 bytes?, cursor value in the folder
+addresses.offset_folder         = 0x020093E6; -- 2 bytes?, offset value in the folder
+addresses.cursor_pack           = 0x020093EC; -- 2 bytes?, cursor value in the pack
+addresses.offset_pack           = 0x020093F0; -- 2 bytes?, offset value in the pack
 addresses.folder_count          = 0x020093DA; -- 1 byte, number of chips in folder being edited
 
 addresses.selected_offset_folder = 0x02009420; -- 2 bytes?, offset value of selected chip in folder
