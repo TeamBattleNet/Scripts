@@ -3,6 +3,7 @@
 local game = require("All/Game");
 
 game.number = 1;
+game.name = "BN1";
 
 game.ram      = require("BN1/RAM"     );
 game.areas    = require("BN1/Areas"   );

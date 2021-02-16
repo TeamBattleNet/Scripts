@@ -201,7 +201,7 @@ end
 function hud.initialize()
     print("\nInitializing MMBN HUD...");
     settings.set_display_text("fceux");
-    controls.initialize(hud.game.number);
+    controls.initialize(hud.game.name);
     hud.game.initialize({maximum_RNG_index = 10 * 60 * 60}); -- 10 minutes of frames
     print(string.format("\nInitialized HUD %s for MMBN %s - %s!", hud.version, hud.game.number, hud.game.get_version_name()));
     --require("Test/Tests").test_this(hud);

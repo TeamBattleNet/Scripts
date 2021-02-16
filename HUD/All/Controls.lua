@@ -63,7 +63,7 @@ function controls.get_options()
 end
 
 function controls.initialize(which_game)
-    commands = require("BN" .. which_game .. "/Commands");
+    commands = require(which_game .. "/Commands");
 end
 
 return controls;

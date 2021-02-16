@@ -52,6 +52,7 @@ addresses.cursor_ID             = 0x02000000;
 addresses.cursor_pack           = 0x02000000;
 addresses.cursor_selected       = 0x02000000;
 addresses.delete_timer          = 0x02000000;
+addresses.game_mode             = 0x02000000;
 addresses.game_state            = 0x02000000;
 addresses.HPMemory              = 0x02000000;
 addresses.library               = 0x02000000;

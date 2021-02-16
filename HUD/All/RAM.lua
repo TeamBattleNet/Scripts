@@ -126,6 +126,8 @@ ram.set.folder[3].ID = function(which_slot, chip_ID) memory.write_u16_le(ram.add
 ram.get.folder[3].code = function(which_slot) return memory.read_u16_le(ram.addr.folder[3].code+(4*which_slot)); end;
 ram.set.folder[3].code = function(which_slot, chip_code) memory.write_u16_le(ram.addr.folder[3].code+(4*which_slot), chip_code); end;
 
+ram.get.game_mode = function() return memory.read_u8(ram.addr.game_mode); end;
+ram.set.game_mode = function(game_mode) memory.write_u8(ram.addr.game_mode, game_mode); end;
 ram.get.game_state = function() return memory.read_u8(ram.addr.game_state); end;
 ram.set.game_state = function(game_state) memory.write_u8(ram.addr.game_state, game_state); end;
 

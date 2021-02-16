@@ -43,6 +43,8 @@ function load_HUD()
         --return require("BN5/HUD");
     elseif (code == 0x355242 or code == 0x365242) then
         return require("BN6/HUD");
+    elseif (code == 0x393841) then
+        return require("BCC/HUD");
     end
     return nil;
 end
