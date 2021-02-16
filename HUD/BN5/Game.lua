@@ -15,34 +15,56 @@ game.fun_flags = {}; -- set in Commands, used in RAM
 
 ---------------------------------------- Game State ----------------------------------------
 
--- Copied from BN 6
+game.state.splash        = 0x00; -- or BIOS or loading
+game.state.world_init    = 0x00; -- real and digital
+game.state.world         = 0x04; -- real and digital
+game.state.battle_init   = 0x08;
+game.state.battle        = 0x0C;
+game.state.transition    = 0x14; -- jack-in / out
+game.state.title         = 0x1C;
+game.state.menu          = 0x1C;
+game.state.shop          = 0x28;
 
-game.game_state_names[0x00] = "world_init";
-game.game_state_names[0x04] = "world";
-game.game_state_names[0x08] = "battle_init";
-game.game_state_names[0x0C] = "battle";
-game.game_state_names[0x10] = "map_change";
-game.game_state_names[0x14] = "player_change";
-game.game_state_names[0x18] = "menu";
-game.game_state_names[0x1C] = "bbs";
-game.game_state_names[0x20] = "shop";
-game.game_state_names[0x24] = "trader";
-game.game_state_names[0x30] = "request_bbs";
-game.game_state_names[0x34] = "mailbox";
-game.game_state_names[0x38] = "chargeman_minigame";
+--game.state.game_over     = 0xFF;
+--game.state.chip_trader   = 0xFF;
+--game.state.request_board = 0xFF;
+--game.state.load_navicust = 0xFF;
+--game.state.credits       = 0xFF;
 
-game.battle_state_names[0x00] = "loading";
-game.battle_state_names[0x04] = "busy";
-game.battle_state_names[0x08] = "combat";
-game.battle_state_names[0x1C] = "PAUSE";
-game.battle_state_names[0x20] = "opening_custom";
-game.battle_state_names[0x24] = "custom";
+-- Battle Mode
 
-game.menu_state_names[0x04] = "editing";
-game.menu_state_names[0x14] = "sorting";
-game.menu_state_names[0x10] = "to_pack";
-game.menu_state_names[0x0C] = "to_folder";
-game.menu_state_names[0x08] = "exited";
+function game.in_chip_select()
+    return (true);
+end
+
+function game.in_combat()
+    return (false);
+end
+
+-- Battle State
+
+-- Menu Mode
+
+game.menu.folder_select = 0x00;
+game.menu.subchips      = 0x04;
+game.menu.library       = 0x08;
+game.menu.megaman       = 0x0C;
+game.menu.email         = 0x10;
+game.menu.key_items     = 0x14;
+game.menu.network       = 0x18;
+game.menu.save          = 0x1C;
+game.menu.navicust      = 0x20;
+game.menu.folder_edit   = 0x24;
+
+-- Menu State
+
+function game.in_folder()
+    return game.in_menu_folder_edit() and (true);
+end
+
+function game.in_pack()
+    return game.in_menu_folder_edit() and (false);
+end
 
 ---------------------------------------- Fun Flags  ----------------------------------------
 
@@ -59,7 +81,7 @@ function game.title_screen_A()
 end
 
 function game.use_fun_flags(fun_flags) -- TODO: Rename
-    game.title_screen_A();
+    --game.title_screen_A();
     
     if fun_flags.randomize_colors then
         if game.did_game_state_change() or game.did_menu_mode_change() or game.did_area_change() then game.doit_later[emu.framecount()+5] = game.randomize_color_palette; end

@@ -1,6 +1,6 @@
 -- Progress values for MMBN 5 scripting, enjoy.
 
--- TODO
+-- https://forums.therockmanexezone.com/bn5-story-progression-value-list-t5352.html
 
 local progress = {};
 
@@ -9,8 +9,7 @@ progress.scenarios = {
 };
 
 progress[0x00] = "New Game";
-progress[0x01] = "Tutorial Start";
-progress[0x02] = "Tutorial Finished";
+progress[0x01] = "Tutorial Done";
 
 progress[0x88] = "Final State";
 

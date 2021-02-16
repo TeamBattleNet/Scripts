@@ -1,6 +1,6 @@
 -- Enemy names for MMBN 5 scripting, enjoy.
 
--- TODO
+-- https://forums.therockmanexezone.com/mmbn5-custom-battle-guide-t5381.html
 
 local enemies = {};
 

@@ -30,14 +30,15 @@ command_fun_flags.description = function() return "These Fun Flags Are:"; end;
 function command_fun_flags.update_options(option_value)
     command_fun_flags.options = {};
     table.insert( command_fun_flags.options, fun_flag_helper("modulate_steps"     , "Step Modulation"           ) );
-    table.insert( command_fun_flags.options, fun_flag_helper("always_fullcust"    , "Always Fullcust"           ) );
-    table.insert( command_fun_flags.options, fun_flag_helper("delete_time_zero"   , "Set Delete Time to 0"      ) );
-    table.insert( command_fun_flags.options, fun_flag_helper("chip_selection_one" , "Always Choose  1 Chip"     ) );
-    table.insert( command_fun_flags.options, fun_flag_helper("chip_selection_max" , "Always Choose 10 Chips"    ) );
+    table.insert( command_fun_flags.options, fun_flag_helper("always_fullcust"    , "Always Full cust"          ) );
+    table.insert( command_fun_flags.options, fun_flag_helper("always_emptycust"   , "Always Empty cust"         ) );
+    --table.insert( command_fun_flags.options, fun_flag_helper("delete_time_zero"   , "Set Delete Time to 0"      ) );
+    --table.insert( command_fun_flags.options, fun_flag_helper("chip_selection_one" , "Always Choose  1 Chip"     ) );
+    --table.insert( command_fun_flags.options, fun_flag_helper("chip_selection_max" , "Always Choose 10 Chips"    ) );
     table.insert( command_fun_flags.options, fun_flag_helper("no_encounters"      , "Lock RNG to No  Encounters") );
     table.insert( command_fun_flags.options, fun_flag_helper("yes_encounters"     , "Lock RNG to Yes Encounters") );
-    table.insert( command_fun_flags.options, fun_flag_helper("is_routing"         , "Display Routing Messages"  ) );
-    table.insert( command_fun_flags.options, fun_flag_helper("randomize_colors"   , "Randomize Color Palette"   ) );
+    --table.insert( command_fun_flags.options, fun_flag_helper("is_routing"         , "Display Routing Messages"  ) );
+    --table.insert( command_fun_flags.options, fun_flag_helper("randomize_colors"   , "Randomize Color Palette"   ) );
 end
 command_fun_flags.update_options();
 function command_fun_flags.doit(value)

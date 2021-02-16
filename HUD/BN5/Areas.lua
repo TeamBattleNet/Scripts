@@ -1,6 +1,6 @@
 -- Area names for MMBN 5 scripting, enjoy.
 
--- TODO
+-- https://forums.therockmanexezone.com/list-of-mmbn5-areas-and-subareas-t5343.html
 
 local areas = {};
 

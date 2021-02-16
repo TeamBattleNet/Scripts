@@ -1,8 +1,8 @@
--- RAM Functions for MMBN 1 scripting, enjoy.
+-- RAM Functions for MMBN 5 scripting, enjoy.
 
 local ram = require("All/RAM");
 
-ram.addr = require("BN1/Addresses");
+ram.addr = require("BN5/Addresses");
 
 ram.version_name = ram.addr.version_name;
 
@@ -13,6 +13,8 @@ ram.version_name = ram.addr.version_name;
 function ram.use_fun_flags(fun_flags)
     if fun_flags.always_fullcust then
         ram.set.custom_gauge(0x4000);
+    elseif fun_flags.always_emptycust then
+        ram.set.custom_gauge(0x0000);
     end
     
     if fun_flags.delete_time_zero then
@@ -30,7 +32,7 @@ end
 
 function ram.initialize(options)
     ram.print_details();
-    ram.main_RNG_table = ram.create_RNG_table(0x873CA9E4, options.maximum_RNG_index); -- 0xA338244F ?
+    ram.main_RNG_table = ram.create_RNG_table(0xA338244F, options.maximum_RNG_index);
     ram.lazy_RNG_table = ram.create_RNG_table(0x873CA9E4, options.maximum_RNG_index);
 end
 

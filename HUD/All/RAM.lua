@@ -40,8 +40,8 @@ ram.set.buster_rapid = function(buster_rapid) memory.write_u8(ram.addr.buster_ra
 ram.get.buster_charge = function() return memory.read_u8(ram.addr.buster_charge); end;
 ram.set.buster_charge = function(buster_charge) memory.write_u8(ram.addr.buster_charge, buster_charge); end;
 
-ram.get.check = function() return memory.read_u32_le(ram.addr.check); end;
-ram.set.check = function(check) memory.write_u32_le(ram.addr.check, check); end;
+ram.get.check = function() return memory.read_u16_le(ram.addr.check); end;
+ram.set.check = function(check) memory.write_u16_le(ram.addr.check, check); end;
 
 ram.get.chip_cooldown = function() return memory.read_u8(ram.addr.chip_cooldown); end;
 ram.set.chip_cooldown = function(chip_cooldown) memory.write_u8(ram.addr.chip_cooldown, chip_cooldown); end;
@@ -162,11 +162,11 @@ ram.set.music_progress = function(music_progress) memory.write_u8(ram.addr.music
 ram.get.reg_capacity = function() return memory.read_u8(ram.addr.reg_capacity); end;
 ram.set.reg_capacity = function(reg_capacity) memory.write_u8(ram.addr.reg_capacity, reg_capacity); end;
 
-ram.get.sneak = function() return memory.read_u32_le(ram.addr.sneak); end;
-ram.set.sneak = function(sneak) memory.write_u32_le(ram.addr.sneak, sneak); end;
+ram.get.sneak = function() return memory.read_u16_le(ram.addr.sneak); end;
+ram.set.sneak = function(sneak) memory.write_u16_le(ram.addr.sneak, sneak); end;
 
-ram.get.steps = function() return memory.read_u32_le(ram.addr.steps); end;
-ram.set.steps = function(steps) memory.write_u32_le(ram.addr.steps, steps); end;
+ram.get.steps = function() return memory.read_u16_le(ram.addr.steps); end;
+ram.set.steps = function(steps) memory.write_u16_le(ram.addr.steps, steps); end;
 
 ram.get.your_X = function() return memory.read_s16_le(ram.addr.your_X); end;
 ram.set.your_X = function(your_X) memory.write_s16_le(ram.addr.your_X, your_X); end;
