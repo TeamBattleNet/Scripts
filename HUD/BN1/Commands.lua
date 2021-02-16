@@ -59,13 +59,6 @@ command_battle.options = {
     { value = function() commands.game.kill_enemy(3);     end; text = "Delete Enemy 3"   ; };
     { value = function() commands.game.draw_in_order();   end; text = "Draw Slots: In Order"; };
     { value = function() commands.game.draw_only_slot(0); end; text = "Draw Slots: Always 1"; };
-    { value = function() commands.game.set_all_folder_code_to(       1, 0); end; text = "Folder: Monocode A Folder"     ; };
-    { value = function() commands.game.randomize_folder_codes(       1   ); end; text = "Folder: Randomize Folder Codes"; };
-    { value = function() commands.game.randomize_folder_IDs_standard(1   ); end; text = "Folder: Randomize Folder IDs"  ; };
-    { value = function() commands.game.overwrite_folder_dalus_special(   ); end; text = "Folder: The Dalus_EXE Special" ; };
-    { value = function() commands.game.overwrite_folder_chaotic_special( ); end; text = "Folder: The ChaoticMK Special" ; };
-    { value = function() commands.game.overwrite_folder_smog_special(    ); end; text = "Folder: The SmogBN Special"    ; };
-    { value = function() commands.game.overwrite_folder_press_a(         ); end; text = "Folder: Just PressA"           ; };
 };
 command_battle.doit = function(value) value(); end;
 table.insert(commands.commands, command_battle);
@@ -82,10 +75,11 @@ function command_items.update_options(option_value)
         command_items.selection = command_items.sub_selection;
         command_items.description = function() return "What will U buy?"; end;
         table.insert( command_items.options, { value = 1; text = "Zenny"    ; } );
-        table.insert( command_items.options, { value = 2; text = "PowerUP"  ; } );
-        table.insert( command_items.options, { value = 3; text = "HPMemory" ; } );
-        table.insert( command_items.options, { value = 4; text = "Equipment"; } );
-        table.insert( command_items.options, { value = 5; text = "IceBlock" ; } );
+        table.insert( command_items.options, { value = 2; text = "IceBlock" ; } );
+        table.insert( command_items.options, { value = 3; text = "PowerUP"  ; } );
+        table.insert( command_items.options, { value = 4; text = "HPMemory" ; } );
+        table.insert( command_items.options, { value = 5; text = "Equipment"; } );
+        table.insert( command_items.options, { value = 6; text = "Folders"  ; } );
     else
         command_items.sub_selection = command_items.selection;
         command_items.selection = 1;
@@ -102,16 +96,23 @@ function command_items.update_options(option_value)
             table.insert( command_items.options, { value = -100000; text = "Decrease by 100000"; } );
             command_items.FUNction = function(value) commands.game.add_zenny(value); end;
         elseif option_value == 2 then
+            command_items.description = function() return string.format("IceBlocks: %2u", commands.game.get_IceBlocks()); end;
+            table.insert( command_items.options, { value =  53; text = "Give 53"; } );
+            table.insert( command_items.options, { value =   1; text = "Give  1"; } );
+            table.insert( command_items.options, { value =  -1; text = "Take  1"; } );
+            table.insert( command_items.options, { value = -53; text = "Take 53"; } );
+            command_items.FUNction = function(value) commands.game.add_IceBlocks(value); end;
+        elseif option_value == 3 then
             command_items.description = function() return string.format("PowerUPs: %2u", commands.game.get_PowerUPs()); end;
             table.insert( command_items.options, { value =  10; text = "Give 10"; } );
             table.insert( command_items.options, { value =   1; text = "Give  1"; } );
             table.insert( command_items.options, { value =  -1; text = "Take  1"; } );
             table.insert( command_items.options, { value = -10; text = "Take 10"; } );
             command_items.FUNction = function(value) commands.game.add_PowerUPs(value); end;
-        elseif option_value == 3 then
+        elseif option_value == 4 then
             command_items.description = function() return string.format("HPMemory: %2u", commands.game.get_HPMemory_count()); end;
             table.insert( command_items.options, { value = nil; text = "Apologies... That is sold out..."; } );
-        elseif option_value == 4 then
+        elseif option_value == 5 then
             command_items.description = function() return string.format("Power Level: %4u", commands.game.calculate_mega_level()); end;
             table.insert( command_items.options, { value = commands.game.reset_buster_stats; text = "Reset Buster Stats"     ; } );
             table.insert( command_items.options, { value = commands.game.max_buster_stats;   text = "Max   Buster Stats"     ; } );
@@ -119,13 +120,17 @@ function command_items.update_options(option_value)
             table.insert( command_items.options, { value = commands.game.op_buster_stats;    text = "OP    Buster Stats"     ; } );
             table.insert( command_items.options, { value = commands.game.give_armor;         text = "Get equiped with Armor!"; } );
             command_items.FUNction = function(value) value(); end;
-        elseif option_value == 5 then
-            command_items.description = function() return string.format("IceBlocks: %2u", commands.game.get_IceBlocks()); end;
-            table.insert( command_items.options, { value =  53; text = "Give 53"; } );
-            table.insert( command_items.options, { value =   1; text = "Give  1"; } );
-            table.insert( command_items.options, { value =  -1; text = "Take  1"; } );
-            table.insert( command_items.options, { value = -53; text = "Take 53"; } );
-            command_items.FUNction = function(value) commands.game.add_IceBlocks(value); end;
+        elseif option_value == 6 then
+            command_items.description = function() return "Sponsored by TeamBN"; end;
+            table.insert( command_items.options, { value = function() commands.game.set_all_folder_code_to(1,       0); end; text = "Folder: Monocode A Folder"     ; } );
+            table.insert( command_items.options, { value = function() commands.game.randomize_folder_codes(1         ); end; text = "Folder: Randomize Folder Codes"; } );
+            table.insert( command_items.options, { value = function() commands.game.overwrite_folder_press_a(        ); end; text = "Folder: Just PressA"           ; } );
+            table.insert( command_items.options, { value = function() commands.game.overwrite_folder_smog_special(   ); end; text = "Folder: The SmogBN Special"    ; } );
+            table.insert( command_items.options, { value = function() commands.game.overwrite_folder_dalus_special(  ); end; text = "Folder: The Dalus_EXE Special" ; } );
+            table.insert( command_items.options, { value = function() commands.game.overwrite_folder_chaotic_special(); end; text = "Folder: The ChaoticMK Special" ; } );
+            table.insert( command_items.options, { value = function() commands.game.randomize_folder_IDs_standard(1  ); end; text = "Folder: Randomize Folder IDs"  ; } );
+            table.insert( command_items.options, { value = function() commands.game.randomize_folder_IDs_anything(1  ); end; text = "Folder: Super Randomize IDs"   ; } );
+            command_items.FUNction = function(value) value(); end;
         else
             command_items.description = function() return "Bzzt! (something broke)"; end;
         end

@@ -76,7 +76,7 @@ function commands.general.teleport_real_world.update_options(option_value)
     
     if not option_value then
         commands.general.teleport_real_world.selection = commands.general.teleport_real_world.sub_selection;
-        commands.general.teleport_real_world.description = function() return "TELEPORT to a real world group:"; end;
+        commands.general.teleport_real_world.description = function() return "TELEPORT: Real Areas"; end;
         for i,group in pairs(commands.game.get_area_groups_real()) do
             table.insert( commands.general.teleport_real_world.options, { value = group; text = commands.game.get_area_group_name(group); } );
         end
@@ -113,7 +113,7 @@ function commands.general.teleport_digital_world.update_options(option_value)
     
     if not option_value then
         commands.general.teleport_digital_world.selection = commands.general.teleport_digital_world.sub_selection;
-        commands.general.teleport_digital_world.description = function() return "TELEPORT to a digital world group:"; end;
+        commands.general.teleport_digital_world.description = function() return "TELEPORT: Digital Areas"; end;
         for i,group in pairs(commands.game.get_area_groups_digital()) do
             table.insert( commands.general.teleport_digital_world.options, { value = group; text = commands.game.get_area_group_name(group); } );
         end
