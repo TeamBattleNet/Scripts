@@ -124,7 +124,7 @@ end
 
 -- Game Mode
 
-game.state = { title=0x00 }; -- should be overridden per game
+game.state = { title=0x00 }; -- defined per game
 
 function game.in_title()
     return game.ram.get.game_state() == game.state.title;
@@ -176,8 +176,50 @@ end
 
 -- Menu Mode
 
+game.menu = {}; -- defined per game
+
+function game.in_menu_folder_select()
+    return game.ram.get.menu_mode() == game.menu.folder_select;
+end
+
+function game.in_menu_subchips()
+    return game.ram.get.menu_mode() == game.menu.subchips;
+end
+
+function game.in_menu_library()
+    return game.ram.get.menu_mode() == game.menu.library;
+end
+
+function game.in_menu_megaman()
+    return game.ram.get.menu_mode() == game.menu.megaman;
+end
+
+function game.in_menu_email()
+    return game.ram.get.menu_mode() == game.menu.email;
+end
+
+function game.in_menu_keyitems()
+    return game.ram.get.menu_mode() == game.menu.key_items;
+end
+
+function game.in_menu_network()
+    return game.ram.get.menu_mode() == game.menu.network;
+end
+
+function game.in_menu_save()
+    return game.ram.get.menu_mode() == game.menu.save;
+end
+
+function game.in_menu_navicust()
+    return game.ram.get.menu_mode() == game.menu.navicust;
+end
+
 function game.in_menu_folder_edit()
-    return false; -- should be overridden per game
+    return game.ram.get.menu_mode() == game.menu.folder_edit;
+end
+
+function game.in_menu_folder()
+    return (game.in_menu_folder_select() or game.in_menu_folder_edit());
 end
 
 -- State Names (skip 2 bits, add 1)

@@ -43,7 +43,6 @@ game.game_state_names[0x24] = "Chip Trader";
 game.game_state_names[0x28] = "Request Board";
 game.game_state_names[0x2C] = "Loading NaviCust?";
 game.game_state_names[0x30] = "Credits";
-game.game_state_names[0x34] = "Unused?";
 
 -- Battle Mode
 
@@ -74,6 +73,17 @@ game.battle_state_names[0x4A] = "PAUSE";
 
 -- Menu Mode
 
+game.menu.folder_select = 0x00;
+game.menu.subchips      = 0x04;
+game.menu.library       = 0x08;
+game.menu.megaman       = 0x0C;
+game.menu.email         = 0x10;
+game.menu.key_items     = 0x14;
+game.menu.network       = 0x18;
+game.menu.save          = 0x1C;
+game.menu.navicust      = 0x20;
+game.menu.folder_edit   = 0x24;
+
 game.menu_mode_names[0x00] = "Folder Select";
 game.menu_mode_names[0x04] = "Sub Chips";
 game.menu_mode_names[0x08] = "Library";
@@ -84,50 +94,6 @@ game.menu_mode_names[0x18] = "Network";
 game.menu_mode_names[0x1C] = "Save";
 game.menu_mode_names[0x20] = "NaviCust";
 game.menu_mode_names[0x24] = "Folder Edit";
-
-function game.in_menu_folder_select()
-    return game.ram.get.menu_mode() == 0x00;
-end
-
-function game.in_menu_subchips()
-    return game.ram.get.menu_mode() == 0x04;
-end
-
-function game.in_menu_library()
-    return game.ram.get.menu_mode() == 0x08;
-end
-
-function game.in_menu_megaman()
-    return game.ram.get.menu_mode() == 0x0C;
-end
-
-function game.in_menu_email()
-    return game.ram.get.menu_mode() == 0x10;
-end
-
-function game.in_menu_keyitems()
-    return game.ram.get.menu_mode() == 0x14;
-end
-
-function game.in_menu_network()
-    return game.ram.get.menu_mode() == 0x18;
-end
-
-function game.in_menu_save()
-    return game.ram.get.menu_mode() == 0x1C;
-end
-
-function game.in_menu_navicust()
-    return game.ram.get.menu_mode() == 0x20;
-end
-
-function game.in_menu_folder_edit()
-    return game.ram.get.menu_mode() == 0x24;
-end
-
-function game.in_menu_folder()
-    return (game.in_menu_folder_select() or game.in_menu_folder_edit());
-end
 
 -- Menu State
 
@@ -313,11 +279,11 @@ function game.title_screen_A()
     if game.did_leave_title_screen() then
         print("");
         local lazy_RNG_index = game.get_lazy_RNG_index();
-        local fade_out_RNG_index = game.get_main_RNG_index();
-        local continue_RNG_index = (fade_out_RNG_index and fade_out_RNG_index - 17);
-        game.broadcast(string.format("%u: Pressed A on M RNG Index %s", emu.framecount(), continue_RNG_index or "?????"));
-        game.broadcast(string.format("%u: Loaded in on M RNG Index %s", emu.framecount(), fade_out_RNG_index or "?????"));
-        game.broadcast(string.format("%u: Loaded in on L RNG Index %s", emu.framecount(),     lazy_RNG_index or "?????"));
+        local main_RNG_index = game.get_main_RNG_index();
+        local on_A_RNG_index = (main_RNG_index and main_RNG_index - 17);
+        game.broadcast(string.format("%u: Pressed A on M RNG Index %s", emu.framecount(), on_A_RNG_index or "?????"));
+        game.broadcast(string.format("%u: Loaded in on M RNG Index %s", emu.framecount(), main_RNG_index or "?????"));
+        game.broadcast(string.format("%u: Loaded in on L RNG Index %s", emu.framecount(), lazy_RNG_index or "?????"));
     end
 end
 

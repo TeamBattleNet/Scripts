@@ -41,8 +41,6 @@ game.game_state_names[0x20] = "GAME OVER";
 game.game_state_names[0x24] = "Chip Trader";
 game.game_state_names[0x28] = "Credits";
 game.game_state_names[0x2C] = "Ubisoft Logo";
-game.game_state_names[0x30] = "Unused?";
-game.game_state_names[0x34] = "Unused?";
 
 -- Battle Mode
 
@@ -71,59 +69,22 @@ game.battle_state_names[0x18] = "Opening Custom";
 
 -- Menu Mode
 
+game.menu.folder_select = 0x00;
+game.menu.library       = 0x04;
+game.menu.megaman       = 0x08;
+game.menu.email         = 0x0C;
+game.menu.key_items     = 0x10;
+game.menu.network       = 0x14;
+game.menu.save          = 0x18;
+game.menu.folder_edit   = 0x00;
+
 game.menu_mode_names[0x00] = "Folder";
---game.menu_mode_names[0x04] = "Sub Chips";
 game.menu_mode_names[0x04] = "Library";
 game.menu_mode_names[0x08] = "MegaMan";
 game.menu_mode_names[0x0C] = "E-Mail";
 game.menu_mode_names[0x10] = "Key Items";
 game.menu_mode_names[0x14] = "Network";
 game.menu_mode_names[0x18] = "Save";
-game.menu_mode_names[0x20] = "Unused";
-
-function game.in_menu_folder()
-    return game.ram.get.menu_mode() == 0x00;
-end
-
-function game.in_menu_folder_select()
-    return game.ram.get.menu_mode() == 0x00;
-end
-
-function game.in_menu_folder_edit()
-    return game.ram.get.menu_mode() == 0x00;
-end
-
-function game.in_menu_subchips()
-    return false; -- Only BN 1 doesn't have subchips
-end
-
-function game.in_menu_library()
-    return game.ram.get.menu_mode() == 0x04;
-end
-
-function game.in_menu_megaman()
-    return game.ram.get.menu_mode() == 0x08;
-end
-
-function game.in_menu_email()
-    return game.ram.get.menu_mode() == 0x0C;
-end
-
-function game.in_menu_keyitems()
-    return game.ram.get.menu_mode() == 0x10;
-end
-
-function game.in_menu_network()
-    return game.ram.get.menu_mode() == 0x14;
-end
-
-function game.in_menu_save()
-    return game.ram.get.menu_mode() == 0x18;
-end
-
-function game.get_shop_cursor_offset()
-    return game.ram.get.shop_cursor_offset();
-end
 
 -- Menu State
 
@@ -470,6 +431,10 @@ function game.overwrite_folder_press_a()
 end
 
 ---------------------------------------- Miscellaneous ----------------------------------------
+
+function game.get_shop_cursor_offset()
+    return game.ram.get.shop_cursor_offset();
+end
 
 function game.get_door_code()
     return game.ram.get.door_code();
