@@ -61,28 +61,28 @@ local version_byte = memory.read_u32_le(addresses.version_byte);
 
 if     version_byte == 0x4A4B5242 then
     addresses.version_name      = "JP Colonel";
-    addresses.encounter_odds    = 0x08000000;
-    addresses.encounter_curve   = 0x08000000;
+    addresses.encounter_odds    = 0x0801D04E;
+    addresses.encounter_curve   = 0x0801D0D6;
 elseif version_byte == 0x4A425242 then
     addresses.version_name      = "JP Proto";
-    addresses.encounter_odds    = 0x08000000;
-    addresses.encounter_curve   = 0x08000000;
+    addresses.encounter_odds    = 0x0801D052;
+    addresses.encounter_curve   = 0x0801D0DA;
 elseif version_byte == 0x454B5242 then
     addresses.version_name      = "US Colonel";
     addresses.encounter_odds    = 0x0801D092;
     addresses.encounter_curve   = 0x0801D11A;
 elseif version_byte == 0x45425242 then
     addresses.version_name      = "US Proto";
-    addresses.encounter_odds    = 0x08000000;
-    addresses.encounter_curve   = 0x08000000;
+    addresses.encounter_odds    = 0x0801D096;
+    addresses.encounter_curve   = 0x0801D11E;
 elseif version_byte == 0x504B5242 then
     addresses.version_name      = "PAL Colonel";
-    addresses.encounter_odds    = 0x08000000;
-    addresses.encounter_curve   = 0x08000000;
+    addresses.encounter_odds    = 0x0801D092;
+    addresses.encounter_curve   = 0x0801D11A;
 elseif version_byte == 0x50425242 then
     addresses.version_name      = "PAL Proto";
-    addresses.encounter_odds    = 0x08000000;
-    addresses.encounter_curve   = 0x08000000;
+    addresses.encounter_odds    = 0x0801D096;
+    addresses.encounter_curve   = 0x0801D11E;
 else
     print("\nRAM: Warning! Unrecognized game version! Unable to set certain addresses!");
 end
