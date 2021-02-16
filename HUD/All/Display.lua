@@ -1,6 +1,8 @@
 -- Display Functions for MMBN scripting, enjoy.
 
-local hud = { game={}; version="0.5"; };
+local hud = {};
+
+hud.game = {}; -- overridden later
 
 local settings = require("All/Settings");
 

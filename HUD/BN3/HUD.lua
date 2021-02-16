@@ -4,7 +4,7 @@
 
 local hud = require("All/HUD");
 
-hud.version = hud.version .. ".0.2";
+hud.version = hud.version .. ".0.0";
 
 hud.game = require("BN3/Game");
 

@@ -26,6 +26,8 @@
 
 local hud = require("All/Display");
 
+hud.version = "0.6";
+
 local buttons  = require("All/Buttons");
 local controls = require("All/Controls");
 local settings = require("All/Settings");
