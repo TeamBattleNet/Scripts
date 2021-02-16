@@ -308,11 +308,9 @@ end
 
 ---------------------------------------- Module Controls ----------------------------------------
 
-local settings = require("All/Settings");
-
 function game.initialize(options)
-    settings.set_display_text("gui"); -- TODO: Remove when gui.text fully supported
     game.ram.initialize(options);
+    require("All/Settings").set_display_text("gui"); -- TODO: Remove when gui.text fully supported
 end
 
 function game.pre_update(options)
