@@ -10,17 +10,21 @@ addresses.flags                 = 0x02000000; -- N bytes, to 5F at most
 addresses.star_byte_yellow      = 0x02000000; -- Somewhere in the first row
 addresses.star_byte_green       = 0x02000010; -- Somewhere in the second row
 
+addresses.scenario_flags        = 0x02000040; -- bit flags cleared per scenario
+
 addresses.magic_byte            = 0x02000048; -- 0x04 Progress >= 0x42
+--addresses.magic_bit           = { addr=0x02000048; mask=0x04 }; -- Progress >= 0x42
 
 addresses.library               = 0x02000060; -- ? bytes, bit flags, ends on 80?
 
 -- 91-9F PAs in here somewhere...
 
-addresses.MD_flags              = 0x020000A0; -- ? bytes, bit flags
+addresses.MD_flags              = 0x020000A0; -- ? bytes, bit flags, ends at BF? CF?
 
--- 100-10F don't write to these bytes!
--- 10A Pause state?
--- 10B Don't write to this byte...
+-- 100 tempoary state flags?
+
+addresses.control_flags         = 0x0200010A; -- 1 byte, bit flags, menu open | static object | teleporting
+addresses.pause_menu_flags      = 0x0200010B; -- ? bytes, bit flags, disables entering some menus
 
 addresses.folder[1].ID          = 0x02000AB0; -- every other 2 bytes, chip  IDs  of folder 1, ends at B24
 addresses.folder[1].code        = 0x02000AB2; -- every other 2 bytes, chip codes of folder 1, ends at B26
@@ -29,7 +33,7 @@ addresses.folder[2].code        = 0x02000B2A; -- every other 2 bytes, chip codes
 addresses.folder[3].ID          = 0x02000BA0; -- every other 2 bytes, chip  IDs  of folder 3, ends at C14
 addresses.folder[3].code        = 0x02000BA2; -- every other 2 bytes, chip codes of folder 3, ends at C16
 
--- C1B MDs in current area
+addresses.MD_current_area       = 0x02000C1B; -- 1 byte, bit flags for MDs in the current area, 0xFF all spawned
 
 -- C20 - DAF What's all this then?
 
@@ -112,7 +116,9 @@ addresses.aqua_shld_level       = 0x02000F17; -- 1 byte
 addresses.wood_shld_level       = 0x02000F18; -- 1 byte
 addresses.hub_style_level       = 0x02000F19; -- 1 byte
 
--- only current styles are non-0; offset is index into style_value table at 0x08029A6C; ((style_level - 1) << 6) | style_value
+-- only current styles are non-0
+-- offset is index into style_value table at 0x08029A6C
+-- ((style_level - 1) << 6) | style_value
 
 -- F20+ TBD
 
@@ -154,7 +160,7 @@ addresses.battles_shld          = 0x02003A74; -- 4 bytes
 addresses.battle_mode           = 0x02004EE1; -- 1 byte
 addresses.battle_state          = 0x02004EE2; -- 1 byte
 
-addresses.chip_window_size_next = 0x02004EEE; -- 1 byte, number of chips available in the custom menu on next open
+addresses.chip_window_size_next = 0x02004EEE; -- 1 byte, number of chips available in the next custom menu open
 
 addresses.enemies_remaining     = 0x02004F04; -- 2 bytes?
 addresses.battle_custom_gauge   = 0x02004F0C; -- 2 bytes, counts up to 0x4000
@@ -203,6 +209,8 @@ addresses.power_on_frames       = 0x02008880; -- 2 bytes, session counter
 addresses.enemy[1].HP           = 0x02008B54; -- 2 bytes, which_enemy * 0xC0
 addresses.enemy[1].HP_max       = 0x02008B56; -- 2 bytes, for healing
 
+addresses.zenny_shop            = 0x02008A60; -- 4 bytes, zenny while shopping
+
 addresses.enemy[2].HP           = 0x02008C14; -- 2 bytes, which_enemy * 0xC0
 addresses.enemy[2].HP_max       = 0x02008C16; -- 2 bytes, for healing
 
@@ -225,7 +233,7 @@ addresses.color_palette         = 0x02009090; -- 1024 bytes, 0x3FF bytes, ends a
 --addresses.                    = 0x0200EEF4; -- 1 byte, battle data
 addresses.custom_hover_slot     = 0x0200EEF5; -- 1 byte
 addresses.chip_window_size      = 0x0200EEF9; -- 1 byte, number of chips available in the custom menu currently
-addresses.custom_hover_slot     = 0x0200EF38; -- 1 byte each, select visual state: 0x00 normal 0x01 selected 0x02 black out
+addresses.custom_hover_slot     = 0x0200EF38; -- 1 byte each, visual state: 0x00 normal 0x01 selected 0x02 black out
 addresses.custom_folder_slot    = 0x0200EF42; -- 1 byte each, the selected folder slots (in order)
 addresses.custom_select_slot    = 0x0200EF47; -- 1 byte each, the selected  chip  slots (in order)
 addresses.custom_select_code    = 0x0200EF51; -- 1 byte each, the selected  chip  codes (in order)
