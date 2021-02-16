@@ -6,8 +6,8 @@ local areas = {};
 
 areas.names = {};
 
-areas.real_groups    = {0x00};
-areas.digital_groups = {0x80};
+areas.real_groups    = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05};
+areas.digital_groups = {0x80, 0x81, 0x82, 0x83, 0x84, 0x86, 0x88, 0x8A, 0x8C, 0x8D, 0x8E, 0x90, 0x91, 0x92, 0x93, 0x94};
 
 areas.names[0x00] = {};
 areas.names[0x00].group = "ACDC Town";
@@ -124,11 +124,11 @@ areas.names[0x88][0x04] = "SciLab HP";
 areas.names[0x88][0x05] = "Gargoyle Castle HP";
 --areas.names[0x88][0x06] = "NaviChange Machine Comp (DS only)";
 
-areas.names[0x00] = {};
+areas.names[0x8A] = {};
 areas.names[0x8A].group = "Vision Burst";
-areas.names[0xFF][0x00] = "ACDC Town Vision Burst";
-areas.names[0xFF][0x01] = "SciLab Vision Burst";
-areas.names[0xFF][0x02] = "Oran Isle Vision Burst";
+areas.names[0x8A][0x00] = "ACDC Town Vision Burst";
+areas.names[0x8A][0x01] = "SciLab Vision Burst";
+areas.names[0x8A][0x02] = "Oran Isle Vision Burst";
 
 areas.names[0x8C] = {};
 areas.names[0x8C].group = "Miscellaneous Comps 1";

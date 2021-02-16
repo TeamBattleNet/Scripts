@@ -20,7 +20,7 @@ addresses.progress              = 0x02002946;
 addresses.music_progress        = 0x02002947; -- TBD
 
 addresses.zenny                 = 0x0200299C;
-addresses.bug_frags             = 0x02000000; -- TBD
+addresses.bug_frags             = 0x020029A0; -- TBD
 
 addresses.steps                 = 0x020029BE;
 addresses.check                 = 0x020029C0;
