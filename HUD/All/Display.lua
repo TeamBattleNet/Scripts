@@ -55,16 +55,6 @@ function hud.set_ws()
     hud.ws = client.getwindowsize(); -- screen space is GBA * ws
 end
 
-function hud.reset_xy()
-    hud.x = 0;
-    hud.y = 0;
-    hud.x0 = 0;
-    hud.y0 = 0;
-    hud.xc = 0;
-    hud.yc = 0;
-    hud.set_ws();
-end
-
 function hud.set_position(x, y)
     hud.x0 = (x or 2) * hud.ws;
     hud.y0 = (y or 1) * hud.ws;
@@ -83,6 +73,14 @@ end
 function hud.set_center_y(height) -- in characters
     local screen_height = 160 * (settings.use_gui_text and hud.ws or 1);
     hud.yc = (screen_height - (height * hud.ys)) / 2;
+end
+
+function hud.reset_xy()
+    hud.set_ws();
+    hud.set_position(x, y);
+    hud.set_offset(x, y);
+    hud.xc = 0;
+    hud.yc = 0;
 end
 
 function hud.to_pixel(x, y, text)
