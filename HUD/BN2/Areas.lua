@@ -184,7 +184,7 @@ areas.names[0x8C][0x0E] = "Gift Shop Comp";
 areas.names[0x8C][0x0F] = "Bronze Statue Comp";
 
 areas.names[0x8D] = {};
-areas.names[0x8D].group = "Small Comp 2";
+areas.names[0x8D].group = "Small Comps 2";
 areas.names[0x8D][0x00] = "Refrigerator Comp";
 areas.names[0x8D][0x01] = "Goddess Comp";
 areas.names[0x8D][0x02] = "Television Comp";

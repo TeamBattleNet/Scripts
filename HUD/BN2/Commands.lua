@@ -52,19 +52,14 @@ local command_battle = {};
 command_battle.selection = 1;
 command_battle.description = function() return "Battle Options:"; end;
 command_battle.options = {
-    { value = function() commands.game.kill_enemy(0);     end; text = "Delete Everything"; };
-    { value = function() commands.game.kill_enemy(1);     end; text = "Delete Enemy 1"   ; };
-    { value = function() commands.game.kill_enemy(2);     end; text = "Delete Enemy 2"   ; };
-    { value = function() commands.game.kill_enemy(3);     end; text = "Delete Enemy 3"   ; };
-    { value = function() commands.game.draw_in_order();   end; text = "Draw Slots: In Order"; };
-    { value = function() commands.game.draw_only_slot(0); end; text = "Draw Slots: Always 1"; };
-    { value = function() commands.game.set_all_folder_code_to(       1, 0); end; text = "Folder: Monocode A Folder"     ; };
-    { value = function() commands.game.randomize_folder_codes(       1   ); end; text = "Folder: Randomize Folder Codes"; };
-    { value = function() commands.game.randomize_folder_IDs_standard(1   ); end; text = "Folder: Randomize Folder IDs"  ; };
-    { value = function() commands.game.overwrite_folder_press_a(         ); end; text = "Folder: Just PressA"           ; };
-    { value = function() commands.game.overwrite_folder_dalus_special(   ); end; text = "Folder: The Dalus_EXE Special" ; };
-    { value = function() commands.game.overwrite_folder_gater(           ); end; text = "Folder: Gater LOL"             ; };
-    { value = function() commands.game.overwrite_folder_last_special(    ); end; text = "Folder: TheLast Folder"        ; };
+    { value = function() commands.game.kill_enemy(0);       end; text = "Delete Everything"   ; };
+    { value = function() commands.game.kill_enemy(1);       end; text = "Delete Enemy 1"      ; };
+    { value = function() commands.game.kill_enemy(2);       end; text = "Delete Enemy 2"      ; };
+    { value = function() commands.game.kill_enemy(3);       end; text = "Delete Enemy 3"      ; };
+    { value = function() commands.game.draw_in_order();     end; text = "Draw Slots: In Order"; };
+    { value = function() commands.game.draw_only_slot(0);   end; text = "Draw Slots: Always 1"; };
+    { value = function() commands.game.set_reg_capacity(0); end; text = " 0 Reg MB"           ; };
+    { value = function() commands.game.max_reg_capacity();  end; text = "99 Reg MB"           ; };
 };
 command_battle.doit = function(value) value(); end;
 table.insert(commands.commands, command_battle);
@@ -80,11 +75,12 @@ function command_items.update_options(option_value)
     if not option_value then
         command_items.selection = command_items.sub_selection;
         command_items.description = function() return "What will U buy?"; end;
-        table.insert( command_items.options, { value = 1; text = "Zenny"    ; } );
-        table.insert( command_items.options, { value = 2; text = "BugFrags" ; } );
-        table.insert( command_items.options, { value = 3; text = "PowerUP"  ; } );
-        table.insert( command_items.options, { value = 4; text = "HPMemory" ; } );
-        table.insert( command_items.options, { value = 5; text = "Equipment"; } );
+        table.insert( command_items.options, { value = 1; text = "Zenny"         ; } );
+        table.insert( command_items.options, { value = 2; text = "BugFrags"      ; } );
+        table.insert( command_items.options, { value = 3; text = "PowerUP"       ; } );
+        table.insert( command_items.options, { value = 4; text = "HPMemory"      ; } );
+        table.insert( command_items.options, { value = 5; text = "Equipment"     ; } );
+        table.insert( command_items.options, { value = 6; text = "Custom Folders"; } );
     else
         command_items.sub_selection = command_items.selection;
         command_items.selection = 1;
@@ -133,6 +129,17 @@ function command_items.update_options(option_value)
             table.insert( command_items.options, { value = commands.game.set_style_heat;       text = "Make Active Element Heat"; } );
             table.insert( command_items.options, { value = commands.game.set_style_aqua;       text = "Make Active Element Aqua"; } );
             table.insert( command_items.options, { value = commands.game.set_style_wood;       text = "Make Active Element Wood"; } );
+            command_items.FUNction = function(value) value(); end;
+        elseif option_value == 6 then
+            command_items.description = function() return "Sponsored by TeamBN"; end;
+            table.insert( command_items.options, { value = function() commands.game.set_all_folder_code_to(1,     0); end; text = "Folder: Monocode A Folder"     ; } );
+            table.insert( command_items.options, { value = function() commands.game.randomize_folder_codes(1       ); end; text = "Folder: Randomize Folder Codes"; } );
+            table.insert( command_items.options, { value = function() commands.game.overwrite_folder_press_a(      ); end; text = "Folder: Just PressA"           ; } );
+            table.insert( command_items.options, { value = function() commands.game.overwrite_folder_dalus_special(); end; text = "Folder: The Dalus_EXE Special" ; } );
+            table.insert( command_items.options, { value = function() commands.game.overwrite_folder_gater(        ); end; text = "Folder: Gater LOL"             ; } );
+            table.insert( command_items.options, { value = function() commands.game.overwrite_folder_last_special( ); end; text = "Folder: TheLast Folder"        ; } );
+            table.insert( command_items.options, { value = function() commands.game.randomize_folder_IDs_standard(1); end; text = "Folder: Randomize Folder IDs"  ; } );
+            table.insert( command_items.options, { value = function() commands.game.randomize_folder_IDs_anything(1); end; text = "Folder: Super Randomize IDs"   ; } );
             command_items.FUNction = function(value) value(); end;
         else
             command_items.description = function() return "Bzzt! (something broke)"; end;

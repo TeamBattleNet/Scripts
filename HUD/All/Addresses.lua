@@ -70,6 +70,7 @@ addresses.play_time_frames      = 0x02000000;
 addresses.PowerUP               = 0x02000000;
 addresses.power_on_frames       = 0x02000000;
 addresses.progress              = 0x02000000;
+addresses.reg_capacity          = 0x02000000;
 addresses.RNG                   = 0x02000000;
 addresses.sneak                 = 0x02000000;
 addresses.steps                 = 0x02000000;

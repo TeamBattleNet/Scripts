@@ -207,6 +207,14 @@ end
 
 ---------------------------------------- Battlechips ----------------------------------------
 
+function game.set_reg_capacity(reg_capacity)
+    game.ram.set.reg_capacity(reg_capacity);
+end
+
+function game.max_reg_capacity()
+    game.set_reg_capacity(99);
+end
+
 function game.get_chip_name(ID)
     return game.chips.names[ID] or "Unknown Chip ID";
 end

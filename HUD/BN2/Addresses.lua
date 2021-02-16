@@ -54,6 +54,7 @@ addresses.battle_paused         = 0x02000DC9; -- 1 byte, flag 0x01
 addresses.main_area_previous    = 0x02000DCC; -- 1 byte
 addresses.sub_area_previous     = 0x02000DCD; -- 1 byte
 
+addresses.reg_capacity          = 0x02000DD7; -- 1 byte
 addresses.reg_slot_current      = 0x02000DDC; -- 1 byte 0xFF if nothing is reg
 addresses.reg_slot_folder_1     = 0x02000DDD; -- 1 byte 0xFF if nothing is reg
 addresses.reg_slot_folder_2     = 0x02000DDE; -- 1 byte 0xFF if nothing is reg
