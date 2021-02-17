@@ -36,6 +36,7 @@ ram.set.door_code = function(number_door_code) memory.write_u8(ram.addr.number_d
 
 ram.get.draw_slot = function(which_slot) return memory.read_u8(ram.addr.battle_draw_slots+which_slot); end;
 ram.set.draw_slot = function(which_slot, folder_slot) memory.write_u8(ram.addr.battle_draw_slots+which_slot, folder_slot); end;
+--ram.update_draw_slots_ref = event.onmemorywrite(ram.update_draw_slots, ram.addr.battle_draw_slots, "MMBN_draw_slots");
 
 ram.get.folder_ID = function(which_slot) return memory.read_u8(ram.addr.folder_ID+(2*which_slot)); end;
 ram.set.folder_ID = function(which_slot, chip_ID) memory.write_u8(ram.addr.folder_ID+(2*which_slot), chip_ID); end;
