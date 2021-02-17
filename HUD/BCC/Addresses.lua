@@ -10,6 +10,8 @@ addresses.game_state            = 0x02000000; -- 1 byte
 addresses.menu_mode             = 0x02000000; -- 1 byte
 addresses.menu_state            = 0x02000000; -- 1 byte
 
+addresses.chip_purchased        = 0x02007060; -- 2 bytes?
+
 addresses.main_RNG              = 0x020070F8; -- 2 bytes
 
 addresses.play_time_frames      = 0x02007100; -- 4 bytes
