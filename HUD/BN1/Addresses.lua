@@ -263,10 +263,11 @@ addresses.cursor_sort_copy      = 0x0200631E; -- 2 bytes, copy
 
 addresses.GMD_reward            = 0x02006380; -- 2 bytes, how to decode?
 
-addresses.power_on_frames       = 0x020064A0; -- 2 bytes, session counter
-
 addresses.text_box_state        = 0x02006350; -- multiple bytes, TBD
 addresses.number_door_display   = 0x02006353; -- bit flag, 0x20
+
+addresses.step_related          = 0x02006448; -- 2 bytes? from the TAS notes
+addresses.power_on_frames       = 0x020064A0; -- 2 bytes, session counter
 
 addresses.button_flags          = 0x020065F0; -- many bytes, many flags
 
