@@ -212,15 +212,20 @@ table.insert(hud.HUDs, HUD_speedrun);
 ---------------------------------------- Module Controls ----------------------------------------
 
 function hud.Up()
-    print("\n" .. hud.game.get_folder_text(1));
+    -- TODO: Simulate Draw+1
 end
 
 function hud.Down()
-    print("\n" .. hud.game.get_draw_slots_text_multi_line());
+    -- TODO: Simulate Draw-1
 end
 
 function hud.B()
-    print("\n" .. hud.game.get_draw_slots_text_one_line());
+    if hud.game.in_battle() then
+        print("\n" .. hud.game.get_draw_slots_text_multi_line());
+        print("\n" .. hud.game.get_draw_slots_text_one_line());
+    else
+        print("\n" .. hud.game.get_folder_text(1));
+    end
 end
 
 function hud.update_local_state()
