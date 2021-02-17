@@ -206,6 +206,9 @@ local log_file = io.open("logs/draws.txt", "w");
 --  34  153 (120 + 33)
 -- 410 4768
 
+-- overworld fights perform 1 more RNG call than cutscene fights
+-- this index is tuned to overworld fights, so cutscene draws will appear to be +1 (1564 maps to 1565)
+
 function ram.simulate_draws()
     for i=1,calculations_per_frame do
         ram.shuffle_folder_simulate_from_value(RNG_value, swaps);
