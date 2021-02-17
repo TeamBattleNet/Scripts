@@ -197,10 +197,10 @@ local swaps = 60;
 local RNG_index = 1;
 local RNG_value = 0xA338244F;
 --local RNG_value = 0x873CA9E4;
-local target_RNG_index = 9999-120;
+local target_RNG_index = 9999;
 local calculations_per_frame = 200;
 
-local log_file = io.open("draws.txt", "w");
+local log_file = io.open("logs/draws.txt", "w");
 
 -- 376 4615
 --  34  153 (120 + 33)
@@ -222,6 +222,8 @@ while RNG_index < target_RNG_index do
 end
 
 log_file:close();
+
+print("Simulations finished");
 
 --local battle_index = 1564;
 --local battle_value = ram.iterate_RNG(0xA338244F, battle_index-121);
