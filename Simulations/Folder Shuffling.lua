@@ -13,6 +13,14 @@ function ram.simulate_RNG(seed)
     return bit.bxor((bit.lshift(seed,1) + bit.rshift(seed, 31) + 1), 0x873CA9E5);
 end
 
+function ram.reverse_RNG(seed)
+    -- seed = (seed ^ 0x873CA9E5) - 1;
+    seed = bit.bxor(seed, 0x873CA9E5) - 1;
+    -- seed = (seed >> 1) + (seed << 31);
+    seed = bit.rshift(seed,1) + bit.lshift(seed, 31);
+    return seed;
+end
+
 function ram.iterate_RNG(seed, iterations)
     iterations = iterations or 1;
     for i=1,iterations do
