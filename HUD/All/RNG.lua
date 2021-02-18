@@ -225,7 +225,8 @@ function ram.update_draw_slots()
         ram.draw_slots[i] = memory.read_u8(ram.addr.battle_draw_slots+i);
     end
 end
---ram.update_draw_slots_ref = event.onmemorywrite(ram.update_draw_slots, ram.addr.battle_draw_slots, "MMBN_draw_slots");
+-- must register after ram.addr.battle_draw_slots is defined
+-- ram.update_draw_slots_ref = event.onmemorywrite(ram.update_draw_slots, ram.addr.battle_draw_slots, "MMBN_draw_slots");
 
 function ram.shuffle_folder_simulate_from_value(RNG_value, swaps)
     RNG_value = RNG_value or 0x873CA9E5;

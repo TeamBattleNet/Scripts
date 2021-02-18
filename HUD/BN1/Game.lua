@@ -454,7 +454,7 @@ end
 
 function game.title_screen_A()
     if game.did_leave_title_screen() then
-        print(string.format("\nRNG Froze on frame: %u", emu.framecount())); -- 17 frames after A
+        print(string.format("\nCONTINUE fade out on frame: %u", emu.framecount())); -- 17 frames after A
     end
 end
 
