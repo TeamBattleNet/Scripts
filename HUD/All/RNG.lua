@@ -31,10 +31,14 @@ function ram.reverse_RNG(seed)
     return seed;
 end
 
-function ram.iterate_RNG(seed, iterations)
+function ram.iterate_RNG(seed, iterations, backwards)
     iterations = iterations or 1;
     for i=1,math.min(iterations,ram.loop_calculations_per_frame) do
-        seed = ram.simulate_RNG(seed);
+        if backwards then
+            seed = ram.reverse_RNG(seed);
+        else
+            seed = ram.simulate_RNG(seed);
+        end
     end
     return seed;
 end
@@ -212,6 +216,10 @@ end
 ram.get.draw_slot = function(which_slot) return ram.draw_slots[which_slot]; end;
 ram.set.draw_slot = function(which_slot, folder_slot) ram.draw_slots[which_slot] = folder_slot; end;
 
+function ram.get_simulated_draw_slots()
+    return ram.draw_slots;
+end
+
 function ram.update_draw_slots()
     for i=0,29 do
         ram.draw_slots[i] = memory.read_u8(ram.addr.battle_draw_slots+i);
@@ -227,9 +235,9 @@ function ram.shuffle_folder_simulate_from_value(RNG_value, swaps)
     end
     for i=1,swaps do
         local slot_a = ram.to_int(bit.rshift(RNG_value,1)) % 30;
-        RNG_value = ram.get.RNG_value_at(RNG_value);
+        RNG_value = ram.simulate_RNG(RNG_value);
         local slot_b = ram.to_int(bit.rshift(RNG_value,1)) % 30;
-        RNG_value = ram.get.RNG_value_at(RNG_value);
+        RNG_value = ram.simulate_RNG(RNG_value);
         ram.draw_slots[slot_a], ram.draw_slots[slot_b] = ram.draw_slots[slot_b], ram.draw_slots[slot_a];
     end
     return ram.draw_slots;
