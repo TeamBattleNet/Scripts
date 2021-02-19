@@ -57,6 +57,34 @@ function game.fill_custom_gauge()
     game.set_custom_gauge(0x4000);
 end
 
+function game.get_battle_level()
+    return memory.read_u8(game.ram.get.battle_pointer() + 0x01);
+end
+
+function game.get_run_chance()
+    local navi_level = math.ceil(game.ram.get.base_HP() / 5);
+    local battle_level = game.get_battle_level();
+    local run_count = game.ram.get.run_count();
+
+    local odds = 0;
+    if (navi_level > battle_level) then
+        odds = 16;
+    elseif (math.floor(navi_level * 1.5) > battle_level) then
+        odds = memory.read_u8(game.ram.addr.run_chance_odds + 6 + run_count);
+    elseif (navi_level * 2 > battle_level) then
+        odds = memory.read_u8(game.ram.addr.run_chance_odds + 3 + run_count);
+    else
+        odds = memory.read_u8(game.ram.addr.run_chance_odds + run_count);
+    end
+
+    -- This block was in the mmbn6_walkframes lua script, unsure what its purpose is?
+    if (bit.band(memory.read_u32_le(0x02009F38), 7) == 1) then
+        odds = 0;
+    end
+
+    return (math.min(odds, 16) / 16) * 100;
+end
+
 ---------------------------------------- Draw Slots ----------------------------------------
 
 function game.get_draw_slot(which_slot)

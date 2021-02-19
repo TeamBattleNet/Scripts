@@ -78,6 +78,12 @@ ram.set.custom_gauge = function(custom_gauge_fill) memory.write_u16_le(ram.addr.
 ram.get.delete_timer = function() return memory.read_u16_le(ram.addr.delete_timer); end;
 ram.set.delete_timer = function(delete_timer) memory.write_u16_le(ram.addr.delete_timer, delete_timer); end;
 
+ram.get.base_HP = function() return memory.read_u16_le(ram.addr.base_HP); end;
+ram.set.base_HP = function(base_HP) memory.write_u16_le(ram.addr.base_HP, base_HP); end;
+
+ram.get.run_count = function() return memory.read_u32_le(ram.addr.run_count); end;
+ram.set.run_count = function(run_count) memory.write_u32_le(ram.addr.run_count, run_count); end;
+
 ram.get.enemy = {}
 ram.set.enemy = {}
 
@@ -128,6 +134,9 @@ ram.set.folder[3].code = function(which_slot, chip_code) memory.write_u16_le(ram
 
 ram.get.game_mode = function() return memory.read_u8(ram.addr.game_mode); end;
 ram.set.game_mode = function(game_mode) memory.write_u8(ram.addr.game_mode, game_mode); end;
+
+ram.get.reg_slot = function() return memory.read_u8(ram.addr.reg_slot) or 255; end
+
 ram.get.game_state = function() return memory.read_u8(ram.addr.game_state); end;
 ram.set.game_state = function(game_state) memory.write_u8(ram.addr.game_state, game_state); end;
 

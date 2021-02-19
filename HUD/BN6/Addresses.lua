@@ -1,6 +1,6 @@
 -- RAM addresses for MMBN 1 scripting, enjoy.
 
-local addresses = {};
+local addresses = require("All/Addresses");
 
 --[[
 General Internal Memory
@@ -61,7 +61,6 @@ addresses.battle_turns        = 0; -- 1 byte, number of custom gauge opens + 1
 addresses.chip_window_count   = 0; -- 1 byte, number of chips in the custom menu
 addresses.battle_paused_also  = 0; -- 1 byte, flag 0x08 (no effect on write)
 addresses.battle_timer        = 0; -- 2 bytes, frame counter for current battle
-addresses.battle_pointer      = 0; -- 2 bytes? ROM offset?
 addresses.battle_custom_gauge = 0; -- 2 bytes, counts up to 0x4000
 addresses.folder_to_pack      = 0; -- 1 byte, menu transition and tracker
 addresses.folder_to_pack_copy = 0; -- 1 byte, copy
@@ -99,12 +98,15 @@ addresses.lazy_RNG            = 0x02001120; -- 4 bytes, resets and pauses on the
 
 addresses.main_RNG            = 0x020013F0; -- 4 bytes, resets and pauses on the title screen
 
+
 -- 001B00 - 001BFF
 
 addresses.game_state          = 0x02001B80; -- 1 byte
 addresses.main_area           = 0x02001B84; -- 1 byte
 addresses.sub_area            = 0x02001B85; -- 1 byte
 addresses.progress            = 0x02001B86; -- 1 byte
+
+addresses.battle_pointer      = 0x02001B9C; -- 4 bytes? ROM offset?
 
 addresses.zenny               = 0x02001BDC; -- 4 bytes, 999999 "max"
 addresses.bugfrags			  = 0x02001BE0; -- 4 bytes, 9999 "max"
@@ -148,9 +150,9 @@ addresses.enemy_ID            = 0x020348D4; -- 2 bytes
 addresses.enemy_ID_2          = 0x020348D6; -- 2 bytes
 addresses.enemy_ID_3          = 0x020348D8; -- 2 bytes
 
--- 03CA00 - 03CAFF
+-- 034900 - 0349FF
 
-addresses.battle_state        = 0x0203CA70;
+addresses.run_count           = 0x020349A8; -- 4 bytes
 
 -- 03AA00 - 03AAFF
 
@@ -164,6 +166,14 @@ addresses.enemy_HP_2          = 0x0203AB84; -- 2 bytes, which_enemy * 0xC0
 
 addresses.enemy_HP_3          = 0x0203AC5C; -- 2 bytes, which_enemy * 0xC0
 
+-- 03CA00 - 03CAFF
+
+addresses.battle_state        = 0x0203CA70;
+
+-- 03CE00 - 03CEFF
+
+addresses.base_HP             = 0x0203CE3E;
+
 ---------------------------------------- ROM  08000000-09FFFFFF ----------------------------------------
 
 -- 000000 - 0000FF
@@ -174,6 +184,10 @@ addresses.version_byte        = 0x080000AC;
 
 addresses.encounter_odds  	  = 0x08020C5C;
 addresses.encounter_curve 	  = 0x08020CE4;
+
+-- 027000 - 0270FF
+
+addresses.run_chance_odds     = 0x08027020;
 
 ---------------------------------------- Verion Dependent ----------------------------------------
 
