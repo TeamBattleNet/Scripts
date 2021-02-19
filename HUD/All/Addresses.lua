@@ -36,6 +36,8 @@ addresses.battle_pointer        = 0x02000000;
 addresses.battle_state          = 0x02000000;
 addresses.battle_timer          = 0x02000000;
 
+addresses.base_HP               = 0x02000000;
+addresses.battle_level          = 0x02000000;
 addresses.bug_frags             = 0x02000000;
 addresses.bug_run               = 0x02000000;
 addresses.buster_attack         = 0x02000000;
@@ -72,7 +74,9 @@ addresses.PowerUP               = 0x02000000;
 addresses.power_on_frames       = 0x02000000;
 addresses.progress              = 0x02000000;
 addresses.reg_capacity          = 0x02000000;
+addresses.reg_slot              = 0x02000000;
 addresses.RNG                   = 0x02000000;
+addresses.run_count             = 0x02000000;
 addresses.main_RNG              = 0x02000000;
 addresses.lazy_RNG              = 0x02000000;
 addresses.sneak                 = 0x02000000;
@@ -92,6 +96,7 @@ addresses.version_byte          = 0x080000AC;
 addresses.region_byte           = 0x080000AF;
 addresses.encounter_odds        = 0x08000000;
 addresses.encounter_curve       = 0x08000000;
+addresses.run_chance_odds       = 0x08000000;
 
 --[[
 General Internal Memory

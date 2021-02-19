@@ -1,4 +1,4 @@
--- Functions for MMBN 1 scripting, enjoy.
+-- Functions for MMBN 6 scripting, enjoy.
 
 local game = require("All/Game");
 
@@ -21,7 +21,6 @@ game.state.title         = 0x00; -- or BIOS
 game.state.world         = 0x04; -- real and digital
 game.state.battle        = 0x0C;
 game.state.transition    = 0x14; -- jack-in / out
-game.state.splash        = 0x14;
 game.state.menu          = 0x18;
 game.state.shop          = 0x20;
 game.state.chip_trader   = 0x24;

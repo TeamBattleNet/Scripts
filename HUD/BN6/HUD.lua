@@ -1,10 +1,10 @@
--- HUD Script for Mega Man Battle Network 3, enjoy.
+-- HUD Script for Mega Man Battle Network 6, enjoy.
 
 -- https://drive.google.com/drive/folders/1K2foCnQbJ_bM2ewBhvxVo7JAdSzV1Ecm Did you check The Notes?
 
 local hud = require("All/HUD");
 
-hud.version = hud.version .. ".0.3";
+hud.version = hud.version .. ".0.0";
 
 hud.game = require("BN6/Game");
 

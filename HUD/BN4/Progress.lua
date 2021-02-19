@@ -4,6 +4,16 @@
 
 local progress = {};
 
+progress.scenarios = {
+    { value = 0x00; description = "TBD" };
+    { value = 0x10; description = "TBD" };
+    { value = 0x20; description = "TBD" };
+    { value = 0x30; description = "TBD" };
+    { value = 0x40; description = "TBD" };
+    { value = 0x50; description = "TBD" };
+    { value = 0x60; description = "TBD" };
+};
+
 progress[0x00] = "New Game";
 progress[0x01] = "Tutorial Finished";
 

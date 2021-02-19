@@ -1,4 +1,4 @@
--- RAM Functions for MMBN 3 scripting, enjoy.
+-- RAM Functions for MMBN 6 scripting, enjoy.
 
 local ram = require("All/RAM");
 

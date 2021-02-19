@@ -1,10 +1,16 @@
--- Commands for MMBN 4 scripting, enjoy.
+-- Commands for MMBN scripting, enjoy.
 
-local commands = require("Common/Commands");
+local commands = require("All/Commands");
 
 commands.game = require("BN4/Game");
 
-commands.init_commands();
+for i,command in pairs(commands.general) do
+    if command.update_options then
+        command.update_options();
+    end
+end
+
+table.insert(commands.commands, commands.general.command_menu);
 
 return commands;
 

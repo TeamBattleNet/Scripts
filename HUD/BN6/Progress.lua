@@ -1,4 +1,4 @@
--- Progress values for MMBN 1 scripting, enjoy.
+-- Progress values for MMBN 6 scripting, enjoy.
 
 -- https://forums.therockmanexezone.com/bn1-story-progression-value-list-t5340.html
 
