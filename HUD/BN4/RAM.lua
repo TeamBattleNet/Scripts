@@ -18,7 +18,7 @@ ram.track_RAM = function()
 
     if ram.previous_ram_offset ~= ram_offset then
         for addr_name,addr in pairs(ram.addr) do
-            if type(addr) == "number" and (addr >= 0x02002130 and addr <= 0x02005E20)then
+            if type(addr) == "number" and (addr >= 0x02002130 and addr <= 0x02009B10)then
                 ram.addr[addr_name] = addr + ram_offset - ram.previous_ram_offset;
             end
         end
