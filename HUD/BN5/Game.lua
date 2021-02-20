@@ -21,9 +21,22 @@ game.state.world         = 0x04; -- real and digital
 game.state.battle_init   = 0x08;
 game.state.battle        = 0x0C;
 game.state.transition    = 0x14; -- jack-in / out
-game.state.title         = 0x1C;
+game.state.title         = 0x00;
 game.state.menu          = 0x1C;
 game.state.shop          = 0x28;
+
+game.game_state_names[0x00] = "World Init";
+game.game_state_names[0x04] = "World";
+game.game_state_names[0x08] = "Battle Init";
+game.game_state_names[0x0C] = "Battle";
+game.game_state_names[0x10] = "Map Change";
+game.game_state_names[0x14] = "Player Change";
+game.game_state_names[0x18] = "Liberation";
+game.game_state_names[0x1C] = "Menu";
+game.game_state_names[0x20] = "BBS";
+game.game_state_names[0x28] = "Shop";
+game.game_state_names[0x2C] = "Liberation Init";
+game.game_state_names[0x30] = "Chip Trader";
 
 --game.state.game_over     = 0xFF;
 --game.state.chip_trader   = 0xFF;
@@ -64,6 +77,27 @@ end
 
 function game.in_pack()
     return game.in_menu_folder_edit() and (false);
+end
+
+---------------------------------------- Battle Chips ----------------------------------------
+
+function game.count_library()
+    local count = 0;
+    for i=0,0x1F do -- TODO: determine total bytes
+        count = count + game.bit_counter(game.ram.get.library(i));
+    end
+    return count;
+end
+
+function game.simulate_folder_shuffle()
+    local seed = game.ram.get.lazy_RNG_value();
+
+    -- TODO: Determine actual number of seeds to advance.
+    for i=0,247 do
+        seed = game.ram.simulate_RNG(seed);
+    end
+
+    local draw_slots = game.ram.shuffle_folder_simulate_from_value(seed, 30);
 end
 
 ---------------------------------------- Fun Flags  ----------------------------------------

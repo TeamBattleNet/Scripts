@@ -29,13 +29,25 @@ addresses.sneak                 = 0x020029D0;
 
 addresses.karma                 = 0x020052EC;
 
-addresses.your_X                = 0x02000000;
-addresses.your_Y                = 0x02000000;
+addresses.your_X                = 0x02000000; -- TBD
+addresses.your_Y                = 0x02000000; -- TBD
 addresses.your_X2               = 0x02000000;
 addresses.your_Y2               = 0x02000000;
 
 addresses.folder[1].ID          = 0x0202B022;
 addresses.folder[1].code        = 0x0202B024; -- TBD
+
+addresses.offset_folder         = 0x02009A54; -- TBD
+addresses.offset_pack           = 0x02009A5E; -- TBD
+
+addresses.base_HP               = 0x02034EFE;
+addresses.battle_pointer        = 0x0200295C;
+addresses.run_count             = 0x02034E18;
+
+addresses.reg_slot              = 0x02005336;
+
+addresses.cursor_id             = 0x0200845E;
+addresses.cursor_code           = 0x0200845C;
 
 addresses.enemy[1].ID           = 0x02034AE4;
 addresses.battle_custom_gauge   = 0x02035700;
@@ -63,6 +75,7 @@ if     version_byte == 0x4A4B5242 then
     addresses.version_name      = "JP Colonel";
     addresses.encounter_odds    = 0x0801D04E;
     addresses.encounter_curve   = 0x0801D0D6;
+    addresses.run_chance_odds   = 0x08023268;
 elseif version_byte == 0x4A425242 then
     addresses.version_name      = "JP Proto";
     addresses.encounter_odds    = 0x0801D052;

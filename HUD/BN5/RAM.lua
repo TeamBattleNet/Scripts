@@ -8,6 +8,9 @@ ram.version_name = ram.addr.version_name;
 
 ------------------------------ Getters & Setters ------------------------------
 
+ram.get.battle_pointer = function() return memory.read_u32_le(ram.addr.battle_pointer); end;
+ram.set.battle_pointer = function(battle_pointer) memory.write_u32_le(ram.addr.battle_pointer, battle_pointer); end;
+
 ---------------------------------------- RAMsacking ----------------------------------------
 
 function ram.use_fun_flags(fun_flags)
