@@ -21,10 +21,7 @@ game.state.title         = 0x00; -- or BIOS
 game.state.world         = 0x04; -- real and digital
 game.state.battle        = 0x08;
 game.state.transition    = 0x10; -- jack-in / out
-game.state.splash        = 0x14;
-game.state.menu          = 0x18;
-game.state.shop          = 0x20;
-game.state.chip_trader   = 0x24;
+game.state.menu          = 0x14;
 
 game.game_state_names[0x00] = "World Init";
 game.game_state_names[0x04] = "World";
@@ -92,6 +89,9 @@ function game.pre_update(options)
     options.fun_flags = game.fun_flags;
     game.ram.pre_update(options);
     game.use_fun_flags(game.fun_flags);
+
+    -- Specific to BN4, update RAM addresses if the offset has changed.
+    game.ram.track_RAM();
 end
 
 function game.post_update(options)

@@ -6,7 +6,26 @@ ram.addr = require("BN4/Addresses");
 
 ram.version_name = ram.addr.version_name;
 
+-- Necessary to support BN4 non-Wii U versions.
+ram.offset_addr = 0x02001550;
+
+ram.previous_ram_offset = 0;
+
 ------------------------------ Getters & Setters ------------------------------
+
+ram.track_RAM = function()
+    local ram_offset = memory.read_u32_le(ram.offset_addr);
+
+    if ram.previous_ram_offset ~= ram_offset then
+        for addr_name,addr in pairs(ram.addr) do
+            if type(addr) == "number" and (addr >= 0x02002130 and addr <= 0x02005E20)then
+                ram.addr[addr_name] = addr + ram_offset - ram.previous_ram_offset;
+            end
+        end
+
+        ram.previous_ram_offset = ram_offset;
+    end
+end
 
 ram.get.pack_ID = function(which_slot) return memory.read_u8(ram.addr.pack_ID+(0x20*which_slot)); end;
 ram.set.pack_ID = function(which_slot, chip_ID) memory.write_u8(ram.addr.pack_ID+(0x20*which_slot), chip_ID); end;
