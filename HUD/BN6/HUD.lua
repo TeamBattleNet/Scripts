@@ -1,6 +1,6 @@
 -- HUD Script for Mega Man Battle Network 6, enjoy.
 
--- https://drive.google.com/drive/folders/1K2foCnQbJ_bM2ewBhvxVo7JAdSzV1Ecm Did you check The Notes?
+-- https://drive.google.com/drive/folders/1w7TNhBxEmzngGA2E6emykVCjPDQluydg Did you check The Notes?
 
 local hud = require("All/HUD");
 
