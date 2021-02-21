@@ -52,7 +52,7 @@ end
 local hud = load_HUD();
 
 if hud then
-    hud.initialize({major_version = "0.3"});
+    hud.initialize();
     while true do
         hud.update();
         emu.frameadvance();
