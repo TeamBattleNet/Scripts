@@ -98,6 +98,8 @@ addresses.encounter_odds        = 0x08000000;
 addresses.encounter_curve       = 0x08000000;
 addresses.run_chance_odds       = 0x08000000;
 
+-- 1C1A1412100C0C00 RAM search string for encounter_odds
+
 --[[
 General Internal Memory
     00000000-00003FFF   BIOS - System ROM         (16 KBytes)
