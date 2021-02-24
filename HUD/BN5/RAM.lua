@@ -31,6 +31,65 @@ function ram.use_fun_flags(fun_flags)
     end
 end
 
+---------------------------------------- Folder Shuffling ----------------------------------------
+
+function ram.shuffle_folder_simulate_from_value(RNG_value, swaps)
+    RNG_value = RNG_value or 0x873CA9E5;
+    swaps = swaps or 30;
+    for i=0,29 do
+        ram.draw_slots[i] = i;
+    end
+
+    -- If reg chip, subtract 1 from number of swaps
+    local reg_slot = ram.get.reg_slot();
+    if reg_slot == 255 then
+        for i=1,swaps do -- 60 in BN1, 30 in the rest
+            RNG_value = ram.simulate_RNG(RNG_value);
+            local slot_a = bit.band(RNG_value, 0x7FFFFFFF) % 30;
+            RNG_value = ram.simulate_RNG(RNG_value);
+            local slot_b = bit.band(RNG_value, 0x7FFFFFFF) % 30;
+            ram.draw_slots[slot_a], ram.draw_slots[slot_b] = ram.draw_slots[slot_b], ram.draw_slots[slot_a];
+        end
+    else
+
+        -- Swap slot 1 to the slot just before reg_slot, move others up 1;
+        for i=0,reg_slot - 2 do
+            ram.draw_slots[i] = ram.draw_slots[i + 1];
+        end
+        ram.draw_slots[reg_slot - 1] = 0;
+
+        local slots_text = "";
+        for i=0,29 do
+            slots_text = string.format("%s %02u", slots_text, ram.draw_slots[i]);
+        end
+
+        print(slots_text);
+
+        for i=1,(swaps - 1) do -- 60 in BN1, 30 in the rest
+            RNG_value = ram.simulate_RNG(RNG_value);
+            local slot_a = bit.band(RNG_value, 0x7FFFFFFF) % 29;
+            if slot_a >= reg_slot then
+                slot_a = slot_a + 1;
+            end
+            RNG_value = ram.simulate_RNG(RNG_value);
+            local slot_b = bit.band(RNG_value, 0x7FFFFFFF) % 29;
+            if slot_b >= reg_slot then
+                slot_b = slot_b + 1;
+            end
+            ram.draw_slots[slot_a], ram.draw_slots[slot_b] = ram.draw_slots[slot_b], ram.draw_slots[slot_a];
+        end
+
+        -- Place reg chip at top, move other chips down.
+        for i=reg_slot,0,-1 do
+            ram.draw_slots[i] = ram.draw_slots[i - 1];
+        end
+
+        ram.draw_slots[0] = reg_slot;
+    end
+
+    return ram.draw_slots;
+end
+
 ---------------------------------------- Module Controls ----------------------------------------
 
 function ram.initialize(options)
