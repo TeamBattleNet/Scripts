@@ -16,7 +16,7 @@ ram.previous_ram_offset = 0;
 ram.track_RAM = function()
     local ram_offset = memory.read_u32_le(ram.offset_addr);
 
-    if ram.previous_ram_offset ~= ram_offset then
+    if ram.previous_ram_offset ~= ram_offset and ram_offset < 0x3CF0 then
         for addr_name,addr in pairs(ram.addr) do
             if type(addr) == "number" and (addr >= 0x02002130 and addr <= 0x02009B10)then
                 ram.addr[addr_name] = addr + ram_offset - ram.previous_ram_offset;

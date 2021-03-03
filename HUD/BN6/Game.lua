@@ -105,6 +105,7 @@ end
 
 function game.post_update(options)
     game.track_game_state();
+    game.track_encounter_checks();
     game.ram.post_update(options);
 end
 

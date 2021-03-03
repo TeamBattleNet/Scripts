@@ -243,7 +243,13 @@ function game.is_sneakrun_bugged()
     return false; -- overridden per game
 end
 
+local previous_steps = 0;
 function game.track_encounter_checks()
+    local curr_steps = game.ram.get.steps();
+    if previous_steps ~= curr_steps and curr_steps == 0 then
+        print("Steps reset to 0. Previous step counter: " .. previous_steps);
+    end
+    previous_steps = curr_steps;
     if game.did_area_change() then
         area_odds = area_odds * current_odds;
         if area_odds < 1 then
