@@ -146,7 +146,7 @@ function hud.Down()
 end
 
 function hud.B()
-    hud.game.randomize_GMD_RNG();
+    --hud.game.randomize_GMD_RNG();
 end
 
 function hud.update_local_state()

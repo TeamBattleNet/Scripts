@@ -52,8 +52,12 @@ addresses.cursor_code           = 0x0200845C;
 addresses.enemy[1].ID           = 0x02034AE4;
 addresses.battle_custom_gauge   = 0x02035700;
 addresses.enemy[1].HP           = 0x0203B2FC;
+addresses.enemy[2].HP           = 0x0203B3D4;
+addresses.enemy[3].HP           = 0x0203B4AC;
 addresses.mega_mood             = 0x0203C88E;
 addresses.enemy[1].HP_text      = 0x0203E5C2;
+addresses.enemy[2].HP_text      = 0x0203E5D6;
+addresses.enemy[3].HP_text      = 0x0203E5EA;
 
 -- 0x0203FFFF end of WRAM
 
