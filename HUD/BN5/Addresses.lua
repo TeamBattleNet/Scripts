@@ -6,6 +6,8 @@ local addresses = require("All/Addresses");
 
 addresses.zenny_anti_cheat      = 0x02000180; -- XOR to mirror value
 
+addresses.library               = 0x02001440;
+
 addresses.main_RNG              = 0x02001D40;
 addresses.lazy_RNG              = 0x02001C94;
 
@@ -32,7 +34,7 @@ addresses.sneak                 = 0x020029D0;
 
 addresses.flags                 = 0x020029F8; -- flags, unverified
 
-addresses.library               = 0x02000000; -- after flags
+addresses.pack                  = 0x02002CC8;
 
 addresses.karma                 = 0x020052EC;
 
@@ -101,16 +103,18 @@ elseif version_byte == 0x454B5242 then
     addresses.version_name      = "US Colonel";
     addresses.encounter_odds    = 0x0801D092;
     addresses.encounter_curve   = 0x0801D11A;
-    --memory.write_u16_le(0x0803C302, 0x46C0); -- anti cheat, zenny get
-    --memory.write_u16_le(0x0803C376, 0x46C0); -- anti cheat, zenny set
-    --memory.write_u16_le(0x0803C38A, 0x46C0); -- anti cheat, bug frags get
-    --memory.write_u16_le(0x0803C3FE, 0x46C0); -- anti cheat, bug frags set
+    --memory.write_u16_le(0x0803C302, 0x46C0); -- anti cheat, zenny get?
+    --memory.write_u16_le(0x0803C376, 0x46C0); -- anti cheat, zenny set?
+    --memory.write_u16_le(0x0803C38A, 0x46C0); -- anti cheat, bug frags get?
+    --memory.write_u16_le(0x0803C3FE, 0x46C0); -- anti cheat, bug frags set?
 elseif version_byte == 0x45425242 then
     addresses.version_name      = "US Proto";
     addresses.encounter_odds    = 0x0801D096;
     addresses.encounter_curve   = 0x0801D11E;
-    --memory.write_u16_le(0x0803C372, 0x4651); -- anti cheat, zenny
-    --memory.write_u16_le(0x0803C3FA, 0x4651); -- anti cheat, bug frags set
+    --memory.write_u16_le(0x0803C2FE, 0x4651); -- anti cheat, zenny get?
+    --memory.write_u16_le(0x0803C372, 0x4651); -- anti cheat, zenny set?
+    --memory.write_u16_le(0x0803C386, 0x4651); -- anti cheat, bug frags get?
+    --memory.write_u16_le(0x0803C3FA, 0x4651); -- anti cheat, bug frags set?
 elseif version_byte == 0x504B5242 then
     addresses.version_name      = "PAL Colonel";
     addresses.encounter_odds    = 0x0801D092;
