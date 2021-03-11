@@ -23,6 +23,13 @@ ram.set.zenny = function(zenny)
     memory.write_u32_le(ram.addr.zenny_anti_cheat, 0);
 end;
 
+ram.get.enemy[1].ID = function() return memory.read_u16_le(ram.addr.enemy[1].ID); end;
+ram.set.enemy[1].ID = function(enemy_ID) memory.write_u16_le(ram.addr.enemy[1].ID, enemy_ID); end;
+ram.get.enemy[2].ID = function() return memory.read_u16_le(ram.addr.enemy[2].ID); end;
+ram.set.enemy[2].ID = function(enemy_ID) memory.write_u16_le(ram.addr.enemy[2].ID, enemy_ID); end;
+ram.get.enemy[3].ID = function() return memory.read_u16_le(ram.addr.enemy[3].ID); end;
+ram.set.enemy[3].ID = function(enemy_ID) memory.write_u16_le(ram.addr.enemy[3].ID, enemy_ID); end;
+
 ---------------------------------------- RAMsacking ----------------------------------------
 
 function ram.use_fun_flags(fun_flags)

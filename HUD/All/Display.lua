@@ -215,7 +215,7 @@ end
 
 function hud.display_enemy(which_enemy)
     local enemy_name = hud.game.get_enemy_name(which_enemy);
-    if enemy_name ~= "Unknown" and enemy_name ~= "Empty" and enemy_name ~= "MegaMan" then
+    if enemy_name ~= "Unknown" and enemy_name ~= "Empty" and enemy_name ~= "MegaMan" and enemy_name ~= "Test Virus" then
         hud.to_bottom_right(enemy_name);
     end
 end
