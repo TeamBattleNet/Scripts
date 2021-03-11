@@ -76,8 +76,8 @@ function command_items.update_options(option_value)
     if not option_value then
         command_items.selection = command_items.sub_selection;
         command_items.description = function() return "What will U buy?"; end;
-        --table.insert( command_items.options, { value = 1; text = "Zenny"    ; } );
-        --table.insert( command_items.options, { value = 2; text = "BugFrags" ; } );
+        table.insert( command_items.options, { value = 1; text = "Zenny"    ; } );
+        table.insert( command_items.options, { value = 2; text = "BugFrags" ; } );
         table.insert( command_items.options, { value = 3; text = "NaviCust" ; } );
         table.insert( command_items.options, { value = 4; text = "HPMemory" ; } );
         table.insert( command_items.options, { value = 5; text = "Equipment"; } );

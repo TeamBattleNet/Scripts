@@ -49,7 +49,9 @@ end
 local function HUD_routing()
     hud.set_position(0, 8);
     hud.set_center_x(54);
-    hud.to_screen("Routing HUD: WIP");
+    hud.to_screen("0180: " .. hud.game.get_string_hex(0x02000180, 4, true));
+    hud.to_screen("60CC: " .. hud.game.get_string_hex(0x020060CC, 4, true));
+    hud.to_screen("299C: " .. hud.game.get_string_hex(0x0200299C, 4, true));
 end
 
 local function HUD_battle()

@@ -4,10 +4,12 @@ local addresses = require("All/Addresses");
 
 ---------------------------------------- WRAM 02000000-0203FFFF ----------------------------------------
 
-addresses.library               = 0x02000000;
+addresses.zenny_anti_cheat      = 0x02000180; -- XOR to mirror value
 
 addresses.main_RNG              = 0x02001D40;
 addresses.lazy_RNG              = 0x02001C94;
+
+addresses.bug_frags_anti_cheat  = 0x0200266C; -- XOR to mirror value
 
 addresses.game_mode             = 0x02000000;
 addresses.game_state            = 0x02002940;
@@ -18,6 +20,7 @@ addresses.main_area             = 0x02002944;
 addresses.sub_area              = 0x02002945;
 addresses.progress              = 0x02002946;
 addresses.music_progress        = 0x02002947; -- TBD
+addresses.battle_pointer        = 0x0200295C;
 
 addresses.zenny                 = 0x0200299C;
 addresses.bug_frags             = 0x020029A0; -- TBD
@@ -27,7 +30,14 @@ addresses.check                 = 0x020029C0;
 addresses.play_time_frames      = 0x020029C4;
 addresses.sneak                 = 0x020029D0;
 
+addresses.flags                 = 0x020029F8; -- flags, unverified
+
+addresses.library               = 0x02000000; -- after flags
+
 addresses.karma                 = 0x020052EC;
+
+addresses.zenny_mirror          = 0x020060CC;
+addresses.bug_frags_mirror      = 0x020060D4;
 
 addresses.your_X                = 0x02000000; -- TBD
 addresses.your_Y                = 0x02000000; -- TBD
@@ -42,8 +52,7 @@ addresses.offset_pack           = 0x02009A5E; -- TBD
 
 addresses.GMD_value             = 0x0200AC24;
 
-addresses.base_HP               = 0x02034EFE;
-addresses.battle_pointer        = 0x0200295C;
+addresses.base_HP               = 0x02034EFE; -- wrong?
 addresses.run_count             = 0x02034E18;
 
 addresses.reg_slot              = 0x02005336;
@@ -92,10 +101,16 @@ elseif version_byte == 0x454B5242 then
     addresses.version_name      = "US Colonel";
     addresses.encounter_odds    = 0x0801D092;
     addresses.encounter_curve   = 0x0801D11A;
+    --memory.write_u16_le(0x0803C302, 0x46C0); -- anti cheat, zenny get
+    --memory.write_u16_le(0x0803C376, 0x46C0); -- anti cheat, zenny set
+    --memory.write_u16_le(0x0803C38A, 0x46C0); -- anti cheat, bug frags get
+    --memory.write_u16_le(0x0803C3FE, 0x46C0); -- anti cheat, bug frags set
 elseif version_byte == 0x45425242 then
     addresses.version_name      = "US Proto";
     addresses.encounter_odds    = 0x0801D096;
     addresses.encounter_curve   = 0x0801D11E;
+    --memory.write_u16_le(0x0803C372, 0x4651); -- anti cheat, zenny
+    --memory.write_u16_le(0x0803C3FA, 0x4651); -- anti cheat, bug frags set
 elseif version_byte == 0x504B5242 then
     addresses.version_name      = "PAL Colonel";
     addresses.encounter_odds    = 0x0801D092;

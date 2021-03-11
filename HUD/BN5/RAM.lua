@@ -11,6 +11,18 @@ ram.version_name = ram.addr.version_name;
 ram.get.battle_pointer = function() return memory.read_u32_le(ram.addr.battle_pointer); end;
 ram.set.battle_pointer = function(battle_pointer) memory.write_u32_le(ram.addr.battle_pointer, battle_pointer); end;
 
+ram.set.bug_frags = function(bug_frags)
+    memory.write_u32_le(ram.addr.bug_frags, bug_frags);
+    memory.write_u32_le(ram.addr.bug_frags_mirror, bug_frags);
+    memory.write_u32_le(ram.addr.bug_frags_anti_cheat, 0);
+end;
+
+ram.set.zenny = function(zenny)
+    memory.write_u32_le(ram.addr.zenny, zenny);
+    memory.write_u32_le(ram.addr.zenny_mirror, zenny);
+    memory.write_u32_le(ram.addr.zenny_anti_cheat, 0);
+end;
+
 ---------------------------------------- RAMsacking ----------------------------------------
 
 function ram.use_fun_flags(fun_flags)
