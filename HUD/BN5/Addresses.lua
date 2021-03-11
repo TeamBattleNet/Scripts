@@ -40,6 +40,8 @@ addresses.folder[1].code        = 0x0202B024; -- TBD
 addresses.offset_folder         = 0x02009A54; -- TBD
 addresses.offset_pack           = 0x02009A5E; -- TBD
 
+addresses.GMD_value             = 0x0200AC24;
+
 addresses.base_HP               = 0x02034EFE;
 addresses.battle_pointer        = 0x0200295C;
 addresses.run_count             = 0x02034E18;
@@ -50,6 +52,8 @@ addresses.cursor_id             = 0x0200845E;
 addresses.cursor_code           = 0x0200845C;
 
 addresses.enemy[1].ID           = 0x02034AE4;
+addresses.enemy[2].ID           = 0x02034AE6;
+addresses.enemy[3].ID           = 0x02034AE8;
 addresses.battle_custom_gauge   = 0x02035700;
 addresses.enemy[1].HP           = 0x0203B2FC;
 addresses.enemy[2].HP           = 0x0203B3D4;
