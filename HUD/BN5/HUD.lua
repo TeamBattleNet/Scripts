@@ -78,7 +78,11 @@ local function HUD_auto()
         hud.to_screen("");
         display_player_info();
         hud.display_area();
-    elseif hud.game.in_world() then
+    elseif hud.game.in_liberation() then
+        hud.set_position(2, 17);
+        hud.display_steps();
+        hud.display_area();
+    elseif hud.game.in_world() or hud.game.in_liberation() then
         if hud.game.in_real_world() then
             hud.set_position(2, 23);
         else

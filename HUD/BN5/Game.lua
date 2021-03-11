@@ -21,8 +21,9 @@ game.state.world         = 0x04; -- real and digital
 game.state.battle_init   = 0x08;
 game.state.battle        = 0x0C;
 game.state.transition    = 0x14; -- jack-in / out
-game.state.title         = 0x00;
+game.state.title         = 0x1C;
 game.state.menu          = 0x1C;
+game.state.liberation    = 0x18;
 game.state.shop          = 0x28;
 
 game.game_state_names[0x00] = "World Init";
@@ -37,6 +38,10 @@ game.game_state_names[0x20] = "BBS";
 game.game_state_names[0x28] = "Shop";
 game.game_state_names[0x2C] = "Liberation Init";
 game.game_state_names[0x30] = "Chip Trader";
+
+function game.in_liberation()
+    return game.ram.get.game_state() == game.state.liberation;
+end
 
 --game.state.game_over     = 0xFF;
 --game.state.chip_trader   = 0xFF;
