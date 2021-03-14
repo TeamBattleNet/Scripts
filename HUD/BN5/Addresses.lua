@@ -36,6 +36,8 @@ addresses.flags                 = 0x020029F8; -- flags, unverified
 
 addresses.pack                  = 0x02002CC8;
 
+addresses.unlocker              = 0x02003E25;
+
 addresses.karma                 = 0x020052EC;
 
 addresses.zenny_mirror          = 0x020060CC;
