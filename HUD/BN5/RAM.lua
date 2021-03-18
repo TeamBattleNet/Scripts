@@ -50,6 +50,88 @@ function ram.use_fun_flags(fun_flags)
     end
 end
 
+---------------------------------------- GMD Generation ----------------------------------------
+
+local gmd = require("BN5/GMDTables");
+local gmd_table = {};
+local gmd_initial_seed = 0;
+
+function ram.generate_gmds_simulate_from_value(RNG_value)
+    gmd_initial_seed = RNG_value;
+
+    -- Advance RNG 64 times (US) or 72 times (JP) to account for areas not currently listed in GMDTables.lua
+    local advance_rng = 64;
+    if ram.addr.version_name == "JP Colonel" or ram.addr.version_name == "JP Proto" then
+        advance_rng = 72;
+    end
+
+    for i = 1, advance_rng do
+        RNG_value = ram.simulate_RNG(RNG_value);
+    end
+
+    for i, rewards in ipairs(gmd.drop_table) do
+        local probabilities = {32, 32, 32, 32, 32, 32, 32, 32};
+        local contents = {};
+        local location = {};
+
+        for gmd = 1, 2 do
+            local mod_value = 0;
+            local total_prob = 0;
+
+            -- Advance RNG for determining location
+            RNG_value = ram.simulate_RNG(RNG_value);
+            if bit.band(RNG_value, 0x3f) + 1 >= 32 then
+                location[gmd] = 2;
+            else
+                location[gmd] = 1;
+            end
+
+            -- Advance RNG for determining contents
+            RNG_value = ram.simulate_RNG(RNG_value);
+
+            local modValue = 0;
+            for j, prob in ipairs(probabilities) do
+                mod_value = mod_value + prob;
+            end
+
+            local randomProb = (bit.band(RNG_value, 0xffff) % mod_value) + 1;
+
+            for j, prob in ipairs(probabilities) do
+                total_prob = total_prob + prob;
+                if total_prob >= randomProb then
+                    contents[gmd] = rewards[j];
+                    probabilities[j] = 0;
+                    break;
+                end
+            end
+        end
+
+        local area = gmd.areas[i];
+
+        gmd_table[area] = {};
+        gmd_table[area][1] = {
+            location = location[1];
+            contents = contents[1];
+        };
+        gmd_table[area][2] = {
+            location = location[2];
+            contents = contents[2];
+        };
+    end
+end
+
+function ram.get.gmd_table()
+    return gmd_table;
+end
+
+function ram.get.gmd_initial_seed_index()
+    return ram.get.main_RNG_index_of(gmd_initial_seed) or "?????";
+end
+
+function ram.get.gmd_initial_seed()
+    return gmd_initial_seed;
+end
+
 ---------------------------------------- Folder Shuffling ----------------------------------------
 
 function ram.shuffle_folder_simulate_from_value(RNG_value, swaps)

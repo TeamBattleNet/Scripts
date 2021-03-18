@@ -137,6 +137,19 @@ function game.use_fun_flags(fun_flags) -- TODO: Rename
     end
 end
 
+---------------------------------------- GMD Generation ----------------------------------------
+
+function game.on_spawn_gmds()
+    local r14 = emu.getregister("R14");
+    if r14 ~= 0x8004b01 then
+        local RNG_value = game.ram.get.main_RNG_value();
+
+        game.ram.generate_gmds_simulate_from_value(RNG_value);
+    end
+end
+
+event.onmemoryexecute(game.on_spawn_gmds, game.ram.addr.gmd_function);
+
 ---------------------------------------- Module Controls ----------------------------------------
 
 function game.initialize(options)

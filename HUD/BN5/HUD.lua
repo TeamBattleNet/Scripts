@@ -35,6 +35,23 @@ local function display_selected_chip()
     -- TODO: Selected Chip
 end
 
+local function display_gmd_table()
+    hud.to_screen(string.format("Index: %8s", hud.game.ram.get.gmd_initial_seed_index()));
+    hud.to_screen(string.format("Seed: %9x", hud.game.ram.get.gmd_initial_seed()));
+    local gmd_table = hud.game.ram.get.gmd_table();
+    local current_area = hud.game.get_area_name(hud.game.get_main_area(), hud.game.get_sub_area());
+    if gmd_table[current_area] ~= nil then
+        hud.to_screen("");
+        hud.to_screen("GMD 1");
+        hud.to_screen(string.format("Spawn: %d", gmd_table[current_area][1]["location"]));
+        hud.to_screen(string.format("Reward: %s", gmd_table[current_area][1]["contents"]));
+        hud.to_screen("");
+        hud.to_screen("GMD 2");
+        hud.to_screen(string.format("Spawn: %d", gmd_table[current_area][2]["location"]));
+        hud.to_screen(string.format("Reward: %s", gmd_table[current_area][2]["contents"]));
+    end
+end
+
 ---------------------------------------- HUD Modes ----------------------------------------
 
 local function HUD_speedrun()
@@ -70,6 +87,16 @@ local function HUD_battle()
     hud.to_screen(string.format("%%: %8.3f%%", 100-hud.game.get_current_percent()));
     --hud.to_screen(string.format("Drawfset: %2u", draw_offset));
     hud.display_enemies();
+end
+
+local function HUD_gmds()
+    if hud.game.in_real_world() then
+        hud.set_position(2, 23);
+        hud.to_screen("Jack in to see GMD contents");
+    else
+        hud.set_position(2, 17);
+        display_gmd_table();
+    end
 end
 
 local function HUD_auto()
@@ -139,6 +166,7 @@ table.insert(hud.HUDs, HUD_auto);
 table.insert(hud.HUDs, HUD_battle);
 table.insert(hud.HUDs, HUD_routing);
 table.insert(hud.HUDs, HUD_speedrun);
+table.insert(hud.HUDs, HUD_gmds);
 
 ---------------------------------------- Module Controls ----------------------------------------
 

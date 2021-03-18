@@ -97,6 +97,8 @@ if     version_byte == 0x4A4B5242 then
     addresses.encounter_odds    = 0x0801D04E;
     addresses.encounter_curve   = 0x0801D0D6;
     addresses.run_chance_odds   = 0x08023268;
+    addresses.gmd_function      = 0x080A6C64;
+
 elseif version_byte == 0x4A425242 then
     addresses.version_name      = "JP Proto";
     addresses.encounter_odds    = 0x0801D052;
@@ -105,6 +107,7 @@ elseif version_byte == 0x454B5242 then
     addresses.version_name      = "US Colonel";
     addresses.encounter_odds    = 0x0801D092;
     addresses.encounter_curve   = 0x0801D11A;
+    addresses.gmd_function      = 0x080A7300;
     --memory.write_u16_le(0x0803C302, 0x46C0); -- anti cheat, zenny get?
     --memory.write_u16_le(0x0803C376, 0x46C0); -- anti cheat, zenny set?
     --memory.write_u16_le(0x0803C38A, 0x46C0); -- anti cheat, bug frags get?
