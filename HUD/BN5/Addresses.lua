@@ -43,10 +43,11 @@ addresses.karma                 = 0x020052EC;
 addresses.zenny_mirror          = 0x020060CC;
 addresses.bug_frags_mirror      = 0x020060D4;
 
-addresses.your_X                = 0x02000000; -- TBD
-addresses.your_Y                = 0x02000000; -- TBD
-addresses.your_X2               = 0x02000000;
-addresses.your_Y2               = 0x02000000;
+addresses.your_X                = 0x0200AE4C +  2;
+addresses.your_Y                = 0x0200AE4C +  6;
+addresses.your_Z                = 0x0200AE4C + 10;
+addresses.your_X2               = 0x02000000; -- TBD
+addresses.your_Y2               = 0x02000000; -- TBD
 
 addresses.folder[1].ID          = 0x0202B022;
 addresses.folder[1].code        = 0x0202B024; -- TBD
