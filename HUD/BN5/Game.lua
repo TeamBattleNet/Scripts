@@ -148,7 +148,9 @@ function game.on_spawn_gmds()
     end
 end
 
-event.onmemoryexecute(game.on_spawn_gmds, game.ram.addr.gmd_function);
+if game.on_spawn_gmds and game.ram.addr.gmd_function then
+    event.onmemoryexecute(game.on_spawn_gmds, game.ram.addr.gmd_function);
+end
 
 ---------------------------------------- Module Controls ----------------------------------------
 
