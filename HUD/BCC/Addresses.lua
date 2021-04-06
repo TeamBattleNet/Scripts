@@ -26,6 +26,8 @@ local addresses = require("All/Addresses");
 
 -- 5048 ??? 6 Bytes
 
+addresses.battle_state4         = 0x020051A4; -- ???
+
 -- 7460 - 761F Folders & Program Decks
 
 -- 7620 - 7718 ??? 00 83 All 81's
@@ -36,31 +38,45 @@ local addresses = require("All/Addresses");
 
 -- 7812 - 7925 TBD Folder Stuff?
 
-addresses.game_mode             = 0x02000000; -- 1 byte
-addresses.game_state            = 0x02000000; -- 1 byte
+addresses.chip_purchased        = 0x02007060; -- 2 bytes?
+
+addresses.tourney_setup1        = 0x020070B8; -- 0x0200878E ???
+addresses.tourney_setup2        = 0x020070BC; -- 0x001D0082 ???
+
+addresses.game_state            = 0x020070F0; -- 1 byte 0x13 is StateSwitch
+addresses.game_state_next       = 0x020070F1; -- 1 byte 0x12 is BattleChipGP
 
 addresses.menu_mode             = 0x02000000; -- 1 byte
 addresses.menu_state            = 0x02000000; -- 1 byte
-
-addresses.chip_purchased        = 0x02007060; -- 2 bytes?
-
--- 70F0 Game State Row?
 
 addresses.main_RNG              = 0x020070F8; -- 2 bytes
 
 addresses.play_time_frames      = 0x02007100; -- 4 bytes
 
 addresses.zenny                 = 0x02007110; -- 4 bytes
+
+addresses.tournament_data       = 0x020086F0; -- Complicated
+
+addresses.tourney_setup3        = 0x0200878F; -- for i = 0, 15 do memory.writebyte(0x0878F + i, 0x7F - i) end
+
 addresses.zenny_save1           = 0x02008844; -- 4 bytes
 addresses.zenny_save2           = 0x02009F78; -- 4 bytes
 
 -- Stuff
+
+addresses.battle_state1         = 0x0200B78C; -- TBD
+addresses.battle_state2         = 0x0200B78D; -- TBD
+addresses.battle_state3         = 0x0200B7A0; -- ???
+
+addresses.battle_background     = 0x0200B81A; -- 0x00 - 0x1F
 
 -- 8BA0 - 8D51 Copy of Program Decks?
 
 -- Stuff
 
 -- A2D0 - A485 Copy of Program Decks?
+
+addresses.tournament_navis      = 0x0200B824; -- 2 bytes each
 
 -- B9C0 Interesting?
 
@@ -90,7 +106,40 @@ addresses.zenny_save2           = 0x02009F78; -- 4 bytes
 
 ---------------------------------------- ROM  08000000-09FFFFFF ----------------------------------------
 
--- None
+addresses.interruptNames1       = 0x0801EF32; -- From NMarkro
+addresses.interruptNames2       = 0x0801EFC6; -- From NMarkro
+
+addresses.interruptMusic1       = 0x08002FC6; -- mute intro  music (From NMarkro)
+addresses.interruptMusic2       = 0x0804A2DE; -- mute battle music (From NMarkro)
+
+---------------------------------------- BCCplaysBCC Functions ----------------------------------------
+
+local function getNavi(is_left)
+    if is_left then
+        return tournament[16 - (memory.read_u16_le(0x0B824) - 0x2070)]
+    else
+        return tournament[16 - (memory.read_u16_le(0x0B826) - 0x2070)]
+    end
+end
+
+local function writeNavis()
+    codes = loadTournament()
+    if codes == nil then
+        return
+    end
+    for i = 0, 15 do
+        code = tournament[i + 1]
+        memory.writebyte(0x086F0 - 28 * i + 0, code.navi[0])   -- Operator
+        memory.writebyte(0x086F0 - 28 * i + 1, code.navi[1])   -- Base Navi
+        for j = 1, 12 do                                       -- Chips
+            memory.writebyte(0x086F0 - 28 * i + 1 + j, code.navi[j])
+        end
+        writeString(0x086F0 - 28 * i + 14,  code.deckname, true, 4)
+        memory.writebyte(0x086F0 - 28 * i + 23, 0x80)          -- ???
+        memory.writebyte(0x086F0 - 28 * i + 24, code.navi[13]) -- Code type ???
+        memory.writebyte(0x086F0 - 28 * i + 25, 1)             -- Enabler ???
+     end
+end
 
 ---------------------------------------- Verion Dependent ----------------------------------------
 
