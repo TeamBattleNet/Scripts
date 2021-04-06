@@ -8,6 +8,15 @@ hud.version = hud.version .. ".0.0";
 
 hud.game = require("BCC/Game");
 
+-- https://www.twitch.tv/videos/152857527
+-- https://www.therockmanexezone.com/ncgen/
+-- Show name above text box (& program deck?)
+-- Show slot in % target
+-- Show win % prediction? (use in game function?)
+-- How to change music?
+-- Separate window with tournament info?
+-- ROM hacking? Randomizer?
+
 ---------------------------------------- Display Functions ----------------------------------------
 
 function hud.display_RNG(and_value) -- overridding
