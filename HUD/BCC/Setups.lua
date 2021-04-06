@@ -14,5 +14,17 @@ setups.add_setup(setups.group_misc, "TEST BUTTONS", function()
     setups.press_buttons( 1, "PRESS START", {Start=true});
 end);
 
+local group_folders = setups.create_group("Folder Edits");
+
+setups.add_setup(group_folders, "Folder  0: Remove All Chips", function()
+    for i=1,30 do
+        setups.folder_edit_buttons({
+            {A=true};
+            {A=true};
+            {Down=true};
+        });
+    end
+end);
+
 return setups.groups;
 

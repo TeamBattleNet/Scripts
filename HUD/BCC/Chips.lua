@@ -2,7 +2,7 @@
 
 -- https://docs.google.com/spreadsheets/d/18qUmXQP_w6g7Guy_fpzaCCWph17cxSetR29n5WOxXKI/pubhtml
 
-local chips = {};
+local chips = require("All/Chips");
 
 chips.names = {};
 chips.names[ -1] = "-";
@@ -197,38 +197,59 @@ chips.names[187] = "MetalStage";
 chips.names[188] = "Geddon";
 chips.names[189] = "PanelOut";
 chips.names[190] = "Repair";
-
-function chips.get_random_code()
-    return math.random(0,25);
-end
-
-local function get_valid(first_ID, last_ID)
-    local ID = nil;
-    while not chips.names[ID] do
-        ID = math.random(first_ID,last_ID);
-    end
-    return ID;
-end
-
-function chips.get_random_ID_standard()
-    return get_valid(  1,   3);
-end
-
-function chips.get_random_ID_mega()
-    return get_valid(  1,   3);
-end
-
-function chips.get_random_ID_all_chips()
-    return get_valid(  1,   3);
-end
-
-function chips.get_random_ID_PA()
-    return get_valid(  1,   3);
-end
-
-function chips.get_random_ID_all()
-    return get_valid(  1,   3);
-end
+chips.names[191] = "DataChp1";
+chips.names[192] = "DataChp2";
+chips.names[193] = "DataChp3";
+chips.names[194] = "DataChp4";
+chips.names[195] = "MegaMan";
+chips.names[196] = "Roll";
+chips.names[197] = "GutsMan";
+chips.names[198] = "ProtoMan";
+chips.names[199] = "TurboMan";
+chips.names[200] = "Ring";
+chips.names[201] = "BassGS";
+chips.names[202] = "Bass";
+chips.names[203] = "TBD";
+chips.names[204] = "TBD";
+chips.names[205] = "TBD";
+chips.names[206] = "TBD";
+chips.names[207] = "TBD";
+chips.names[208] = "TBD";
+chips.names[209] = "TBD";
+chips.names[210] = "TBD";
+chips.names[211] = "TBD";
+chips.names[212] = "TBD";
+chips.names[213] = "TBD";
+chips.names[214] = "TBD";
+chips.names[215] = "TBD";
+chips.names[216] = "TBD";
+chips.names[217] = "TBD";
+chips.names[218] = "TBD";
+chips.names[219] = "TBD";
+chips.names[220] = "TBD";
+chips.names[221] = "TBD";
+chips.names[222] = "TBD";
+chips.names[223] = "TBD";
+chips.names[224] = "TBD";
+chips.names[225] = "TBD";
+chips.names[226] = "TBD";
+chips.names[227] = "TBD";
+chips.names[228] = "TBD";
+chips.names[229] = "TBD";
+chips.names[230] = "TBD";
+chips.names[231] = "TBD";
+chips.names[232] = "TBD";
+chips.names[233] = "TBD";
+chips.names[234] = "NormNav1";
+chips.names[235] = "NormNav2";
+chips.names[236] = "NormNav3";
+chips.names[237] = "NormNav4";
+chips.names[238] = "NormNav5";
+chips.names[239] = "TBD";
+chips.names[240] = "TBD";
+chips.names[241] = "TBD";
+chips.names[242] = "TBD";
+chips.names[243] = "NormNavX";
 
 return chips;
 

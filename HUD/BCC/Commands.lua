@@ -1,33 +1,17 @@
 -- Commands for BCC scripting, enjoy.
 
-local commands = {}; -- Menu, Flags, Battle, Items, RNG
-
-commands.commands = {}; -- the final group for use in Controls.lua
+local commands = require("All/Commands"); -- Menu, Flags, Battle, Items, RNG, Progress, Real, Digital, Setups
 
 commands.game = require("BCC/Game");
+commands.setup_groups = require("BCC/Setups");
 
----------------------------------------- Menu ----------------------------------------
+for i,command in pairs(commands.general) do
+    if command.update_options then
+        command.update_options();
+    end
+end
 
-local settings = require("All/Settings");
-
-local command_menu = {};
-command_menu.selection = 1;
-command_menu.description = function() return "Welcome to the Command list!"; end;
-command_menu.options = {
-    { value = function() return; end; text = "Use Up or Down to change Options!"; };
-    { value = function() return; end; text = "Right or Left to change Commands!"; };
-    { value = function() return; end; text = "Use the controller or a keyboard!"; };
-    { value = function() settings.set_display_text("gui");   end; text = "Font Text: gui.text"   ; };
-    { value = function() settings.set_display_text("gens");  end; text = "Font Text: Pixel gens" ; };
-    { value = function() settings.set_display_text("fceux"); end; text = "Font Text: Pixel fceux"; };
-    { value = function() settings.set_text_background(0x00000000); end; text = "Font Background: None" ; };
-    { value = function() settings.set_text_background(0x40000000); end; text = "Font Background: Light"; };
-    { value = function() settings.set_text_background(0x80000000); end; text = "Font Background: Half" ; };
-    { value = function() settings.set_text_background(0xC0000000); end; text = "Font Background: Dark" ; };
-    { value = function() settings.set_text_background(0xFF000000); end; text = "Font Background: Solid"; };
-};
-command_menu.doit = function(value) value(); end;
-table.insert(commands.commands, command_fun_flags);
+table.insert(commands.commands, commands.general.command_menu);
 
 ---------------------------------------- Flags ----------------------------------------
 
@@ -45,7 +29,8 @@ command_fun_flags.selection = 1;
 command_fun_flags.description = function() return "These Fun Flags Are:"; end;
 function command_fun_flags.update_options(option_value)
     command_fun_flags.options = {};
-    table.insert( command_fun_flags.options, fun_flag_helper("randomize_colors", "Randomize Color Palette") );
+    table.insert( command_fun_flags.options, fun_flag_helper("is_routing"         , "Display Routing Messages"  ) );
+    table.insert( command_fun_flags.options, fun_flag_helper("randomize_colors"   , "Randomize Color Palette"   ) );
 end
 command_fun_flags.update_options();
 function command_fun_flags.doit(value)
@@ -60,7 +45,8 @@ local command_battle = {};
 command_battle.selection = 1;
 command_battle.description = function() return "Battle Options:"; end;
 command_battle.options = {
-    { value = function() commands.game.kill_enemy(); end; text = "Delete Enemy"; };
+    { value = function() commands.game.kill_enemy(1); end; text = "Delete Left"  ; };
+    { value = function() commands.game.kill_enemy(2); end; text = "Delete Right" ; };
 };
 command_battle.doit = function(value) value(); end;
 table.insert(commands.commands, command_battle);
@@ -76,7 +62,7 @@ function command_items.update_options(option_value)
     if not option_value then
         command_items.selection = command_items.sub_selection;
         command_items.description = function() return "What will U buy?"; end;
-        table.insert( command_items.options, { value = 1; text = "Zenny"; } );
+        table.insert( command_items.options, { value = 1; text = "Zenny" ; } );
     else
         command_items.sub_selection = command_items.selection;
         command_items.selection = 1;
@@ -119,7 +105,7 @@ function command_routing.update_options(option_value)
         command_routing.selection = command_routing.sub_selection;
         command_routing.description = function() return "Wanna see some RNG manip?"; end;
         table.insert( command_routing.options, { value = 1; text = "Main RNG Index"; } );
-        table.insert( command_routing.options, { value = 2; text = "Flag Flipper"  ; } );
+        table.insert( command_routing.options, { value = 3; text = "Flag Flipper"  ; } );
     else
         command_routing.sub_selection = command_routing.selection;
         command_routing.selection = 1;
@@ -137,7 +123,7 @@ function command_routing.update_options(option_value)
             command_routing.FUNction = function(value) commands.game.adjust_main_RNG(value); end;
         elseif option_value == 2 then
             command_routing.description = function() return "Bits, Nibbles, Bytes, and Words."; end;
-            table.insert( command_routing.options, { value = commands.game.reset_main_RNG; text = "Restart Main RNG"; } );
+            table.insert( command_routing.options, { value = commands.game.reset_main_RNG; text = "Restart Main RNG" ; } );
             command_routing.FUNction = function(value) value(); end;
         else
             command_routing.description = function() return "Bzzt! (something broke)"; end;
@@ -155,6 +141,9 @@ end
 table.insert(commands.commands, command_routing);
 
 ---------------------------------------- Module ----------------------------------------
+
+table.insert(commands.commands, commands.general.command_progress);
+table.insert(commands.commands, commands.general.command_setups);
 
 return commands.commands;
 

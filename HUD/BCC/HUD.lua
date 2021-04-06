@@ -10,7 +10,7 @@ hud.game = require("BCC/Game");
 
 ---------------------------------------- Display Functions ----------------------------------------
 
-function hud.display_RNG(and_value) -- for BN1 & BN2
+function hud.display_RNG(and_value) -- overridding
     if and_value then
         hud.to_screen(string.format("RNG:  0x%04X", hud.game.get_main_RNG_value()));
     end
@@ -21,6 +21,8 @@ end
 ---------------------------------------- HUD Modes ----------------------------------------
 
 local function HUD_auto()
+    --hud.set_position(1, 17);
+    --hud.set_offset(8, 0);
     if true or hud.game.in_title() then
         hud.display_RNG(true);
     else
