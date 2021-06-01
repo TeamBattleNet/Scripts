@@ -81,6 +81,9 @@ addresses.enemy[3].HP_text      = 0x0203E5EA;
 
 ---------------------------------------- ROM  08000000-09FFFFFF ----------------------------------------
 
+addresses.wireless_adapter_US   = 0x080308CB; -- set to 0xE0
+addresses.wireless_adapter_JP   = 0x08030867; -- set to 0xE0
+
 ---------------------------------------- Verion Dependent ----------------------------------------
 
 -- A0 A1 A2 A3 A4 A5 A6 A7 A8 A9 AA AB AC AD AE AF - ROM Address

@@ -237,6 +237,8 @@ addresses.enemy[3].HP_max       = 0x02037512; -- 2 bytes, for healing?
 
 ---------------------------------------- Verion Dependent ----------------------------------------
 
+addresses.main_loop             = 0x080002B4; -- series of instructions, easy to break
+
 -- A0 A1 A2 A3 A4 A5 A6 A7 A8 A9 AA AB AC AD AE AF - ROM Address
 -- 52 4F 43 4B 4D 41 4E 5F 45 58 45 33 41 36 42 4A - ROCKMAN_EXE3A6BJ - JP  White
 -- 52 4F 43 4B 5F 45 58 45 33 5F 42 4B 41 33 58 4A - ROCK_EXE3_BKA3XJ - JP  Black
