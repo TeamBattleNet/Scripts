@@ -87,6 +87,7 @@ addresses.navi_cust             = 0x02001D90; -- 1 byte per square, value is pro
 addresses.navi_cust_commands    = 0x02001D9A; -- 1 byte per square, value is program index, the 5 command tiles
 
 addresses.next_element          = 0x02001DBB; -- 1 byte, next element
+addresses.library_anti_cheat    = 0x02001DC3; -- 1 byte, write 0xFF to fix flashcart bug - mars
 addresses.battle_count          = 0x02001DCA; -- 1 byte, number of battles since last style change
 addresses.play_time_frames      = 0x02001DD0; -- 4 bytes, check for skipped frames
 addresses.steps                 = 0x02001DDC; -- 4 bytes
