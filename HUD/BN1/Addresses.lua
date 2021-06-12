@@ -205,6 +205,8 @@ addresses.enemy[3].ID           = 0x02003776; -- 1 byte
 -- 4713 animation timer
 -- 4718 dog know
 
+addresses.battle_object_spawns  = 0x02004890; -- 1 bit each, which battle objects are allocated
+
 -- 4904 & 4906 fade in and out
 
 addresses.battle_draw_slots     = 0x02004910; -- 1 byte each, in battle chip draws, ends at 492D
@@ -279,6 +281,7 @@ addresses.shop_cursor_offset    = 0x02006619; -- 1 byte
 addresses.chip_cooldown         = 0x02006719; -- 1 byte, BstrBomb HYPE
 
 addresses.enemy[1].HP           = 0x02006790; -- 2 bytes, which_enemy * 0xC0
+addresses.boss_object_reference = 0x020067E0; -- 1 byte, ProtoMan charge attack object reference
 addresses.enemy[2].HP           = 0x02006850; -- 2 bytes, which_enemy * 0xC0
 addresses.enemy[3].HP           = 0x02006910; -- 2 bytes, which_enemy * 0xC0
 
