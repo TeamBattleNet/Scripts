@@ -39,6 +39,10 @@ game.game_state_names[0x28] = "Shop";
 game.game_state_names[0x2C] = "Liberation Init";
 game.game_state_names[0x30] = "Chip Trader";
 
+function game.did_leave_battle()
+    return (game.did_game_state_change() and game.previous_game_state == 0x0C);
+end
+
 function game.in_liberation()
     return game.ram.get.game_state() == game.state.liberation;
 end
@@ -150,6 +154,195 @@ end
 
 if game.on_spawn_gmds and game.ram.addr.gmd_function then
     event.onmemoryexecute(game.on_spawn_gmds, game.ram.addr.gmd_function);
+end
+
+---------------------------------------- ACE Shenanigans ----------------------------------------
+
+function game.check_crossover_data(payload, log_data)
+    local name = game.ram.get.crossover_name();
+    local desc1 = game.ram.get.crossover_desc_1();
+    local desc2 = game.ram.get.crossover_desc_2();
+    local desc3 = game.ram.get.crossover_desc_3();
+
+    if name == payload.name and desc1 == payload.desc1 and desc2 == payload.desc2 and desc3 == payload.desc3 then
+        return true;
+    else
+        if log_data then
+            if name ~= payload.name then
+                if name == 0 then
+                    print("Payload name is all 0s. This likely means you have not loaded the payload. Enter the Crossover Battle menu from the title screen, enter the first menu, then back out.");
+                else
+                    print(string.format("Payload name data is incorrect. Expected: %08x, Actual: %08x", payload.name, name));
+                end
+            end
+
+            if desc1 ~= payload.desc1 or desc2 ~= payload.desc2 or desc3 ~= payload.desc3 then
+                if desc1 == 0 and desc2 == 0 and desc3 == 0 then
+                    print("Payload description is all 0s. This likely means you have not loaded the payload. Enter the Crossover Battle menu from the title screen, enter the first menu, then back out.");
+                else
+                    print(string.format("Payload description data is incorrect. Expected: %08x%08x%08x, Actual: %08x%08x%08x", payload.desc1, payload.desc2, payload.desc3, desc1, desc2, desc3));
+                end
+            end
+        end
+    end
+
+    if log_data then
+        print("");
+    end
+
+    return false;
+end
+
+function game.is_safe_chip(chip_id)
+    if chip_id < 0x00E6 or chip_id > 0x00FF then
+        return true;
+    end
+
+    return false;
+end
+
+function game.is_safe_damage(chip_damage)
+    if chip_damage < 0x00E6 or chip_damage > 0x00FF then
+        return true;
+    end
+
+    return false;
+end
+
+function game.check_knightman_hand_buffer(log_data)
+    local chip_id_1 = game.ram.get.hand_buffer_chip_id_1();
+    local chip_id_2 = game.ram.get.hand_buffer_chip_id_2();
+    local chip_id_3 = game.ram.get.hand_buffer_chip_id_3();
+    local chip_id_4 = game.ram.get.hand_buffer_chip_id_4();
+    local chip_id_5 = game.ram.get.hand_buffer_chip_id_5();
+
+    local chip_damage_1 = game.ram.get.hand_buffer_chip_damage_1();
+    local chip_damage_2 = game.ram.get.hand_buffer_chip_damage_2();
+    local chip_damage_3 = game.ram.get.hand_buffer_chip_damage_3();
+    local chip_damage_4 = game.ram.get.hand_buffer_chip_damage_4();
+    local chip_damage_5 = game.ram.get.hand_buffer_chip_damage_5();
+
+    -- First, check chip IDs are correct for KnightManSP 240 setup.
+    if game.is_safe_chip(chip_id_1) and chip_id_2 == 0x00FF and chip_id_3 == 0x0100 and game.is_safe_chip(chip_id_4) and chip_id_5 == 0x00FE then
+        -- Verify the damage values are correct
+        if chip_damage_1 == 0x0000 and chip_damage_2 == 0x00F0 and chip_damage_3 == 0x00DC and game.is_safe_damage(chip_damage_4) and chip_damage_5 == 0x00AA then
+            return true;
+        else
+            if log_data then
+                print("Hand Buffer is wrong: Damage values are wrong. Expected damage values below (Note: XXXX can be any chip damage less than 230 or greater than 255).");
+                print("0000 00F0 00DC XXXX 00AA");
+                print("Actual Chip Damage.");
+                print(string.format("%04x %04x %04x %04x %04x", chip_damage_1, chip_damage_2, chip_damage_3, chip_damage_4, chip_damage_5));
+            end
+        end
+    -- If KnightManSP 240 damage setup isn't correct, check chip IDs are correct for KnightManSP 220 setup.
+    elseif game.is_safe_chip(chip_id_1) and chip_id_2 == 0x0100 and chip_id_3 == 0x00FF and chip_id_4 == 0x0001 and chip_id_5 == 0x00FE then
+        -- If KnightManSP 240 damage setup isn't correct, check chip IDs are correct for KnightManSP 220 setup.
+        -- Verify the damage values are correct
+        if chip_damage_1 == 0x0000 and chip_damage_2 == 0x00F0 and chip_damage_3 == 0x00DC and game.is_safe_damage(chip_damage_4) and chip_damage_5 == 0x00AA then
+            return true;
+        else
+            if log_data then
+                print("Hand Buffer is wrong: Damage values are wrong. Expected damage values below (Note: XXXX can be any chip damage less than 230 or greater than 255).");
+                print("0000 00F0 00DC XXXX 00AA");
+                print("Actual Chip Damage.");
+                print(string.format("%04x %04x %04x %04x %04x", chip_damage_1, chip_damage_2, chip_damage_3, chip_damage_4, chip_damage_5));
+            end
+        end
+    else
+        if log_data then
+            print("Hand Buffer is wrong: Chips were not selected in the right order. Expected order listed below (Note: XXXX can be any chip ID less than 230 or greater than 255).");
+            print("Chip ID order for KnightMan SP 240 damage.");
+            print("XXXX 00FF 0100 XXXX 00FE");
+            print("Chip ID order for KnightMan SP 240 damage.");
+            print("XXXX 0100 00FF 0001 00FE");
+            print("Actual Chip ID order.");
+            print(string.format("%04x %04x %04x %04x %04x", chip_id_1, chip_id_2, chip_id_3, chip_id_4, chip_id_5));
+        end
+    end
+
+    if log_data then
+        print("");
+    end
+
+    -- If both cases are incorrect, the hand buffer setup is bad. Return false
+    return false;
+end
+
+function game.check_hand_buffer(type, log_data)
+    if type == "KnightMan" then
+        return game.check_knightman_hand_buffer(log_data)
+    end
+end
+
+function game.check_guardian_combo(log_data)
+    local dark_mega_ai_combo = game.ram.get.dark_mega_ai_combo_1();
+
+    if dark_mega_ai_combo == 0x00CB00FC then
+        return true;
+    else
+        if log_data then
+            -- Check if Guardian is the first chip. If it is, then verify the X Y coordinates.
+            if game.ram.get.dark_mega_ai_combo_1_chip_id_1() ~= 0x00CB then
+                print("Guardian Combo is wrong: Chip 1 in the top combo is not Guardian.");
+
+                -- If Guardian is not the first chip, check other combos to see if the Guardian combo is not the top combo.
+                if game.ram.get.dark_mega_ai_combo_2_chip_id_1() == 0x00CB then
+                    print("Noticed that Guardian combo is in the list, but not the top combo. Either another combo has been done more often, or a different combo has been done more recently. Try doing the combo again.");
+                end
+
+                if game.ram.get.dark_mega_ai_combo_3_chip_id_1() == 0x00CB then
+                    print("Noticed that Guardian combo is in the list, but not the top combo. Either another combo has been done more often, or a different combo has been done more recently. Try doing the combo again.");
+                end
+
+                if game.ram.get.dark_mega_ai_combo_4_chip_id_1() == 0x00CB then
+                    print("Noticed that Guardian combo is in the list, but not the top combo. Either another combo has been done more often, or a different combo has been done more recently. Try doing the combo again.");
+                end
+
+                if game.ram.get.dark_mega_ai_combo_5_chip_id_1() == 0x00CB then
+                    print("Noticed that Guardian combo is in the list, but not the top combo. Either another combo has been done more often, or a different combo has been done more recently. Try doing the combo again.");
+                end
+            else
+                if game.ram.get.dark_mega_ai_combo_1_x() ~= -4 then
+                    print("Guardian Combo is wrong: X position is wrong. Expected: " .. -4 .. ", Actual: " .. game.ram.get.dark_mega_ai_combo_1_x());
+                end
+
+                if game.ram.get.dark_mega_ai_combo_1_y() ~= 0 then
+                    print("Guardian Combo is wrong: Y position is wrong. Expected: " .. 0 .. ", Actual: " .. game.ram.get.dark_mega_ai_combo_1_y());
+                end
+            end
+
+            print("");
+        end
+    end
+
+    return false;
+end
+
+function game.check_navi_stats(expected_curr_hp, expected_max_hp, expected_karma, log_data)
+    local curr_hp = game.ram.get.navi_stats_buffer_curr_hp();
+    local max_hp = game.ram.get.navi_stats_buffer_max_hp();
+    local karma = game.ram.get.navi_stats_buffer_karma();
+
+    if curr_hp == expected_curr_hp and max_hp == expected_max_hp and karma == expected_karma then
+        return true;
+    else
+        if log_data then
+            if curr_hp ~= expected_curr_hp then
+                print("Current HP in buffer is wrong. Expected: " .. expected_curr_hp .. ", Actual: " .. curr_hp);
+            end
+            if max_hp ~= expected_max_hp then
+                print("Max HP in buffer is wrong. Expected: " .. expected_max_hp .. ", Actual: " .. max_hp);
+            end
+            if karma ~= expected_karma then
+                print("Karma in buffer is wrong. Expected: " .. expected_karma .. ", Actual: " .. karma);
+            end
+
+            print("");
+        end
+    end
+
+    return false;
 end
 
 ---------------------------------------- Module Controls ----------------------------------------

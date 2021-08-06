@@ -231,13 +231,13 @@ function game.did_magic_byte_change()
     return game.ram.get.magic_byte() ~= previous_magic_byte;
 end
 
-local previous_game_state = 0x00;
+game.previous_game_state = 0x00;
 function game.did_game_state_change()
-    return game.ram.get.game_state() ~= previous_game_state;
+    return game.ram.get.game_state() ~= game.previous_game_state;
 end
 
 function game.did_leave_title_screen()
-    return (game.did_game_state_change() and previous_game_state == 0x00);
+    return (game.did_game_state_change() and game.previous_game_state == 0x00);
 end
 
 local previous_battle_state = 0x00;
@@ -354,7 +354,7 @@ end
 function game.track_game_state()
     previous_progress       = game.ram.get.progress();
     previous_magic_byte     = game.ram.get.magic_byte();
-    previous_game_state     = game.ram.get.game_state();
+    game.previous_game_state     = game.ram.get.game_state();
     previous_battle_state   = game.ram.get.battle_state();
     previous_battle_pointer = game.ram.get.battle_pointer();
     previous_menu_mode      = game.ram.get.menu_mode();

@@ -30,6 +30,10 @@ ram.set.enemy[2].ID = function(enemy_ID) memory.write_u16_le(ram.addr.enemy[2].I
 ram.get.enemy[3].ID = function() return memory.read_u16_le(ram.addr.enemy[3].ID); end;
 ram.set.enemy[3].ID = function(enemy_ID) memory.write_u16_le(ram.addr.enemy[3].ID, enemy_ID); end;
 
+function ram.get.curr_hp() return memory.read_u16_le(ram.addr.curr_HP) end
+function ram.get.max_hp() return memory.read_u16_le(ram.addr.max_HP) end
+function ram.get.karma() return memory.read_u16_le(ram.addr.karma) end
+
 ---------------------------------------- RAMsacking ----------------------------------------
 
 function ram.use_fun_flags(fun_flags)
@@ -190,6 +194,51 @@ function ram.shuffle_folder_simulate_from_value(RNG_value, swaps)
 
     return ram.draw_slots;
 end
+
+---------------------------------------- ACE Shenanigans ----------------------------------------
+
+function ram.get.crossover_name() return memory.read_u32_le (ram.addr.crossover_name); end
+function ram.get.crossover_desc_1() return memory.read_u32_le (ram.addr.crossover_desc); end
+function ram.get.crossover_desc_2() return memory.read_u32_le (ram.addr.crossover_desc + 0x04); end
+function ram.get.crossover_desc_3() return memory.read_u32_le (ram.addr.crossover_desc + 0x08); end
+
+function ram.get.hand_buffer_chip_id_1() return memory.read_u16_le(ram.addr.hand_buffer); end
+function ram.get.hand_buffer_chip_id_2() return memory.read_u16_le(ram.addr.hand_buffer + 0x02); end
+function ram.get.hand_buffer_chip_id_3() return memory.read_u16_le(ram.addr.hand_buffer + 0x04); end
+function ram.get.hand_buffer_chip_id_4() return memory.read_u16_le(ram.addr.hand_buffer + 0x06); end
+function ram.get.hand_buffer_chip_id_5() return memory.read_u16_le(ram.addr.hand_buffer + 0x08); end
+
+function ram.get.hand_buffer_chip_damage_1() return memory.read_u16_le(ram.addr.hand_buffer + 0x0C); end
+function ram.get.hand_buffer_chip_damage_2() return memory.read_u16_le(ram.addr.hand_buffer + 0x0E); end
+function ram.get.hand_buffer_chip_damage_3() return memory.read_u16_le(ram.addr.hand_buffer + 0x10); end
+function ram.get.hand_buffer_chip_damage_4() return memory.read_u16_le(ram.addr.hand_buffer + 0x12); end
+function ram.get.hand_buffer_chip_damage_5() return memory.read_u16_le(ram.addr.hand_buffer + 0x14); end
+
+function ram.get.dark_mega_ai_combo_1() return memory.read_u32_le(ram.addr.dark_mega_ai_combos) end
+function ram.get.dark_mega_ai_combo_1_x() return memory.read_s8(ram.addr.dark_mega_ai_combos) end
+function ram.get.dark_mega_ai_combo_1_y() return memory.read_s8(ram.addr.dark_mega_ai_combos + 0x01) end
+function ram.get.dark_mega_ai_combo_1_chip_id_1() return memory.read_u16_le(ram.addr.dark_mega_ai_combos + 0x02) end
+
+function ram.get.dark_mega_ai_combo_2_x() return memory.read_s8(ram.addr.dark_mega_ai_combos + 0x10) end
+function ram.get.dark_mega_ai_combo_2_y() return memory.read_s8(ram.addr.dark_mega_ai_combos + 0x11) end
+function ram.get.dark_mega_ai_combo_2_chip_id_1() return memory.read_u16_le(ram.addr.dark_mega_ai_combos + 0x12) end
+
+function ram.get.dark_mega_ai_combo_3_x() return memory.read_s8(ram.addr.dark_mega_ai_combos + 0x20) end
+function ram.get.dark_mega_ai_combo_3_y() return memory.read_s8(ram.addr.dark_mega_ai_combos + 0x21) end
+function ram.get.dark_mega_ai_combo_3_chip_id_1() return memory.read_u16_le(ram.addr.dark_mega_ai_combos + 0x22) end
+
+function ram.get.dark_mega_ai_combo_4_x() return memory.read_s8(ram.addr.dark_mega_ai_combos + 0x30) end
+function ram.get.dark_mega_ai_combo_4_y() return memory.read_s8(ram.addr.dark_mega_ai_combos + 0x31) end
+function ram.get.dark_mega_ai_combo_4_chip_id_1() return memory.read_u16_le(ram.addr.dark_mega_ai_combos + 0x32) end
+
+function ram.get.dark_mega_ai_combo_5_x() return memory.read_s8(ram.addr.dark_mega_ai_combos + 0x40) end
+function ram.get.dark_mega_ai_combo_5_y() return memory.read_s8(ram.addr.dark_mega_ai_combos + 0x41) end
+function ram.get.dark_mega_ai_combo_5_chip_id_1() return memory.read_u16_le(ram.addr.dark_mega_ai_combos + 0x42) end
+
+function ram.get.navi_stats_buffer_base_hp() return memory.read_u16_le(ram.addr.navi_stats); end
+function ram.get.navi_stats_buffer_curr_hp() return memory.read_u16_le(ram.addr.navi_stats + 0x02); end
+function ram.get.navi_stats_buffer_max_hp() return memory.read_u16_le(ram.addr.navi_stats + 0x04); end
+function ram.get.navi_stats_buffer_karma() return memory.read_u16_le(ram.addr.navi_stats + 0x06); end
 
 ---------------------------------------- Module Controls ----------------------------------------
 
