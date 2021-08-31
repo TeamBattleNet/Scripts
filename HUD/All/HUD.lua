@@ -47,11 +47,11 @@ local function record_menu_buttons()
         end
         
         if buttons.down.Left then
-            buttons_string = buttons_string .. " >"; -- ← ◄
+            buttons_string = buttons_string .. " <"; -- ← ◄
         end
         
         if buttons.down.Right then
-            buttons_string = buttons_string .. " <"; -- → ►
+            buttons_string = buttons_string .. " >"; -- → ►
         end
         
         if buttons.down.Start then
