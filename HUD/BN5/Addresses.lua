@@ -57,7 +57,9 @@ addresses.offset_pack           = 0x02009A5E; -- TBD
 
 addresses.GMD_value             = 0x0200AC24;
 
-addresses.base_HP               = 0x02034EFE; -- wrong?
+addresses.base_HP               = 0x020052E6;
+addresses.curr_HP               = 0x020052E8; -- 2 bytes, updates after battle_custom_gauge
+addresses.max_HP                = 0x020052EA; -- 2 bytes
 addresses.run_count             = 0x02034E18;
 
 addresses.reg_slot              = 0x02005336;
@@ -76,6 +78,16 @@ addresses.mega_mood             = 0x0203C88E;
 addresses.enemy[1].HP_text      = 0x0203E5C2;
 addresses.enemy[2].HP_text      = 0x0203E5D6;
 addresses.enemy[3].HP_text      = 0x0203E5EA;
+
+-- Important addresses for ACE
+addresses.crossover_name        = 0x0200B05C; -- 4 bytes
+addresses.crossover_desc      =   0x0200B06C; -- 12 bytes
+
+addresses.dark_mega_ai_combos   = 0x02000000; -- First 2 byte are X and Y positions relative to enemy. Then 2 byte increments for each chip ID in the combo. Every 16 bytes is a new combo, stores ?? combos
+
+addresses.hand_buffer           = 0x02033000; -- First 10 bytes are 5 chip IDs (2 bytes each), 2 byte buffer, then 10 bytes of damage (2 bytes each)
+
+addresses.navi_stats            = 0x0203C7C2; -- 8 bytes? First 2 are base HP, then curr HP, then max HP, then karma. Stored upon entering a fight.
 
 -- 0x0203FFFF end of WRAM
 

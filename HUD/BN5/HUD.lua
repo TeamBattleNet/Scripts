@@ -8,6 +8,9 @@ hud.version = hud.version .. ".0.0";
 
 hud.game = require("BN5/Game");
 
+local ase_setups = require("BN5/ASE_Setups");
+local curr_ase_setup = 1;
+
 local total_fights = 0;
 
 ---------------------------------------- Display Functions ----------------------------------------
@@ -99,6 +102,121 @@ local function HUD_gmds()
     end
 end
 
+local log_data = true;
+local init_message = true;
+local swap_setups = true;
+local function HUD_ACE()
+    if init_message then
+        print("Welcome to the ACE HUD! To change which setup you would like to practice, press the Spacebar.\n");
+        init_message = false;
+    end
+
+    local keys = input.get();
+
+    if keys.Space then
+        if swap_setups then
+            curr_ase_setup = curr_ase_setup + 1;
+            if curr_ase_setup > table.getn(ase_setups) then
+                curr_ase_setup = 1;
+            end
+            log_data = true;
+            swap_setups = false;
+        end
+    else
+        swap_setups = true;
+    end
+
+    local ase_setup = ase_setups[curr_ase_setup];
+
+    if hud.game.did_leave_battle() then
+        log_data = true;
+    end
+
+    local hand_buffer = false;
+    local guardian_combo = false;
+    local navi_stats = false;
+    local payload = false;
+
+    if hud.game.in_battle() or hud.game.in_game_over() then
+        if hud.game.did_game_state_change() then
+            hud.game.simulate_folder_shuffle()
+        end
+        if hud.game.in_combat() then
+            hud.set_position(2, 17);
+            hud.to_screen(string.format("Fight:  0x%04X", hud.game.get_battle_pointer()));
+            hud.display_both_RNG();
+        else
+            hud.set_position(2, 25);
+            hud.display_draws(9);
+            hud.set_offset(8, 0);
+            hud.display_both_RNG();
+            hud.to_screen("");
+            hud.to_screen(string.format("Run %%: %6.2f%%", hud.game.get_run_chance()));
+            --hud.to_screen(string.format("M-Boomer: %4i", hud.game.find_first(138)));
+            hud.to_screen(string.format("Checks: %6u", hud.game.get_encounter_checks()));
+            hud.to_screen(string.format("%%: %10.3f%%", 100-hud.game.get_current_percent()));
+        end
+        hud.display_enemies();
+    else
+        hud.set_position(108, 126);
+        if hud.game.check_hand_buffer(ase_setup.hand_buffer, log_data) then
+            hud.to_screen("Hand Buffer:     Correct!");
+            hand_buffer = true;
+        else
+            hud.to_screen("Hand Buffer:     Incorrect");
+        end
+
+        -- Check other Guardian combo, navi stats, and potentially payload if KnightMan hand buffer is required
+        if ase_setup.hand_buffer == "KnightMan" then
+            if hud.game.check_guardian_combo(log_data) then
+                hud.to_screen("Guardian Combo:  Correct!");
+                guardian_combo = true;
+            else
+                hud.to_screen("Guardian Combo:  Incorrect");
+            end
+
+            if hud.game.check_navi_stats(ase_setup.curr_hp, ase_setup.max_hp, ase_setup.karma, log_data) then
+                hud.to_screen("Navi Stats:      Correct!");
+                navi_stats = true;
+            else
+                hud.to_screen("Navi Stats:      Incorrect");
+            end
+
+            if ase_setup.type == "ACE" then
+                if hud.game.check_crossover_data(ase_setup.payload, log_data) then
+                    hud.to_screen("Payload:         Correct!");
+                    payload = true;
+                else
+                    hud.to_screen("Payload:         Incorrect");
+                end
+            else
+                payload = true;
+            end
+        else
+            guardian_combo = true;
+            navi_stats = true;
+            payload = true;
+        end
+
+        hud.set_position(2, 126);
+        hud.set_offset(0, 0);
+        hud.to_screen(string.format("Karma: %9d", hud.game.ram.get.karma()))
+        hud.to_screen(string.format("Current HP: %4d", hud.game.ram.get.curr_hp()))
+        hud.to_screen(string.format("Max HP: %8d", hud.game.ram.get.max_hp()))
+
+        hud.set_position(2, 0);
+        hud.set_offset(0, 0);
+        hud.to_screen("Currently verifying: " .. ase_setup.name);
+        if hand_buffer and guardian_combo and navi_stats and payload then
+            hud.to_screen("Expected Outcome: Success!");
+        else
+            hud.to_screen("Expected Outcome: Crash");
+        end
+    end
+
+    log_data = false;
+end
+
 local function HUD_auto()
     if hud.game.in_title() or hud.game.in_splash() or hud.game.in_transition() then
         hud.display_game_info();
@@ -167,6 +285,7 @@ table.insert(hud.HUDs, HUD_battle);
 table.insert(hud.HUDs, HUD_routing);
 table.insert(hud.HUDs, HUD_speedrun);
 table.insert(hud.HUDs, HUD_gmds);
+table.insert(hud.HUDs, HUD_ACE);
 
 ---------------------------------------- Module Controls ----------------------------------------
 
