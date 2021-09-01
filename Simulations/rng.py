@@ -66,22 +66,25 @@ def shuffle_folder_bn3(RNG_value=0x873CA9E4, reg_slot=255, swaps=30): # matches 
     return draw_slots
 #def
 
-def get_draw_slots_bn3(start_index, end_index, reg_slot=255):
+def get_draw_slots_bn3(start_index, end_index, reg_slot=255, one_index=False):
     draw_slots = {}
     RNG_value = iterate_RNG(0x873CA9E4, start_index-61)
     for index in range(start_index, end_index+1):
         draw_slots[index] = shuffle_folder_bn3(RNG_value, reg_slot)
+        if one_index:
+            draw_slots[index] = [slot+1 for slot in draw_slots[index]]
+        #if
         RNG_value = simulate_RNG(RNG_value)
     #for
     return draw_slots
 #def
 
 def print_draw_slots_bn3(start_index, end_index, reg_slot=255):
-    draw_frames = get_draw_slots_bn3(start_index, end_index, reg_slot)
+    draw_frames = get_draw_slots_bn3(start_index, end_index, reg_slot, True)
     for draw_frame in draw_frames:
         draw_string = f'{draw_frame:d}'
         for draw_slot in draw_frames[draw_frame]:
-            draw_string += f' {draw_slot+1:d}'
+            draw_string += f' {draw_slot:d}'
         #for
         print(draw_string)
     #for
@@ -90,11 +93,11 @@ def print_draw_slots_bn3(start_index, end_index, reg_slot=255):
 def print_draw_slots_log_bn3(start_index, end_index, reg_slot=255):
     print("####: 01 02 03 04 05 | 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30")
     print("---------------------+---------------------------------------------------------------------------")
-    draw_frames = get_draw_slots_bn3(start_index, end_index, reg_slot)
+    draw_frames = get_draw_slots_bn3(start_index, end_index, reg_slot, True)
     for draw_frame in draw_frames:
         draw_string = f'{draw_frame:04d}:'
         for draw_slot in draw_frames[draw_frame]:
-            draw_string += f' {draw_slot+1:02d}'
+            draw_string += f' {draw_slot:02d}'
         #for
         print(draw_string[:21] + "|" + draw_string[20:])
     #for
