@@ -48,9 +48,8 @@ def shuffle_folder_bn3(RNG_value=0x873CA9E4, reg_slot=255, swaps=30): # matches 
     if reg_slot != 255:
         slots -= 1
         reg_slot -= 1 # 0 index
-        draw_slots.pop(reg_slot)
-        for i in range(reg_slot):
-            draw_slots[i] += 1
+        draw_slots[reg_slot] = 0
+        draw_slots.pop(0)
         #for
     #if
     
