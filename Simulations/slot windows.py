@@ -7,7 +7,7 @@ do_print_parity = True
 min_depth = 1
 max_depth = 6
 
-RNG_start = 160
+RNG_start = 200
 RNG_end   = 400
 
 min_window_size = 1
@@ -115,9 +115,9 @@ def end_windows(windows, RNG_index):
 				
 				# all window
 				if windows[slot_set][0]["first"] != None and windows[slot_set][1]["first"] != None:
-					window_start = max(windows[slot_set][0]["first"], windows[slot_set][1]["first"])
-					# window_end same as above
-					window_size  = window_end - window_start + 1 # will be off by one both ways? add two?
+					window_start = max(windows[slot_set][0]["first"], windows[slot_set][1]["first"]) - 1
+					window_end   = min(windows[slot_set][0]["last" ], windows[slot_set][1]["last" ]) + 1
+					window_size  = window_end - window_start + 1
 					if window_size >= min_window_size:
 						print("All ", slot_set, " from ", window_start, " to ", window_end, " size ", window_size)
 					#if
@@ -159,10 +159,10 @@ def read_frames(lines):
 
 print("")
 print("Processing draws.txt ...")
-find_windows(read_frames(open("draws.txt", "r").readlines()))
+find_windows(read_frames(open("logs/draws.txt", "r").readlines()))
 
 print("")
 print("Processing draws reg.txt ...")
 min_depth = max(2, min_depth) # skip reg slot
-find_windows(read_frames(open("draws reg.txt", "r").readlines()))
+find_windows(read_frames(open("logs/draws reg.txt", "r").readlines()))
 
