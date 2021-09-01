@@ -1,16 +1,20 @@
 # Draw Slot Window Finder for Mega Man Battle Network routing by Tterraj42
 
+import rng
+
 import itertools
 
-do_print_parity = True
+do_print_parity = False
 
 min_depth = 1
 max_depth = 6
 
-RNG_start = 200
-RNG_end   = 400
+reg_slot  = 1
 
-min_window_size = 1
+RNG_start = 115
+RNG_end   = 500
+
+min_window_size = 30
 
 set_sizes = []
 set_sizes.append(1)
@@ -59,7 +63,7 @@ def get_slot_sets(frame):
 	slot_sets = []
 	# https://docs.python.org/3/library/itertools.html#itertools.combinations
 	for set_size in set_sizes:
-		for slot_set in itertools.combinations(sorted(frame[min_depth:max_depth+1]), set_size):
+		for slot_set in itertools.combinations(sorted(frame[min_depth-1:max_depth]), set_size):
 			if not any_slots or has_any_slot(slot_set):
 				if not all_slots or has_all_slots(slot_set):
 					slot_sets.append(slot_set)
@@ -103,7 +107,7 @@ def end_windows(windows, RNG_index):
 	parity = RNG_index % 2
 	for slot_set in windows:
 		if windows[slot_set][parity]["first"] != None:
-			if RNG_index - windows[slot_set][parity]["last"] > 2:
+			if RNG_index - windows[slot_set][parity]["last"] >= 2:
 				
 				# parity window
 				window_start = windows[slot_set][parity]["first"]
@@ -133,36 +137,23 @@ def end_windows(windows, RNG_index):
 def find_windows(frames):
 	windows  = {}
 	
-	for frame in frames:
-		RNG_index = int(frame[0])
-		
-		if RNG_index > RNG_end:
-			end_windows(windows, RNG_end+2)
-			return
-		#if
-		
-		if RNG_index >= RNG_start:
-			slot_sets = get_slot_sets(frame)
-			start_windows(windows, slot_sets, RNG_index)
-			update_windows(windows, slot_sets, RNG_index)
-			end_windows(windows, RNG_index)
-		#if
+	for RNG_index in frames:
+		slot_sets = get_slot_sets(frames[RNG_index])
+		start_windows(windows, slot_sets, RNG_index)
+		update_windows(windows, slot_sets, RNG_index)
+		end_windows(windows, RNG_index)
 	#for
-#def
-
-def read_frames(lines):
-	frames = []
-	for line in lines:
-		frames.append(line.split())
-	return frames
+	
+	end_windows(windows, RNG_end+3)
+	end_windows(windows, RNG_end+4)
 #def
 
 print("")
-print("Processing draws.txt ...")
-find_windows(read_frames(open("logs/draws.txt", "r").readlines()))
+print("Processing No Reg ...")
+find_windows(rng.get_draw_slots_bn3(RNG_start, RNG_end, 255, True))
 
 print("")
-print("Processing draws reg.txt ...")
+print("Processing Reg Slot ...")
 min_depth = max(2, min_depth) # skip reg slot
-find_windows(read_frames(open("logs/draws reg.txt", "r").readlines()))
+find_windows(rng.get_draw_slots_bn3(RNG_start, RNG_end, reg_slot, True))
 
