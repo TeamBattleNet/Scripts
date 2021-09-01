@@ -36,6 +36,43 @@ def calculate_RNG_delta(temp, goal):
     return delta
 #def
 
+def shuffle_folder_bn3(RNG_value=0x873CA9E4): # incorrect output
+    slots = 30
+    swaps = 30
+    
+    draw_slots = [n for n in range(slots)]
+    
+    #print(draw_slots)
+    
+    for i in range(swaps):
+        RNG_value = simulate_RNG(RNG_value)
+        slot_a = (RNG_value & 0x7FFFFFFF) % slots
+        RNG_value = simulate_RNG(RNG_value)
+        slot_b = (RNG_value & 0x7FFFFFFF) % slots
+        #print(f'swapping {slot_a:02d} and {slot_b:02d}')
+        draw_slots[slot_a], draw_slots[slot_b] = draw_slots[slot_b], draw_slots[slot_a]
+    #for
+    
+    #print(draw_slots)
+    
+    return draw_slots
+#def
+
+def print_draw_slots_bn3(target_index, reg_slot=255):
+    draw_slots = shuffle_folder_bn3(iterate_RNG(0x873CA9E4, target_index-60))
+    draw_string = str(target_index) + ":"
+    for draw_slot in draw_slots:
+        draw_string += f' {draw_slot+1:02d}'
+    #for
+    print(draw_string)
+#def
+
+test_index = 120
+print_draw_slots_bn3(test_index+0)
+print_draw_slots_bn3(test_index+2)
+print_draw_slots_bn3(test_index+4)
+print_draw_slots_bn3(test_index+6)
+
 def shuffle_folder_simulate_from_value(RNG_value, swaps, reg_slot):
     RNG_value = RNG_value or 0x873CA9E5
     swaps = swaps or 30 # 60 in BN1, 30 in the rest
