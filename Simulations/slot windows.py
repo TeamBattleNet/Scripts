@@ -4,17 +4,23 @@ import rng
 
 import itertools
 
-do_print_parity = False
-
 min_depth = 1
 max_depth = 6
-
 reg_slot  = 1
-
-RNG_start = 115
+RNG_start = 100
 RNG_end   = 500
-
 min_window_size = 30
+do_print_parity = False
+
+print("")
+print(f"Running with settings: ")
+print(f"reg_slot={reg_slot:d} min_depth={min_depth:d} max_depth={max_depth:d} min_window_size={min_window_size:d}")
+print("")
+
+# TODO constraints
+# limited copies of chip
+# index offset to current frame
+# gauntlets...
 
 set_sizes = []
 set_sizes.append(1)
@@ -58,6 +64,10 @@ def has_all_slots(slot_set):
 	#for
 	return True
 #def
+
+if reg_slot and reg_slot != 255:
+	min_depth = max(2, min_depth) # skip reg slot
+#if
 
 def get_slot_sets(frame):
 	slot_sets = []
@@ -134,7 +144,11 @@ def end_windows(windows, RNG_index):
 	#for
 #def
 
-def find_windows(frames):
+def find_windows(index_start, index_end, reg=255):
+	print(f"Searching for windows from {index_start:d} to {index_end:d}...")
+	
+	frames = rng.get_draw_slots_bn3(index_start, index_end, reg, True)
+	
 	windows  = {}
 	
 	for RNG_index in frames:
@@ -144,16 +158,17 @@ def find_windows(frames):
 		end_windows(windows, RNG_index)
 	#for
 	
-	end_windows(windows, RNG_end+3)
-	end_windows(windows, RNG_end+4)
+	# end any active windows on both parity
+	end_windows(windows, index_end+3)
+	end_windows(windows, index_end+4)
 #def
 
 print("")
-print("Processing No Reg ...")
-find_windows(rng.get_draw_slots_bn3(RNG_start, RNG_end, 255, True))
+
+find_windows(RNG_start, RNG_end, reg_slot)
+
+#rng.print_draw_slots_log_bn3(-10, 120, 1)
+#rng.print_draw_slots_gauntlet_bn3(239, 251, 5, 1)
 
 print("")
-print("Processing Reg Slot ...")
-min_depth = max(2, min_depth) # skip reg slot
-find_windows(rng.get_draw_slots_bn3(RNG_start, RNG_end, reg_slot, True))
 
