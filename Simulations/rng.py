@@ -105,7 +105,14 @@ def print_draw_slots_log_bn3(start_index, end_index, reg_slot=255):
     #for
 #def
 
-#print_draw_slots_log_bn3(-10, 120, 1)
+def print_draw_slots_gauntlet_bn3(start_index, end_index, fights=3, reg_slot=255, gauntlet_offset=68):
+    for fight in range(fights):
+        print("")
+        start = start_index + gauntlet_offset * fight
+        end   =   end_index + gauntlet_offset * fight
+        print_draw_slots_log_bn3(start, end, reg_slot)
+    #for
+#def
 
 def shuffle_folder_simulate_from_value(RNG_value, swaps, reg_slot):
     RNG_value = RNG_value or 0x873CA9E5
