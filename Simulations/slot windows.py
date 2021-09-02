@@ -24,21 +24,21 @@ set_sizes.append(1)
 #set_sizes.append(5)
 
 any_slots = []
-#any_slots.append("01")
-#any_slots.append("02")
-#any_slots.append("03")
-#any_slots.append("04")
-#any_slots.append("05")
-#any_slots.append("06")
+#any_slots.append(1)
+#any_slots.append(2)
+#any_slots.append(3)
+#any_slots.append(4)
+#any_slots.append(5)
+#any_slots.append(6)
 print("Requiring Any of Slots: ", any_slots)
 
 all_slots = []
-#all_slots.append("01")
-#all_slots.append("02")
-#all_slots.append("03")
-#all_slots.append("04")
-#all_slots.append("05")
-#all_slots.append("06")
+#all_slots.append(1)
+#all_slots.append(2)
+#all_slots.append(3)
+#all_slots.append(4)
+#all_slots.append(5)
+#all_slots.append(6)
 print("Requiring All of Slots: ", all_slots)
 
 def has_any_slot(slot_set):
