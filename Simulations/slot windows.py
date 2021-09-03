@@ -1,4 +1,4 @@
-# Draw Slot Window Finder for Mega Man Battle Network routing by Tterraj42
+# Draw Slot Window Finder for routing RNG manipulation in Mega Man Battle Network, enjoy.
 
 import rng
 
@@ -13,8 +13,11 @@ min_window_size = 30
 do_print_parity = False
 
 print("")
-print(f"Running with settings: ")
-print(f"reg_slot={reg_slot:d} min_depth={min_depth:d} max_depth={max_depth:d} min_window_size={min_window_size:d}")
+print("Running with settings:")
+print(f"reg_slot={reg_slot:d}")
+print(f"min_depth={min_depth:d}")
+print(f"max_depth={max_depth:d}")
+print(f"min_window_size={min_window_size:d}")
 print("")
 
 # TODO constraints
@@ -165,10 +168,10 @@ def find_windows(index_start, index_end, reg=255):
 
 print("")
 
-find_windows(RNG_start, RNG_end, reg_slot)
+#find_windows(RNG_start, RNG_end, reg_slot)
 
 #rng.print_draw_slots_log_bn3(-10, 120, 1)
-#rng.print_draw_slots_gauntlet_bn3(239, 251, 5, 1)
+#rng.print_draw_slots_gauntlet_bn3(313-68, 339-68, 5, 1)
 
 print("")
 
