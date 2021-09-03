@@ -58,6 +58,10 @@ local function HUD_routing()
     --hud.to_screen("0000: " .. hud.game.get_string_binary(0x02000000,  1, true));
     --hud.set_offset(16, hud.y-1);
     --hud.to_screen(tostring(hud.game.is_go_mode()));
+    hud.to_screen(string.format("GMD Value: 0x%08X",      hud.game.get_GMD_value()));
+    hud.to_screen(string.format("GMD   RNG: 0x%08X",      hud.game.get_GMD_RNG()));
+    hud.to_screen(string.format("GMD   %%32: 0x%02X %5u", hud.game.get_GMD_RNG_lower()%32,
+                                                          hud.game.get_GMD_RNG_lower()%32));
 end
 
 local function HUD_battle()
@@ -96,8 +100,8 @@ local function HUD_auto()
         end
         hud.display_both_RNG();
         if hud.game.in_the_internet() then
-            --hud.to_screen(string.format("GMD:0x%08X", hud.game.get_GMD_RNG()));
-            hud.to_screen(string.format("GMD: 0x%02X %2u", hud.game.get_GMD_RNG_lower(), hud.game.get_GMD_RNG_lower()%32));
+            hud.to_screen(string.format("GMD: 0x%02X %2u", hud.game.get_GMD_RNG_lower(),
+                                                           hud.game.get_GMD_RNG_lower()%32));
         end
         hud.display_steps(true);
         if hud.game.get_sneak() > 0 then

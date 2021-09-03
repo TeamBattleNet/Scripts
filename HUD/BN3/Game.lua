@@ -235,6 +235,10 @@ function game.is_sneakrun_bugged()
     return game.ram.get.bug_run() > 0;
 end
 
+function game.get_GMD_value()
+    return game.ram.get.GMD_value();
+end
+
 function game.get_GMD_RNG()
     return game.ram.get.GMD_RNG();
 end
@@ -247,8 +251,12 @@ function game.set_GMD_RNG(new_GMD_RNG)
     game.ram.set.GMD_RNG(new_GMD_RNG);
 end
 
-function game.increment_GMD_RNG()
+function game.increase_GMD_RNG()
     game.set_GMD_RNG(game.get_GMD_RNG()+1);
+end
+
+function game.decrease_GMD_RNG()
+    game.set_GMD_RNG(game.get_GMD_RNG()-1);
 end
 
 function game.randomize_GMD_RNG()
