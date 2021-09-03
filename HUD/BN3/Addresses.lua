@@ -10,7 +10,8 @@ local addresses = require("All/Addresses");
 
 ---------------------------------------- WRAM 02000000-0203FFFF ----------------------------------------
 
-addresses.fire_flags            = 0x02000000; -- 1 byte TBD
+addresses.water_fire_flags      = 0x02000000; -- 1 byte TBD
+addresses.plant_fire_flags      = 0x02000000; -- 1 byte TBD
 
 addresses.navi_cust_bugged      = 0x0200003B; -- 1 bit, 0x80, maybe?
 addresses.viruses_captured      = 0x0200003B; -- 1 digit per virus 0x7 ends 3F
@@ -235,6 +236,12 @@ addresses.enemy[3].HP_max       = 0x02037512; -- 2 bytes, for healing?
 --addresses.                    = 0x0203B390; -- 4 bytes, 5 copies of button flags?
 
 -- 0x0203FFFF end of WRAM
+
+---------------------------------------- ROM  08000000-09FFFFFF ----------------------------------------
+
+addresses.GMD_pick_table = 0x0802769C; -- BN3 Blue (U)
+addresses.GMD_pick_zenny = 0x08027DC2; -- BN3 Blue (U)
+addresses.GMD_pick_chips = 0x08027E02; -- BN3 Blue (U)
 
 ---------------------------------------- Verion Dependent ----------------------------------------
 
