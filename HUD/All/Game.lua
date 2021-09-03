@@ -148,6 +148,12 @@ function game.draw_in_reverse()
     end
 end
 
+function game.draw_in_random()
+    for i=0,29 do
+        game.ram.set.draw_slot(i, math.random(0, 29));
+    end
+end
+
 function game.draw_only_slot(which_slot)
     for i=0,29 do
         game.ram.set.draw_slot(i, which_slot%30);

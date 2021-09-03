@@ -57,6 +57,7 @@ command_battle.options = {
     { value = function() commands.game.kill_enemy(2);       end; text = "Delete Enemy 2"        ; };
     { value = function() commands.game.kill_enemy(3);       end; text = "Delete Enemy 3"        ; };
     { value = function() commands.game.draw_in_order();     end; text = "Draw Slots: In Order"  ; };
+    { value = function() commands.game.draw_in_random();    end; text = "Draw Slots: Reshuffle" ; };
     { value = function() commands.game.draw_only_slot(0);   end; text = "Draw Slots: All Slot 1"; };
     { value = function() commands.game.set_reg_capacity(0); end; text = " 0 Reg MB"             ; };
     { value = function() commands.game.max_reg_capacity();  end; text = "99 Reg MB"             ; };
