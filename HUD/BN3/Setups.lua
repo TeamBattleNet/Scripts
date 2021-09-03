@@ -30,6 +30,20 @@ local function reset_and_wait(hard, pause, delay)
     end
 end
 
+local function jack_in(hard, pause, delay_title, delay_jackin)
+    reset_and_wait(hard, false, delay_title)
+    setups.press_buttons(delay_jackin, "waiting on Main RNG...");
+    if pause then
+        client.pause(); -- off by one?
+    else
+        setups.press_buttons( 1, "Plug in!", {R=true});
+    end
+end
+
+setups.add_setup(group_RNG, "L235  M318: First  R",          function() jack_in( true, false,     0,  39); end);
+setups.add_setup(group_RNG, "L235  M318: First  R  (Pause)", function() jack_in( true,  true,     0,  39); end);
+setups.add_setup(group_RNG, "L???  M318: First  R",          function() jack_in(false, false,     0,  39); end);
+setups.add_setup(group_RNG, "L???  M318: First  R  (Pause)", function() jack_in(false,  true,     0,  39); end);
 setups.add_setup(group_RNG, " 66 ->  83: First  A",          function() reset_and_wait( true, false,   0); end);
 setups.add_setup(group_RNG, " 66 ->  83: First  A  (Pause)", function() reset_and_wait( true,  true,   0); end);
 setups.add_setup(group_RNG, " 83 -> 100: 100 Load  (Pause)", function() reset_and_wait( true,  true,  17); end);
