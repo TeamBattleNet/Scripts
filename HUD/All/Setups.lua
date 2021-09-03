@@ -122,5 +122,15 @@ setups.add_setup(setups.group_misc, "One Step Down, Pause", function()
     setups.press_buttons( 1, "Start", {Start=true});
 end);
 
+setups.add_setup(setups.group_misc, "One Step Left, Pause", function()
+    setups.press_buttons( 2, "Step", {Left=true});
+    setups.press_buttons( 1, "Start", {Start=true});
+end);
+
+setups.add_setup(setups.group_misc, "One Step Right, Pause", function()
+    setups.press_buttons( 2, "Step", {Right=true});
+    setups.press_buttons( 1, "Start", {Start=true});
+end);
+
 return setups;
 
