@@ -59,13 +59,15 @@ local function HUD_routing()
     --hud.to_screen("0000: " .. hud.game.get_string_binary(0x02000000,  1, true));
     --hud.set_offset(16, hud.y-1);
     --hud.to_screen(tostring(hud.game.is_go_mode()));
+    hud.to_screen("");
+    hud.to_screen("GMD RNG: " .. hud.game.get_string_binary(0x02000E68,  4, true));
+    hud.to_screen("GMD Val: " .. hud.game.get_string_binary(0x020094B8,  2, true));
     hud.set_offset( 0, hud.y+1);
     hud.display_both_RNG(false, true);
     hud.set_offset(22, hud.y-6);
-    hud.to_screen(string.format("GMD Value: 0x%08X",      hud.game.get_GMD_value()));
-    hud.to_screen(string.format("GMD   RNG: 0x%08X",      hud.game.get_GMD_RNG()));
-    hud.to_screen(string.format("GMD   %%32: 0x%02X %5u", hud.game.get_GMD_RNG_lower()%32,
-                                                          hud.game.get_GMD_RNG_lower()%32));
+    hud.to_screen(string.format("GMD Value: 0x%08X", hud.game.get_GMD_value()));
+    hud.to_screen(string.format("GMD   RNG: 0x%08X", hud.game.get_GMD_RNG()));
+    hud.to_screen(string.format("GMD Index: %2u",    hud.game.get_GMD_RNG_index()));
 end
 
 local function HUD_battle()
@@ -104,8 +106,7 @@ local function HUD_auto()
         end
         hud.display_both_RNG();
         if hud.game.in_the_internet() then
-            hud.to_screen(string.format("GMD: 0x%02X %2u", hud.game.get_GMD_RNG_lower(),
-                                                           hud.game.get_GMD_RNG_lower()%32));
+            hud.to_screen(string.format("GMD Index:  %2u",    hud.game.get_GMD_RNG_index()));
         end
         hud.display_steps(true);
         if hud.game.get_sneak() > 0 then
@@ -176,12 +177,14 @@ table.insert(hud.HUDs, HUD_speedrun);
 ---------------------------------------- Module Controls ----------------------------------------
 
 function hud.Up()
-    print("\n" .. hud.game.get_folder_text(1));
+    hud.game.increase_GMD_index();
+    -- print("\n" .. hud.game.get_folder_text(1));
 end
 
 function hud.Down()
-    print("\n" .. hud.game.get_draw_slots_text_multi_line());
-    print("\n" .. hud.game.get_draw_slots_text_one_line());
+    hud.game.decrease_GMD_index();
+    -- print("\n" .. hud.game.get_draw_slots_text_multi_line());
+    -- print("\n" .. hud.game.get_draw_slots_text_one_line());
 end
 
 function hud.B()

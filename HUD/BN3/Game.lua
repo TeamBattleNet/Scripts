@@ -244,23 +244,50 @@ function game.get_GMD_RNG()
 end
 
 function game.get_GMD_RNG_lower()
-    return bit.band(game.ram.get.GMD_RNG(), 0xFF);
+    return bit.band(game.get_GMD_RNG(), 0xFF);
 end
 
 function game.set_GMD_RNG(new_GMD_RNG)
     game.ram.set.GMD_RNG(new_GMD_RNG);
 end
 
-function game.increase_GMD_RNG()
-    game.set_GMD_RNG(game.get_GMD_RNG()+1);
-end
-
-function game.decrease_GMD_RNG()
-    game.set_GMD_RNG(game.get_GMD_RNG()-1);
-end
-
 function game.randomize_GMD_RNG()
     game.set_GMD_RNG(game.get_main_RNG_value());
+end
+
+--            t               ii iii      
+-- 0000 0000 0000 0000 0000 0000 0000 0000
+
+function game.get_GMD_is_chips()
+    return bit.band(game.get_GMD_RNG(), 0x00400000) == 0;
+end
+
+function game.get_GMD_is_zenny()
+    return not game.get_GMD_is_chips();
+end
+
+function game.get_GMD_RNG_index()
+    local GMD_index = bit.rshift(game.get_GMD_RNG(), 5) % 16 + 1;
+    if game.get_GMD_is_zenny() then
+        return GMD_index + 16;
+    end
+    return GMD_index;
+end
+
+function game.set_GMD_index(new_GMD_index)
+    local GMD_index = bit.lshift((new_GMD_index - 1) % 16, 5);
+    if new_GMD_index > 16 then
+        GMD_index = bit.bor(GMD_index, 0x00400000);
+    end
+    game.set_GMD_RNG(GMD_index);
+end
+
+function game.increase_GMD_index()
+    game.set_GMD_index(game.get_GMD_RNG_index()+1);
+end
+
+function game.decrease_GMD_index()
+    game.set_GMD_index(game.get_GMD_RNG_index()-1);
 end
 
 function game.get_gamble_pick()
