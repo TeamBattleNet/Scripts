@@ -44,8 +44,56 @@ setups.add_setup(group_RNG, "168 -> 185: IceBall   (Pause)", function() reset_an
 setups.add_setup(group_RNG, "170 -> 187: IceBall    (Hard)", function() reset_and_wait( true, false, 104); end);
 setups.add_setup(group_RNG, "170 -> 187: IceBall    (Soft)", function() reset_and_wait(false, false, 104); end);
 
+local game = require("BN3/Game");
+
+local function print_GMD(GMD_RNG_index, GMD_index)
+    local GMDi = GMD_index;
+    if GMDi == 16 or GMDi == 32 then
+        print(string.format("%04u: OPTIMAL", GMD_RNG_index));
+    elseif (13 <= GMDi and GMDi <= 15) or (29 <= GMDi and GMDi <= 31) then
+        print(string.format("%04u: GOOD", GMD_RNG_index));
+    else
+        print(string.format("%04u: bad", GMD_RNG_index));
+    end
+end
+
 local function dump_GMDs(index_start, index_end)
-    -- todo
+    local GMD_data = {};
+    
+    local GMD_RNG = game.ram.iterate_RNG_capped(0xA338244F, index_start-1, index_end);
+    
+    savestate.saveslot(0);
+    
+    for i=index_start,index_end do
+        game.set_GMD_RNG(GMD_RNG);
+        game.set_main_RNG_value(GMD_RNG);
+        local GMD_index = game.get_GMD_index();
+        local GMD_RNG_index = game.get_GMD_RNG_index();
+        local is_zenny = game.get_GMD_is_zenny();
+        setups.press_buttons(3, "GMD Get!", {A=true});
+        
+        local GMD_value = game.get_GMD_value();
+        local GMD_RNG_next = game.get_GMD_RNG();
+        local GMD_RNG_delta = game.get_main_RNG_delta();
+        local GMD_index_next = game.get_GMD_index();
+        
+        GMD_data[GMD_RNG_index] = GMD_index;
+        print_GMD(GMD_RNG_index, GMD_index);
+        
+        GMD_data[GMD_RNG_index] = {};
+        GMD_data[GMD_RNG_index].index = GMD_index;
+        GMD_data[GMD_RNG_index].value = GMD_value;
+        GMD_data[GMD_RNG_index].delta = GMD_RNG_delta;
+        GMD_data[GMD_RNG_index].next  = GMD_RNG_next;
+        GMD_data[GMD_RNG_index].is_zenny = is_zenny;
+        
+        savestate.loadslot(0);
+        GMD_RNG = game.ram.simulate_RNG(GMD_RNG);
+    end
+    
+    --print(GMD_data);
+    
+    return GMD_data;
 end
 
 local function jack_in(hard, pause, delay_title, delay_jackin)
@@ -59,11 +107,19 @@ local function jack_in(hard, pause, delay_title, delay_jackin)
 end
 
 local group_GMD = setups.create_group("GMD Manipulation");
-setups.add_setup(group_GMD, "L235  M318: First  R",          function() jack_in( true, false,   0,  39); end);
-setups.add_setup(group_GMD, "L235  M318: First  R  (Pause)", function() jack_in( true,  true,   0,  39); end);
-setups.add_setup(group_GMD, "L???  M318: First  R",          function() jack_in(false, false,   0,  39); end);
-setups.add_setup(group_GMD, "L???  M318: First  R  (Pause)", function() jack_in(false,  true,   0,  39); end);
-setups.add_setup(group_GMD, "GMD Value Dump",                function() dump_GMDs(            315, 325); end);
+setups.add_setup(group_GMD, "L235  M319: First  R",          function() jack_in( true, false,    0,   39); end);
+setups.add_setup(group_GMD, "L235  M319: First  R  (Pause)", function() jack_in( true,  true,    0,   39); end);
+setups.add_setup(group_GMD, "L???  M319: First  R",          function() jack_in(false, false,    0,   39); end);
+setups.add_setup(group_GMD, "L???  M319: First  R  (Pause)", function() jack_in(false,  true,    0,   39); end);
+setups.add_setup(group_GMD, "L???  M385: Wind Star",         function() jack_in(false, false,   66,   39); end);
+setups.add_setup(group_GMD, "L???  M385 Wind Star No R",    function() reset_and_wait(false, false,  66); end);
+setups.add_setup(group_GMD, "L???  M385 Wind Star (Pause)", function() jack_in(false,  true,   66,   39); end);
+setups.add_setup(group_GMD, "L???  M390: Gamble",            function() jack_in(false, false,   71,   39); end);
+setups.add_setup(group_GMD, "L???  M390: Gamble No R",       function() reset_and_wait(false, false,  71); end);
+setups.add_setup(group_GMD, "L???  M390: Gamble (Pause)",    function() jack_in(false,  true,   71,   39); end);
+setups.add_setup(group_GMD, "GMD Value Dump  315 to  325",   function() dump_GMDs(             315,  325); end);
+setups.add_setup(group_GMD, "GMD Value Dump  150 to  400",   function() dump_GMDs(             150,  500); end);
+setups.add_setup(group_GMD, "GMD Value Dump 4500 to 5000",   function() dump_GMDs(            4500, 5000); end);
 
 local group_folders = setups.create_group("Folder Edits");
 
@@ -77,7 +133,7 @@ setups.add_setup(group_folders, "Folder  0: Remove All Chips", function()
     end
 end);
 
-setups.add_setup(group_folders, "Folder  1: FlashMan", function()
+setups.add_setup(group_folders, "Folder  1: Rock, Paper, FlashMan", function()
     setups.folder_edit_buttons({
         {A=true};
         {R=true};
