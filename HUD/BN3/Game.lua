@@ -270,12 +270,16 @@ function game.get_GMD_is_zenny()
     return not game.get_GMD_is_chips();
 end
 
-function game.get_GMD_index()
-    local GMD_index = bit.rshift(game.get_GMD_RNG(), 5) % 16 + 1;
+function game.get_GMD_index_from_value(GMD_RNG)
+    local GMD_index = bit.rshift(GMD_RNG, 5) % 16 + 1;
     if game.get_GMD_is_zenny() then
         return GMD_index + 16;
     end
     return GMD_index;
+end
+
+function game.get_GMD_index()
+    return game.get_GMD_index_from_value(game.get_GMD_RNG());
 end
 
 function game.set_GMD_index(new_GMD_index)
@@ -287,11 +291,11 @@ function game.set_GMD_index(new_GMD_index)
 end
 
 function game.increase_GMD_index()
-    game.set_GMD_index(game.get_GMD_RNG_index()+1);
+    game.set_GMD_index(game.get_GMD_index()+1);
 end
 
 function game.decrease_GMD_index()
-    game.set_GMD_index(game.get_GMD_RNG_index()-1);
+    game.set_GMD_index(game.get_GMD_index()-1);
 end
 
 function game.get_gamble_pick()
