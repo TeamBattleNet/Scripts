@@ -14,8 +14,6 @@ setups.add_setup(setups.group_misc, "TEST BUTTONS", function()
     setups.press_buttons( 1, "PRESS START", {Start=true});
 end);
 
-local group_RNG = setups.create_group("RNG Manipulation");
-
 local function reset_and_wait(hard, pause, delay)
     if hard then
         setups.hard_reset();
@@ -30,20 +28,7 @@ local function reset_and_wait(hard, pause, delay)
     end
 end
 
-local function jack_in(hard, pause, delay_title, delay_jackin)
-    reset_and_wait(hard, false, delay_title)
-    setups.press_buttons(delay_jackin, "waiting on Main RNG...");
-    if pause then
-        client.pause(); -- off by one?
-    else
-        setups.press_buttons( 1, "Plug in!", {R=true});
-    end
-end
-
-setups.add_setup(group_RNG, "L235  M318: First  R",          function() jack_in( true, false,     0,  39); end);
-setups.add_setup(group_RNG, "L235  M318: First  R  (Pause)", function() jack_in( true,  true,     0,  39); end);
-setups.add_setup(group_RNG, "L???  M318: First  R",          function() jack_in(false, false,     0,  39); end);
-setups.add_setup(group_RNG, "L???  M318: First  R  (Pause)", function() jack_in(false,  true,     0,  39); end);
+local group_RNG = setups.create_group("RNG Manipulation");
 setups.add_setup(group_RNG, " 66 ->  83: First  A",          function() reset_and_wait( true, false,   0); end);
 setups.add_setup(group_RNG, " 66 ->  83: First  A  (Pause)", function() reset_and_wait( true,  true,   0); end);
 setups.add_setup(group_RNG, " 83 -> 100: 100 Load  (Pause)", function() reset_and_wait( true,  true,  17); end);
@@ -58,6 +43,23 @@ setups.add_setup(group_RNG, "137 -> 154: Gamble",            function() reset_an
 setups.add_setup(group_RNG, "168 -> 185: IceBall   (Pause)", function() reset_and_wait( true,  true, 102); end);
 setups.add_setup(group_RNG, "170 -> 187: IceBall    (Hard)", function() reset_and_wait( true, false, 104); end);
 setups.add_setup(group_RNG, "170 -> 187: IceBall    (Soft)", function() reset_and_wait(false, false, 104); end);
+
+local function jack_in(hard, pause, delay_title, delay_jackin)
+    reset_and_wait(hard, false, delay_title)
+    setups.press_buttons(delay_jackin, "waiting on Main RNG...");
+    if pause then
+        client.pause();
+    else
+        setups.press_buttons( 1, "Plug in!", {R=true});
+    end
+end
+
+local group_GMD = setups.create_group("GMD Manipulation");
+setups.add_setup(group_GMD, "L235  M318: First  R",          function() jack_in( true, false,   0,  39); end);
+setups.add_setup(group_GMD, "L235  M318: First  R  (Pause)", function() jack_in( true,  true,   0,  39); end);
+setups.add_setup(group_GMD, "L???  M318: First  R",          function() jack_in(false, false,   0,  39); end);
+setups.add_setup(group_GMD, "L???  M318: First  R  (Pause)", function() jack_in(false,  true,   0,  39); end);
+setups.add_setup(group_GMD, "GMD Value Dump",                function() dump_GMDs(            315, 325); end);
 
 local group_folders = setups.create_group("Folder Edits");
 
