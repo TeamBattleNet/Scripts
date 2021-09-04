@@ -31,17 +31,21 @@ function ram.reverse_RNG(seed)
     return seed;
 end
 
-function ram.iterate_RNG(seed, iterations)
+function ram.iterate_RNG_capped(seed, iterations, cap)
     iterations = iterations or 0;
-    iterations = math.max(iterations,-ram.loop_calculations_per_frame);
+    iterations = math.max(iterations,-cap);
     for i=iterations,-1 do
         seed = ram.reverse_RNG(seed);
     end
-    iterations = math.min(iterations,ram.loop_calculations_per_frame);
+    iterations = math.min(iterations,cap);
     for i=1,iterations do
         seed = ram.simulate_RNG(seed);
     end
     return seed;
+end
+
+function ram.iterate_RNG(seed, iterations)
+    return ram.iterate_RNG_capped(seed, iterations, ram.loop_calculations_per_frame)
 end
 
 function ram.calculate_RNG_delta(temp, goal)
