@@ -255,6 +255,10 @@ function game.randomize_GMD_RNG()
     game.set_GMD_RNG(game.get_main_RNG_value());
 end
 
+function game.get_GMD_RNG_index()
+    return game.ram.get.main_RNG_index_of(game.get_GMD_RNG());
+end
+
 --            t               ii iii      
 -- 0000 0000 0000 0000 0000 0000 0000 0000
 
@@ -266,7 +270,7 @@ function game.get_GMD_is_zenny()
     return not game.get_GMD_is_chips();
 end
 
-function game.get_GMD_RNG_index()
+function game.get_GMD_index()
     local GMD_index = bit.rshift(game.get_GMD_RNG(), 5) % 16 + 1;
     if game.get_GMD_is_zenny() then
         return GMD_index + 16;
