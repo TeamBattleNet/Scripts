@@ -58,8 +58,8 @@ setups.delay_title  =  65; -- BN 1
 
 function setups.PRESS_START(delay)
     setups.press_buttons(setups.delay_title, "WAIT FOR IT");
-    setups.press_buttons(delay or 0, "delaying");
     setups.press_buttons(1, "START", {Start=true});
+    setups.press_buttons(delay or 0, "delaying");
 end
 
 function setups.CONTINUE(delay)
