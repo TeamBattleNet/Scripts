@@ -44,6 +44,10 @@ setups.add_setup(group_RNG, "168 -> 185: IceBall   (Pause)", function() reset_an
 setups.add_setup(group_RNG, "170 -> 187: IceBall    (Hard)", function() reset_and_wait( true, false, 104); end);
 setups.add_setup(group_RNG, "170 -> 187: IceBall    (Soft)", function() reset_and_wait(false, false, 104); end);
 
+local function dump_GMDs(index_start, index_end)
+    -- todo
+end
+
 local function jack_in(hard, pause, delay_title, delay_jackin)
     reset_and_wait(hard, false, delay_title)
     setups.press_buttons(delay_jackin, "waiting on Main RNG...");
