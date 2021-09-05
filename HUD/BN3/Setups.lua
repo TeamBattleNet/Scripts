@@ -106,7 +106,25 @@ local function jack_in(hard, pause, delay_title, delay_jackin)
     end
 end
 
+local function grab_GMD(pause, delay_title, delay_pressA)
+    reset_and_wait(false, false, delay_title)
+    setups.press_buttons(47, "waiting on control...");
+    setups.press_buttons( 1, "GMD Text!", {A=true});
+    setups.press_buttons(12, "waiting on Text...");
+    setups.press_buttons( 1, "GMD Text!", {B=true});
+    setups.press_buttons(35, "waiting on Text...");
+    setups.press_buttons(delay_pressA, "waiting on Main RNG...");
+    if pause then
+        client.pause();
+    else
+        setups.press_buttons( 1, "GMD Get!", {A=true});
+    end
+end
+
 local group_GMD = setups.create_group("GMD Manipulation");
+setups.add_setup(group_GMD, "L???  M154? GMD First A",      function() grab_GMD(      false,    0,    0); end);
+setups.add_setup(group_GMD, "L???  M172? GMD Reset & Fast",  function() grab_GMD(      false,    8,    8); end);
+setups.add_setup(group_GMD, "L???  M311? GMD On 2 Drum 3",   function() grab_GMD(      false,   55,  100); end);
 setups.add_setup(group_GMD, "L235  M319: First  R",          function() jack_in( true, false,    0,   39); end);
 setups.add_setup(group_GMD, "L235  M319: First  R  (Pause)", function() jack_in( true,  true,    0,   39); end);
 setups.add_setup(group_GMD, "L???  M319: First  R",          function() jack_in(false, false,    0,   39); end);
