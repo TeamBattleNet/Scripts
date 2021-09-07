@@ -123,10 +123,16 @@ local function dump_GMDs_xy(index_start, index_end)
         setups.press_buttons(10, "Movin' on up!", {Up=true});
         setups.press_buttons(28, "Spawning GMD!", {});
         
-        local GMD_1_xy = game.ram.get.GMD_1_xy(); -- optimal FF10
-        local GMD_1_yx = game.ram.get.GMD_1_yx(); -- optimal 00B0
-        local GMD_2_xy = game.ram.get.GMD_2_xy(); -- optimal FFB0
-        local GMD_2_yx = game.ram.get.GMD_2_yx(); -- optimal 0014
+        local GMD_1_xy = game.ram.get.GMD_1_xy();
+        local GMD_1_yx = game.ram.get.GMD_1_yx();
+        local GMD_2_xy = game.ram.get.GMD_2_xy();
+        local GMD_2_yx = game.ram.get.GMD_2_yx();
+        
+        -- ACDC2 Optimal Spawns
+        -- 0101: FF10 00B0 FFB0 0014 shop set
+        -- 0105: 00F2 FECC FF70 FED4 upper set a
+        -- 0133: 00F2 FECC FF74 FE6A upper set b
+        -- 0134: 00F2 FECC FF74 FE6A upper set b
         
         GMD_data[i] = {};
         GMD_data.GMD_1_xy = GMD_1_xy;
