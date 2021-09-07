@@ -65,11 +65,14 @@ local function HUD_routing()
     hud.to_screen("GMD Val: " .. hud.game.get_string_binary(0x020094B8,  2, true));
     hud.set_offset( 0, hud.y+1);
     --]]
+    hud.to_screen("GMD RNG: " .. hud.game.get_string_binary(0x02000E68,  4, true));
+    hud.set_offset( 0, hud.y+1);
     hud.display_both_RNG(false, true);
-    hud.set_offset(22, hud.y-6);
+    hud.set_offset(27, hud.y-6);
     hud.to_screen(string.format("GMD RNG  : 0x%08X", hud.game.get_GMD_RNG()));
     hud.to_screen(string.format("RNG Index: %10s",  (hud.game.get_GMD_RNG_index() or "????")));
     hud.to_screen(string.format("GMD Value: 0x%08X", hud.game.get_GMD_value()));
+    hud.to_screen(string.format("GMD Virus: %s", tostring(hud.game.get_GMD_is_virus())));
     hud.to_screen(string.format("GMD Index: %2u",    hud.game.get_GMD_index()));
     hud.reset_xy();
     hud.set_position(2, 17);
@@ -195,6 +198,7 @@ end
 
 function hud.B()
     hud.game.randomize_GMD_RNG();
+    print(string.format("GMD RNG: 0x%08X", hud.game.get_main_RNG_value()));
 end
 
 function hud.update_local_state()
