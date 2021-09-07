@@ -259,8 +259,12 @@ function game.get_GMD_RNG_index()
     return game.ram.get.main_RNG_index_of(game.get_GMD_RNG());
 end
 
---            t               ii iii      
+--        vv vtv               i iii      
 -- 0000 0000 0000 0000 0000 0000 0000 0000
+
+function game.get_GMD_is_virus()
+    return bit.band(game.get_GMD_RNG(), 0x03A00000) >= 0; -- this is wrong!
+end
 
 function game.get_GMD_is_chips()
     return bit.band(game.get_GMD_RNG(), 0x00400000) == 0;
