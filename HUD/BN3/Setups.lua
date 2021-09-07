@@ -107,8 +107,8 @@ local function jack_in(hard, pause, delay_title, delay_jackin)
 end
 
 local function grab_GMD(pause, delay_title, delay_pressA)
-    reset_and_wait(false, false, delay_title)
-    setups.press_buttons(47, "waiting on control...");
+    reset_and_wait(true, false, delay_title)
+    setups.press_buttons(50, "waiting on control...");
     setups.press_buttons( 1, "GMD Text!", {A=true});
     setups.press_buttons(12, "waiting on Text...");
     setups.press_buttons( 1, "GMD Text!", {B=true});
@@ -122,25 +122,19 @@ local function grab_GMD(pause, delay_title, delay_pressA)
 end
 
 local group_GMD = setups.create_group("GMD Manipulation");
-setups.add_setup(group_GMD, "L???  M154? GMD First A",      function() grab_GMD(      false,    0,    0); end);
-setups.add_setup(group_GMD, "L???  M172? GMD Reset & Fast",  function() grab_GMD(      false,    8,    8); end);
-setups.add_setup(group_GMD, "L???  M311? GMD On 2 Drum 3",   function() grab_GMD(      false,   55,  100); end);
-setups.add_setup(group_GMD, "L235  M319: First  R",          function() jack_in( true, false,    0,   39); end);
-setups.add_setup(group_GMD, "L235  M319: First  R  (Pause)", function() jack_in( true,  true,    0,   39); end);
-setups.add_setup(group_GMD, "L???  M319: First  R",          function() jack_in(false, false,    0,   39); end);
-setups.add_setup(group_GMD, "L???  M319: First  R  (Pause)", function() jack_in(false,  true,    0,   39); end);
-setups.add_setup(group_GMD, "L???  M385: Wind Star",         function() jack_in(false, false,   66,   39); end);
-setups.add_setup(group_GMD, "L???  M385: Wind Star No R",    function() reset_and_wait(false, false,  66); end);
-setups.add_setup(group_GMD, "L???  M385: Wind Star (Pause)", function() jack_in(false,  true,   66,   39); end);
-setups.add_setup(group_GMD, "L???  M448: Wind Bop (Pause)",  function() jack_in(false,  true,   66,  100); end);
-setups.add_setup(group_GMD, "L???  M448: Wind Bop",          function() jack_in(false, false,   66,  102); end);
-setups.add_setup(group_GMD, "L???  M390: Gamble",            function() jack_in(false, false,   71,   39); end);
-setups.add_setup(group_GMD, "L???  M390: Gamble No R",       function() reset_and_wait(false, false,  71); end);
-setups.add_setup(group_GMD, "L???  M390: Gamble (Pause)",    function() jack_in(false,  true,   71,   39); end);
-setups.add_setup(group_GMD, "L???  M448: Gamble Bop",        function() jack_in(false, false,   71,   97); end);
-setups.add_setup(group_GMD, "Print GMD Values  315 to  325", function() dump_GMDs(             315,  325); end);
-setups.add_setup(group_GMD, "Print GMD Values  150 to  400", function() dump_GMDs(             150,  500); end);
-setups.add_setup(group_GMD, "Print GMD Values 4500 to 5000", function() dump_GMDs(            4500, 5000); end);
+setups.add_setup(group_GMD, "M156: GMD First A",       function() grab_GMD(      false,    0,    0); end);
+setups.add_setup(group_GMD, "M460: 2000 Test",         function() grab_GMD(       true,  150,  155); end);
+setups.add_setup(group_GMD, "M472: 2000 Frame 1",      function() grab_GMD(      false,  159,  155); end);
+setups.add_setup(group_GMD, "M474: 2000 Frame 4",      function() grab_GMD(      false,  162,  155); end);
+setups.add_setup(group_GMD, "M478: 1000 Frame 8",      function() grab_GMD(      false,  166,  155); end);
+setups.add_setup(group_GMD, "M319: First  R",          function() jack_in(false, false,    0,   39); end);
+setups.add_setup(group_GMD, "M319: First  R  (Pause)", function() jack_in(false,  true,    0,   39); end);
+setups.add_setup(group_GMD, "M385: Wind Star",         function() jack_in(false, false,   66,   39); end);
+setups.add_setup(group_GMD, "M385: Wind Star No R",    function() reset_and_wait(false, false,  66); end);
+setups.add_setup(group_GMD, "M448: Wind Bop",          function() jack_in(false, false,   66,  102); end);
+setups.add_setup(group_GMD, "M438: Wind Bop (Pause)",  function() jack_in(false,  true,   66,  102); end);
+setups.add_setup(group_GMD, "Print GMDs  150 to  400", function() dump_GMDs(             150,  500); end);
+setups.add_setup(group_GMD, "Print GMDs 4500 to 5000", function() dump_GMDs(            4500, 5000); end);
 
 local group_folders = setups.create_group("Folder Edits");
 
