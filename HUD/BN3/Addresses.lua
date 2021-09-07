@@ -101,6 +101,11 @@ addresses.sneak                 = 0x02001DEC; -- 4 bytes, starts at 6000
 
 addresses.pack_chip_counts      = 0x02001f60; -- 18*312 bytes, first 6 of every 18 bytes are used, ends at 35D0?
 
+addresses.GMD_1_xy              = 0x02004586; -- 2 bytes iso coords
+addresses.GMD_1_yx              = 0x0200458A; -- 2 bytes iso coords
+addresses.GMD_2_xy              = 0x0200464A; -- 2 bytes iso coords
+addresses.GMD_2_yx              = 0x0200464E; -- 2 bytes iso coords
+
 addresses.credits_cutscene      = 0x020050A8; -- 1 byte ???
 
 -- 5220 - 575F all 1's

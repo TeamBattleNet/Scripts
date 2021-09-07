@@ -31,6 +31,15 @@ ram.set.GMD_RNG = function(GMD_RNG) memory.write_u32_le(ram.addr.GMD_RNG, GMD_RN
 ram.get.GMD_value = function() return memory.read_u16_le(ram.addr.GMD_value); end;
 ram.set.GMD_value = function(GMD_value) memory.write_u16_le(ram.addr.GMD_value, GMD_value); end;
 
+ram.get.GMD_1_xy = function() return memory.read_u16_le(ram.addr.GMD_1_xy); end;
+ram.set.GMD_1_xy = function(GMD_xy) memory.write_u16_le(ram.addr.GMD_1_xy, GMD_xy); end;
+ram.get.GMD_1_yx = function() return memory.read_u16_le(ram.addr.GMD_1_yx); end;
+ram.set.GMD_1_yx = function(GMD_xy) memory.write_u16_le(ram.addr.GMD_1_yx, GMD_xy); end;
+ram.get.GMD_2_xy = function() return memory.read_u16_le(ram.addr.GMD_2_xy); end;
+ram.set.GMD_2_xy = function(GMD_xy) memory.write_u16_le(ram.addr.GMD_2_xy, GMD_xy); end;
+ram.get.GMD_2_yx = function() return memory.read_u16_le(ram.addr.GMD_2_yx); end;
+ram.set.GMD_2_yx = function(GMD_xy) memory.write_u16_le(ram.addr.GMD_2_yx, GMD_xy); end;
+
 ---------------------------------------- RAMsacking ----------------------------------------
 
 function ram.use_fun_flags(fun_flags)
