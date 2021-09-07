@@ -47,12 +47,25 @@ setups.add_setup(group_RNG, "170 -> 187: IceBall    (Soft)", function() reset_an
 
 local game = require("BN3/Game");
 
-local function print_GMD(GMD_RNG_index, GMD_index)
+local function print_GMD_1200(GMD_RNG_index, GMD_index)
+    local GMDi = GMD_index;
+    if GMDi == 31 or GMDi == 32 then
+        print(string.format("%04u: OPTIMAL", GMD_RNG_index)); -- 1200z
+    elseif 28 <= GMDi and GMDi <= 30 then
+        print(string.format("%04u: GOOD", GMD_RNG_index));    --  800z
+    elseif 21 <= GMDi and GMDi <= 27 then
+        print(string.format("%04u: OKAY", GMD_RNG_index));    --  400z
+    else
+        print(string.format("%04u: bad", GMD_RNG_index));
+    end
+end
+
+local function print_GMD_2000(GMD_RNG_index, GMD_index)
     local GMDi = GMD_index;
     if GMDi == 16 or GMDi == 32 then
-        print(string.format("%04u: OPTIMAL", GMD_RNG_index));
+        print(string.format("%04u: OPTIMAL", GMD_RNG_index)); -- 2000z
     elseif (13 <= GMDi and GMDi <= 15) or (29 <= GMDi and GMDi <= 31) then
-        print(string.format("%04u: GOOD", GMD_RNG_index));
+        print(string.format("%04u: GOOD", GMD_RNG_index));    -- 1000z
     else
         print(string.format("%04u: bad", GMD_RNG_index));
     end
@@ -79,7 +92,7 @@ local function dump_GMDs(index_start, index_end)
         local GMD_index_next = game.get_GMD_index();
         
         GMD_data[GMD_RNG_index] = GMD_index;
-        print_GMD(GMD_RNG_index, GMD_index);
+        print_GMD_1200(GMD_RNG_index, GMD_index);
         
         GMD_data[GMD_RNG_index] = {};
         GMD_data[GMD_RNG_index].index = GMD_index;
@@ -173,6 +186,7 @@ setups.add_setup(group_GMD, "Print GMDs  150 to 1000", function() dump_GMDs(    
 setups.add_setup(group_GMD, "Print GMDs 1000 to 2000", function() dump_GMDs(            1000, 2000); end);
 setups.add_setup(group_GMD, "Spawn GMDs  120 to  240", function() dump_GMDs_xy(          120,  240); end);
 setups.add_setup(group_GMD, "Spawn GMDs  100 to  500", function() dump_GMDs_xy(          100,  500); end);
+setups.add_setup(group_GMD, "Spawn GMDs 1000 to 5000", function() dump_GMDs_xy(         1000, 5000); end);
 
 local group_folders = setups.create_group("Folder Edits");
 
