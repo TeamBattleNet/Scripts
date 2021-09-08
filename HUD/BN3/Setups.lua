@@ -64,8 +64,10 @@ local function print_GMD_2000(GMD_RNG_index, GMD_index)
     local GMDi = GMD_index;
     if GMDi == 16 or GMDi == 32 then
         print(string.format("%04u: OPTIMAL", GMD_RNG_index)); -- 2000z
-    elseif (13 <= GMDi and GMDi <= 15) or (29 <= GMDi and GMDi <= 31) then
-        print(string.format("%04u: GOOD", GMD_RNG_index));    -- 1000z
+    elseif 29 <= GMDi and GMDi <= 31 then
+        print(string.format("%04u: GOOD", GMD_RNG_index));    -- 1200z / 800z
+    elseif 13 <= GMDi and GMDi <= 15 then
+        print(string.format("%04u: OKAY", GMD_RNG_index));    -- 1000z
     else
         print(string.format("%04u: bad", GMD_RNG_index));
     end
@@ -110,6 +112,19 @@ local function dump_GMDs(index_start, index_end)
     return GMD_data;
 end
 
+local function print_GMD_xy_ACDC2(i, GMD_1_xy, GMD_1_yx, GMD_2_xy, GMD_2_yx)
+    if GMD_1_xy == 0xFF10 and GMD_1_yx == 0x00B0 and GMD_2_xy == 0xFFB0 and GMD_2_yx == 0x0014 then
+        print(string.format("%04u: OPTIMAL", i)); -- shop set
+    elseif GMD_1_xy == 0x00F2 and GMD_1_yx == 0xFECC and GMD_2_xy == 0xFF70 and GMD_2_yx == 0xFED4 then
+        print(string.format("%04u: GOOD", i)); -- upper set a
+    elseif GMD_1_xy == 0x00F2 and GMD_1_yx == 0xFECC and GMD_2_xy == 0xFF74 and GMD_2_yx == 0xFE6A then
+        print(string.format("%04u: GOOD", i)); -- upper set b
+    else
+        print(string.format("%04u: bad", i));
+    end
+    --print(string.format("%04u: %04X %04X %04X %04X", i, GMD_1_xy, GMD_1_yx, GMD_2_xy, GMD_2_yx));
+end
+
 local function dump_GMDs_xy(index_start, index_end)
     local GMD_data = {};
     
@@ -128,18 +143,12 @@ local function dump_GMDs_xy(index_start, index_end)
         local GMD_2_xy = game.ram.get.GMD_2_xy();
         local GMD_2_yx = game.ram.get.GMD_2_yx();
         
-        -- ACDC2 Optimal Spawns
-        -- 0101: FF10 00B0 FFB0 0014 shop set
-        -- 0105: 00F2 FECC FF70 FED4 upper set a
-        -- 0133: 00F2 FECC FF74 FE6A upper set b
-        -- 0134: 00F2 FECC FF74 FE6A upper set b
-        
         GMD_data[i] = {};
         GMD_data.GMD_1_xy = GMD_1_xy;
         GMD_data.GMD_1_yx = GMD_1_yx;
         GMD_data.GMD_2_xy = GMD_2_xy;
         GMD_data.GMD_2_yx = GMD_2_yx;
-        print(string.format("%04u: %04X %04X %04X %04X", i, GMD_1_xy, GMD_1_yx, GMD_2_xy, GMD_2_yx));
+        print_GMD_xy_ACDC2(i, GMD_1_xy, GMD_1_yx, GMD_2_xy, GMD_2_yx);
         
         savestate.loadslot(0);
         emu.frameadvance();
@@ -176,7 +185,7 @@ local function grab_GMD(pause, delay_title, delay_pressA)
     end
 end
 
-local group_GMD = setups.create_group("GMD Manipulation");
+local group_GMD = setups.create_group("GMD Setups");
 setups.add_setup(group_GMD, "M156: GMD First A",       function() grab_GMD(      false,    0,    0); end);
 setups.add_setup(group_GMD, "M472: 2000 Frame 1",      function() grab_GMD(      false,  157,  157); end);
 setups.add_setup(group_GMD, "M474: 2000 Frame 4",      function() grab_GMD(      false,  160,  157); end);
@@ -187,12 +196,16 @@ setups.add_setup(group_GMD, "M319: First  R  (Pause)", function() jack_in(false,
 setups.add_setup(group_GMD, "M385: Wind Star",         function() jack_in(false, false,   66,   39); end);
 setups.add_setup(group_GMD, "M385: Wind Star No R",    function() reset_and_wait(false, false,  66); end);
 setups.add_setup(group_GMD, "M448: Wind Bop",          function() jack_in(false, false,   66,  102); end);
-setups.add_setup(group_GMD, "M438: Wind Bop (Pause)",  function() jack_in(false,  true,   66,  102); end);
+setups.add_setup(group_GMD, "M448: Wind Bop (Pause)",  function() jack_in(false,  true,   66,  102); end);
+setups.add_setup(group_GMD, "M466: After 5 (Pause)",   function() jack_in(false,  true,   84,  102); end);
+setups.add_setup(group_GMD, "M474: After 5 then Bop",  function() jack_in(false, false,   92,  102); end);
+
+local group_GMD = setups.create_group("GMD Logging");
 setups.add_setup(group_GMD, "Print GMDs  150 to 1000", function() dump_GMDs(             150, 1000); end);
 setups.add_setup(group_GMD, "Print GMDs 1000 to 2000", function() dump_GMDs(            1000, 2000); end);
 setups.add_setup(group_GMD, "Spawn GMDs  120 to  240", function() dump_GMDs_xy(          120,  240); end);
 setups.add_setup(group_GMD, "Spawn GMDs  100 to  500", function() dump_GMDs_xy(          100,  500); end);
-setups.add_setup(group_GMD, "Spawn GMDs 1000 to 5000", function() dump_GMDs_xy(         1000, 5000); end);
+setups.add_setup(group_GMD, "Spawn GMDs 1000 to 2000", function() dump_GMDs_xy(         1000, 2000); end);
 
 local group_folders = setups.create_group("Folder Edits");
 
