@@ -105,8 +105,8 @@ end
 function game.get_draw_slots_text_one_line()
     local slots = game.get_draw_slots();
     --slots = game.ram.get_simulated_draw_slots();
-    local main_RNG_index = game.get_main_RNG_index() or "????";
-    local slots_text = string.format("%s:", main_RNG_index);
+    local lazy_RNG_index = game.get_lazy_RNG_index() or "????";
+    local slots_text = string.format("%s:", lazy_RNG_index);
     for i=1,30 do
         slots_text = string.format("%s %02u", slots_text, slots[i]);
     end
@@ -116,8 +116,8 @@ end
 function game.get_draw_slots_text_multi_line()
     local slots = game.get_draw_slots();
     --slots = game.ram.get_simulated_draw_slots();
-    local main_RNG_index = game.get_main_RNG_index() or "????";
-    local slots_text = string.format("%s:", main_RNG_index);
+    local lazy_RNG_index = game.get_lazy_RNG_index() or "????";
+    local slots_text = string.format("%s:", lazy_RNG_index);
     for i=1,30 do
         slots_text = string.format("%s\n%02u: %02u", slots_text, i, slots[i]);
     end

@@ -27,6 +27,12 @@ commands.general.command_menu.options = {
     { value = function() settings.set_text_background(0x80000000); end; text = "Font Background: Half" ; };
     { value = function() settings.set_text_background(0xC0000000); end; text = "Font Background: Dark" ; };
     { value = function() settings.set_text_background(0xFF000000); end; text = "Font Background: Solid"; };
+    { value = function() print("\n" .. commands.game.get_folder_text(1)); end; text = "Log Folder 1"; };
+    { value = function() print("\n" ..
+            commands.game.get_draw_slots_text_one_line()); end; text = "Log Draw Slots"; };
+    { value = function() print("\n" ..
+            commands.game.get_draw_slots_text_multi_line()); end; text = "Log Draw Slots Multi"; };
+    { value = function() client.SetSoundOn(not client.GetSoundOn()); end; text = "Toggle Emulator Sound"; };
 };
 commands.general.command_menu.doit = function(value) value(); end;
 

@@ -191,13 +191,10 @@ table.insert(hud.HUDs, HUD_speedrun);
 
 function hud.Up()
     hud.game.increase_GMD_index();
-    -- print("\n" .. hud.game.get_folder_text(1));
 end
 
 function hud.Down()
     hud.game.decrease_GMD_index();
-    -- print("\n" .. hud.game.get_draw_slots_text_multi_line());
-    -- print("\n" .. hud.game.get_draw_slots_text_one_line());
 end
 
 function hud.B()

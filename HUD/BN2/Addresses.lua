@@ -222,6 +222,7 @@ addresses.enemy[3].HP_max       = 0x02008CD6; -- 2 bytes, for healing
 --addresses.                    = 0x02009070; -- 4 bytes, state transition related?
 addresses.game_state            = 0x02009078; -- 1 byte
 addresses.main_RNG              = 0x02009080; -- 4 bytes, restarts on the title screen
+addresses.lazy_RNG              = 0x02009080; -- to support shared functions with later games
 
 addresses.color_palette         = 0x02009090; -- 1024 bytes, 0x3FF bytes, ends at 948F
 

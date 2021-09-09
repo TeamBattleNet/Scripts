@@ -119,6 +119,7 @@ end
 function ram.initialize(options)
     ram.print_details();
     ram.main_RNG_table = ram.create_RNG_table(0xC14CE145, options.maximum_RNG_index);
+    ram.lazy_RNG_table = ram.main_RNG_table; -- to support shared functions with later games
 end
 
 function ram.pre_update(options)

@@ -287,6 +287,7 @@ addresses.enemy[3].HP           = 0x02006910; -- 2 bytes, which_enemy * 0xC0
 
 addresses.game_state            = 0x02006CB8; -- 1 byte
 addresses.main_RNG              = 0x02006CC0; -- 4 bytes, resets and pauses on the title screen
+addresses.lazy_RNG              = 0x02006CC0; -- to support shared functions with later games
 
 addresses.color_palette         = 0x02006CD0; -- 512 bytes, 0x1FF bytes, ends at 6ECF
 
