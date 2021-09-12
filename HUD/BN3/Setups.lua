@@ -28,12 +28,14 @@ local function reset_and_wait(hard, pause, delay)
     end
 end
 
-local group_RNG = setups.create_group("RNG Manipulation");
+local group_RNG = setups.create_group("RNG Both");
 setups.add_setup(group_RNG, " 66 ->  83: First  A",          function() reset_and_wait( true, false,   0); end);
 setups.add_setup(group_RNG, " 66 ->  83: First  A  (Soft)",  function() reset_and_wait(false, false,   0); end);
 setups.add_setup(group_RNG, " 66 ->  83: First  A  (Pause)", function() reset_and_wait( true,  true,   0); end);
 setups.add_setup(group_RNG, " 83 -> 100: 100 Load  (Pause)", function() reset_and_wait( true,  true,  17); end);
 setups.add_setup(group_RNG, "100 -> 117: 100 On A  (Pause)", function() reset_and_wait( true,  true,  34); end);
+
+local group_RNG = setups.create_group("RNG US");
 setups.add_setup(group_RNG, "100 -> 117: Yort Encounter",    function() reset_and_wait( true, false,  34); end);
 setups.add_setup(group_RNG, "128 -> 145: CopyMan   (Pause)", function() reset_and_wait( true,  true,  62); end);
 setups.add_setup(group_RNG, "129 -> 146: Wind Star (Pause)", function() reset_and_wait( true,  true,  63); end);
@@ -44,6 +46,11 @@ setups.add_setup(group_RNG, "137 -> 154: Gamble",            function() reset_an
 setups.add_setup(group_RNG, "168 -> 185: IceBall   (Pause)", function() reset_and_wait( true,  true, 102); end);
 setups.add_setup(group_RNG, "170 -> 187: IceBall    (Hard)", function() reset_and_wait( true, false, 104); end);
 setups.add_setup(group_RNG, "170 -> 187: IceBall    (Soft)", function() reset_and_wait(false, false, 104); end);
+setups.add_setup(group_RNG, "229 -> 246: IceBall   (Pause)", function() reset_and_wait( true,  true, 163); end);
+setups.add_setup(group_RNG, "232 -> 249: IceBall Slide",     function() reset_and_wait( true, false, 166); end);
+
+local group_RNG = setups.create_group("RNG JP");
+setups.add_setup(group_RNG, " 66 ->  83: First  A",          function() reset_and_wait( true, false,   0); end);
 
 local game = require("BN3/Game");
 
@@ -185,12 +192,18 @@ local function grab_GMD(pause, delay_title, delay_pressA)
     end
 end
 
-local group_GMD = setups.create_group("GMD Setups");
+local group_GMD = setups.create_group("GMD Reroll US");
 setups.add_setup(group_GMD, "M156: GMD First A",       function() grab_GMD(      false,    0,    0); end);
 setups.add_setup(group_GMD, "M472: 2000 Frame 1",      function() grab_GMD(      false,  157,  157); end);
+setups.add_setup(group_GMD, "M474: 2000 Frame 2",      function() grab_GMD(      false,  158,  157); end);
+setups.add_setup(group_GMD, "M472: 2000 Frame 3",      function() grab_GMD(      false,  159,  157); end);
 setups.add_setup(group_GMD, "M474: 2000 Frame 4",      function() grab_GMD(      false,  160,  157); end);
 setups.add_setup(group_GMD, "M476: 2000 Frame 5",      function() grab_GMD(      false,  161,  157); end);
+setups.add_setup(group_GMD, "M478: 2000 Frame 6",      function() grab_GMD(      false,  162,  157); end);
+setups.add_setup(group_GMD, "M476: 2000 Frame 7",      function() grab_GMD(      false,  163,  157); end);
 setups.add_setup(group_GMD, "M478: 1000 Frame 8",      function() grab_GMD(      false,  164,  157); end);
+
+local group_GMD = setups.create_group("GMD Jackin US");
 setups.add_setup(group_GMD, "M319: First  R",          function() jack_in(false, false,    0,   39); end);
 setups.add_setup(group_GMD, "M319: First  R  (Pause)", function() jack_in(false,  true,    0,   39); end);
 setups.add_setup(group_GMD, "M385: Wind Star",         function() jack_in(false, false,   66,   39); end);
