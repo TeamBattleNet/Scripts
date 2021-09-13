@@ -16,7 +16,7 @@ def check_frame(mRNG, constraints):
 	return True
 #def
 
-def find_windows(index_start, index_end, constraints):
+def find_windows(index_start, index_end, constraints, pressA_offset=0):
 	print(f"Searching for windows from {index_start:d} to {index_end:d}...")
 	
 	mRNG = rng.iterate_RNG(0xA338244F, index_start-1) # lRNG Seed 0x873CA9E4
@@ -72,7 +72,6 @@ print("")
 # 1024 0x0C 12 38% 766 889 1240 1267
 # A on 131, 1 on 264, 2 on 553, 3 on 842
 #     -133,        0,      289,      578
-pressA_offset = 132 # verified on actual HUD
 index_start = 200
 index_end   = 999
 constraints = [
@@ -92,6 +91,21 @@ constraints = [
         "got_encounter":  True,
     },
 ]
+pressA_offset = 132 # verified on actual HUD
+find_windows(index_start, index_end, constraints, pressA_offset)
 
-find_windows(index_start, index_end, constraints)
+
+
+constraints = [{
+    "offset"       :    0,
+    "threshold"    : 0x0C,
+    "got_encounter": True,
+}]
+find_windows(1, 1000, constraints)
+
+
+
+#print(f"{rng.reverse_RNG(0x02-1):08x}")
+#print(f"{rng.reverse_RNG(0x06-1):08x}")
+#print(f"{rng.reverse_RNG(0x0C-1):08x}")
 
