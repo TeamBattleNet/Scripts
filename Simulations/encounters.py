@@ -66,7 +66,18 @@ BugRun uses Curve 00
 
 print("")
 
-# IceBall M[anip]
+# TODO Does the encounter check use the first or second value on frame change?
+
+constraints = [{
+    "offset"       :    0,
+    "threshold"    : 0x0C,
+    "got_encounter": True,
+}]
+#find_windows(1, 1000, constraints)
+
+
+
+# IceBall M[anip] Slider
 #  896 0x02  2  6% 190 313  664  691
 #  960 0x06  6 18% 478 601  952  979
 # 1024 0x0C 12 38% 766 889 1240 1267
@@ -92,16 +103,30 @@ constraints = [
     },
 ]
 pressA_offset = 132 # verified on actual HUD
-find_windows(index_start, index_end, constraints, pressA_offset)
+#find_windows(index_start, index_end, constraints, pressA_offset)
 
 
 
-constraints = [{
-    "offset"       :    0,
-    "threshold"    : 0x0C,
-    "got_encounter": True,
-}]
-find_windows(1, 1000, constraints)
+# IceBall M[anip] Go Fast
+#  896 0x02  2  6%
+#  960 0x06  6 18%
+# 1024 0x0C 12 38%
+index_start = 1200
+index_end   = 2000
+constraints = [
+    {
+        "offset"       :     0,
+        "threshold"    :  0x02,
+        "got_encounter": False,
+    },
+    {
+        "offset"       :    33,
+        "threshold"    :  0x06,
+        "got_encounter":  True,
+    },
+]
+pressA_offset = 1162 # verified on actual HUD
+#find_windows(index_start, index_end, constraints, pressA_offset)
 
 
 
