@@ -220,6 +220,12 @@ end
 function ram.use_fun_flags_common(fun_flags)
     if fun_flags.no_encounters then
         ram.set.main_RNG_value(0xBC61AB0C);
+    elseif fun_flags.encounters_02 then
+        ram.set.main_RNG_value(0xC39E54F1);
+    elseif fun_flags.encounters_06 then
+        ram.set.main_RNG_value(0xC39E54EF);
+    elseif fun_flags.encounters_0C then
+        ram.set.main_RNG_value(0xC39E54F6);
     elseif fun_flags.yes_encounters then
         ram.set.main_RNG_value(0x439E54F2);
     end
