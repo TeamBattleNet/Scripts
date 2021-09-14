@@ -29,6 +29,10 @@ def iterate_RNG(seed, iterations):
     return seed
 #def
 
+def would_get_encounter(encounter_threshold, mRNG):
+    return encounter_threshold > (mRNG % 0x20)
+#def
+
 max_delta = 100000
 def calculate_RNG_delta(seed, goal):
     delta = 0

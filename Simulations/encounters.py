@@ -2,15 +2,11 @@
 
 import rng
 
-def would_get_encounter(encounter_threshold, mRNG):
-    return encounter_threshold > (mRNG % 0x20)
-#def
-
 def check_frame(mRNG, constraints):
     for constraint in constraints:
         # TODO check possible wiggles
         mRNG_test = rng.iterate_RNG(mRNG, constraint["offset"])
-        if would_get_encounter(constraint["threshold"], mRNG_test) != constraint["got_encounter"]:
+        if rng.would_get_encounter(constraint["threshold"], mRNG_test) != constraint["got_encounter"]:
             # add 1 turn (half wiggle) up to max_wiggles, add that value to future offsets
             return False
         #if
