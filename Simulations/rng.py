@@ -5,7 +5,9 @@ def to_int(seed):
 #def
 
 def simulate_RNG(seed):
-    return ((to_int(seed) << 1) + (seed >> 31) + 1) ^ 0x873CA9E5
+    seed = (to_int(seed) << 1) + (seed >> 31)
+    seed = (seed + 1) ^ 0x873CA9E5
+    return seed
 #def
 
 def reverse_RNG(seed):
