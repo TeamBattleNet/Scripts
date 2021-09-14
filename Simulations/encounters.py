@@ -85,7 +85,7 @@ constraints = [{
 #  896 0x02  2  6%
 #  960 0x06  6 18%
 # 1024 0x0C 12 38% 766 889 1240 1267
-A_offset    = 1158
+A_offset    = 1157
 max_wiggles = 0
 index_start = 1200
 index_end   = 2000
