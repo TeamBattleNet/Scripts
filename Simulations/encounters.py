@@ -2,26 +2,33 @@
 
 import rng
 
-def check_frame(mRNG, constraints):
+max_wiggles = 0
+A_offset    = 0
+index_start = 1
+index_end   = 1
+constraints = [{
+    "offset"       :     0,
+    "threshold"    :  0x00,
+    "got_encounter": False,
+}]
+
+def check_frame(mRNG):
     for constraint in constraints:
-        # TODO check possible wiggles
         mRNG_test = rng.iterate_RNG(mRNG, constraint["offset"])
-        if rng.would_get_encounter(constraint["threshold"], mRNG_test) != constraint["got_encounter"]:
-            # add 1 turn (half wiggle) up to max_wiggles, add that value to future offsets
-            return False
+        if rng.would_get_encounter(constraint["threshold"], mRNG_test):
+            return constraint["got_encounter"]
         #if
     #for
-    return True # array of needed wiggles, or None
+    return False
 #def
 
-def find_windows(index_start, index_end, constraints):
+def find_windows():
     print(f"Searching for windows from {index_start:d} to {index_end:d}...")
     
     mRNG = rng.iterate_RNG(0xA338244F, index_start-1) # lRNG Seed 0x873CA9E4
     
     for RNG_index in range(index_start, index_end+1):
-        # TODO Does the encounter check use the first or second value on frame change?
-        print(f"{RNG_index-A_offset:03d}: {check_frame(mRNG, constraints)}")
+        print(f"{RNG_index-A_offset:03d}: {check_frame(mRNG)}")
         mRNG = rng.simulate_RNG(mRNG)
     #for
 #def
@@ -70,8 +77,8 @@ BugRun uses Curve 00
 print("")
 
 # Single Threshold Check
-A_offset    = 0
 max_wiggles = 0
+A_offset    = 0
 index_start =    1
 index_end   = 2000
 constraints = [{
@@ -79,14 +86,14 @@ constraints = [{
     "threshold"    : 0x0C,
     "got_encounter": True,
 }]
-#find_windows(index_start, index_end, constraints)
+#find_windows()
 
 # IceBall M[anip] Go Fast (lRNG 1267)
 #  896 0x02  2  6%
 #  960 0x06  6 18%
 # 1024 0x0C 12 38% 766 889 1240 1267
-A_offset    = 1157
 max_wiggles = 0
+A_offset    = 1157
 index_start = 1200
 index_end   = 2000
 constraints = [
@@ -106,14 +113,14 @@ constraints = [
         "got_encounter":  True,
     },
 ]
-#find_windows(index_start, index_end, constraints)
+#find_windows()
 
 # IceBall M[anip] Slider (lRNG 766)
 #  896 0x02  2  6% 190 313  664  691
 #  960 0x06  6 18% 478 601  952  979
 # 1024 0x0C 12 38% 766 889 1240 1267
-A_offset    = 132
 max_wiggles = 0
+A_offset    = 132
 index_start = 200
 index_end   = 999
 constraints = [
@@ -133,5 +140,50 @@ constraints = [
         "got_encounter":  True,
     },
 ]
-#find_windows(index_start, index_end, constraints)
+#find_windows()
+
+# YoYo Yort Beach 1
+# Area Curve 6: 1st, 2nd, 3rd, 5th, 6th, and 7th (so not 4th)
+max_wiggles = 0
+A_offset    = 64
+index_start =  70
+index_end   = 999
+constraints = [
+    {
+        "offset"       :     0,
+        "threshold"    :  0x02,
+        "got_encounter":  True,
+    },
+    {
+        "offset"       :  33*1,
+        "threshold"    :  0x06,
+        "got_encounter":  True,
+    },
+    {
+        "offset"       :  33*2,
+        "threshold"    :  0x0C,
+        "got_encounter":  True,
+    },
+    {
+        "offset"       :  33*3,
+        "threshold"    :  0x0C,
+        "got_encounter": False,
+    },
+    {
+        "offset"       :  33*4,
+        "threshold"    :  0x0C,
+        "got_encounter":  True,
+    },
+    {
+        "offset"       :  33*5,
+        "threshold"    :  0x0C,
+        "got_encounter":  True,
+    },
+    {
+        "offset"       :  33*6,
+        "threshold"    :  0x0C,
+        "got_encounter":  True,
+    },
+]
+#find_windows()
 
