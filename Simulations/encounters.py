@@ -73,7 +73,7 @@ print("")
 A_offset    = 0
 max_wiggles = 0
 index_start =    1
-index_end   = 1000
+index_end   = 2000
 constraints = [{
     "offset"       :    0,
     "threshold"    : 0x0C,
@@ -81,11 +81,11 @@ constraints = [{
 }]
 #find_windows(index_start, index_end, constraints)
 
-# IceBall M[anip] Go Fast
+# IceBall M[anip] Go Fast (lRNG 1267)
 #  896 0x02  2  6%
 #  960 0x06  6 18%
-# 1024 0x0C 12 38%
-A_offset    = 1162
+# 1024 0x0C 12 38% 766 889 1240 1267
+A_offset    = 1158
 max_wiggles = 0
 index_start = 1200
 index_end   = 2000
@@ -101,14 +101,14 @@ constraints = [
         "got_encounter": False,
     },
     {
-        "offset"       :    33,
+        "offset"       :    66, # 107 if after conveyor
         "threshold"    :  0x0C,
         "got_encounter":  True,
     },
 ]
 #find_windows(index_start, index_end, constraints)
 
-# IceBall M[anip] Slider
+# IceBall M[anip] Slider (lRNG 766)
 #  896 0x02  2  6% 190 313  664  691
 #  960 0x06  6 18% 478 601  952  979
 # 1024 0x0C 12 38% 766 889 1240 1267
