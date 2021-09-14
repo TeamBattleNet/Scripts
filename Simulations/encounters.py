@@ -143,10 +143,10 @@ constraints = [
 #find_windows()
 
 # YoYo Yort Beach 1
-# Area Curve 6: 1st, 2nd, 3rd, 5th, 6th, and 7th (so not 4th)
+# Area Curve 6: 1st, 2nd, 3rd, 5th, 6th, and 7th (so not 4th or 8th)
 max_wiggles = 0
 A_offset    = 64
-index_start =  70
+index_start = 124
 index_end   = 999
 constraints = [
     {
