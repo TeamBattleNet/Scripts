@@ -28,6 +28,10 @@ local function reset_and_wait(hard, pause, delay)
     end
 end
 
+local function press_A_on(hard, target_index)
+    reset_and_wait(hard, false, target_index - 66);
+end
+
 local group_RNG = setups.create_group("RNG Both");
 setups.add_setup(group_RNG, " 66 ->  83: First  A",          function() reset_and_wait( true, false,   0); end);
 setups.add_setup(group_RNG, " 66 ->  83: First  A  (Soft)",  function() reset_and_wait(false, false,   0); end);
@@ -36,6 +40,8 @@ setups.add_setup(group_RNG, " 83 -> 100: 100 Load  (Pause)", function() reset_an
 setups.add_setup(group_RNG, "100 -> 117: 100 On A  (Pause)", function() reset_and_wait( true,  true,  34); end);
 
 local group_RNG = setups.create_group("RNG US");
+setups.add_setup(group_RNG, "100 Test (Hard)",               function()     press_A_on( true,        100); end);
+setups.add_setup(group_RNG, "100 Test (Soft)",               function()     press_A_on(false,        100); end);
 setups.add_setup(group_RNG, "100 -> 117: Yort Encounter",    function() reset_and_wait( true, false,  34); end);
 setups.add_setup(group_RNG, "128 -> 145: CopyMan   (Pause)", function() reset_and_wait( true,  true,  62); end);
 setups.add_setup(group_RNG, "129 -> 146: Wind Star (Pause)", function() reset_and_wait( true,  true,  63); end);
