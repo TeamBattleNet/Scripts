@@ -1,3 +1,4 @@
+# mRNG Window Tool for MMBN routing, enjoy.
 
 import rng
 
@@ -6,25 +7,27 @@ def would_get_encounter(encounter_threshold, mRNG):
 #def
 
 def check_frame(mRNG, constraints):
-	for constraint in constraints:
-		# TODO check possible wiggles
-		mRNG_test = rng.iterate_RNG(mRNG, constraint["offset"])
-		if would_get_encounter(constraint["threshold"], mRNG_test) != constraint["got_encounter"]:
-			return False
-		#if
-	#for
-	return True
+    for constraint in constraints:
+        # TODO check possible wiggles
+        mRNG_test = rng.iterate_RNG(mRNG, constraint["offset"])
+        if would_get_encounter(constraint["threshold"], mRNG_test) != constraint["got_encounter"]:
+            # add 1 turn (half wiggle) up to max_wiggles, add that value to future offsets
+            return False
+        #if
+    #for
+    return True # array of needed wiggles, or None
 #def
 
-def find_windows(index_start, index_end, constraints, pressA_offset=0):
-	print(f"Searching for windows from {index_start:d} to {index_end:d}...")
-	
-	mRNG = rng.iterate_RNG(0xA338244F, index_start-1) # lRNG Seed 0x873CA9E4
-	
-	for RNG_index in range(index_start, index_end+1):
-		print(f"{RNG_index-pressA_offset:03d}: {check_frame(mRNG, constraints)}")
-		mRNG = rng.simulate_RNG(mRNG)
-	#for
+def find_windows(index_start, index_end, constraints):
+    print(f"Searching for windows from {index_start:d} to {index_end:d}...")
+    
+    mRNG = rng.iterate_RNG(0xA338244F, index_start-1) # lRNG Seed 0x873CA9E4
+    
+    for RNG_index in range(index_start, index_end+1):
+        # TODO Does the encounter check use the first or second value on frame change?
+        print(f"{RNG_index-A_offset:03d}: {check_frame(mRNG, constraints)}")
+        mRNG = rng.simulate_RNG(mRNG)
+    #for
 #def
 
 """ Example Encounter Curves (BN 3):
@@ -64,25 +67,57 @@ BugRun uses Curve 00
 -- 0xFFFFFFFF 11111111111111111111111111111111 no encounter
 """
 
+#print(f"0x{rng.reverse_RNG(0x02-1):08x}")
+#print(f"0x{rng.reverse_RNG(0x06-1):08x}")
+#print(f"0x{rng.reverse_RNG(0x0C-1):08x}")
+
 print("")
 
-# TODO Does the encounter check use the first or second value on frame change?
-
+# Single Threshold Check
+A_offset    = 0
+max_wiggles = 0
+index_start =    1
+index_end   = 1000
 constraints = [{
     "offset"       :    0,
     "threshold"    : 0x0C,
     "got_encounter": True,
 }]
-#find_windows(1, 1000, constraints)
+#find_windows(index_start, index_end, constraints)
 
-
+# IceBall M[anip] Go Fast
+#  896 0x02  2  6%
+#  960 0x06  6 18%
+# 1024 0x0C 12 38%
+A_offset    = 1162
+max_wiggles = 0
+index_start = 1200
+index_end   = 2000
+constraints = [
+    {
+        "offset"       :     0,
+        "threshold"    :  0x02,
+        "got_encounter": False,
+    },
+    {
+        "offset"       :    33,
+        "threshold"    :  0x06,
+        "got_encounter": False,
+    },
+    {
+        "offset"       :    33,
+        "threshold"    :  0x0C,
+        "got_encounter":  True,
+    },
+]
+#find_windows(index_start, index_end, constraints)
 
 # IceBall M[anip] Slider
 #  896 0x02  2  6% 190 313  664  691
 #  960 0x06  6 18% 478 601  952  979
 # 1024 0x0C 12 38% 766 889 1240 1267
-# A on 131, 1 on 264, 2 on 553, 3 on 842
-#     -133,        0,      289,      578
+A_offset    = 132
+max_wiggles = 0
 index_start = 200
 index_end   = 999
 constraints = [
@@ -102,35 +137,5 @@ constraints = [
         "got_encounter":  True,
     },
 ]
-pressA_offset = 132 # verified on actual HUD
-#find_windows(index_start, index_end, constraints, pressA_offset)
-
-
-
-# IceBall M[anip] Go Fast
-#  896 0x02  2  6%
-#  960 0x06  6 18%
-# 1024 0x0C 12 38%
-index_start = 1200
-index_end   = 2000
-constraints = [
-    {
-        "offset"       :     0,
-        "threshold"    :  0x02,
-        "got_encounter": False,
-    },
-    {
-        "offset"       :    33,
-        "threshold"    :  0x06,
-        "got_encounter":  True,
-    },
-]
-pressA_offset = 1162 # verified on actual HUD
-#find_windows(index_start, index_end, constraints, pressA_offset)
-
-
-
-#print(f"{rng.reverse_RNG(0x02-1):08x}")
-#print(f"{rng.reverse_RNG(0x06-1):08x}")
-#print(f"{rng.reverse_RNG(0x0C-1):08x}")
+#find_windows(index_start, index_end, constraints)
 
