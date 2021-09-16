@@ -278,18 +278,26 @@ function game.track_encounter_checks()
     end
 end
 
-function game.get_encounter_curve()
+function game.get_encounter_curve_specific(main_area, sub_area)
     local curve_addr = game.ram.addr.encounter_curve;
-    local curve_offset = (game.get_main_area() - 0x80) * 0x10 + game.get_sub_area();
+    local curve_offset = (main_area - 0x80) * 0x10 + sub_area;
     return memory.read_u8(curve_addr + curve_offset); -- 7 for areas with no viruses
 end
 
-function game.get_encounter_threshold()
+function game.get_encounter_curve()
+    return game.get_encounter_curve_specific(game.get_main_area(), game.get_sub_area());
+end
+
+function game.get_encounter_threshold_specific(test_level)
     local curve = game.get_encounter_curve();
     if curve ~= 7 and game.is_sneakrun_bugged() then curve = 0; end
     local odds_addr = game.ram.addr.encounter_odds;
-    local test_level = math.min(math.floor(game.get_steps() / 64), 16);
     return memory.read_u8(odds_addr + test_level * 8 + curve);
+end
+
+function game.get_encounter_threshold()
+    local test_level = math.min(math.floor(game.get_steps() / 64), 16);
+    return game.get_encounter_threshold_specific(test_level);
 end
 
 function game.get_encounter_chance()
