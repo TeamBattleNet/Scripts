@@ -35,9 +35,7 @@ function command_fun_flags.update_options(option_value)
     table.insert( command_fun_flags.options, fun_flag_helper("chip_selection_one" , "Always Choose  1 Chip"     ) );
     table.insert( command_fun_flags.options, fun_flag_helper("chip_selection_max" , "Always Choose 10 Chips"    ) );
     table.insert( command_fun_flags.options, fun_flag_helper("no_encounters"      , "Lock RNG to No  Encounters") );
-    table.insert( command_fun_flags.options, fun_flag_helper("encounters_02"      , "Lock RNG to x02 Encounters") );
-    table.insert( command_fun_flags.options, fun_flag_helper("encounters_06"      , "Lock RNG to x06 Encounters") );
-    table.insert( command_fun_flags.options, fun_flag_helper("encounters_0C"      , "Lock RNG to x0C Encounters") );
+    table.insert( command_fun_flags.options, fun_flag_helper("maybe_encounters"   , "Lock RNG to ??? Encounters") );
     table.insert( command_fun_flags.options, fun_flag_helper("yes_encounters"     , "Lock RNG to Yes Encounters") );
     table.insert( command_fun_flags.options, fun_flag_helper("is_routing"         , "Display Routing Messages"  ) );
     table.insert( command_fun_flags.options, fun_flag_helper("randomize_colors"   , "Randomize Color Palette"   ) );
@@ -146,6 +144,9 @@ table.insert(commands.commands, command_items);
 
 ---------------------------------------- Routing ----------------------------------------
 
+commands.game.fun_flags.test_level = 14 -- I hit that 6% every. single. time. - BN 3 runners
+commands.game.fun_flags.encounter_threshold = 0x1C; -- highest possible threshold
+
 local command_routing = {};
 command_routing.sub_selection = 1;
 function command_routing.update_options(option_value)
@@ -155,10 +156,11 @@ function command_routing.update_options(option_value)
     if not option_value then
         command_routing.selection = command_routing.sub_selection;
         command_routing.description = function() return "Wanna see some RNG manip?"; end;
-        table.insert( command_routing.options, { value = 1; text = "Main RNG Index"; } );
-        table.insert( command_routing.options, { value = 2; text = "Lazy RNG Index"; } );
-        table.insert( command_routing.options, { value = 3; text = "Step Counter"  ; } );
-        table.insert( command_routing.options, { value = 4; text = "Flag Flipper"  ; } );
+        table.insert( command_routing.options, { value = 1; text = "Main RNG Index"   ; } );
+        table.insert( command_routing.options, { value = 2; text = "Lazy RNG Index"   ; } );
+        table.insert( command_routing.options, { value = 3; text = "Step Counter"     ; } );
+        table.insert( command_routing.options, { value = 4; text = "Encounter Checks" ; } );
+        table.insert( command_routing.options, { value = 5; text = "Flag Flipper"     ; } );
     else
         command_routing.sub_selection = command_routing.selection;
         command_routing.selection = 1;
@@ -197,6 +199,15 @@ function command_routing.update_options(option_value)
             table.insert( command_routing.options, { value = -1024; text = "Decrease by 1024"; } );
             command_routing.FUNction = function(value) commands.game.add_steps(value); end;
         elseif option_value == 4 then
+            command_routing.description = function() return string.format("Encounter Test Level: %2i", commands.game.fun_flags.test_level); end;
+            table.insert( command_routing.options, { value =     1; text = "Increase by    1"; } );
+            table.insert( command_routing.options, { value =    -1; text = "Decrease by    1"; } );
+            command_routing.FUNction = function(value)
+                commands.game.fun_flags.test_level = commands.game.fun_flags.test_level + value;
+                commands.game.fun_flags.test_level = math.max(commands.game.fun_flags.test_level,  0);
+                commands.game.fun_flags.test_level = math.min(commands.game.fun_flags.test_level, 16);
+            end;
+        elseif option_value == 5 then
             command_routing.description = function() return "Bits, Nibbles, Bytes, and Words."; end;
             table.insert( command_routing.options, { value = commands.game.reset_main_RNG;        text = "Restart Main RNG"     ; } );
             table.insert( command_routing.options, { value = commands.game.reset_lazy_RNG;        text = "Restart Lazy RNG"     ; } );
