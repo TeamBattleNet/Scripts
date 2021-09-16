@@ -6,6 +6,34 @@ local ram = require("All/RNG");
 --ram.get  = {}; -- defined in All/RNG
 --ram.set  = {}; -- defined in All/RNG
 
+---------------------------------------- Data ----------------------------------------
+
+ram.encounter_thresholds     = {};                                               -- BN 3
+ram.encounter_thresholds[ 0] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}; --    0
+ram.encounter_thresholds[ 1] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}; --   64
+ram.encounter_thresholds[ 2] = {0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}; --  128
+ram.encounter_thresholds[ 3] = {0x02, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}; --  192
+ram.encounter_thresholds[ 4] = {0x03, 0x02, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00}; --  256
+ram.encounter_thresholds[ 5] = {0x04, 0x03, 0x02, 0x01, 0x00, 0x00, 0x00, 0x00}; --  320
+ram.encounter_thresholds[ 6] = {0x05, 0x04, 0x03, 0x02, 0x01, 0x00, 0x00, 0x00}; --  384
+ram.encounter_thresholds[ 7] = {0x06, 0x05, 0x04, 0x03, 0x02, 0x00, 0x00, 0x00}; --  448
+ram.encounter_thresholds[ 8] = {0x08, 0x06, 0x05, 0x04, 0x03, 0x01, 0x00, 0x00}; --  512
+ram.encounter_thresholds[ 9] = {0x0A, 0x08, 0x06, 0x05, 0x04, 0x02, 0x00, 0x00}; --  576
+ram.encounter_thresholds[10] = {0x0C, 0x0A, 0x08, 0x06, 0x05, 0x03, 0x00, 0x00}; --  640
+ram.encounter_thresholds[11] = {0x0E, 0x0C, 0x0A, 0x08, 0x06, 0x04, 0x00, 0x00}; --  704
+ram.encounter_thresholds[12] = {0x10, 0x0E, 0x0C, 0x0A, 0x08, 0x05, 0x00, 0x00}; --  768
+ram.encounter_thresholds[13] = {0x12, 0x10, 0x0E, 0x0C, 0x0A, 0x06, 0x00, 0x00}; --  832
+ram.encounter_thresholds[14] = {0x14, 0x12, 0x10, 0x0E, 0x0C, 0x08, 0x02, 0x00}; --  896
+ram.encounter_thresholds[15] = {0x1A, 0x14, 0x12, 0x10, 0x0E, 0x0A, 0x06, 0x00}; --  960
+ram.encounter_thresholds[16] = {0x1C, 0x1A, 0x14, 0x12, 0x10, 0x0C, 0x0C, 0x00}; -- 1024
+-- BugRun uses Area Curve 0
+
+function ram.get_threshold(check_number, area_curve)
+    area_curve = area_curve % 8;
+    check_number = min(check_number, 15);
+    return encounter_thresholds[check_number][area_curve];
+end
+
 ---------------------------------------- Getters & Setters ----------------------------------------
 
 ram.get.bytes_1 = function(addr) return memory.read_u8 (addr       )    ; end;
@@ -237,18 +265,6 @@ function ram.use_fun_flags_common(fun_flags)
         end
     end
 end
-
--- 0xBC61AB0C 10111100011000011010101100001100 input
--- 0x78C35619 01111000110000110101011000011001 lshift (and wrap)
--- 0x78C3561A 01111000110000110101011000011010 add+1
--- 0x873CA9E5 10000111001111001010100111100101 xor
--- 0xFFFFFFFF 11111111111111111111111111111111 no encounters
-
--- 0x439E54F2 01000011100111100101010011110010 input
--- 0x873CA9E4 10000111001111001010100111100100 lshift (and wrap)
--- 0x873CA9E5 10000111001111001010100111100101 add+1
--- 0x873CA9E5 10000111001111001010100111100101 xor
--- 0x00000000 00000000000000000000000000000000 yes encounters
 
 ---------------------------------------- Module Controls ----------------------------------------
 
