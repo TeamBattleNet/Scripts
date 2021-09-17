@@ -4,11 +4,18 @@ import rng
 
 max_wiggles  = 0
 A_offset     = 0
-index_start  = 1
-index_end    = 1
+window_start = 1
+window_end   = 1
 area_curve   = 0
 check_number = 1
 constraints  = []
+
+def all_false():
+    for constraint in constraints:
+        if constraint["got_encounter"]:
+            return False
+    return True
+#def
 
 def check_frame(mRNG):
     for constraint in constraints:
@@ -17,38 +24,42 @@ def check_frame(mRNG):
             return constraint["got_encounter"]
         #if
     #for
-    return False
+    
+    return all_false() # no True encounters, this might be what we want
 #def
 
 def find_windows():
-    print(f"Searching for windows from {index_start:d} to {index_end:d}...")
+    index_start = window_start + A_offset
+    index_end   = window_end   + A_offset
+    
+    print(f"Searching for windows from mRNG index {index_start:d} to {index_end:d}...")
     
     mRNG = rng.iterate_RNG(0xA338244F, index_start-1) # lRNG Seed 0x873CA9E4
     
-    for RNG_index in range(index_start, index_end+1):
-        print(f"{RNG_index-A_offset:03d}: {check_frame(mRNG)}")
+    for press_A_on in range(window_start, window_end+1):
+        print(f"{press_A_on:03d} ({press_A_on+index_start-1:03d}): {check_frame(mRNG)}")
         mRNG = rng.simulate_RNG(mRNG)
     #for
 #def
 
 encounter_thresholds = [                              # BN 3
-    [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], #    0
-    [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], #   64
-    [0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], #  128
-    [0x02, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], #  192
-    [0x03, 0x02, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00], #  256
-    [0x04, 0x03, 0x02, 0x01, 0x00, 0x00, 0x00, 0x00], #  320
-    [0x05, 0x04, 0x03, 0x02, 0x01, 0x00, 0x00, 0x00], #  384
-    [0x06, 0x05, 0x04, 0x03, 0x02, 0x00, 0x00, 0x00], #  448
-    [0x08, 0x06, 0x05, 0x04, 0x03, 0x01, 0x00, 0x00], #  512
-    [0x0A, 0x08, 0x06, 0x05, 0x04, 0x02, 0x00, 0x00], #  576
-    [0x0C, 0x0A, 0x08, 0x06, 0x05, 0x03, 0x00, 0x00], #  640
-    [0x0E, 0x0C, 0x0A, 0x08, 0x06, 0x04, 0x00, 0x00], #  704
-    [0x10, 0x0E, 0x0C, 0x0A, 0x08, 0x05, 0x00, 0x00], #  768
-    [0x12, 0x10, 0x0E, 0x0C, 0x0A, 0x06, 0x00, 0x00], #  832
-    [0x14, 0x12, 0x10, 0x0E, 0x0C, 0x08, 0x02, 0x00], #  896
-    [0x1A, 0x14, 0x12, 0x10, 0x0E, 0x0A, 0x06, 0x00], #  960
-    [0x1C, 0x1A, 0x14, 0x12, 0x10, 0x0C, 0x0C, 0x00], # 1024
+    [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], #    0  0
+    [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], #   64  1
+    [0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], #  128  2
+    [0x02, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], #  192  3
+    [0x03, 0x02, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00], #  256  4
+    [0x04, 0x03, 0x02, 0x01, 0x00, 0x00, 0x00, 0x00], #  320  5
+    [0x05, 0x04, 0x03, 0x02, 0x01, 0x00, 0x00, 0x00], #  384  6
+    [0x06, 0x05, 0x04, 0x03, 0x02, 0x00, 0x00, 0x00], #  448  7
+    [0x08, 0x06, 0x05, 0x04, 0x03, 0x01, 0x00, 0x00], #  512  8
+    [0x0A, 0x08, 0x06, 0x05, 0x04, 0x02, 0x00, 0x00], #  576  9
+    [0x0C, 0x0A, 0x08, 0x06, 0x05, 0x03, 0x00, 0x00], #  640 10
+    [0x0E, 0x0C, 0x0A, 0x08, 0x06, 0x04, 0x00, 0x00], #  704 11
+    [0x10, 0x0E, 0x0C, 0x0A, 0x08, 0x05, 0x00, 0x00], #  768 12
+    [0x12, 0x10, 0x0E, 0x0C, 0x0A, 0x06, 0x00, 0x00], #  832 13
+    [0x14, 0x12, 0x10, 0x0E, 0x0C, 0x08, 0x02, 0x00], #  896 14
+    [0x1A, 0x14, 0x12, 0x10, 0x0E, 0x0A, 0x06, 0x00], #  960 15
+    [0x1C, 0x1A, 0x14, 0x12, 0x10, 0x0C, 0x0C, 0x00], # 1024 16
 ]
 #encounter_thresholds[check_number][area_curve]
 # BugRun uses Area Curve 0
@@ -94,7 +105,7 @@ def add_constraint(offset, got_encounter):
     global check_number
     constraints.append({
         "offset"       : offset,
-        "threshold"    : encounter_thresholds[min(check_number-1,15)][(area_curve-1)%8],
+        "threshold"    : encounter_thresholds[min(check_number,16)][(area_curve)%8],
         "got_encounter": got_encounter,
     })
     check_number = check_number + 1
@@ -107,79 +118,53 @@ def add_constraint(offset, got_encounter):
 print("")
 
 # Single Threshold Check
-max_wiggles  = 0
 A_offset     = 0
-index_start  =    1
-index_end    = 2000
-constraints  = []
+window_start =    1
+window_end   = 2000
 area_curve   = 5
 check_number = 16
+constraints  = []
 add_constraint(0, True)
 #find_windows()
 
-# IceBall M[anip] Go Fast (lRNG 1267)
-#  896 0x02  2  6%
-#  960 0x06  6 18%
-# 1024 0x0C 12 38% 766 889 1240 1267
-max_wiggles = 0
-A_offset    = 1157
-index_start = 1200
-index_end   = 2000
-constraints = [
-    {
-        "offset"       :     0,
-        "threshold"    :  0x02,
-        "got_encounter": False,
-    },
-    {
-        "offset"       :    33,
-        "threshold"    :  0x06,
-        "got_encounter": False,
-    },
-    {
-        "offset"       :    66, # 107 if after conveyor
-        "threshold"    :  0x0C,
-        "got_encounter":  True,
-    },
-]
-#find_windows()
-
-# IceBall M[anip] Slider (lRNG 766)
-#  896 0x02  2  6% 190 313  664  691
-#  960 0x06  6 18% 478 601  952  979
-# 1024 0x0C 12 38% 766 889 1240 1267
-max_wiggles = 0
-A_offset    = 132
-index_start = 200
-index_end   = 999
-constraints = [
-    {
-        "offset"       :     0,
-        "threshold"    :  0x02,
-        "got_encounter": False,
-    },
-    {
-        "offset"       :   289,
-        "threshold"    :  0x06,
-        "got_encounter": False,
-    },
-    {
-        "offset"       :   578,
-        "threshold"    :  0x0C,
-        "got_encounter":  True,
-    },
-]
-#find_windows()
-
-# YoYo Yort Beach 1
-# Area Curve 6: 1st, 2nd, 3rd, 5th, 6th, and 7th (so not 4th or 8th)
-max_wiggles = 0
-A_offset    = 64  # 56 steps to next check
-index_start = 124
-index_end   = 999
+# ACDC Area 3
+max_wiggles  = 0
+A_offset     = 505
+window_start = 1
+window_end   = 500
 area_curve   = 6
 check_number = 14
-constraints = []
+constraints  = []
+add_constraint(33*0, False)
+add_constraint(33*1, False)
+add_constraint(33*2, False)
+add_constraint(33*3 + 2, False)
+add_constraint(33*4 + 3, False)
+#find_windows()
+
+# Tamako's HP - Wind Box
+A_offset     = 151 # 24 steps to next check, 4 wiggles
+window_start =   1
+window_end   = 999
+area_curve   = 5
+check_number = 8
+constraints  = []
+add_constraint(33*0,  True) #  8
+add_constraint(33*1,  True) #  9
+add_constraint(33*2,  True) # 10
+add_constraint(33*3,  True) # 11
+add_constraint(33*4, False) # 12
+add_constraint(33*5,  True) # 13
+add_constraint(33*6,  True) # 14
+#find_windows()
+
+# Beach 1 - Double Yorts
+A_offset     = 64 # 56 steps to next check
+window_start =   1
+window_end   = 999
+area_curve   = 6
+check_number = 14
+constraints  = []
 add_constraint(33*0,  True)
 add_constraint(33*1,  True)
 add_constraint(33*2,  True)
@@ -187,5 +172,35 @@ add_constraint(33*3, False)
 add_constraint(33*4,  True)
 add_constraint(33*5,  True)
 add_constraint(33*6,  True)
+#find_windows()
+
+# IceBall M[anip] First Try (lRNG 1267)
+#  896 0x02  2  6%
+#  960 0x06  6 18%
+# 1024 0x0C 12 38% 766 889 1240 1267
+A_offset     = 1157
+window_start =   1
+window_end   = 999
+area_curve   = 6
+check_number = 14
+constraints  = []
+add_constraint(33*0, False)
+add_constraint(33*1, False)
+add_constraint(33*2,  True) # 107 if after conveyor
+#find_windows()
+
+# IceBall M[anip] Slider Backup (lRNG 766)
+#  896 0x02  2  6% 190 313  664  691
+#  960 0x06  6 18% 478 601  952  979
+# 1024 0x0C 12 38% 766 889 1240 1267
+A_offset     = 132
+window_start =   1
+window_end   = 999
+area_curve   = 6
+check_number = 14
+constraints  = []
+add_constraint(  0, False)
+add_constraint(289, False)
+add_constraint(578,  True)
 #find_windows()
 
