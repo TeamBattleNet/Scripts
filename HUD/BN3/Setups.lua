@@ -38,11 +38,14 @@ setups.add_setup(group_RNG, " 66 ->  83: First  A  (Soft)",  function() reset_an
 setups.add_setup(group_RNG, " 66 ->  83: First  A  (Pause)", function() reset_and_wait( true,  true,   0); end);
 setups.add_setup(group_RNG, " 83 -> 100: 100 Load  (Pause)", function() reset_and_wait( true,  true,  17); end);
 setups.add_setup(group_RNG, "100 -> 117: 100 On A  (Pause)", function() reset_and_wait( true,  true,  34); end);
+setups.add_setup(group_RNG, "100 -> 117: 100 On A",          function()     press_A_on( true,        100); end);
+setups.add_setup(group_RNG, "200 -> 217: 200 On A",          function()     press_A_on( true,        200); end);
+setups.add_setup(group_RNG, "300 -> 317: 300 On A",          function()     press_A_on( true,        300); end);
 
 local group_RNG = setups.create_group("RNG US");
-setups.add_setup(group_RNG, "100 Test (Hard)",               function()     press_A_on( true,        100); end);
-setups.add_setup(group_RNG, "100 Test (Soft)",               function()     press_A_on(false,        100); end);
-setups.add_setup(group_RNG, "100 -> 117: Yort Encounter",    function() reset_and_wait( true, false,  34); end);
+setups.add_setup(group_RNG, "101 -> 118: Wind Box  (Pause)", function() reset_and_wait( true,  true,  35); end);
+setups.add_setup(group_RNG, "104 -> 121: Wind Box",          function() reset_and_wait( true, false,  38); end);
+setups.add_setup(group_RNG, "104 -> 121: Yort Encounter",    function() reset_and_wait( true, false,  38); end);
 setups.add_setup(group_RNG, "128 -> 145: CopyMan   (Pause)", function() reset_and_wait( true,  true,  62); end);
 setups.add_setup(group_RNG, "129 -> 146: Wind Star (Pause)", function() reset_and_wait( true,  true,  63); end);
 setups.add_setup(group_RNG, "132 -> 149: CopyMan",           function() reset_and_wait( true, false,  66); end);
