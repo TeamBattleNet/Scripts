@@ -43,19 +43,19 @@ setups.add_setup(group_RNG, "200 -> 217: 200 On A",          function()     pres
 setups.add_setup(group_RNG, "300 -> 317: 300 On A",          function()     press_A_on( true,        300); end);
 
 local group_RNG = setups.create_group("RNG US");
-setups.add_setup(group_RNG, "101 -> 118: Wind Box  (Pause)", function() reset_and_wait( true,  true,  35); end);
-setups.add_setup(group_RNG, "104 -> 121: Wind Box",          function() reset_and_wait( true, false,  38); end);
-setups.add_setup(group_RNG, "104 -> 121: Yort Encounter",    function() reset_and_wait( true, false,  38); end);
+setups.add_setup(group_RNG, "102 -> 119: Wind Box 1",        function() reset_and_wait( true, false,  36); end);
+setups.add_setup(group_RNG, "104 -> 121: Wind Box 2",        function() reset_and_wait( true, false,  38); end);
+setups.add_setup(group_RNG, "106 -> 123: Wind Box 3",        function() reset_and_wait( true, false,  40); end);
+setups.add_setup(group_RNG, "104 -> 121: Yort Encounters",   function() reset_and_wait( true, false,  38); end);
 setups.add_setup(group_RNG, "128 -> 145: CopyMan   (Pause)", function() reset_and_wait( true,  true,  62); end);
-setups.add_setup(group_RNG, "129 -> 146: Wind Star (Pause)", function() reset_and_wait( true,  true,  63); end);
 setups.add_setup(group_RNG, "132 -> 149: CopyMan",           function() reset_and_wait( true, false,  66); end);
-setups.add_setup(group_RNG, "132 -> 149: Wind Star",         function() reset_and_wait( true, false,  66); end);
+setups.add_setup(group_RNG, "132 -> 149: Wind Star Old",     function() reset_and_wait( true, false,  66); end);
 setups.add_setup(group_RNG, "135 -> 152: Gamble    (Pause)", function() reset_and_wait(false,  true,  69); end);
 setups.add_setup(group_RNG, "137 -> 154: Gamble",            function() reset_and_wait(false, false,  71); end);
-setups.add_setup(group_RNG, "168 -> 185: IceBall   (Pause)", function() reset_and_wait( true,  true, 102); end);
+setups.add_setup(group_RNG, "162 -> 179: IceBall Fast A",    function() reset_and_wait( true, false,  96); end);
+setups.add_setup(group_RNG, "174 -> 191: IceBall Fast B",    function() reset_and_wait( true, false, 108); end);
 setups.add_setup(group_RNG, "170 -> 187: IceBall    (Hard)", function() reset_and_wait( true, false, 104); end);
 setups.add_setup(group_RNG, "170 -> 187: IceBall    (Soft)", function() reset_and_wait(false, false, 104); end);
-setups.add_setup(group_RNG, "229 -> 246: IceBall   (Pause)", function() reset_and_wait( true,  true, 163); end);
 setups.add_setup(group_RNG, "232 -> 249: IceBall Slide",     function() reset_and_wait( true, false, 166); end);
 
 local group_RNG = setups.create_group("RNG JP");
