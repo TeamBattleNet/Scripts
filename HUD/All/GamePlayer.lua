@@ -216,7 +216,7 @@ function game.max_reg_capacity()
 end
 
 function game.get_chip_name(ID)
-    return game.chips.names[ID] or "Unknown Chip ID";
+    return game.chips.names[ID] or "UnknwnID"; -- InvlidID ErrChpID
 end
 
 function game.get_chip_code(code)
@@ -228,7 +228,19 @@ function game.get_folder_text(which_folder)
     for which_slot=0,29 do
         local ID   = game.ram.get.folder[which_folder].ID  (which_slot);
         local code = game.ram.get.folder[which_folder].code(which_slot);
-        folder_text = string.format("%s{ ID=%3u; code=%2u }; -- %s %s\n", folder_text, ID, code, game.get_chip_name(ID), game.get_chip_code(code));
+        folder_text = string.format("%s%02u %8s %s\n", folder_text,
+            which_slot+1, game.get_chip_name(ID), game.get_chip_code(code));
+    end
+    return folder_text;
+end
+
+function game.get_folder_text_lua(which_folder)
+    local folder_text = "";
+    for which_slot=0,29 do
+        local ID   = game.ram.get.folder[which_folder].ID  (which_slot);
+        local code = game.ram.get.folder[which_folder].code(which_slot);
+        folder_text = string.format("%s{ ID=%3u; code=%2u }; -- %02u %8s %s\n", folder_text,
+            ID, code, which_slot+1, game.get_chip_name(ID), game.get_chip_code(code));
     end
     return folder_text;
 end
