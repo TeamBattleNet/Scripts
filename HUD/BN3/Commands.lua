@@ -144,7 +144,7 @@ table.insert(commands.commands, command_items);
 
 ---------------------------------------- Routing ----------------------------------------
 
-commands.game.fun_flags.test_level = 14 -- I hit that 6% every. single. time. - BN 3 runners
+commands.game.fun_flags.test_level = 14; -- I hit that 6% every. single. time. - BN 3 runners
 commands.game.fun_flags.encounter_threshold = 0x1C; -- highest possible threshold
 
 local command_routing = {};

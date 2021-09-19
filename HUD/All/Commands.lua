@@ -10,6 +10,11 @@ commands.setup_groups = {}; -- overridden later
 commands.commands = {}; -- the final group for use in Controls.lua
 commands.general = {}; -- temporary storage to allow for reordering commands per game
 
+-- Global Defaults to prevent crashing
+commands.game.fun_flags = {};
+commands.game.fun_flags.test_level = 14;
+commands.game.fun_flags.encounter_threshold = 0x1C;
+
 ---------------------------------------- Menu ----------------------------------------
 
 commands.general.command_menu = {};
