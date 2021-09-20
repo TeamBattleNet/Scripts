@@ -24,6 +24,19 @@ addresses.viruses_breeder       = 0x02000164; -- 1 bit, must be set before jack-
 addresses.email_read            = 0x02000260; -- 1 bit per email, 1 if unread, 0 if read
 
 addresses.library               = 0x02000330; -- 1 bit per chip, runs for ~44 bytes
+addresses.library_S_begin       = 0x02000330; -- 0x80 for Navi+20
+addresses.library_S_end         = 0x02000349; -- 0x80 for Navi+20
+addresses.library_M_begin       = 0x02000349; -- 0x7F for TBD
+addresses.library_plantmen      = 0x0200034F; -- 0x0F for PlantMan 1-4
+addresses.library_mist_bowl_men = 0x02000353; -- 0x3DE0 for MistMan & BowlMan chips
+addresses.library_M_end         = 0x02000355; -- 0x78 for JapanMan chips
+addresses.library_giga_1        = 0x02000355; -- 1 bit per chip: 0x03 FoldrBak, DeltaRay
+addresses.library_giga_2        = 0x02000356; -- 1 bit per chip: 0x07 Bass+, DarkAura, AlphArmO
+addresses.library_giga_3        = 0x02000357; -- 1 bit per chip: 0x80 BassGS followed by 7 invalid IDs
+addresses.library_PA_1          = 0x02000358; -- 0xFF for (in actual order of library)
+addresses.library_PA_2          = 0x02000359; -- 0xFF for (in actual order of library)
+addresses.library_PA_3          = 0x0200035A; -- 0xFF for (in actual order of library)
+addresses.library_PA_4          = 0x0200035B; -- 0xFF for (in actual order of library)
 
 addresses.battles_guts          = 0x02000E60; -- 1 byte
 addresses.battles_cust          = 0x02000E61; -- 1 byte
