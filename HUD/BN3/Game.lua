@@ -194,6 +194,23 @@ function game.count_library()
     return count;
 end
 
+function game.fill_library_standard()
+    game.ram.set_bits   (0x7F, game.ram.addr.library_S_begin      );
+    game.ram.write_bytes(0xFF, game.ram.addr.library_S_begin+1, 23);
+    game.ram.set_bits   (0x80, game.ram.addr.library_S_end        );
+end
+
+function game.fill_library_mega()
+    game.ram.set_bits   (0x7F, game.ram.addr.library_M_begin      );
+    game.ram.write_bytes(0xFF, game.ram.addr.library_M_begin+1, 10);
+    game.ram.set_bits   (0xF8, game.ram.addr.library_M_end        );
+end
+
+function game.fill_library_mist_bowl()
+    game.ram.set_bits   (0x3D, game.ram.addr.library_mist_bowl_men  );
+    game.ram.set_bits   (0xE0, game.ram.addr.library_mist_bowl_men+1);
+end
+
 function game.overwrite_folder_press_a()
     game.overwrite_folder_to(1, {
         { ID=211; code=26 }; -- FullCust *

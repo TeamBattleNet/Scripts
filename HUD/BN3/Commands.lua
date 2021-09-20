@@ -119,14 +119,16 @@ function command_items.update_options(option_value)
             command_items.description = function() return string.format("Power Level: %4u", commands.game.calculate_mega_level()); end;
             table.insert( command_items.options, { value = nil; text = "Apologies... That is sold out..."; } );
         elseif option_value == 6 then
-            command_items.description = function() return "Soon(TM)"; end;
-            table.insert( command_items.options, { value = nil; text = "Apologies... That is sold out..."; } );
-            --table.insert( command_items.options, { value = function() commands.game.set_all_folder_code_to(1,     0); end; text = "Folder: Monocode A Folder"     ; } );
-            --table.insert( command_items.options, { value = function() commands.game.randomize_folder_codes(1       ); end; text = "Folder: Randomize Folder Codes"; } );
-            --table.insert( command_items.options, { value = function() commands.game.overwrite_folder_press_a(      ); end; text = "Folder: Just PressA"           ; } );
-            --table.insert( command_items.options, { value = function() commands.game.randomize_folder_IDs_standard(1); end; text = "Folder: Randomize Folder IDs"  ; } );
+            command_items.description = function() return "Sponsored by TeamBN"; end;
+            table.insert( command_items.options, { value = function() commands.game.fill_library_standard(         ); end; text = "Library: Fill Standard"        ; } );
+            table.insert( command_items.options, { value = function() commands.game.fill_library_mega(             ); end; text = "Library: Fill Mega"            ; } );
+            table.insert( command_items.options, { value = function() commands.game.fill_library_mist_bowl(        ); end; text = "Library: Fill Mist/Bowl"       ; } );
+            table.insert( command_items.options, { value = function() commands.game.set_all_folder_code_to(1,     0); end; text = "Folder: Monocode A Folder"     ; } );
+            table.insert( command_items.options, { value = function() commands.game.randomize_folder_codes(1       ); end; text = "Folder: Randomize Folder Codes"; } );
+            table.insert( command_items.options, { value = function() commands.game.overwrite_folder_press_a(      ); end; text = "Folder: Just PressA"           ; } );
+            table.insert( command_items.options, { value = function() commands.game.randomize_folder_IDs_standard(1); end; text = "Folder: Randomize Folder IDs"  ; } );
             --table.insert( command_items.options, { value = function() commands.game.randomize_folder_IDs_anything(1); end; text = "Folder: Super Randomize IDs"   ; } );
-            --command_items.FUNction = function(value) value(); end;
+            command_items.FUNction = function(value) value(); end;
         else
             command_items.description = function() return "Bzzt! (something broke)"; end;
         end
