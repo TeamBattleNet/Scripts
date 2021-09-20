@@ -215,6 +215,16 @@ ram.set.zenny = function(zenny) memory.write_u32_le(ram.addr.zenny, zenny); end;
 
 ---------------------------------------- RAMsacking ----------------------------------------
 
+function ram.set_bits(val, addr)
+    memory.write_u8(addr, bit.bor(memory.read_u8(addr), val))
+end
+
+function ram.write_bytes(val, addr, len)
+    for i=0,len do
+        memory.write_u8(addr+i, val)
+    end
+end
+
 function ram.bit_blast(addr, value)
     print(string.format("Changing 0x%08X from 0x%02X to 0x%02X!", addr, memory.read_u8(addr), value));
     memory.write_u8(addr, value);
