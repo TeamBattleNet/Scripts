@@ -245,6 +245,16 @@ function game.get_folder_text_lua(which_folder)
     return folder_text;
 end
 
+function game.get_folder_text_python(which_folder)
+    local folder_text = "folder     = {}\n";
+    for which_slot=0,29 do
+        local ID   = game.ram.get.folder[which_folder].ID  (which_slot);
+        local code = game.ram.get.folder[which_folder].code(which_slot);
+        folder_text = string.format("%sfolder[%2u] = \"%8s %1s\"\n", folder_text, which_slot+1, game.get_chip_name(ID), game.get_chip_code(code));
+    end
+    return folder_text;
+end
+
 function game.overwrite_folder_to(which_folder, chips)
     for which_slot,chip in pairs(chips) do
         game.ram.set.folder[which_folder].ID  (which_slot-1, chip.ID  );
