@@ -90,55 +90,58 @@ def get_draw_slots_bn3(start_index, end_index, reg_slot=255, one_index=False):
     return draw_slots
 #def
 
-def print_draw_slots_bn3(start_index, end_index, reg_slot=255):
+def print_draw_slots_bn3(start_index, end_index, reg_slot=255, zero_pad=False):
     draw_frames = get_draw_slots_bn3(start_index, end_index, reg_slot, True)
     for draw_frame in draw_frames:
         draw_string = f'{draw_frame:d}'
         for draw_slot in draw_frames[draw_frame]:
-            draw_string += f' {draw_slot:d}'
+            if zero_pad:
+                draw_string += f' {draw_slot:02d}'
+            else:
+                draw_string += f' {draw_slot:d}'
+            #if
         #for
         print(draw_string)
     #for
 #def
 
 def log_draw_slots_bn3(start_index, end_index, reg_slot=255):
-    f = open('logs/bn3_slots.txt', 'a')
-    f.write("####: 01 02 03 04 05 | 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30")
-    f.write("---------------------+---------------------------------------------------------------------------")
+    f = open('Simulations/logs/bn3_slots.txt', 'a')
+    f.write("####: 01 02 03 04 05 | 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30\n")
+    f.write("---------------------+---------------------------------------------------------------------------\n")
     draw_frames = get_draw_slots_bn3(start_index, end_index, reg_slot, True)
     for draw_frame in draw_frames:
         draw_string = f'{draw_frame:04d}:'
         for draw_slot in draw_frames[draw_frame]:
             draw_string += f' {draw_slot:02d}'
         #for
-        f.write(draw_string[:21] + "|" + draw_string[20:])
+        f.write(draw_string[:21] + "|" + draw_string[20:] + "\n")
     #for
-    f.write("")
+    f.write("\n")
     f.close()
 #def
 
-def log_draw_chips_bn3(start_index, end_index, folder=None, depth=5, reg_slot=255):
-    f = open('logs/bn3_chips.txt', 'a')
-    f.write("Folder:", folder)
-    f.write("")
+def log_draw_chips_bn3(start_index, end_index, reg_slot=255, draw_depth=5, folder=None):
+    f = open('Simulations/logs/bn3_chips.txt', 'a')
+    f.write("\n")
     draw_frames = get_draw_slots_bn3(start_index, end_index, reg_slot, True)
     for draw_frame in draw_frames:
         draw_string = f'{draw_frame:04d}:'
-        for slot in range(depth):
+        for slot in range(draw_depth):
             draw_string += f' {folder[draw_frames[draw_frame][slot]]:10s}'
         #for
-        f.write(draw_string)
+        f.write(draw_string + "\n")
     #for
-    f.write("")
+    f.write("\n")
     f.close()
 #def
 
-def log_draw_slots_gauntlet_bn3(start_index, end_index, folder=None, fights=3, reg_slot=255, gauntlet_offset=68):
+def log_draw_slots_gauntlet_bn3(start_index, end_index, reg_slot=255, draw_depth=5, folder=None, fights=3, gauntlet_offset=68):
     for fight in range(fights):
         start = start_index + gauntlet_offset * fight
         end   =   end_index + gauntlet_offset * fight
         if folder:
-            log_draw_chips_bn3(folder, start, end, reg_slot)
+            log_draw_chips_bn3(start, end, reg_slot, draw_depth, folder)
         else:
             log_draw_slots_bn3(start, end, reg_slot)
         #if
