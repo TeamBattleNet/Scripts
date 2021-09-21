@@ -42,3 +42,4 @@ luac.out
 HUD/notes.txt
 Simulations/logs/*
 HUD/BCC/BCCplaysBCC/*
+Simulations/__pycache__/*
