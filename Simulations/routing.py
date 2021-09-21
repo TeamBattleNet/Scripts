@@ -12,11 +12,11 @@ folder[ 1] = " Wood+30 *"
 folder[ 2] = " VarSwrd B"
 folder[ 3] = " VarSwrd B"
 folder[ 4] = "StepCros R"
-folder[ 5] = " VarSwrd B"
+folder[ 5] = " VarSwrd D"
 folder[ 6] = "StepCros R"
-folder[ 7] = "StepSwrd P"
-folder[ 8] = " VarSwrd D"
-folder[ 9] = " Slasher D"
+folder[ 7] = "  Atk+10 *"
+folder[ 8] = " VarSwrd B"
+folder[ 9] = "StepSwrd P"
 folder[10] = " CopyDmg *"
 folder[11] = "RockCube *"
 folder[12] = "   Invis *"
@@ -31,7 +31,7 @@ folder[20] = " CopyDmg *"
 folder[21] = "  Shake1 R"
 folder[22] = " CopyDmg *"
 folder[23] = "BambSwrd P"
-folder[24] = "  Atk+10 *"
+folder[24] = " Slasher D"
 folder[25] = "  Atk+10 *"
 folder[26] = "  Atk+10 *"
 folder[27] = "AirShot1 *"
@@ -47,6 +47,15 @@ fights      = 4
 draw_depth  = 5
 
 print("Folder: " + str(folder))
+
+# Question: Which 4 slots are you most likely to top deck *at least one of* in the first N RNG values?
+#  10800 is  3 minutes (of overworld movement)
+# 108000 is 30 minutes
+# 324000 is 90 minutes
+# 648000 is 3    hours
+# 972000 is 4.5  hours
+# rng.get_draw_slots_bn3(1, 648000, reg_slot=1)
+# for each combination of 4 slots, count how many top 5 draws had at least 1 of those slots; sort.
 
 #rng.print_draw_slots_bn3(start_index, end_index, reg_slot, zero_pad=True)
 #rng.log_draw_slots_bn3(start_index, end_index, reg_slot)

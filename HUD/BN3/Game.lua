@@ -246,6 +246,41 @@ function game.overwrite_folder_press_a()
     });
 end
 
+function game.overwrite_folder_manip()
+    game.overwrite_folder_to(1, {
+        { ID=199; code=26 }; -- 01  Wood+30 *
+        { ID= 38; code= 1 }; -- 02  VarSwrd B
+        { ID= 38; code= 1 }; -- 03  VarSwrd B
+        { ID= 40; code=17 }; -- 04 StepCros R
+        { ID= 38; code= 3 }; -- 05  VarSwrd D
+        { ID= 40; code=17 }; -- 06 StepCros R
+        { ID=195; code=26 }; -- 07   Atk+10 *
+        { ID= 38; code= 1 }; -- 08  VarSwrd B
+        { ID= 39; code=15 }; -- 09 StepSwrd P
+        { ID=194; code=26 }; -- 10  CopyDmg *
+        { ID=141; code=26 }; -- 11 RockCube *
+        { ID=160; code=26 }; -- 12    Invis *
+        { ID=160; code=26 }; -- 13    Invis *
+        { ID=160; code=26 }; -- 14    Invis *
+        { ID=160; code=26 }; -- 15    Invis *
+        { ID=207; code=15 }; -- 16 HeroSwrd P
+        { ID=  4; code=26 }; -- 17 AirShot1 *
+        { ID= 48; code=14 }; -- 18 GutStrgt O
+        { ID= 48; code=14 }; -- 19 GutStrgt O
+        { ID=194; code=26 }; -- 20  CopyDmg *
+        { ID=110; code=17 }; -- 21   Shake1 R
+        { ID=194; code=26 }; -- 22  CopyDmg *
+        { ID= 36; code=15 }; -- 23 BambSwrd P
+        { ID= 43; code= 3 }; -- 24  Slasher D
+        { ID=195; code=26 }; -- 25   Atk+10 *
+        { ID=195; code=26 }; -- 26   Atk+10 *
+        { ID=  4; code=26 }; -- 27 AirShot1 *
+        { ID=  4; code=26 }; -- 28 AirShot1 *
+        { ID=  4; code=26 }; -- 29 AirShot1 *
+        { ID= 48; code=14 }; -- 30 GutStrgt O
+    });
+end
+
 ---------------------------------------- Miscellaneous ----------------------------------------
 
 function game.is_sneakrun_bugged()

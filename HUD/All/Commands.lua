@@ -33,6 +33,7 @@ commands.general.command_menu.options = {
     { value = function() settings.set_text_background(0xC0000000); end; text = "Font Background: Dark" ; };
     { value = function() settings.set_text_background(0xFF000000); end; text = "Font Background: Solid"; };
     { value = function() print("\n" .. commands.game.get_folder_text(1)); end; text = "Log Folder 1"; };
+    { value = function() print("\n" .. commands.game.get_folder_text_lua(1)); end; text = "Log FdrLua 1"; };
     { value = function() print("\n" .. commands.game.get_folder_text_python(1)); end; text = "Log Python 1"; };
     { value = function() print("\n" ..
             commands.game.get_draw_slots_text_one_line()); end; text = "Log Draw Slots"; };
