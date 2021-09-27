@@ -99,6 +99,61 @@ BugRun uses Area Curve 00
 -- 0x78C3561A 01111000110000110101011000011010 add+1
 -- 0x873CA9E5 10000111001111001010100111100101 xor
 -- 0xFFFFFFFF 11111111111111111111111111111111 no encounter
+
+========================= Encounter Check Logic
+//encounter check every 64 steps
+//table of encounterRate table at 0800D2F4
+encounterRate = readByte(0800D2F4 + (area * 16) + subarea)
+if sneakrun is bugged encounterRate = 0
+encounterCheckNumber = steps / 64 //(capped out at 16)
+//encounterCheckValue table at 0800D26C
+encounterCheckValue = readByte(0800D26C + (encounterCheckNumber * 16) + encounterRate)
+//rng1 is the one at 02009800
+randomNum = rng1_get_uint() & 0x1F
+if randomNum is >= encounterCheckValue there is no encounter
+if locenemy is on
+    if rng1_get_int() & 1 == 0
+        do locenemybattle
+Gets list of battles filtered by your navi cust (oil body, battery ect)
+if that list is empty gets unfiltered list
+//rng2 is the one at 02009730
+randomNum = (rng2_get_int() >> 0x10) % sumBattleProbabilities
+loops through list of battle list subtracting the probability of that battle from the random number
+when that number if finally < 0 that battle is selected
+if sneakrun is not active ends encounter routine
+if hp is greater than battles threshold no encounter
+
+========================= Drop Table Logic
+Step 1 Picks which enemy to choose rewards for
+    (rng2009800 number) % (number of enemy in the battle)
+
+Step 2 Picks reward index:
+    -Get reward list for enemy (80160AA8 + (enemy_index * 0x38))
+    -If you are under half HP uses the first half of the list otherwise it uses the second half (+0 or +0x1C)
+
+    -Gets another rng2009800 random number
+    -Discards first 8 bits of the random number
+    -With the next 8 bits of the random number:
+        finalIndexAdd = (value & 1)*2
+    -With the 8 bits after that:
+        tableIndexAdd = (value & 0x0F)
+    -Gets a reward index based on (busting level + tableIndexAdd)
+    BustingLevel0?  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    BustingLevel1   00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    BustingLevel2   00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    BustingLevel3   00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+    BustingLevel4   00 00 00 00 00 00 00 00 04 04 04 04 04 04 04 04
+    BustingLevel5   04 04 04 04 04 04 04 04 08 08 08 08 08 08 08 08
+    BustingLevel6   08 08 08 08 08 08 08 08 08 08 08 08 08 08 08 08
+    BustingLevel7   08 08 08 08 08 08 08 08 0C 0C 0C 0C 0C 0C 0C 0C
+    BustingLevel8   0C 0C 0C 0C 0C 0C 0C 0C 0C 0C 0C 0C 0C 0C 0C 0C
+    BustingLevel9   0C 0C 0C 0C 0C 0C 0C 0C 0C 0C 0C 0C 0C 0C 0C 10
+    BustingLevel10  0C 0C 0C 0C 0C 0C 0C 0C 10 10 10 10 10 10 10 10
+    BustingLevelS   10 10 10 10 10 10 10 10 10 10 10 10 10 10 10 10
+    BustingLevelS+  14 14 14 14 14 14 14 14 14 14 14 14 14 14 14 14
+    BustingLevelS++ 18 18 18 18 18 18 18 18 18 18 18 18 18 18 18 18
+    
+    -Adds finalIndexAdd to the value from the table
 """
 
 def add_constraint(offset, got_encounter):
