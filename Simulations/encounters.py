@@ -154,6 +154,8 @@ Step 2 Picks reward index:
     BustingLevelS++ 18 18 18 18 18 18 18 18 18 18 18 18 18 18 18 18
     
     -Adds finalIndexAdd to the value from the table
+
+Drop Table Bias Proof: https://gist.github.com/StraDaMa/2019adda4b7d605e2403a6760a037086
 """
 
 def add_constraint(offset, got_encounter):
