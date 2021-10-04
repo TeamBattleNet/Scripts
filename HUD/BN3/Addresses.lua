@@ -107,12 +107,20 @@ addresses.play_time_frames      = 0x02001DD0; -- 4 bytes, check for skipped fram
 addresses.steps                 = 0x02001DDC; -- 4 bytes
 addresses.check                 = 0x02001DE0; -- 4 bytes, steps at the last encounter check
 addresses.sneak                 = 0x02001DEC; -- 4 bytes, starts at 6000
+addresses.loc_enemy_steps       = 0x02001DF0; -- 4 bytes, starts at 6000
+addresses.loc_enemy_id          = 0x02001DF4; -- 4 bytes, encounter ID (ROM Address?)
 
 -- 1E00 ROCKMANEXE3 20021002
 
 -- 1E14 - 1F5F all 1's
 
 addresses.pack_chip_counts      = 0x02001f60; -- 18*312 bytes, first 6 of every 18 bytes are used, ends at 35D0?
+
+-- 35EF end of pack?
+
+-- 44FF end of something?
+
+-- 4560 area temps?
 
 addresses.GMD_1_xy              = 0x02004586; -- 2 bytes iso coords
 addresses.GMD_1_yx              = 0x0200458A; -- 2 bytes iso coords
