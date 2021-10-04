@@ -40,6 +40,6 @@ luac.out
 *.hex
 
 HUD/notes.txt
-Simulations/logs/*
+Simulations/ignore/*
 HUD/BCC/BCCplaysBCC/*
 Simulations/__pycache__/*
