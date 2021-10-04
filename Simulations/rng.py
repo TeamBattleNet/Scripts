@@ -106,7 +106,7 @@ def print_draw_slots_bn3(start_index, end_index, reg_slot=255, zero_pad=False):
 #def
 
 def log_draw_slots_bn3(start_index, end_index, reg_slot=255, draw_depth=30):
-    f = open('Simulations/logs/bn3_slots.txt', 'a')
+    f = open('Simulations/ignore/bn3_slots.txt', 'a')
     f.write("####: 01 02 03 04 05 | 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30\n")
     f.write("---------------------+---------------------------------------------------------------------------\n")
     draw_frames = get_draw_slots_bn3(start_index, end_index, reg_slot, True)
@@ -126,8 +126,8 @@ def log_draw_slots_bn3(start_index, end_index, reg_slot=255, draw_depth=30):
 #def
 
 def log_draw_chips_bn3(start_index, end_index, reg_slot=255, draw_depth=5, folder=None):
-    f = open('Simulations/logs/bn3_chips.txt', 'a')
-    f.write("####:       01         02         03         04         05\n")
+    f = open('Simulations/ignore/bn3_chips.txt', 'a')
+    f.write("####:       01         02         03         04         05         06\n")
     draw_frames = get_draw_slots_bn3(start_index, end_index, reg_slot, True)
     for draw_frame in draw_frames:
         draw_string = f'{draw_frame:04d}:'
