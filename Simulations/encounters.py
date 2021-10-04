@@ -215,7 +215,7 @@ add_constraint(33*5,  True) # 13
 add_constraint(33*6,  True) # 14
 #find_windows()
 
-# Beach 1 - Double Yorts
+# Beach 1 - Double Yorts (Top Corner)
 A_offset     = 64 # 56 steps to next check
 window_start =   1
 window_end   = 999
@@ -229,6 +229,23 @@ add_constraint(33*3, False)
 add_constraint(33*4,  True)
 add_constraint(33*5,  True)
 add_constraint(33*6,  True)
+#find_windows()
+
+# Beach 1 - Double Yorts (From Warp)
+A_offset     = 516
+window_start = 100
+window_end   = 999
+area_curve   = 6
+check_number = 14
+constraints  = []
+# wide delayed turn
+#add_constraint(33*0 + 0, False) # Deetle Trumpy
+#add_constraint(33*1 + 0,  True) # Yort Yort
+#add_constraint(33*2 + 2,  True) # Yort Yort
+# fast movement
+add_constraint(33*0 + 2, False) # bad
+add_constraint(33*1 + 2, False) # bad
+add_constraint(33*2 + 2,  True) # Yort Yort
 #find_windows()
 
 # IceBall M[anip] First Try (lRNG 1267)
