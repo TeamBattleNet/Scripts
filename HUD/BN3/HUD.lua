@@ -127,21 +127,8 @@ local function HUD_auto()
         end
         if hud.game.is_gambling() then
             hud.to_screen("");
-            hud.to_screen("Gamble  Win: " .. hud.game.get_gamble_win( ));
-            hud.to_screen("Gamble Pick: " .. hud.game.get_gamble_pick());
-
-            if previous_gamble_win ~= hud.game.get_gamble_win() then
-                previous_gamble_win = hud.game.get_gamble_win();
-                if previous_gamble_win ~= 255 then
-                    local main_rng = hud.game.get_main_RNG_index() or "???";
-
-                    if type(main_rng) == "number" then
-                        main_rng = main_rng - 1;
-                    end
-
-                    print(string.format("New Gamble Option - %s: %d", main_rng, previous_gamble_win));
-                end
-            end
+            hud.to_screen("Gamble  Win: " .. hud.game.get_gamble_panel_win( ));
+            hud.to_screen("Gamble Pick: " .. hud.game.get_gamble_panel_pick());
         end
         hud.display_area();
     elseif hud.game.in_battle() or hud.game.in_game_over() then

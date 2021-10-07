@@ -114,6 +114,9 @@ function game.in_pack()
     return game.in_menu_folder_edit() and (game.ram.get.menu_state() == 0x08 or game.ram.get.menu_state() == 0x1C);
 end
 
+game.previous_gamble_win = 255;
+game.gamble_panels = {"Bottom Left", "Top Left", "Top Right", "Bottom Right"};
+
 ----------------------------------------Mega Modifications ----------------------------------------
 
 --[[
@@ -362,6 +365,18 @@ function game.get_gamble_win()
     return game.ram.get.gamble_win();
 end
 
+function game.get_previous_gamble_win()
+    return game.previous_gamble_win;
+end
+
+function game.get_gamble_panel_pick()
+    return game.gamble_panels[game.get_gamble_pick()+1] or "??";
+end
+
+function game.get_gamble_panel_win()
+    return game.gamble_panels[game.get_gamble_win()+1] or "??";
+end
+
 function game.is_gambling()
     return game.get_main_area() == 0x8C and -- Sub Comps
           (game.get_sub_area() == 0x02 or   -- Vending Comp (SciLab)
@@ -425,6 +440,17 @@ end
 function game.post_update(options)
     game.update();
     game.ram.post_update(options);
+    if  game.previous_gamble_win ~= game.get_gamble_win() then
+        game.previous_gamble_win  = game.get_gamble_win();
+        if game.get_gamble_win() ~= 255 and game.get_main_RNG_index() then
+            print(string.format("New Gamble Option: %4s -> %4s: %d %s",
+                game.get_main_RNG_index() - 1 - 195,
+                game.get_main_RNG_index() - 1,
+                game.get_gamble_win(),
+                game.get_gamble_panel_win()
+            ));
+        end
+    end
 end
 
 return game;
