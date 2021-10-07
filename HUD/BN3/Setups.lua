@@ -16,35 +16,63 @@ setups.add_setup(setups.group_misc, "TEST BUTTONS", function()
     setups.press_buttons( 1, "PRESS START", {Start=true});
 end);
 
+-- Title "PRESS START" flashes 25 on, 7 off (require Hard Reset?)
+setups.add_setups(setups.create_group("Audio US"),
+    { -- description, hard, pause, delay_start, target_index
+        {" 66  ->   83 : First A",    false, false, 0,   0},
+        {"104 (101-107): 1st Beat",   false, false, 0, 104},
+      --{"104 (102-106): Wind Star",  false, false, 0, 104},
+      --{"104 (102-106): GMD Jackin", false, false, 0, 104},
+      --{"104 ( 99-108): Yort Yort",  false, false, 0, 104},
+        {"119 (117-121): 2nd Beat",   false, false, 0, 119},
+        {"129 (127-131): 3rd Beat",   false, false, 0, 129},
+      --{"129 (127-130): ACDC Skip",  false, false, 0, 129},
+        {"136 (134-138): Gamble Old", false, false, 0, 136},
+      --{"158 (156-160): GMD Jackin", false, false, 0, 158},
+      --{"162 (160-163): FastBall A", false, false, 0, 162},
+      --{"174 (172-176): FastBall B", false, false, 0, 174},
+        {"174 (172-176): 7th Beat",   false, false, 0, 174},
+        {"220 (218-222): 9th Beat",   false, false, 0, 220},
+      --{"220 (218-222): GMD Reroll", false, false, 0, 224},
+        {"232 (230-234): 10th Beat",  false, false, 0, 232},
+      --{"232 (229-234): SkeeBall",   false, false, 0, 232},
+      --{"302 (300-304): FastBall C", false, false, 0, 302},
+      --{"308 (306-310): FastBall D", false, false, 0, 308},
+    }
+);
 
-local group_RNG = setups.create_group("RNG Both");
-setups.add_setup(group_RNG, " 66 ->  83: First  A",          function() reset_and_wait( true, false,   0); end);
-setups.add_setup(group_RNG, " 66 ->  83: First  A  (Soft)",  function() reset_and_wait(false, false,   0); end);
-setups.add_setup(group_RNG, " 66 ->  83: First  A  (Pause)", function() reset_and_wait( true,  true,   0); end);
-setups.add_setup(group_RNG, " 83 -> 100: 100 Load  (Pause)", function() reset_and_wait( true,  true,  17); end);
-setups.add_setup(group_RNG, "100 -> 117: 100 On A  (Pause)", function() reset_and_wait( true,  true,  34); end);
-setups.add_setup(group_RNG, "100 -> 117: 100 On A",          function()     press_A_on( true,        100); end);
-setups.add_setup(group_RNG, "200 -> 217: 200 On A",          function()     press_A_on( true,        200); end);
-setups.add_setup(group_RNG, "300 -> 317: 300 On A",          function()     press_A_on( true,        300); end);
+setups.add_setups(setups.create_group("Test US"),
+    { -- description, hard, pause, delay_start, target_index
+        {" 66 ->  83: First  A  (Soft)",  false, false, 0,  66},
+        {" 66 ->  83: First  A  (Hard)",   true, false, 0,  66},
+        {" 66 ->  83: First  A  (Pause)",  true,  true, 0,  66},
+        {" 83 -> 100: 100 Load",          false, false, 0,  83},
+        {"100 -> 117: 100 On A",          false, false, 0, 100},
+        {"200 -> 217: 200 On A",          false, false, 0, 200},
+        {"300 -> 317: 300 On A",          false, false, 0, 300},
+    }
+);
 
-local group_RNG = setups.create_group("RNG US");
-setups.add_setup(group_RNG, "102 -> 119: Wind Box 1",        function() reset_and_wait( true, false,  36); end);
-setups.add_setup(group_RNG, "104 -> 121: Wind Box 2",        function() reset_and_wait( true, false,  38); end);
-setups.add_setup(group_RNG, "106 -> 123: Wind Box 3",        function() reset_and_wait( true, false,  40); end);
-setups.add_setup(group_RNG, "104 -> 121: Yort Encounters",   function() reset_and_wait( true, false,  38); end);
-setups.add_setup(group_RNG, "128 -> 145: CopyMan   (Pause)", function() reset_and_wait( true,  true,  62); end);
-setups.add_setup(group_RNG, "132 -> 149: CopyMan",           function() reset_and_wait( true, false,  66); end);
-setups.add_setup(group_RNG, "132 -> 149: Wind Star Old",     function() reset_and_wait( true, false,  66); end);
-setups.add_setup(group_RNG, "135 -> 152: Gamble    (Pause)", function() reset_and_wait(false,  true,  69); end);
-setups.add_setup(group_RNG, "137 -> 154: Gamble",            function() reset_and_wait(false, false,  71); end);
-setups.add_setup(group_RNG, "162 -> 179: IceBall Fast A",    function() reset_and_wait( true, false,  96); end);
-setups.add_setup(group_RNG, "174 -> 191: IceBall Fast B",    function() reset_and_wait( true, false, 108); end);
-setups.add_setup(group_RNG, "170 -> 187: IceBall    (Hard)", function() reset_and_wait( true, false, 104); end);
-setups.add_setup(group_RNG, "170 -> 187: IceBall    (Soft)", function() reset_and_wait(false, false, 104); end);
-setups.add_setup(group_RNG, "232 -> 249: IceBall Slide",     function() reset_and_wait( true, false, 166); end);
-
-local group_RNG = setups.create_group("RNG JP");
-setups.add_setup(group_RNG, " 66 ->  83: First  A",          function() reset_and_wait( true, false,   0); end);
+setups.add_setups(setups.create_group("RNG US"),
+    { -- description, hard, pause, delay_start, target_index
+        {"102 -> 119: Wind Box 1",         true, false, 0, 102},
+        {"104 -> 121: Wind Box 2",         true, false, 0, 104}, --  1st Beat
+        {"106 -> 123: Wind Box 3",         true, false, 0, 106},
+        {"128 -> 145: CopyMan (Pause)",    true,  true, 0, 128},
+        {"132 -> 149: CopyMan",            true, false, 0, 132},
+      --{"132 -> 149: Wind Star Old",      true, false, 0, 132},
+        {"135 -> 152: Gamble  (Pause)",   false,  true, 0, 135},
+        {"137 -> 154: Gamble",            false, false, 0, 137},
+        {"162 -> 179: IceBall Fast A",     true, false, 0, 162},
+        {"174 -> 191: IceBall Fast B",     true, false, 0, 174}, --  7th Beat
+        {"220 -> 237: GMD Reroll",         true, false, 0, 220}, --  9th Beat
+        {"232 -> 249: IceBall Slide",      true, false, 0, 232}, -- 10th Beat
+        {"302 -> 319: IceBall Fast C",     true, false, 0, 302},
+        {"308 -> 325: IceBall Fast D",    false, false, 0, 308},
+      --{"170 -> 187: IceBall (Hard)",     true, false, 0, 170},
+      --{"170 -> 187: IceBall (Soft)",    false, false, 0, 170},
+    }
+);
 
 setups.add_setup(setups.group_folders, "Folder  1: Rock, Paper, FlashMan", function()
     setups.folder_edit_buttons({
