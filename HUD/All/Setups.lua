@@ -95,7 +95,7 @@ function setups.reset_and_wait(hard, pause, delay_start, delay_A)
 end
 
 function setups.press_A_on(hard, pause, delay_start, target_index)
-    setups.reset_and_wait(hard, pause, delay_start, target_index - setups.align_RNG);
+    setups.reset_and_wait(hard, pause, delay_start, target_index - setups.align_RNG - delay_start);
 end
 
 function setups.add_setups(group, setup_array)
