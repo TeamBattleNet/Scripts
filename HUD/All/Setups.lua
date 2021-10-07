@@ -3,6 +3,7 @@
 -- Note: When setting A in Lua, it happens before next_frame();
 -- Note: When pressing A on Controller, it happens after next_frame();
 -- Note: Game load (RNG freeze) happens 17 frames after Controller A, but 18 frames after Lua A
+-- Note: This difference depends on whether event.onframestart or event.onframeend is used
 
 local setups = {};
 
@@ -55,15 +56,17 @@ end
 setups.delay_bios   = 282; -- BN 1
 setups.delay_capcom =  31; -- BN 1
 setups.delay_title  =  65; -- BN 1
+setups.align_RNG    =  66; -- BN 3
 
-function setups.PRESS_START(delay)
+function setups.PRESS_START(delay_start)
     setups.press_buttons(setups.delay_title, "WAIT FOR IT");
+    setups.press_buttons(delay_start or 0, "delaying Start");
     setups.press_buttons(1, "START", {Start=true});
-    setups.press_buttons(delay or 0, "delaying");
 end
 
-function setups.CONTINUE(delay)
-    setups.PRESS_START(delay);
+function setups.CONTINUE(delay_start, delay_A)
+    setups.PRESS_START(delay_start);
+    setups.press_buttons(delay_A or 0, "delaying A");
     setups.press_buttons(1, "PressA", {A=true});
 end
 
@@ -75,6 +78,39 @@ function setups.hard_reset()
     setups.press_buttons(1, "Hard Reset", {Power=true});
     setups.press_buttons(setups.delay_bios, "BIOS");
     setups.press_buttons(setups.delay_capcom, "Capcom", {Start=true});
+end
+
+function setups.reset_and_wait(hard, pause, delay_start, delay_A)
+    if hard then
+        setups.hard_reset();
+    else
+        setups.soft_reset();
+    end
+    if pause then
+        setups.PRESS_START(delay_start);
+        client.pause();
+    else
+        setups.CONTINUE(delay_start, delay_A);
+    end
+end
+
+function setups.press_A_on(hard, pause, delay_start, target_index)
+    setups.reset_and_wait(hard, pause, delay_start, target_index - setups.align_RNG);
+end
+
+function setups.add_setups(group, setup_array)
+    for _, setup in ipairs(setup_array) do
+        setups.add_setup(group, setup[1], -- description
+            function()
+                setups.press_A_on(
+                    setup[2], -- hard
+                    setup[3], -- pause
+                    setup[4], -- delay_start
+                    setup[5]  -- target_index
+                );
+            end
+        );
+    end
 end
 
 function setups.folder_edit_button(button)
@@ -131,6 +167,22 @@ setups.add_setup(setups.group_misc, "One Step Right, Pause", function()
     setups.press_buttons( 2, "Step", {Right=true});
     setups.press_buttons( 1, "Start", {Start=true});
 end);
+
+---------------------------------------- Folder Group ----------------------------------------
+
+setups.group_folders = setups.create_group("Folder Edits");
+
+setups.add_setup(setups.group_folders, "Folder  0: Remove All Chips", function()
+    for i=1,30 do
+        setups.folder_edit_buttons({
+            {A=true};
+            {A=true};
+            {Down=true};
+        });
+    end
+end);
+
+---------------------------------------- Module Controls ----------------------------------------
 
 return setups;
 
