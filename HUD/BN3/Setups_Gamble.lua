@@ -67,9 +67,9 @@ local function next_winner(screenshot, target_index, control_delay)
         client.screenshot();
     end
     setups.press_buttons(1, "Pressing A!", {A=true});
+    print(string.format("Pressing A on %4d -> %4d", game.get_main_RNG_index(), game.get_main_RNG_index()+control_delay));
     setups.press_buttons(control_delay, "waiting for control...");
     pick_winner();
-    print(string.format("Pressing A on %4d -> %4d", game.get_main_RNG_index(), game.get_main_RNG_index()+control_delay));
 end
 
 local function gamble_manip(hard, screenshot, title_A, target_1, target_2, target_3, target_4)
@@ -86,6 +86,17 @@ local function gamble_manip(hard, screenshot, title_A, target_1, target_2, targe
 end
 
 local group_gamble = setups.create_group("Gamble US");
-setups.add_setup(group_gamble, "M???: Gamble JP", function() gamble_manip(false, false, 119, 625, 1271, 1854, 2444); end);
-setups.add_setup(group_gamble, "M136: Gamble US", function() gamble_manip(false, false, 136, 625, 1271, 2190, 2820); end);
+setups.add_setup(group_gamble, "M???: Gamble JP"     ,  function() gamble_manip(false, false, 119, 625, 1271, 1854, 2444); end);
+setups.add_setup(group_gamble, "M136: Gamble US"     ,  function() gamble_manip(false, false, 136, 625, 1271, 2190, 2820); end);
+setups.add_setup(group_gamble, "M104: Gamble Test  1",  function() gamble_manip(false, false, 104, 555, 1271, 1854, 2444); end);
+setups.add_setup(group_gamble, "M119: Gamble Test  2",  function() gamble_manip(false, false, 119, 555, 1271, 1854, 2444); end);
+setups.add_setup(group_gamble, "M129: Gamble Test  3",  function() gamble_manip(false, false, 129, 625, 1271, 1854, 2444); end);
+setups.add_setup(group_gamble, "M142: Gamble Test  4",  function() gamble_manip(false, false, 142, 625, 1271, 1854, 2444); end);
+setups.add_setup(group_gamble, "M153: Gamble Test  5a", function() gamble_manip(false, false, 153, 555, 1271, 1854, 2444); end);
+setups.add_setup(group_gamble, "M153: Gamble Test  5b", function() gamble_manip(false, false, 153, 625, 1271, 1854, 2444); end);
+setups.add_setup(group_gamble, "M167: Gamble Test  6",  function() gamble_manip(false, false, 167, 625, 1271, 1854, 2444); end);
+setups.add_setup(group_gamble, "M174: Gamble Test  7",  function() gamble_manip(false, false, 174, 625, 1271, 1854, 2444); end);
+setups.add_setup(group_gamble, "M205: Gamble Test  8",  function() gamble_manip(false, false, 205, 625, 1271, 1854, 2444); end);
+setups.add_setup(group_gamble, "M220: Gamble Test  9",  function() gamble_manip(false, false, 220, 625, 1271, 1854, 2444); end);
+setups.add_setup(group_gamble, "M232: Gamble Test 10",  function() gamble_manip(false, false, 232, 625, 1271, 1854, 2444); end);
 
