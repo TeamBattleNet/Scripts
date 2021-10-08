@@ -231,13 +231,13 @@ function game.did_magic_byte_change()
     return game.ram.get.magic_byte() ~= previous_magic_byte;
 end
 
-game.previous_game_state = 0x00;
+local previous_game_state = 0x00;
 function game.did_game_state_change()
-    return game.ram.get.game_state() ~= game.previous_game_state;
+    return game.ram.get.game_state() ~= previous_game_state;
 end
 
 function game.did_leave_title_screen()
-    return (game.did_game_state_change() and game.previous_game_state == 0x00);
+    return (game.did_game_state_change() and previous_game_state == 0x00);
 end
 
 local previous_battle_state = 0x00;
@@ -351,17 +351,21 @@ end
 
 ---------------------------------------- Module Controls ----------------------------------------
 
+game.previous_game_state = 0x00;
+
 function game.track_game_state()
+    -- for internal use
     previous_progress       = game.ram.get.progress();
     previous_magic_byte     = game.ram.get.magic_byte();
-    game.previous_game_state     = game.ram.get.game_state();
+    previous_game_state     = game.ram.get.game_state();
     previous_battle_state   = game.ram.get.battle_state();
     previous_battle_pointer = game.ram.get.battle_pointer();
     previous_menu_mode      = game.ram.get.menu_mode();
     previous_menu_state     = game.ram.get.menu_state();
     previous_main_area      = game.ram.get.main_area();
     previous_sub_area       = game.ram.get.sub_area();
+    -- for external use
+    game.previous_game_state = previous_game_state;
 end
 
 return game;
-
