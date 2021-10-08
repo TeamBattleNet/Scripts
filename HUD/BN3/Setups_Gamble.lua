@@ -62,18 +62,18 @@ end
 
 local function next_winner(screenshot, target_index, control_delay)
     local wait_for = target_index - control_delay - game.get_main_RNG_index();
-    setups.press_buttons(wait_for, "waiting on Main RNG...");
+    setups.press_buttons(wait_for-1, "waiting on Main RNG...");
     if screenshot then
         client.screenshot();
     end
-    print(string.format("Pressing A on %4d -> %4d", game.get_main_RNG_index(), game.get_main_RNG_index()+control_delay));
     setups.press_buttons(1, "Pressing A!", {A=true});
     setups.press_buttons(control_delay, "waiting for control...");
     pick_winner();
+    print(string.format("Pressing A on %4d -> %4d", game.get_main_RNG_index(), game.get_main_RNG_index()+control_delay));
 end
 
-local function gamble_manip(hard, screenshot, press_A, target_1, target_2, target_3, target_4)
-    setups.press_A_on(hard, false, 0, press_A);
+local function gamble_manip(hard, screenshot, title_A, target_1, target_2, target_3, target_4)
+    setups.press_A_on(hard, false, 0, title_A);
     
     setups.press_buttons(42, "waiting for game to load...");
     
