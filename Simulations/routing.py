@@ -53,6 +53,12 @@ folder[30] = "GutStrgt O"
 
 print("Folder: " + str(folder))
 
+# RNG loop  781,480,823  frames,
+# which is  13,024,680   seconds,
+# which is  217,078      minutes
+# which is  3,618        hours,
+# which is ~1,000        runs.
+
 # Question: Which 1 slot is, on average, closest to the top?
 #  10800 is  3 minutes (of overworld movement)
 # 108000 is 30 minutes
