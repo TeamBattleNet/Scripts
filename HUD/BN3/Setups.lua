@@ -130,7 +130,7 @@ setups.add_setup(setups.group_folders, "Folder  1: Rock, Paper, FlashMan", funct
     });
 end);
 
---require("BN3/Setups_GMD");
+require("BN3/Setups_GMD");
 require("BN3/Setups_Gamble");
 
 return setups.groups;
