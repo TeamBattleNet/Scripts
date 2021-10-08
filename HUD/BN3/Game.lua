@@ -314,6 +314,17 @@ function game.get_GMD_RNG_index()
     return game.ram.get.main_RNG_index_of(game.get_GMD_RNG());
 end
 
+local previous_GMD_p1 = 0;
+local previous_GMD_p2 = 0;
+function game.did_GMD_spawn()
+    if     game.ram.get.GMD_1_xy() + game.ram.get.GMD_1_yx() ~= previous_GMD_p1 and previous_GMD_p1 == 0x0800 then
+        return true;
+    elseif game.ram.get.GMD_2_xy() + game.ram.get.GMD_2_yx() ~= previous_GMD_p2 and previous_GMD_p2 == 0x0800 then
+        return true;
+    end
+    return false;
+end
+
 --        vv vtv               i iii      
 -- 0000 0000 0000 0000 0000 0000 0000 0000
 
@@ -427,12 +438,25 @@ end
 ---------------------------------------- State Tracking ----------------------------------------
 
 function game.track_game_state_bn3()
+    local MRNG_Index = game.get_main_RNG_index();
+    
+    if game.did_GMD_spawn() then
+        local GMD_1_xy = game.ram.get.GMD_1_xy();
+        local GMD_1_yx = game.ram.get.GMD_1_yx();
+        local GMD_2_xy = game.ram.get.GMD_2_xy();
+        local GMD_2_yx = game.ram.get.GMD_2_yx();
+        print(string.format("%04u: GMDs spawned at 0x%04x 0x%04x and 0x%04x 0x%04x",
+            MRNG_Index or 0, GMD_1_xy, GMD_1_yx, GMD_2_xy, GMD_2_yx));
+    end
+    previous_GMD_p1 = game.ram.get.GMD_1_xy() + game.ram.get.GMD_1_yx();
+    previous_GMD_p2 = game.ram.get.GMD_2_xy() + game.ram.get.GMD_2_yx();
+    
     if  game.previous_gamble_win ~= game.get_gamble_win() then
         game.previous_gamble_win  = game.get_gamble_win();
-        if game.get_gamble_win() ~= 255 and game.get_main_RNG_index() then
+        if game.get_gamble_win() ~= 255 and MRNG_Index then
             print(string.format("New Gamble Option: %4s -> %4s: %d %s",
-                game.get_main_RNG_index() - 1 - 195,
-                game.get_main_RNG_index() - 1,
+                MRNG_Index - 1 - 195,
+                MRNG_Index - 1,
                 game.get_gamble_win(),
                 game.get_gamble_panel_win()
             ));
