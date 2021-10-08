@@ -353,7 +353,7 @@ end
 
 game.previous_game_state = 0x00;
 
-function game.track_game_state()
+function game.record_game_state()
     -- for internal use
     previous_progress       = game.ram.get.progress();
     previous_magic_byte     = game.ram.get.magic_byte();

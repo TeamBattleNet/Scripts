@@ -412,6 +412,11 @@ function game.use_fun_flags(fun_flags) -- TODO: Rename
     end
 end
 
+---------------------------------------- State Tracking ----------------------------------------
+
+function game.track_game_state_bn2()
+end
+
 ---------------------------------------- Module Controls ----------------------------------------
 
 function game.initialize(options)
@@ -426,7 +431,7 @@ function game.pre_update(options)
 end
 
 function game.post_update(options)
-    game.update();
+    game.track_game_state_bn2();
     game.ram.post_update(options);
 end
 

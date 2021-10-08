@@ -195,6 +195,8 @@ function hud.update()
         buttons_string = "";
     end
     
+    hud.game.update();
+    
     hud.game.post_update({});
 end
 

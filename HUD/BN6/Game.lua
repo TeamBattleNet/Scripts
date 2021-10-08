@@ -88,13 +88,18 @@ function game.simulate_folder_shuffle()
     local draw_slots = game.ram.shuffle_folder_simulate_from_value(seed, 30);
 end
 
+---------------------------------------- State Tracking ----------------------------------------
+
+function game.track_game_state_bn6()
+end
+
 ---------------------------------------- Module Controls ----------------------------------------
 
 local settings = require("All/Settings");
 
 function game.initialize(options)
-    settings.set_display_text("gui"); -- TODO: Remove when gui.text fully supported
     game.ram.initialize(options);
+    require("All/Settings").set_display_text("gui"); -- TODO: Remove when gui.text fully supported
 end
 
 function game.pre_update(options)
@@ -104,8 +109,7 @@ function game.pre_update(options)
 end
 
 function game.post_update(options)
-    game.track_game_state();
-    game.track_encounter_checks();
+    game.track_game_state_bn6();
     game.ram.post_update(options);
 end
 

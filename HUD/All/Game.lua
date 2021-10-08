@@ -368,20 +368,19 @@ function game.pre_update(options)
     -- should be overridden per game
 end
 
-function game.post_update(options)
-    -- should be overridden per game
-end
-
 game.doit_later = {};
-
 function game.update()
-    game.track_game_state();
     game.track_encounter_checks();
+    game.record_game_state();
     if  game.doit_later[emu.framecount()] then
         game.doit_later[emu.framecount()]();
         game.doit_later[emu.framecount()] = nil;
     end
     if game.in_credits() then gui.text(0, 0, "t r o u t", 0x10000000, "bottomright"); end
+end
+
+function game.post_update(options)
+    -- should be overridden per game
 end
 
 return game;

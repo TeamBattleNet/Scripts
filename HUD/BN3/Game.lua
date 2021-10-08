@@ -424,6 +424,22 @@ function game.use_fun_flags(fun_flags) -- TODO: Rename
     end
 end
 
+---------------------------------------- State Tracking ----------------------------------------
+
+function game.track_game_state_bn3()
+    if  game.previous_gamble_win ~= game.get_gamble_win() then
+        game.previous_gamble_win  = game.get_gamble_win();
+        if game.get_gamble_win() ~= 255 and game.get_main_RNG_index() then
+            print(string.format("New Gamble Option: %4s -> %4s: %d %s",
+                game.get_main_RNG_index() - 1 - 195,
+                game.get_main_RNG_index() - 1,
+                game.get_gamble_win(),
+                game.get_gamble_panel_win()
+            ));
+        end
+    end
+end
+
 ---------------------------------------- Module Controls ----------------------------------------
 
 function game.initialize(options)
@@ -438,19 +454,8 @@ function game.pre_update(options)
 end
 
 function game.post_update(options)
-    game.update();
+    game.track_game_state_bn3();
     game.ram.post_update(options);
-    if  game.previous_gamble_win ~= game.get_gamble_win() then
-        game.previous_gamble_win  = game.get_gamble_win();
-        if game.get_gamble_win() ~= 255 and game.get_main_RNG_index() then
-            print(string.format("New Gamble Option: %4s -> %4s: %d %s",
-                game.get_main_RNG_index() - 1 - 195,
-                game.get_main_RNG_index() - 1,
-                game.get_gamble_win(),
-                game.get_gamble_panel_win()
-            ));
-        end
-    end
 end
 
 return game;

@@ -345,11 +345,16 @@ function game.check_navi_stats(expected_curr_hp, expected_max_hp, expected_karma
     return false;
 end
 
+---------------------------------------- State Tracking ----------------------------------------
+
+function game.track_game_state_bn5()
+end
+
 ---------------------------------------- Module Controls ----------------------------------------
 
 function game.initialize(options)
-    require("All/Settings").set_display_text("gui"); -- TODO: Remove when gui.text fully supported
     game.ram.initialize(options);
+    require("All/Settings").set_display_text("gui"); -- TODO: Remove when gui.text fully supported
 end
 
 function game.pre_update(options)
@@ -359,7 +364,7 @@ function game.pre_update(options)
 end
 
 function game.post_update(options)
-    game.update();
+    game.track_game_state_bn5();
     game.ram.post_update(options);
 end
 

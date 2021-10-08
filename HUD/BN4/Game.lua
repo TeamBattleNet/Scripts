@@ -95,11 +95,8 @@ function game.pre_update(options)
 end
 
 function game.post_update(options)
-    game.track_game_state();
     game.ram.post_update(options);
 end
 
 return game;
-
-
 
