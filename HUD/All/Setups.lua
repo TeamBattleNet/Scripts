@@ -55,6 +55,7 @@ end
 
 setups.delay_bios   = 282; -- BN 1
 setups.delay_capcom =  31; -- BN 1
+setups.await_capcom =  62; -- TBD?
 setups.delay_title  =  65; -- BN 1
 setups.align_RNG    =  66; -- BN 3
 
@@ -74,15 +75,19 @@ function setups.soft_reset()
     setups.press_buttons(1, "Soft Reset", {A=true; B=true; Start=true; Select=true});
 end
 
-function setups.hard_reset()
+function setups.hard_reset(skip_capcom)
     setups.press_buttons(1, "Hard Reset", {Power=true});
     setups.press_buttons(setups.delay_bios, "BIOS");
-    setups.press_buttons(setups.delay_capcom, "Capcom", {Start=true});
+    if skip_capcom == nil or skip_capcom then
+        setups.press_buttons(setups.delay_capcom, "Capcom", {Start=true}); -- default behavior
+    else
+        setups.press_buttons(setups.await_capcom, "Capcom"); -- affects power on frame counter but not RNG
+    end
 end
 
 function setups.reset_and_wait(hard, pause, delay_start, delay_A)
     if hard then
-        setups.hard_reset();
+        setups.hard_reset(true);
     else
         setups.soft_reset();
     end
