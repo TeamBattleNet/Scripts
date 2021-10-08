@@ -231,6 +231,7 @@ end
 
 local area_odds = 1;
 local current_odds = 1;
+local previous_steps = 0;
 local last_encounter_check = 0;
 
 function game.get_area_percent()
@@ -242,18 +243,17 @@ function game.get_current_percent()
 end
 
 function game.get_encounter_checks()
-    return math.floor(last_encounter_check / 64); -- approximate
+    return math.floor(last_encounter_check / 64); -- approximate, exluding SlipRuns
 end
 
 function game.is_sneakrun_bugged()
     return false; -- overridden per game
 end
 
-local previous_steps = 0;
 function game.track_encounter_checks()
     local curr_steps = game.ram.get.steps();
     if previous_steps ~= curr_steps and curr_steps == 0 then
-        print("Steps reset to 0. Previous step counter: " .. previous_steps);
+        print("Steps reset to 0 from: " .. previous_steps);
     end
     previous_steps = curr_steps;
     if game.did_area_change() then
@@ -263,7 +263,7 @@ function game.track_encounter_checks()
             print(string.format("Inverted  Odds: %7.3f%%", 100-game.get_area_percent()));
         end
     end
-    if game.in_world() then
+    if game.in_world() then -- doesn't work in BN 6
         if game.get_check() < last_encounter_check then
             last_encounter_check = 0;
             area_odds = area_odds * (1-current_odds);
@@ -275,6 +275,7 @@ function game.track_encounter_checks()
     end
     if game.did_area_change() then
         area_odds = 1;
+        current_odds = 1;
     end
 end
 
