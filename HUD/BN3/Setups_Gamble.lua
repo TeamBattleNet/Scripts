@@ -86,17 +86,31 @@ local function gamble_manip(hard, screenshot, title_A, target_1, target_2, targe
 end
 
 local group_gamble = setups.create_group("Gamble US");
-setups.add_setup(group_gamble, "M???: Gamble JP"     ,  function() gamble_manip(false, false, 119, 625, 1271, 1854, 2444); end);
-setups.add_setup(group_gamble, "M136: Gamble US"     ,  function() gamble_manip(false, false, 136, 625, 1271, 2190, 2820); end);
-setups.add_setup(group_gamble, "M104: Gamble Test  1",  function() gamble_manip(false, false, 104, 555, 1271, 1854, 2444); end);
-setups.add_setup(group_gamble, "M119: Gamble Test  2",  function() gamble_manip(false, false, 119, 555, 1271, 1854, 2444); end);
-setups.add_setup(group_gamble, "M129: Gamble Test  3",  function() gamble_manip(false, false, 129, 625, 1271, 1854, 2444); end);
-setups.add_setup(group_gamble, "M142: Gamble Test  4",  function() gamble_manip(false, false, 142, 625, 1271, 1854, 2444); end);
-setups.add_setup(group_gamble, "M153: Gamble Test  5a", function() gamble_manip(false, false, 153, 555, 1271, 1854, 2444); end);
-setups.add_setup(group_gamble, "M153: Gamble Test  5b", function() gamble_manip(false, false, 153, 625, 1271, 1854, 2444); end);
-setups.add_setup(group_gamble, "M167: Gamble Test  6",  function() gamble_manip(false, false, 167, 625, 1271, 1854, 2444); end);
-setups.add_setup(group_gamble, "M174: Gamble Test  7",  function() gamble_manip(false, false, 174, 625, 1271, 1854, 2444); end);
-setups.add_setup(group_gamble, "M205: Gamble Test  8",  function() gamble_manip(false, false, 205, 625, 1271, 1854, 2444); end);
-setups.add_setup(group_gamble, "M220: Gamble Test  9",  function() gamble_manip(false, false, 220, 625, 1271, 1854, 2444); end);
-setups.add_setup(group_gamble, "M232: Gamble Test 10",  function() gamble_manip(false, false, 232, 625, 1271, 1854, 2444); end);
+setups.add_setup(group_gamble, "M???: Gamble JP"     , function() gamble_manip(false, false, 119, 625, 1271, 1854, 2444); end);
+setups.add_setup(group_gamble, "M136: Gamble US"     , function() gamble_manip(false, false, 136, 625, 1271, 2190, 2820); end);
+
+setups.add_setup(group_gamble, "M104: Gamble Beat 1", function() gamble_manip(false, false, 104, 555, 1271, 1854, 2475); end); -- ok
+setups.add_setup(group_gamble, "M119: Gamble Beat 2", function() gamble_manip(false, false, 119, 555, 1271, 1854, 2444); end); -- bad
+setups.add_setup(group_gamble, "M129: Gamble Beat 3", function() gamble_manip(false, false, 129, 625, 1271, 1854, 2444); end); -- off
+setups.add_setup(group_gamble, "M142: Gamble Beat 4", function() gamble_manip(false, false, 142, 625, 1271, 1854, 2444); end); -- ok
+setups.add_setup(group_gamble, "M153: Gamble Beat 5", function() gamble_manip(false, false, 153, 555, 1271, 1854, 2444); end); -- ok
+
+setups.add_setup(group_gamble, "M167: Gamble Beat 6", function() gamble_manip(false, false, 167, 625, 1271, 1854, 2444); end); -- bad
+setups.add_setup(group_gamble, "M174: Gamble Beat 7", function() gamble_manip(false, false, 174, 625, 1271, 1854, 2444); end); -- ok
+setups.add_setup(group_gamble, "M205: Gamble Beat 8", function() gamble_manip(false, false, 205, 625, 1271, 1854, 2444); end); -- eh
+setups.add_setup(group_gamble, "M220: Gamble Beat 9", function() gamble_manip(false, false, 220, 625, 1271, 1854, 2444); end); -- off
+
+--[[
+ 553- 557: TL   5  555
+ 623- 627: BL   5  625
+
+1102-1108: BL   7 1105 needs 555
+1134-1139: BL   6 1136 needs 555
+1269-1274: TL   6 1271
+
+1852-1856: TL   5 1854
+
+2440-2448: TL   9 2444
+2472-2478: TL   7 2475
+--]]
 
