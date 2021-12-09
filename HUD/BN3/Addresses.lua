@@ -17,6 +17,7 @@ addresses.navi_cust_bugged      = 0x0200003B; -- 1 bit, 0x80, maybe?
 addresses.viruses_captured      = 0x0200003B; -- 1 digit per virus 0x7 ends 3F
 
 addresses.folder_state          = 0x02000040; -- 1 byte
+addresses.navi_deleted_flags    = 0x02000050; -- 1 bit per navi (alpha / beta / cubes) format tbd
 addresses.HP_memory_value       = 0x02000150; -- 1 byte ???
 
 addresses.viruses_breeder       = 0x02000164; -- 1 bit, must be set before jack-in
