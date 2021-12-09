@@ -17,6 +17,9 @@ ram.set.bug_frags = function(bug_frags) memory.write_u8(ram.addr.bug_frags, bug_
 ram.get.draw_slot = function(which_slot) return memory.read_u8(ram.addr.battle_draw_slots+which_slot); end;
 ram.set.draw_slot = function(which_slot, folder_slot) memory.write_u8(ram.addr.battle_draw_slots+which_slot, folder_slot); end;
 
+ram.get.next_element = function() return memory.read_u8(ram.addr.element_next); end;
+ram.set.next_element = function(next_element) memory.write_u8(ram.addr.element_next, next_element); end;
+
 ram.get.folder_count = function() return memory.read_u8(ram.addr.folder_count); end;
 ram.set.folder_count = function(folder_count) memory.write_u8(ram.addr.folder_count, folder_count); end;
 

@@ -59,6 +59,8 @@ local function HUD_routing()
     hud.to_screen("0048: " .. hud.game.get_string_binary(0x02000048,  1, true));
     hud.set_offset(16, hud.y-1);
     hud.to_screen(tostring(hud.game.is_go_mode()));
+    hud.to_screen("");
+    hud.to_screen("Element: " .. hud.game.get_next_element_name());
 end
 
 local function HUD_battle()
@@ -86,6 +88,7 @@ local function HUD_auto()
         display_player_info();
         hud.to_screen("");
         hud.display_RNG(true);
+        hud.to_screen("Element: " .. hud.game.get_next_element_name());
         hud.display_area();
     elseif hud.game.in_world() then
         if hud.game.in_real_world() then

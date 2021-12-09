@@ -182,6 +182,15 @@ function game.set_style_wood()
     game.ram.change_active_element(4);
 end
 
+function game.get_next_element()
+    return game.ram.get.next_element();
+end
+
+local elements = {"Elec", "Heat", "Aqua", "Wood"};
+function game.get_next_element_name()
+    return elements[game.get_next_element()] or "????";
+end
+
 function game.calculate_mega_level()
     level = 1; -- starting level
     level = level +     game.ram.get.HPMemory();
