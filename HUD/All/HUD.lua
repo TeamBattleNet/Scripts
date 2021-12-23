@@ -181,10 +181,6 @@ function hud.update()
                     hud.Up();
                 elseif buttons.keys.down.Down    then
                     hud.Down();
-                elseif buttons.keys.down.Left    then
-                    hud.Left();
-                elseif buttons.keys.down.Right   then
-                    hud.Right();
                 end
             end
             hud.HUDs[hud.HUD_mode]();
