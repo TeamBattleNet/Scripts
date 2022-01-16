@@ -42,7 +42,7 @@ ram.set.GMD_2_yx = function(GMD_xy) memory.write_u16_le(ram.addr.GMD_2_yx, GMD_x
 
 ram.get.style_active = function () return memory.read_u16_le(ram.addr.style_active); end;
 ram.set.style_active = function (style) return memory.write_u16_le(ram.addr.style_active, style); end;
-ram.set.style_stored = function () return memory.read_u16_le(ram.addr.style_stored); end;
+ram.get.style_stored = function () return memory.read_u16_le(ram.addr.style_stored); end;
 ram.set.style_stored = function (style) return memory.write_u16_le(ram.addr.style_stored, style); end;
 ---------------------------------------- RAMsacking ----------------------------------------
 
