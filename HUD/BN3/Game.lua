@@ -119,6 +119,22 @@ game.gamble_panels = {"Bottom Left", "Top Left", "Top Right", "Bottom Right"};
 
 ----------------------------------------Mega Modifications ----------------------------------------
 
+function game.set_style(style)
+	local current_style = game.ram.get.style_active();
+	local level = bit.band(current_style, 0xC0);
+	local element = bit.band(current_style, 0x07);
+	game.ram.set.style_stored(level + bit.lshift(style, 3) + element);
+    return game.ram.set.style_active(level + bit.lshift(style, 3) + element);
+end
+
+function game.set_style_element(element)
+	local current_style = game.ram.get.style_active();
+	local level = bit.band(current_style, 0xC0);
+	local style = bit.band(current_style, 0x38);
+	game.ram.set.style_stored(level + style + element);
+    return game.ram.set.style_active(level + style + element);
+end
+
 --[[
 
 function game.get_style_type()
