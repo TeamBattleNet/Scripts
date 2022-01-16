@@ -83,6 +83,8 @@ function command_items.update_options(option_value)
         table.insert( command_items.options, { value = 4; text = "HPMemory" ; } );
         table.insert( command_items.options, { value = 5; text = "Equipment"; } );
         table.insert( command_items.options, { value = 6; text = "Folders"  ; } );
+		table.insert( command_items.options, { value = 7; text = "Style Element"  ; } );
+		table.insert( command_items.options, { value = 8; text = "Style Type"  ; } );
     else
         command_items.sub_selection = command_items.selection;
         command_items.selection = 1;
@@ -129,6 +131,25 @@ function command_items.update_options(option_value)
             table.insert( command_items.options, { value = function() commands.game.overwrite_folder_manip(        ); end; text = "Folder: Any% Manip"           ; } );
             table.insert( command_items.options, { value = function() commands.game.randomize_folder_IDs_standard(1); end; text = "Folder: Randomize Folder IDs"  ; } );
             --table.insert( command_items.options, { value = function() commands.game.randomize_folder_IDs_anything(1); end; text = "Folder: Super Randomize IDs"   ; } );
+            command_items.FUNction = function(value) value(); end;
+		elseif option_value == 7 then
+            command_items.description = function() return "Overrides Current Saved Element"; end;
+            table.insert( command_items.options, { value = function() commands.game.set_style_element(0            ); end; text = "Normal Element"     ; } );
+			table.insert( command_items.options, { value = function() commands.game.set_style_element(1            ); end; text = "Elec Element"       ; } );
+			table.insert( command_items.options, { value = function() commands.game.set_style_element(2            ); end; text = "Heat Element"       ; } );
+			table.insert( command_items.options, { value = function() commands.game.set_style_element(3            ); end; text = "Aqua Element"       ; } );
+			table.insert( command_items.options, { value = function() commands.game.set_style_element(4            ); end; text = "Wood Element"       ; } );
+            command_items.FUNction = function(value) value(); end;
+		elseif option_value == 8 then
+            command_items.description = function() return "Overrides Current Saved Style"; end;
+			table.insert( command_items.options, { value = function() commands.game.set_style(0                    ); end; text = "Normal Style"       ; } );
+			table.insert( command_items.options, { value = function() commands.game.set_style(1                    ); end; text = "Guts Style"         ; } );
+			table.insert( command_items.options, { value = function() commands.game.set_style(2                    ); end; text = "Custom Style"       ; } );
+			table.insert( command_items.options, { value = function() commands.game.set_style(3                    ); end; text = "Team Style"         ; } );
+			table.insert( command_items.options, { value = function() commands.game.set_style(4                    ); end; text = "Shield Style"       ; } );
+			table.insert( command_items.options, { value = function() commands.game.set_style(5                    ); end; text = "Ground Style"       ; } );
+			table.insert( command_items.options, { value = function() commands.game.set_style(6                    ); end; text = "Shadow Style"       ; } );
+			table.insert( command_items.options, { value = function() commands.game.set_style(7                    ); end; text = "Bug Style"          ; } );
             command_items.FUNction = function(value) value(); end;
         else
             command_items.description = function() return "Bzzt! (something broke)"; end;
