@@ -37,6 +37,27 @@ end
 
 ---------------------------------------- HUD Modes ----------------------------------------
 
+local function HUD_tournament()
+    local seed = hud.game.ram.get.tournament_seed();
+
+    if seed == 0xFFFFFFFF then
+        hud.display_main_RNG(false);
+    else
+        -- Display tournament scenarios
+        local frame = hud.game.get_tournament_frame();
+        local scenarios = hud.game.get_tournament_scenarios();
+
+        -- hud.set_position(2, 110);
+
+        if frame then
+            hud.to_screen(string.format("Tourney Index: %4d", hud.game.get_tournament_frame() - 1)); -- Don't ask why, the old tourney manip script did this so I will too. Probably for 0 indexing
+            hud.to_screen(string.format("%s, %s, %s", scenarios[1], scenarios[2], scenarios[3]));
+            hud.to_screen(string.format("%s, %s, %s", scenarios[4], scenarios[5], scenarios[6]));
+            hud.to_screen(string.format("%s, %s, %s", scenarios[7], scenarios[8], scenarios[9]));
+        end
+    end
+end
+
 local function HUD_speedrun()
     hud.to_screen(string.format("Progress: 0x%02X %s", hud.game.get_progress(), hud.game.get_progress_name_current()));
     display_player_info();
@@ -133,6 +154,7 @@ table.insert(hud.HUDs, HUD_auto);
 table.insert(hud.HUDs, HUD_battle);
 table.insert(hud.HUDs, HUD_routing);
 table.insert(hud.HUDs, HUD_speedrun);
+table.insert(hud.HUDs, HUD_tournament);
 
 ---------------------------------------- Module Controls ----------------------------------------
 
