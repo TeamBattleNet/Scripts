@@ -1,6 +1,6 @@
 # Scratch file for calling various simulation functions for MMBN routing, enjoy.
 
-import rng
+import slots
 import slot_windows
 
 import os
@@ -65,8 +65,8 @@ print("Folder: " + str(folder))
 # 324000 is 90 minutes
 # 648000 is 3    hours
 # 972000 is 4.5  hours
-# rng.get_draw_slots_bn2(     1, 324000, reg_slot=1)
-# rng.get_draw_slots_bn2(324000, 648000, reg_slot=1)
+# slots.get_draw_slots_bn2(     1, 324000, reg_slot=1)
+# slots.get_draw_slots_bn2(324000, 648000, reg_slot=1)
 
 # Question: Which 4 slots are you most likely to top deck *at least one of* in a given RNG range?
 #  10800 is  3 minutes (of overworld movement)
@@ -74,15 +74,15 @@ print("Folder: " + str(folder))
 # 324000 is 90 minutes
 # 648000 is 3    hours
 # 972000 is 4.5  hours
-# rng.get_draw_slots_bn3(     1, 648000, reg_slot=1) # full  game
-# rng.get_draw_slots_bn3(     1, 324000, reg_slot=1) # early game
-# rng.get_draw_slots_bn3(324000, 648000, reg_slot=1) # late  game
+# slots.get_draw_slots_bn3(     1, 648000, reg_slot=1) # full  game
+# slots.get_draw_slots_bn3(     1, 324000, reg_slot=1) # early game
+# slots.get_draw_slots_bn3(324000, 648000, reg_slot=1) # late  game
 # for each combination of 4 slots, count how many top 5 draws had at least 1 of those slots; sort.
 
-#rng.log_draw_slots_bn3(start_index, end_index, reg_slot, draw_depth)
-#rng.log_draw_chips_bn3(start_index, end_index, reg_slot, draw_depth, folder)
-#rng.log_draw_slots_gauntlet_bn3(start_index, end_index, reg_slot, draw_depth,   None, fights, gauntlet_offset=68)
-#rng.log_draw_slots_gauntlet_bn3(start_index, end_index, reg_slot, draw_depth, folder, fights, gauntlet_offset=68)
+#slots.log_draw_slots_bn3(start_index, end_index, reg_slot, draw_depth)
+#slots.log_draw_chips_bn3(start_index, end_index, reg_slot, draw_depth, folder)
+#slots.log_draw_slots_gauntlet_bn3(start_index, end_index, reg_slot, draw_depth,   None, fights, gauntlet_offset=68)
+#slots.log_draw_slots_gauntlet_bn3(start_index, end_index, reg_slot, draw_depth, folder, fights, gauntlet_offset=68)
 
 #slot_windows.find_windows_bn3(100, 1000, reg_slot)
 
