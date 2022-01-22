@@ -10,6 +10,16 @@ area_curve   = 0
 check_number = 1
 constraints  = []
 
+def add_constraint(offset, got_encounter):
+    global check_number
+    constraints.append({
+        "offset"       : offset,
+        "threshold"    : encounter_thresholds[min(check_number,16)][(area_curve)%8],
+        "got_encounter": got_encounter,
+    })
+    check_number = check_number + 1
+#def
+
 def all_false():
     for constraint in constraints:
         if constraint["got_encounter"]:
@@ -42,7 +52,8 @@ def find_windows():
     #for
 #def
 
-encounter_thresholds = [                              # BN 3
+encounter_thresholds = [                              #   BN  3
+    #   0     1     2     3     4     5     6     7   # Area  #
     [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], #    0  0
     [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], #   64  1
     [0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00], #  128  2
@@ -64,43 +75,7 @@ encounter_thresholds = [                              # BN 3
 #encounter_thresholds[check_number][area_curve]
 # BugRun uses Area Curve 0
 
-""" Example Encounter Curves (BN 3):
-#: 00 01 02 03 04 05 06 07 - step
----------------------------------
-0: 00 00 00 00 00 00 00 00 -    0
-1: 00 00 00 00 00 00 00 00 -   64
-2: 01 00 00 00 00 00 00 00 -  128
-3: 02 01 00 00 00 00 00 00 -  192
-4: 03 02 01 00 00 00 00 00 -  256
-5: 04 03 02 01 00 00 00 00 -  320
-6: 05 04 03 02 01 00 00 00 -  384
-7: 06 05 04 03 02 00 00 00 -  448
-8: 08 06 05 04 03 01 00 00 -  512
-9: 0A 08 06 05 04 02 00 00 -  576
-A: 0C 0A 08 06 05 03 00 00 -  640
-B: 0E 0C 0A 08 06 04 00 00 -  704
-C: 10 0E 0C 0A 08 05 00 00 -  768
-D: 12 10 0E 0C 0A 06 00 00 -  832
-E: 14 12 10 0E 0C 08 02 00 -  896
-F: 1A 14 12 10 0E 0A 06 00 -  960
-G: 1C 1A 14 12 10 0C 0C 00 - 1024
-BugRun uses Area Curve 00
-
--- ram.would_get_encounter(0x439E54F2); -- true
--- 0x439E54F2 01000011100111100101010011110010 input
--- 0x873CA9E4 10000111001111001010100111100100 lshift
--- 0x873CA9E5 10000111001111001010100111100101 add+1
--- 0x873CA9E5 10000111001111001010100111100101 xor
--- 0x00000000 00000000000000000000000000000000 yes encounter
-
--- ram.would_get_encounter(0xBC61AB0C); -- false
--- 0xBC61AB0C 10111100011000011010101100001100 input
--- 0x78C35619 01111000110000110101011000011001 lshift
--- 0x78C3561A 01111000110000110101011000011010 add+1
--- 0x873CA9E5 10000111001111001010100111100101 xor
--- 0xFFFFFFFF 11111111111111111111111111111111 no encounter
-
-========================= Encounter Check Logic
+""" ========================= Encounter Check Logic
 //encounter check every 64 steps
 //table of encounterRate table at 0800D2F4
 encounterRate = readByte(0800D2F4 + (area * 16) + subarea)
@@ -122,8 +97,9 @@ loops through list of battle list subtracting the probability of that battle fro
 when that number if finally < 0 that battle is selected
 if sneakrun is not active ends encounter routine
 if hp is greater than battles threshold no encounter
+"""
 
-========================= Drop Table Logic
+""" ========================= Drop Table Logic
 Step 1 Picks which enemy to choose rewards for
     (rng2009800 number) % (number of enemy in the battle)
 
@@ -158,15 +134,21 @@ Step 2 Picks reward index:
 Drop Table Bias Proof: https://gist.github.com/StraDaMa/2019adda4b7d605e2403a6760a037086
 """
 
-def add_constraint(offset, got_encounter):
-    global check_number
-    constraints.append({
-        "offset"       : offset,
-        "threshold"    : encounter_thresholds[min(check_number,16)][(area_curve)%8],
-        "got_encounter": got_encounter,
-    })
-    check_number = check_number + 1
-#def
+""" ========================= Magic RNG Values
+-- ram.would_get_encounter(0x439E54F2); -- true
+-- 0x439E54F2 01000011100111100101010011110010 input
+-- 0x873CA9E4 10000111001111001010100111100100 lshift
+-- 0x873CA9E5 10000111001111001010100111100101 add+1
+-- 0x873CA9E5 10000111001111001010100111100101 xor
+-- 0x00000000 00000000000000000000000000000000 yes encounter
+
+-- ram.would_get_encounter(0xBC61AB0C); -- false
+-- 0xBC61AB0C 10111100011000011010101100001100 input
+-- 0x78C35619 01111000110000110101011000011001 lshift
+-- 0x78C3561A 01111000110000110101011000011010 add+1
+-- 0x873CA9E5 10000111001111001010100111100101 xor
+-- 0xFFFFFFFF 11111111111111111111111111111111 no encounter
+"""
 
 #print(f"0x{rng.reverse_RNG(0x02-1):08x}")
 #print(f"0x{rng.reverse_RNG(0x06-1):08x}")
@@ -174,7 +156,7 @@ def add_constraint(offset, got_encounter):
 
 print("")
 
-# Single Threshold Check
+# Example: Single Threshold Check
 A_offset     = 0
 window_start =    1
 window_end   = 2000
