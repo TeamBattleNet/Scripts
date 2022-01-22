@@ -33,22 +33,23 @@ def would_get_encounter(encounter_threshold, mRNG):
     return encounter_threshold > (mRNG % 0x20)
 #def
 
-max_delta = 100000
 def calculate_RNG_delta(seed, goal):
     delta = 0
-    while seed != goal:
+    while seed != goal: # possible infinite loop
         delta += 1
         seed = simulate_RNG(seed)
-        if delta > max_delta:
+        if delta > 108000: # 30 minutes of frames
             return None
         #if
     #while
     return delta
 #def
 
-def shuffle_folder_bn3(RNG_value=0x873CA9E4, reg_slot=255, swaps=30): # matches L Delta of 61
-    slots = 30
-    
+# exclusive finding from BN 1 testing:
+# overworld fights perform 1 more RNG call than cutscene fights
+# the old index is tuned to overworld fights, so cutscene draws will appear to be +1 (42 maps to 43)
+
+def shuffle_folder_bn3(RNG_value=0x873CA9E4, reg_slot=255, swaps=30, slots=30): # matches L Delta of 61
     draw_slots = [n for n in range(slots)]
     
     if reg_slot != 255:
@@ -72,10 +73,6 @@ def shuffle_folder_bn3(RNG_value=0x873CA9E4, reg_slot=255, swaps=30): # matches 
     
     return draw_slots
 #def
-
-# note from BN 1 testing:
-# overworld fights perform 1 more RNG call than cutscene fights
-# this index is tuned to overworld fights, so cutscene draws will appear to be +1 (420 maps to 421)
 
 def get_draw_slots_bn3(start_index, end_index, reg_slot=255, one_index=False):
     draw_slots = {}
@@ -106,7 +103,7 @@ def print_draw_slots_bn3(start_index, end_index, reg_slot=255, zero_pad=False):
 #def
 
 def log_draw_slots_bn3(start_index, end_index, reg_slot=255, draw_depth=30):
-    f = open('Simulations/ignore/bn3_slots.txt', 'a')
+    f = open('Simulations/ignore/bn3_slots.txt', 'a') # a to append, w to over-write
     f.write("####: 01 02 03 04 05 | 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30\n")
     f.write("---------------------+---------------------------------------------------------------------------\n")
     draw_frames = get_draw_slots_bn3(start_index, end_index, reg_slot, True)
@@ -126,7 +123,9 @@ def log_draw_slots_bn3(start_index, end_index, reg_slot=255, draw_depth=30):
 #def
 
 def log_draw_chips_bn3(start_index, end_index, reg_slot=255, draw_depth=5, folder=None):
-    f = open('Simulations/ignore/bn3_chips.txt', 'a')
+    if folder == None:
+        return None
+    f = open('Simulations/ignore/bn3_chips.txt', 'a') # a to append, w to over-write
     f.write("####:       01         02         03         04         05         06\n")
     draw_frames = get_draw_slots_bn3(start_index, end_index, reg_slot, True)
     for draw_frame in draw_frames:
