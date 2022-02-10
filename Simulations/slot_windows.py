@@ -1,6 +1,6 @@
 # Draw Slot Window Finder for routing RNG manipulation in Mega Man Battle Network, enjoy.
 
-import rng
+import slots
 import itertools
 
 min_depth = 1
@@ -154,7 +154,7 @@ def find_windows_bn3(index_start, index_end, reg=255):
 	
 	print(f"Searching for windows from {index_start:d} to {index_end:d}...")
 	
-	frames = rng.get_draw_slots_bn3(index_start, index_end, reg, True)
+	frames = slots.get_draw_slots_bn3(index_start, index_end, reg, True)
 	
 	windows  = {}
 	

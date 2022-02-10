@@ -5,11 +5,12 @@ local game = require("All/Game");
 game.number = 4;
 game.name = "BN4";
 
-game.ram      = require("BN4/RAM"     );
-game.areas    = require("BN4/Areas"   );
-game.chips    = require("BN4/Chips"   );
-game.enemies  = require("BN4/Enemies" );
-game.progress = require("BN4/Progress");
+game.ram         = require("BN4/RAM"     );
+game.areas       = require("BN4/Areas"   );
+game.chips       = require("BN4/Chips"   );
+game.enemies     = require("BN4/Enemies" );
+game.progress    = require("BN4/Progress");
+game.tournaments = require("BN4/Tournaments");
 
 game.fun_flags = {}; -- set in Commands, used in RAM
 
@@ -74,6 +75,22 @@ function game.simulate_shuffle_folder()
     local seed = game.ram.get.lazy_RNG_value();
 
     game.ram.shuffle_folder_simulate_from_value(seed, 30);
+end
+
+function game.get_tournament_frame()
+    local seed = game.ram.get.tournament_seed();
+
+    return game.tournaments.seeds[seed];
+end
+
+function game.get_tournament_scenarios()
+    local frame = game.get_tournament_frame();
+
+    if frame then
+        return game.tournaments.boards[frame - 1]; -- Don't ask why, the old tourney manip script did this so I will too. Probably for 0 indexing
+    end
+
+    return { "", "", "", "", "", "", "", "", ""}
 end
 
 ---------------------------------------- Module Controls ----------------------------------------

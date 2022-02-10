@@ -34,6 +34,7 @@ https://problemkaputt.de/gbatek.htm#gbamemorymap
 
 -- 001100 - 0011FF
 
+addresses.tournament_seed     = 0x02001554; -- 4 bytes, when no tourney is set is 0xFFFFFFFF
 addresses.lazy_RNG            = 0x020015D4; -- 4 bytes, resets and pauses on the title screen
 
 -- 001300 - 0013FF

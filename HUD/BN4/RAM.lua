@@ -27,6 +27,8 @@ ram.track_RAM = function()
     end
 end
 
+ram.get.tournament_seed = function() return memory.read_u32_le(ram.addr.tournament_seed); end
+
 ram.get.pack_ID = function(which_slot) return memory.read_u8(ram.addr.pack_ID+(0x20*which_slot)); end;
 ram.set.pack_ID = function(which_slot, chip_ID) memory.write_u8(ram.addr.pack_ID+(0x20*which_slot), chip_ID); end;
 ram.get.pack_code = function(which_slot) return memory.read_u8(ram.addr.pack_code+(0x20*which_slot)); end;
