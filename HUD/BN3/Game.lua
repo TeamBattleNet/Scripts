@@ -117,6 +117,8 @@ end
 game.previous_gamble_win = 255;
 game.gamble_panels = {"Bottom Left", "Top Left", "Top Right", "Bottom Right"};
 
+game.elements = {"Elec","Heat","Aqua","Wood"};
+
 ----------------------------------------Mega Modifications ----------------------------------------
 
 function game.set_style(style)
@@ -135,6 +137,9 @@ function game.set_style_element(element)
     return game.ram.set.style_active(level + style + element);
 end
 
+function game.get_next_element()
+    return game.elements[game.ram.get.next_element() % 256] or "??";
+end
 --[[
 
 function game.get_style_type()
