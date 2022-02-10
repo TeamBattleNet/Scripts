@@ -130,6 +130,10 @@ local function HUD_auto()
             hud.to_screen("Gamble  Win: " .. hud.game.get_gamble_panel_win( ));
             hud.to_screen("Gamble Pick: " .. hud.game.get_gamble_panel_pick());
         end
+		if hud.game.get_progress() == 0x00 then
+            hud.to_screen("");
+            hud.to_screen("Style Element: " .. hud.game.get_next_element( ));
+        end
         hud.display_area();
     elseif hud.game.in_battle() or hud.game.in_game_over() then
         if hud.game.in_combat() then

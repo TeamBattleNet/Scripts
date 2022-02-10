@@ -44,6 +44,8 @@ ram.get.style_active = function () return memory.read_u16_le(ram.addr.style_acti
 ram.set.style_active = function (style) return memory.write_u16_le(ram.addr.style_active, style); end;
 ram.get.style_stored = function () return memory.read_u16_le(ram.addr.style_stored); end;
 ram.set.style_stored = function (style) return memory.write_u16_le(ram.addr.style_stored, style); end;
+ram.get.next_element = function () return memory.read_u16_le(ram.addr.next_element); end;
+ram.set.next_element = function (element) return memory.write_u16_le(ram.addr.next_element, element); end;
 ---------------------------------------- RAMsacking ----------------------------------------
 
 function ram.use_fun_flags(fun_flags)
