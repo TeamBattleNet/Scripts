@@ -13,6 +13,18 @@ game.progress = require("BN3/Progress");
 
 game.fun_flags = {}; -- set in Commands, used in RAM
 
+--- Check if the game version is EXE3 vanilla / MMBN3 White.
+-- @return true if version is vanilla / White, otherwise false
+function game.is_version_white()
+    return game.ram.addr.version_white
+end
+
+--- Check if the game version is EXE3 Black / MMBN3 Blue.
+-- @return true if version is Black / Blue, otherwise false
+function game.is_version_blue()
+    return game.ram.addr.version_blue
+end
+
 ---------------------------------------- Game State ----------------------------------------
 
 -- Game Mode
@@ -140,11 +152,11 @@ end
 function game.get_next_element()
     return game.elements[game.ram.get.next_element() % 256] or "??";
 end
---[[
 
 function game.get_style_type()
-    return bit.rshift(bit.band(memory.read_u8(style_stored), 0x38), 3);
+    return bit.rshift(bit.band(game.ram.get.style_active(), 0x38), 3);
 end
+--[[
 
 function game.get_current_element()
     return bit.band(memory.read_u8(style_stored), 0x07);
@@ -205,6 +217,115 @@ function game.shuffle_folder_simulate_from_battle(offset)
     if lazy_RNG_index ~= nil then
         offset = offset or 0;
         return game.shuffle_folder_simulate_from_lazy_index(lazy_RNG_index-60+1+offset, 30);
+    end
+end
+
+---------------------------------------- Styles ----------------------------------------
+
+--- Calculate total Guts Style points gained during a battle.
+-- @return number of points
+function game.calc_battle_guts_points()
+    if game.get_style_type() == 1 then
+        return 0;
+    else
+        local pts =  1 * memory.read_u8(game.ram.addr.count_used_mega_buster);
+        pts = pts + 10 * memory.read_u8(game.ram.addr.count_used_charge_shot);
+        pts = pts +  1 * memory.read_u8(game.ram.addr.count_flinched);
+        pts = pts + 30 * memory.read_u8(game.ram.addr.count_used_guts_mg);
+        return pts;
+    end
+end
+
+--- Calculate total Custom Style points gained during a battle.
+-- @return number of points
+function game.calc_battle_custom_points()
+    if game.get_style_type() == 2 then
+        return 0;
+    else
+        local pts =  5 * memory.read_u8(game.ram.addr.count_sent_2_chips);
+        pts = pts + 20 * memory.read_u8(game.ram.addr.count_sent_3_chips);
+        pts = pts + 50 * memory.read_u8(game.ram.addr.count_sent_4_chips);
+        pts = pts + 70 * memory.read_u8(game.ram.addr.count_sent_5_chips);
+        pts = pts + 20 * memory.read_u8(game.ram.addr.count_formed_pas);
+        pts = pts + 30 * memory.read_u8(game.ram.addr.count_used_add);
+        return pts;
+    end
+end
+
+--- Calculate total Team Style points gained during a battle.
+-- @return number of points
+function game.calc_battle_team_points()
+    if game.get_style_type() == 3 then
+        return 0;
+    else
+        local count = memory.read_u8(game.ram.addr.count_sent_navi_chips);
+        local pts = 0;
+        if count >= 1 then
+            pts = pts + 45;
+        end
+        if count >= 2 then
+            pts = pts + 50;
+        end
+        if count >= 3 then
+            pts = pts + 40 * (count - 2);
+        end
+        return pts;
+    end
+end
+
+--- Calculate total Shield Style points gained during a battle.
+-- @return number of points
+function game.calc_battle_shield_points()
+    if game.get_style_type() == 4 then
+        return 0;
+    else
+        local pts = 55 * memory.read_u8(game.ram.addr.count_used_guard_chips);
+        pts = pts + 55 * memory.read_u8(game.ram.addr.count_used_barr_chips);
+        pts = pts + 40 * memory.read_u8(game.ram.addr.count_used_recov_chips);
+        pts = pts + 20 * memory.read_u8(game.ram.addr.count_used_block);
+        pts = pts + 20 * memory.read_u8(game.ram.addr.count_used_shield);
+        pts = pts + 20 * memory.read_u8(game.ram.addr.count_used_reflect);
+        if memory.read_u8(game.ram.addr.count_flinched) == 0 then
+            pts = pts + 1;
+        end
+        return pts;
+    end
+end
+
+--- Calculate total Ground Style points gained during a battle.
+-- @return number of points
+function game.calc_battle_ground_points()
+    if game.get_style_type() == 5 then
+        return 0;
+    else
+        local pts = 70 * memory.read_u8(game.ram.addr.count_used_field_chips);
+        pts = pts + 70 * memory.read_u8(game.ram.addr.count_used_crack_chips);
+        return pts
+    end
+end
+
+--- Calculate total Shadow Style points gained during a battle.
+-- @return number of points
+function game.calc_battle_shadow_points()
+    if game.get_style_type() == 6 then
+        return 0;
+    else
+        local pts = 70 * memory.read_u8(game.ram.addr.count_used_invul_chips);
+        pts = pts + 70 * memory.read_u8(game.ram.addr.count_used_invis_pwr);
+        return pts;
+    end
+end
+
+--- Calculate total Bug Style points gained during a battle.
+-- @return number of points
+function game.calc_battle_bug_points()
+    if game.get_style_type() == 7 then
+        return 0;
+    else
+        local pts = 20 * memory.read_u8(game.ram.addr.count_turns_bug_lv1);
+        pts = pts + 30 * memory.read_u8(game.ram.addr.count_turns_bug_lv2);
+        pts = pts + 40 * memory.read_u8(game.ram.addr.count_turns_bug_lv3);
+        return pts;
     end
 end
 

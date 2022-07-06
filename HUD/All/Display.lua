@@ -106,10 +106,24 @@ function hud.to_screen(text)
     hud.y = hud.y + 1;
 end
 
+function hud.to_top_right_gui(text)
+    local x = 3;
+    local y = 3 + hud.y * hud.ys;
+    gui.text(x, y, text, 0xFFFFFFFF, "topright");
+    hud.y = hud.y + 1;
+end
+
 function hud.to_bottom_right_gui(text)
     local x = 3;
     local y = 3 + hud.y * hud.ys;
     gui.text(x, y, text, 0xFFFFFFFF, "bottomright");
+    hud.y = hud.y + 1;
+end
+
+function hud.to_top_right_pixel(text)
+    local x = 239 - ( hud.xs * string.len(text) );
+    local y =   1 + ( hud.ys * (hud.y + 1) );
+    gui.pixelText(x, y, text); -- GBA is 240x160
     hud.y = hud.y + 1;
 end
 
@@ -118,6 +132,14 @@ function hud.to_bottom_right_pixel(text)
     local y = 160 - ( hud.ys * (hud.y + 1) );
     gui.pixelText(x, y, text); -- GBA is 240x160
     hud.y = hud.y + 1;
+end
+
+function hud.to_top_right(text)
+    if settings.use_gui_text then
+        hud.to_top_right_gui(text);
+    else
+        hud.to_top_right_pixel(text);
+    end
 end
 
 function hud.to_bottom_right(text)
