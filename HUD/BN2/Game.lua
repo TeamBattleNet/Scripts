@@ -236,6 +236,53 @@ function game.shuffle_folder_simulate_from_battle(offset)
     end
 end
 
+---------------------------------------- Styles ----------------------------------------
+
+--- Calculate total Guts Style points gained during a battle.
+-- @return number of points
+function game.calc_battle_guts_points()
+    local pts =  1 * memory.read_u8(game.ram.addr.count_used_mega_buster);
+    pts = pts + 10 * memory.read_u8(game.ram.addr.count_used_charge_shot);
+    return pts;
+end
+
+--- Calculate total Custom Style points gained during a battle.
+-- @return number of points
+function game.calc_battle_custom_points()
+    local pts = 20 * memory.read_u8(game.ram.addr.count_formed_pas);
+    pts = pts +  5 * memory.read_u8(game.ram.addr.count_sent_2_chips);
+    pts = pts + 25 * memory.read_u8(game.ram.addr.count_sent_3_chips);
+    pts = pts + 50 * memory.read_u8(game.ram.addr.count_sent_4_chips);
+    pts = pts + 60 * memory.read_u8(game.ram.addr.count_sent_5_chips);
+    pts = pts + 30 * memory.read_u8(game.ram.addr.count_used_add);
+    return pts;
+end
+
+--- Calculate total Team Style points gained during a battle.
+-- @return number of points
+function game.calc_battle_team_points()
+    local count = memory.read_u8(game.ram.addr.count_sent_navi_chips);
+    if count >= 3 then
+        return 50 * (count - 2);
+    elseif count >= 1 then
+        return 50;
+    else
+        return 0;
+    end
+end
+
+--- Calculate total Shield Style points gained during a battle.
+-- @return number of points
+function game.calc_battle_shield_points()
+    local pts = 45 * memory.read_u8(game.ram.addr.count_sent_guard_chips);
+    pts = pts + 45 * memory.read_u8(game.ram.addr.count_sent_barr_chips);
+    pts = pts + 45 * memory.read_u8(game.ram.addr.count_sent_recov_chips);
+    if memory.read_u8(game.ram.addr.times_flinched) == 0 then
+        pts = pts + 5;
+    end
+    return pts;
+end
+
 ---------------------------------------- Battlechips ----------------------------------------
 
 function game.count_library()

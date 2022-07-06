@@ -66,6 +66,7 @@ addresses.reg_slot_folder_3     = 0x02000DDF; -- 1 byte 0xFF if nothing is reg
 
 addresses.mega_HP_current       = 0x02000DE0; -- 2 bytes
 addresses.mega_HP_max           = 0x02000DE2; -- 2 bytes
+addresses.style_change_counter  = 0x02000DE4; -- 4 bytes, style change at 280
 
 addresses.is_talking            = 0x02000DDA; -- 1 byte, with NPC/MD, flag 0x01
 addresses.is_interacting        = 0x02000DDA; -- 1 byte, toggle check, flag 0x01
@@ -146,12 +147,22 @@ addresses.sneak                 = 0x02001178; -- 4? bytes, starts at 6000
 
 -- 3980 - 3A4F TBD
 
--- 3A50 style point area
-addresses.points_guts           = 0x02003A5D; -- 2 bytes
-addresses.points_cust           = 0x02003A62; -- 2 bytes
-addresses.points_team           = 0x02003A64; -- 2 bytes
-addresses.points_shld           = 0x02003A66; -- 2 bytes
--- ties go in order of: shield, custom, team, guts? (according to faq)
+-- 3A50 battle counters
+addresses.count_formed_pas      = 0x02003A50; -- 1 byte, times formed P.A.         - x20 custom pts
+addresses.count_sent_0_chips    = 0x02003A51; -- 1 byte, times sent 0 chips
+addresses.count_sent_1_chips    = 0x02003A52; -- 1 byte, times sent 1 chips
+addresses.count_sent_2_chips    = 0x02003A53; -- 1 byte, times sent 2 chips        - x 5 custom pts
+addresses.count_sent_3_chips    = 0x02003A54; -- 1 byte, times sent 3 chips        - x25 custom pts
+addresses.count_sent_4_chips    = 0x02003A55; -- 1 byte, times sent 4 chips        - x50 custom pts
+addresses.count_sent_5_chips    = 0x02003A56; -- 1 byte, times sent 5 chips        - x60 custom pts
+addresses.count_used_add        = 0x02003A57; -- 1 byte, times used ADD            - x30 custom pts
+addresses.count_sent_navi_chips = 0x02003A58; -- 1 byte, total sent Navi chips     - +50 team   pts (1-2) (n-2)x50 team pts (3+)
+addresses.count_sent_guard_chips= 0x02003A59; -- 1 byte, total sent guard chips    - x45 shield pts
+addresses.count_sent_barr_chips = 0x02003A5A; -- 1 byte, total sent barrier chips  - x45 shield pts
+addresses.count_sent_recov_chips= 0x02003A5B; -- 1 byte, total sent recovery chips - x45 shield pts
+addresses.count_used_mega_buster= 0x02003A5D; -- 1 byte, times used Mega Buster    - x 1 guts   pts; counter +5 if custom gauge full
+addresses.count_used_charge_shot= 0x02003A5E; -- 1 byte, times used Charge Shot    - x10 guts   pts; counter +5 if custom gauge full
+-- ties go in order of: shield, team, custom, guts
 addresses.battles_guts          = 0x02003A68; -- 4 bytes
 addresses.battles_cust          = 0x02003A6C; -- 4 bytes
 addresses.battles_team          = 0x02003A70; -- 4 bytes
@@ -198,6 +209,7 @@ addresses.offset_folder_copy    = 0x02007EB8; -- 2 bytes
 
 addresses.style_stored_1        = 0x02007EF4; -- 1 byte
 addresses.style_stored_2        = 0x02007EF5; -- 1 byte
+addresses.style_stored_3        = 0x02007EF6; -- 1 byte, not accessible legitimately
 
 -- 8000 SRAM Mirror?
 
@@ -225,6 +237,8 @@ addresses.main_RNG              = 0x02009080; -- 4 bytes, restarts on the title 
 addresses.lazy_RNG              = 0x02009080; -- to support shared functions with later games
 
 addresses.color_palette         = 0x02009090; -- 1024 bytes, 0x3FF bytes, ends at 948F
+
+addresses.times_flinched        = 0x02009BFA; -- times flinched by attack; +5 shield points if 0
 
 -- 9198 ROCKMANEXE2 20011016
 
