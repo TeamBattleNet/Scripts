@@ -37,6 +37,15 @@ local function display_selected_chip()
     -- TODO: Selected Chip
 end
 
+--- Display calculated Style points gained during the battle
+local function display_style_points()
+    hud.set_offset();
+    hud.to_top_right(string.format("Guts:   %4u", hud.game.calc_battle_guts_points()));
+    hud.to_top_right(string.format("Custom: %4u", hud.game.calc_battle_custom_points()));
+    hud.to_top_right(string.format("Team:   %4u", hud.game.calc_battle_team_points()));
+    hud.to_top_right(string.format("Shield: %4u", hud.game.calc_battle_shield_points()));
+end
+
 ---------------------------------------- HUD Modes ----------------------------------------
 
 local function HUD_speedrun()
@@ -78,6 +87,7 @@ local function HUD_battle()
     hud.to_screen(string.format("%%: %8.3f%%", 100-hud.game.get_current_percent()));
     --hud.to_screen(string.format("Drawfset: %2u", draw_offset));
     hud.display_enemies();
+    display_style_points();
 end
 
 local function HUD_auto()
@@ -118,6 +128,7 @@ local function HUD_auto()
             hud.to_screen(string.format("%%: %8.3f%%", 100-hud.game.get_current_percent()));
         end
         hud.display_enemies();
+        display_style_points();
     elseif hud.game.in_menu() then
         hud.display_RNG();
         if hud.game.in_menu_folder_edit() then
