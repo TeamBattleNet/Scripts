@@ -328,12 +328,12 @@ elseif version_byte == 0x4A583341 then
     addresses.version_blue      = true;
     addresses.encounter_odds    = 0x0800D1E8;
     addresses.encounter_curve   = 0x0800D270;
-elseif version_byte == 0x45583341 then
+elseif version_byte == 0x45423641 then
     addresses.version_name      = "US White";
     addresses.version_white     = true;
     addresses.encounter_odds    = 0x0800D26C;
     addresses.encounter_curve   = 0x0800D2F4;
-elseif version_byte == 0x45423641 then
+elseif version_byte == 0x45583341 then
     addresses.version_name      = "US Blue";
     addresses.version_blue      = true;
     addresses.encounter_odds    = 0x0800D26C;
