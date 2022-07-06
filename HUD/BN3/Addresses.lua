@@ -259,6 +259,37 @@ addresses.enemy[2].HP_max       = 0x0203743E; -- 2 bytes, for healing?
 addresses.enemy[3].HP           = 0x02037510; -- 2 bytes, which_enemy * 0xC0
 addresses.enemy[3].HP_max       = 0x02037512; -- 2 bytes, for healing?
 
+addresses.counter_hits          = 0x020384EA; -- 1 byte
+
+addresses.count_used_mega_buster= 0x0203B320; -- 1 byte, times used Mega Buster; counter +10 if custom gauge full
+addresses.count_used_charge_shot= 0x0203B321; -- 1 byte, times used Charge Shot
+addresses.count_flinched        = 0x0203B322; -- 1 byte, times flinched by attack
+addresses.count_used_guts_mg    = 0x0203B323; -- 1 byte, times used Guts MG
+addresses.count_sent_0_chips    = 0x0203B324; -- 1 byte, times sent 0 chips
+addresses.count_sent_1_chips    = 0x0203B325; -- 1 byte, times sent 1 chips
+addresses.count_sent_2_chips    = 0x0203B326; -- 1 byte, times sent 2 chips
+addresses.count_sent_3_chips    = 0x0203B327; -- 1 byte, times sent 3 chips
+addresses.count_sent_4_chips    = 0x0203B328; -- 1 byte, times sent 4 chips
+addresses.count_sent_5_chips    = 0x0203B329; -- 1 byte, times sent 5 chips
+addresses.count_used_add        = 0x0203B32A; -- 1 byte, times used ADD
+addresses.count_formed_pas      = 0x0203B32B; -- 1 byte, times formed P.A.
+addresses.count_sent_navi_chips = 0x0203B32D; -- 1 byte, total sent Navi chips
+addresses.count_used_misc_chips = 0x0203B32E; -- 1 byte, total used misc chips
+addresses.count_used_guard_chips= 0x0203B32F; -- 1 byte, total used guard chips
+addresses.count_used_barr_chips = 0x0203B330; -- 1 byte, total used barrier chips
+addresses.count_used_recov_chips= 0x0203B331; -- 1 byte, total used recovery chips
+addresses.count_used_crack_chips= 0x0203B332; -- 1 byte, total used panel cracking chips
+addresses.count_used_field_chips= 0x0203B333; -- 1 byte, total used field reliant chips
+addresses.count_used_invul_chips= 0x0203B334; -- 1 byte, total used invulnerability chips
+addresses.count_used_sword_chips= 0x0203B335; -- 1 byte, total used sword chips
+addresses.count_used_block      = 0x0203B337; -- 1 byte, total used Block
+addresses.count_used_shield     = 0x0203B338; -- 1 byte, total used Shield
+addresses.count_used_reflect    = 0x0203B339; -- 1 byte, total used Reflect
+addresses.count_used_invis_pwr  = 0x0203B33A; -- 1 byte, total used Invis Power Attack
+addresses.count_turns_bug_lv1   = 0x0203B33B; -- 1 byte, turns LV 1 bug(s) in NC
+addresses.count_turns_bug_lv2   = 0x0203B33C; -- 1 byte, turns LV 2 bug(s) in NC
+addresses.count_turns_bug_lv3   = 0x0203B33D; -- 1 byte, turns LV 3 bug(s) in NC
+
 --addresses.                    = 0x0203B380; -- 4 bytes, battle timer?
 --addresses.                    = 0x0203B390; -- 4 bytes, 5 copies of button flags?
 
@@ -284,28 +315,37 @@ addresses.main_loop             = 0x080002B4; -- series of instructions, easy to
 
 local version_byte = memory.read_u32_le(addresses.version_byte);
 
+addresses.version_white = false;
+addresses.version_blue  = false;
+
 if     version_byte == 0x4A423641 then
     addresses.version_name      = "JP White";
+    addresses.version_white     = true;
     addresses.encounter_odds    = 0x0800D1E8;
     addresses.encounter_curve   = 0x0800D270;
 elseif version_byte == 0x4A583341 then
     addresses.version_name      = "JP Black";
+    addresses.version_blue      = true;
     addresses.encounter_odds    = 0x0800D1E8;
     addresses.encounter_curve   = 0x0800D270;
 elseif version_byte == 0x45583341 then
     addresses.version_name      = "US White";
+    addresses.version_white     = true;
     addresses.encounter_odds    = 0x0800D26C;
     addresses.encounter_curve   = 0x0800D2F4;
 elseif version_byte == 0x45423641 then
     addresses.version_name      = "US Blue";
+    addresses.version_blue      = true;
     addresses.encounter_odds    = 0x0800D26C;
     addresses.encounter_curve   = 0x0800D2F4;
 elseif version_byte == 0x50423641 then
     addresses.version_name      = "PAL White";
+    addresses.version_white     = true;
     addresses.encounter_odds    = 0x0800D26C;
     addresses.encounter_curve   = 0x0800D2F4;
 elseif version_byte == 0x50583341 then
     addresses.version_name      = "PAL Blue";
+    addresses.version_blue      = true;
     addresses.encounter_odds    = 0x0800D26C;
     addresses.encounter_curve   = 0x0800D2F4;
 else
