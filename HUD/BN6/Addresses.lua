@@ -51,8 +51,6 @@ addresses.battle_paused       = 0; -- 1 byte, flag 0x01
 addresses.buster_attack       = 0; -- 1 byte, 0 indexed, can't change mid-battle
 addresses.buster_rapid        = 0; -- 1 byte, 0 indexed, can't change mid-battle
 addresses.buster_charge       = 0; -- 1 byte, 0 indexed, can't change mid-battle
-addresses.HP_max_1            = 0; -- 2 bytes, max is 0x03E8
-addresses.HP_max_2            = 0; -- 2 bytes, max is 0x03E8
 addresses.HPMemory            = 0; -- 1 byte, collected
 addresses.steps_total         = 0; -- 3 bytes, since new game
 addresses.play_time_frames    = 0; -- 4 bytes, check for skipped frames
@@ -121,8 +119,30 @@ addresses.sneak               = 0x02001C28; -- 4 bytes, starts at 6000
 
 addresses.requestBBSFlags     = 0x02001C88; -- 1 byt
 
+-- 001D00 - 001DFF
+
+addresses.cutscene_flags1     = 0x02001D08; -- 4 bytes, binary flags
+addresses.cutscene_flags2     = 0x02001D0C; -- 4 bytes, binary flags
+addresses.cutscene_flags3     = 0x02001D10; -- 4 bytes, binary flags
+
+addresses.interaction_flags1  = 0x02001D14; -- 4 bytes, binary flags
+addresses.interaction_flags2  = 0x02001D18; -- 4 bytes, binary flags
+addresses.interaction_flags3  = 0x02001D1C; -- 4 bytes, binary flags
+addresses.interaction_flags4  = 0x02001D20; -- 4 bytes, binary flags
+
+-- 002000 - 0020FF
+
+addresses.email_flags1        = 0x0200201C; -- 4 bytes, binary flags. Unsure of format
+addresses.email_flags2        = 0x02002020; -- 4 bytes, binary flags. Unsure of format
+addresses.email_flags3        = 0x02002024; -- 4 bytes, binary flags. Unsure of format
+addresses.email_flags4        = 0x02002028; -- 4 bytes, binary flags. Unsure of format
+addresses.email_flags5        = 0x0200202C; -- 4 bytes, binary flags. Unsure of format
+addresses.email_flags6        = 0x02002030; -- 4 bytes, binary flags. Unsure of format
+
 -- 004700 - 0047FF
 
+addresses.HP_current_1        = 0x020047CC; -- 2 bytes
+addresses.HP_max_1            = 0x020047CE; -- 2 bytes, max is 0x03E8
 addresses.reg_slot			  = 0x020047FA; -- 1 byte, Reg Chip. 255 if no reg
 
 -- 008400 - 0084FF
@@ -182,9 +202,6 @@ addresses.version_byte        = 0x080000AC;
 
 -- 020C00 - 020CFF
 
-addresses.encounter_odds  	  = 0x08020C5C;
-addresses.encounter_curve 	  = 0x08020CE4;
-
 -- 027000 - 0270FF
 
 addresses.run_chance_odds     = 0x08027020;
@@ -195,12 +212,20 @@ local version_byte = memory.read_u32_le(addresses.version_byte);
 
 if version_byte == 0x45355242 then
     addresses.version_name    = "Gregar US";
+    addresses.encounter_odds  	  = 0x08020C5C;
+    addresses.encounter_curve 	  = 0x08020CE4;
 elseif version_byte == 0x4A355242 then
     addresses.version_name    = "Gregar JP";
+    addresses.encounter_odds  	  = 0x08021070;
+    addresses.encounter_curve 	  = 0x080210F8;
 elseif version_byte == 0x45365242 then
     addresses.version_name    = "Falzar US";
+    addresses.encounter_odds  	  = 0x08020C5C;
+    addresses.encounter_curve 	  = 0x08020CE4;
 elseif version_byte == 0x4A365242 then
     addresses.version_name    = "Falzar JP";
+    addresses.encounter_odds  	  = 0x08020C5C;
+    addresses.encounter_curve 	  = 0x08020CE4;
 else
     addresses.version_name    = "Unknown";
     print("RAM: Warning! Unrecognized game version! Unable to set certain addresses!");

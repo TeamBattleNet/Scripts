@@ -24,6 +24,9 @@ ram.set.steps = function(steps) memory.write_u16_le(ram.addr.steps, steps); end;
 ram.get.battle_pointer = function() return memory.read_u32_le(ram.addr.battle_pointer); end;
 ram.set.battle_pointer = function(battle_pointer) memory.write_u32_le(ram.addr.battle_pointer, battle_pointer); end;
 
+ram.get.max_hp = function() return memory.read_u32_le(ram.addr.HP_max_1); end;
+ram.set.max_hp = function(hp) memory.write_u32_le(ram.addr.HP_max_1, hp); end;
+
 ---------------------------------------- RAMsacking ----------------------------------------
 
 function ram.use_fun_flags(fun_flags)

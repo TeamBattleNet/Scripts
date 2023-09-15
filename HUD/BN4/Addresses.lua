@@ -48,6 +48,8 @@ addresses.main_area           = 0x02002134; -- 1 byte
 addresses.sub_area            = 0x02002135; -- 1 byte
 addresses.progress            = 0x02002136; -- 1 byte
 
+addresses.zenny               = 0x020021A4;
+
 -- 001C00 - 001CFF
 
 addresses.steps               = 0x020021DA; -- 4 bytes
@@ -72,15 +74,27 @@ addresses.offset_pack         = 0x02009A5E; -- 2 bytes, offset value in the pack
 addresses.your_X              = 0x0200A384; -- 2 bytes
 addresses.your_Y              = 0x0200A386; -- 2 bytes
 
+-- 030000 - 03FFFF
+
+addresses.enemy[1].ID         = 0x02035870;
+addresses.enemy[2].ID         = 0x02035871;
+addresses.enemy[3].ID         = 0x02035872;
+
+addresses.curr_HP             = 0x0203B1A4;
+
+addresses.enemy[1].HP         = 0x0203B27C;
+addresses.enemy[2].HP         = 0x0203B354;
+addresses.enemy[3].HP         = 0x0203B42C;
+
 ---------------------------------------- ROM  08000000-09FFFFFF ----------------------------------------
 
 -- 000000 - 0000FF
 
-addresses.version_byte        = 0x080000AC
+addresses.version_byte        = 0x080000AC;
 
 -- 020C00 - 020CFF
-addresses.encounter_odds  	  = 0x08018960;
-addresses.encounter_curve 	  = 0x080189E8;
+addresses.encounter_odds  	  = 0x080188A0;
+addresses.encounter_curve 	  = 0x08018928;
 
 ---------------------------------------- Verion Dependent ----------------------------------------
 
@@ -88,12 +102,20 @@ local version_byte = memory.read_u32_le(addresses.version_byte);
 
 if version_byte == 0x45423442 then
     addresses.version_name    = "Blue Moon US";
+    addresses.encounter_odds  = 0x08018960;
+    addresses.encounter_curve = 0x080189E8;
 elseif version_byte == 0x4A423442 then
     addresses.version_name    = "Blue Moon JP";
+    addresses.encounter_odds  = 0x080188A0;
+    addresses.encounter_curve = 0x08018928;
 elseif version_byte == 0x45573442 then
-        addresses.version_name    = "Red Sun US";
+    addresses.version_name    = "Red Sun US";
+    addresses.encounter_odds  = 0x08018960;
+    addresses.encounter_curve = 0x080189E8;
 elseif version_byte == 0x4A573442 then
     addresses.version_name    = "Red Sun JP";
+    addresses.encounter_odds  = 0x080188A0;
+    addresses.encounter_curve = 0x08018928;
 else
     addresses.version_name    = "Unknown";
     print("RAM: Warning! Unrecognized game version! Unable to set certain addresses!");

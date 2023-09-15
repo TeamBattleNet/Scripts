@@ -16,7 +16,6 @@ local function display_player_info()
     hud.to_screen(string.format("Zenny  : %6u", hud.game.get_zenny()));
     hud.to_screen(string.format("BugFrag: %6u", hud.game.get_bug_frags()));
     hud.to_screen(string.format("Max  HP: %6u", hud.game.calculate_max_HP()));
-    hud.to_screen(string.format("Library: %6u", hud.game.count_library()));
 end
 
 local function display_edit_slots()
@@ -49,7 +48,14 @@ end
 local function HUD_routing()
     hud.set_position(0, 8);
     hud.set_center_x(54);
-    hud.to_screen("Routing HUD: WIP");
+    hud.to_screen("1D08: " .. hud.game.get_string_binary(0x02001D08,  4, true));
+    hud.to_screen("1D0C: " .. hud.game.get_string_binary(0x02001D0C,  4, true));
+    hud.to_screen("1D10: " .. hud.game.get_string_binary(0x02001D10,  4, true));
+    hud.to_screen("1D14: " .. hud.game.get_string_binary(0x02000004,  4, true));
+    hud.to_screen("0008: " .. hud.game.get_string_binary(0x02000008,  4, true));
+    hud.to_screen("000C: " .. hud.game.get_string_binary(0x0200000C,  4, true));
+    hud.to_screen("01FC: " .. hud.game.get_string_hex(   0x020001FC,  8, true));
+    hud.set_offset(31, hud.y-1);
 end
 
 local function HUD_battle()

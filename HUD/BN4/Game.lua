@@ -22,14 +22,14 @@ game.state.title         = 0x00; -- or BIOS
 game.state.world         = 0x04; -- real and digital
 game.state.battle        = 0x08;
 game.state.transition    = 0x10; -- jack-in / out
-game.state.menu          = 0x14;
+game.state.menu          = 0x1C;
 
 game.game_state_names[0x00] = "World Init";
 game.game_state_names[0x04] = "World";
 game.game_state_names[0x08] = "Battle";
 game.game_state_names[0x0C] = "???";
 game.game_state_names[0x10] = "Player Change";
-game.game_state_names[0x14] = "Menu";
+game.game_state_names[0x1C] = "Menu";
 game.game_state_names[0x18] = "???";
 
 game.battle_state_names[0x00] = "loading";

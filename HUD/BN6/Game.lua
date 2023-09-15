@@ -60,6 +60,10 @@ game.menu_state_names[0x10] = "to_pack";
 game.menu_state_names[0x0C] = "to_folder";
 game.menu_state_names[0x08] = "exited";
 
+function game.calculate_max_HP()
+    return game.ram.get.max_hp();
+end
+
 ---------------------------------------- Battle Chips ----------------------------------------
 
 function game.count_library()
