@@ -167,6 +167,10 @@ function hud.Down()
     print("\n" .. hud.game.get_draw_slots_text_one_line());
 end
 
+function hud.B()
+    --hud.game.randomize_GMD_RNG();
+end
+
 function hud.update_local_state()
     if hud.game.did_game_state_change() and hud.game.in_battle() then
         total_fights = total_fights + 1;
